@@ -31,3 +31,5 @@
     catch(_){window.location.href="mailto:"+email;}
   }));
 })();
+/* Activate live sponsored placements without changing existing site routes. */
+import("/assets/sponsored.js").catch(()=>{});
