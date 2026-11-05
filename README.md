@@ -28,3 +28,10 @@ Framework-free static HTML, CSS and JavaScript:
 - Never use this repository to modify HospitalPro or Slashcure.
 
 Contact for advertising and corrections: info@slashcure.com
+
+## Nationwide doctor finder
+- The homepage's `#find-doctors` section has searchable name/keyword, city/area suggestions (open to any city), and an exact specialty select.
+- `assets/doctor-finder.js` forwards the search to Slashcure's authoritative `/doctors` directory rather than maintaining a duplicate static doctor list. Known city slugs use the `city` parameter; other city/area text uses `loc`. The keyword is forwarded as `q` and specialties as `specialty`.
+- The search intentionally opens results on Slashcure, so newly added approved doctors appear in the source directory without a SlashPromo redeploy. It does not yet display results directly on SlashPromo.
+- City and specialty URL filtering is supported by the public directory. Verify name/keyword filtering against Slashcure's live query handling when testing the deployment; coordinate with the Slashcure search implementation if its query parameter differs.
+- Privacy policy discloses the cross-domain search handoff; no patient details should be entered into the public search.
