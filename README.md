@@ -41,3 +41,12 @@ Contact for advertising and corrections: info@slashcure.com
 - Doctor pages: `/doctors/<city>/<doctor-name>/`; Sukkur hospital pages: `/hospitals/sukkur/<facility-name>/`.
 - Update both JSON and profile page when adding doctors. Never claim live OPD timings without verified current provider updates.
 - Search is an independent SlashPromo experience; public profile links to Slashcure or HospitalPro may be offered for reference only.
+
+
+## Slashcure referral advertisement
+- The approved slim blue/white banner, moving multicolor top line, and sequential wave lettering are styled in `assets/slashcure-strip.css`.
+- The Sukkur doctor/hospital page includes a **static, SEO-readable city-specific banner** after the doctor directory and before the hospital directory; it replaces the former oversized panel.
+- `assets/site.js` loads `assets/slashcure-strip.js` for other appropriate public pages. The script chooses localized copy using page route, doctor/hospital name, city and specialty and inserts **one** banner in the middle of landing/city pages or near the bottom of doctor and hospital profiles.
+- This is a link to Slashcure, not a replacement for SlashPromo's own native directory search. The admin dashboard, advertising inquiry flow, contact page, editorial and legal pages are excluded.
+- The dynamically inserted banners use text content rather than interpolated HTML for provider names. `prefers-reduced-motion` disables animations.
+- Verify Cloudflare Pages has published the latest GitHub commit before reporting that the changes are live.
