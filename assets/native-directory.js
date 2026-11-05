@@ -23,8 +23,49 @@
     if(s.includes("gastro")||s.includes("hepat"))return "◌";
     return "✳";
   };
-  const card = r => `<article class="sp-directory-card">
-    <div class="sp-directory-icon" aria-hidden="true">${esc(symbol(r))}</div>
+  /* Anatomy-inspired line icons are intentionally local to Sukkur doctor cards. */
+  const specialtyIconType = record => {
+    const s=normal(title(record));
+    if(/psychiatr|neurolog|neurosurg|brain/.test(s))return "brain";
+    if(/cardiol|cardiac|heart/.test(s))return "heart";
+    if(/gastro|stomach|digestive/.test(s))return "stomach";
+    if(/hepat|liver/.test(s))return "liver";
+    if(/orthoped|orthop|spine|trauma/.test(s))return "bone";
+    if(/urolog|kidney|nephrol|renal/.test(s))return "kidney";
+    if(/gynecol|obstetric|maternity/.test(s))return "uterus";
+    if(/dent|prosthodont/.test(s))return "tooth";
+    if(/physio|rehabilitation|movement/.test(s))return "movement";
+    if(/pediatric|child|neonatal|paeds/.test(s))return "baby";
+    if(/pulmon|chest|respiratory|lung/.test(s))return "lungs";
+    if(/hematol|haematol|blood/.test(s))return "blood";
+    if(/surg|laparoscop|scalpel/.test(s))return "scalpel";
+    if(/diabet|endocrin/.test(s))return "glucose";
+    return "medicine";
+  };
+  const specialtyPaths = Object.freeze({
+    brain:'<path d="M12 5.4a3.3 3.3 0 0 0-6.25-1.4A4.4 4.4 0 0 0 3 10v2.1a4.1 4.1 0 0 0 1.8 7.7A3.5 3.5 0 0 0 12 18V5.4Z"/><path d="M12 5.4a3.3 3.3 0 0 1 6.25-1.4A4.4 4.4 0 0 1 21 10v2.1a4.1 4.1 0 0 1-1.8 7.7A3.5 3.5 0 0 1 12 18V5.4Z"/><path d="M8 8c-2 .2-2.8 1.6-2.7 3.2M7 15c1.6-.7 2.5-.2 3 1M16 8c2 .2 2.8 1.6 2.7 3.2M17 15c-1.6-.7-2.5-.2-3 1"/>',
+    heart:'<path d="M20.8 5.6a5.3 5.3 0 0 0-7.5 0L12 6.8l-1.3-1.2a5.3 5.3 0 0 0-7.5 7.5L12 21l8.8-7.9a5.3 5.3 0 0 0 0-7.5Z"/><path d="M3.5 12h4l1.4-2.6 2.2 5 1.9-3.1 1.2.7H20"/>',
+    stomach:'<path d="M11 2.5v5.4c0 2 1 3.1 3 3.1h1.9c2.5 0 4.4 2 4.4 4.7 0 3.5-2.7 6.1-6.4 6.1-4 0-7.7-3.1-7.7-6.8 0-2.2 1.1-4.1 2.8-5.5 1.3-1 2-1.8 2-3V2.5"/><path d="M11.1 15.7c.6 1.5 1.9 2.3 3.5 2.4"/>',
+    liver:'<path d="M3 11c2.1-5.2 7.2-7.5 12.4-6.7 2.9.4 4.9 1.7 5.6 4.1v5.2c-2.6-.3-4.2.3-6.5 1.5-2.5 1.4-4.7 2.4-7.6 1.7L3 15.4V11Z"/><path d="M3 12.4c4.2-.3 9.2.2 12.4 2.7M15 8c.4 2.4 1.9 4.1 6 5.6"/>',
+    bone:'<path d="m9 15 6-6"/><path d="M6.2 13.7a2.8 2.8 0 1 0-3.4 4.4 2.8 2.8 0 1 0 4.4 3.4 2.9 2.9 0 0 0 2.3-2.1l5.9-5.9A2.9 2.9 0 0 0 17.5 7a2.8 2.8 0 1 0 3.4-4.4 2.8 2.8 0 1 0-4.4-3.4A2.9 2.9 0 0 0 14.4 5L8.5 10.9a2.9 2.9 0 0 0-2.3 2.8Z" transform="translate(0 2) scale(.94)"/>',
+    kidney:'<path d="M8.8 3C5.1 3 3 6.2 3 10.8c0 5.2 2 9.6 5.6 9.6 2.4 0 3.7-2 3.7-4.5 0-2.1-1.2-3.8-3.2-4.3C6.9 11 6.8 9 7.5 7.3"/><path d="M15.2 3C18.9 3 21 6.2 21 10.8c0 5.2-2 9.6-5.6 9.6-2.4 0-3.7-2-3.7-4.5 0-2.1 1.2-3.8 3.2-4.3 2.2-.6 2.3-2.6 1.6-4.3"/><path d="M9.2 15.8c.5 2.1 1.5 3 2.8 3.4M14.8 15.8c-.5 2.1-1.5 3-2.8 3.4"/>',
+    uterus:'<path d="M8.5 7c1.5-1.2 5.5-1.2 7 0v5.5a3.5 3.5 0 0 1-7 0V7Z"/><path d="M8.5 8.8C6.4 5 4.2 4.2 2.5 5.5M15.5 8.8c2.1-3.8 4.3-4.6 6-3.3M2.5 5.5 3 8l2 1M21.5 5.5 21 8l-2 1M12 16v5m-2.5-1.5h5"/>',
+    tooth:'<path d="M8.1 3.3C5 2.3 3 4.4 3 7.8c0 4.3 2.4 6.4 3.4 10.7.4 1.6 1 2.5 2.1 2.5 1.4 0 1.8-5.5 3.5-5.5s2.1 5.5 3.5 5.5c1.1 0 1.7-.9 2.1-2.5 1-4.3 3.4-6.4 3.4-10.7 0-3.4-2-5.5-5.1-4.5-1.3.4-2.9 1.1-3.9 1.1s-2.6-.7-3.9-1.1Z"/>',
+    movement:'<circle cx="14.7" cy="4.4" r="2"/><path d="m7 21 3.1-5.2 1.6-4.1 4.4 3.3 3.3 1.2"/><path d="m4 13.5 6-2.4 3.4-3.1 3.8 2.2"/><path d="m11.7 11.7-3.1 4.8 3.3 4.5"/>',
+    baby:'<circle cx="12" cy="13" r="8.1"/><path d="M10 5.4c-1.1-2.3.2-4.1 2-4 1.5.1 2.1 1.6 1.4 2.8"/><path d="M8.5 12.3h.1M15.4 12.3h.1"/><path d="M9.2 16c1.5 1.5 4.1 1.5 5.6 0"/>',
+    lungs:'<path d="M10 3v7.5C8.3 9.9 6.5 7 5.5 7 3.7 7 2.8 12 2.8 16.8c0 3.3 2.5 4 4.6 2.1 2-1.8 2.6-3.7 2.6-6"/><path d="M14 3v7.5c1.7-.6 3.5-3.5 4.5-3.5 1.8 0 2.7 5 2.7 9.8 0 3.3-2.5 4-4.6 2.1-2-1.8-2.6-3.7-2.6-6"/><path d="M12 3v7m-2 1 2-1 2 1"/>',
+    blood:'<path d="M12 2.3c-2.8 4.7-7.3 9.4-7.3 13.3a7.3 7.3 0 0 0 14.6 0C19.3 11.7 14.8 7 12 2.3Z"/><path d="M9 16.2c.2 1.2 1.2 2.3 2.5 2.6"/>',
+    scalpel:'<path d="m3 21 7.2-7.2m0 0 2.7 2.7M10.2 13.8l5.7-5.7m0 0L21 3c1.5 4.2-1.1 8-5.1 10l-2.3-2.3M4.8 18.8l2.5 2.5"/>',
+    glucose:'<path d="M12 2.5c-3.2 5.1-6.6 9-6.6 12.2a6.6 6.6 0 0 0 13.2 0C18.6 11.5 15.2 7.6 12 2.5Z"/><path d="M9.7 14.6h4.6M12 12.3v4.6"/>',
+    medicine:'<path d="M7 3v7a5 5 0 0 0 10 0V3M5 4h4M15 4h4M12 15v2.3a3.7 3.7 0 1 0 3.7-3.7"/><circle cx="18.5" cy="13.8" r="2.2"/>'
+  });
+  const specialtyIcon = type => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">'+(specialtyPaths[type]||specialtyPaths.medicine)+'</svg>';
+  const card = (r, sukDoctorIcons=false) => {
+    const type=sukDoctorIcons ? specialtyIconType(r) : "";
+    const icon=sukDoctorIcons ? '<div class="sp-directory-icon sp-specialty-icon sp-specialty-'+type+'" aria-hidden="true">'+specialtyIcon(type)+'</div>'
+      : '<div class="sp-directory-icon" aria-hidden="true">'+esc(symbol(r))+'</div>';
+    return `<article class="sp-directory-card${sukDoctorIcons ? " sp-specialty-card" : ""}">
+    ${icon}
     <div class="sp-directory-body">
       <span class="sp-card-type">${r.kind==="hospital"?"HEALTHCARE FACILITY":"DOCTOR PROFILE"} · ${esc(r.city)}</span>
       <h3><a href="${esc(r.url)}">${esc(r.name)}</a></h3>
@@ -32,6 +73,7 @@
       ${r.hospital?`<p class="sp-card-clinic">⌖ ${esc(r.hospital)}</p>`:""}
       <a class="sp-card-link" href="${esc(r.url)}">Explore profile <span aria-hidden="true">↗</span></a>
     </div></article>`;
+  };
   const setup = (root,db) => {
     const type = root.dataset.kind || "doctor";
     const scope = root.dataset.scope || "all";
@@ -63,7 +105,8 @@
         (!cv||(r.cities||[r.city]).some(c=>normal(c).includes(cv))) &&
         (!sv||normal(title(r)) === sv)).sort((a,b)=>a.name.localeCompare(b.name));
       const current=matches.slice(0,showing);
-      output.innerHTML=current.map(card).join("");
+      const sukDoctorIcons=scope === "sukkur" && type === "doctor";
+      output.innerHTML=current.map(r=>card(r,sukDoctorIcons)).join("");
       const state=matches.length===0?"No matching profiles yet. Try a different name, city or specialty.":`${matches.length} ${type === "hospital"?"healthcare facilities":"doctor profiles"} found`;
       if(label)label.textContent=state;
       if(load){load.hidden=showing>=matches.length;load.textContent=`Show more (${matches.length-current.length} remaining)`;}
