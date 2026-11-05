@@ -10,7 +10,7 @@ export async function authenticate(ctx){
  try{
   const [h,p,s,...extra]=token.split(".");if(!h||!p||!s||extra.length)throw Error();
   const header=part(h),claims=part(p),aud=Array.isArray(claims.aud)?claims.aud:[claims.aud];
-  if(header.alg!=="RS256"||!header.kid||claims.iss!==domain.origin||!aud.includes(String(e.ACCESS_AUD).trim())||!claims.sub||!Number.isFinite(claims.exp)||claims.exp<=Math.floor(Date.now()/1000)||claims.nbf>Math.floor(Date.now()/1000)+30)throw Error();
+  if(header.alg!=="RS256"||!header.kid||claims.iss!==domain.origin||!aud.some(x=>String(e.ACCESS_AUD).split(",").map(v=>v.trim()).includes(x))||!claims.sub||!Number.isFinite(claims.exp)||claims.exp<=Math.floor(Date.now()/1000)||claims.nbf>Math.floor(Date.now()/1000)+30)throw Error();
   const r=await fetch(domain.origin+"/cdn-cgi/access/certs");if(!r.ok)throw Error();
   const keys=await r.json();const jwk=(keys.keys||[]).find(k=>k.kid===header.kid&&k.kty==="RSA");if(!jwk)throw Error();
   const key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]);
