@@ -1,2 +1,2 @@
-# slashcurepromo-site
+# slashpromo-site
 SlashPromo — Advertising &amp; Promotions Platform
