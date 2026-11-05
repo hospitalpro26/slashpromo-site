@@ -4,6 +4,66 @@
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
+      "id": "bahawalpur-dr-hafiz-muhammad-zubair",
+      "name": "Dr. Hafiz Muhammad Zubair",
+      "city": "Bahawalpur",
+      "cities": [
+        "Bahawalpur"
+      ],
+      "specialty": "Gastroenterologist, Hepatologist & Endoscopy Specialist",
+      "qualifications": "MBBS, MD (Gastroenterology)",
+      "hospital": "Zubair Hospital",
+      "url": "/doctors/bahawalpur/dr-hafiz-muhammad-zubair/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "dir-upper-dr-sayed-zada-pir-habib-gul",
+      "name": "Dr. Sayed Zada Pir Habib Gul",
+      "city": "Dir Upper",
+      "cities": [
+        "Dir Upper"
+      ],
+      "specialty": "General Physician",
+      "qualifications": "MBBS",
+      "hospital": "",
+      "url": "/doctors/dir-upper/dr-sayed-zada-pir-habib-gul/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "faisalabad-dr-saba-faisal",
+      "name": "Dr. Saba Faisal",
+      "city": "Faisalabad",
+      "cities": [
+        "Faisalabad"
+      ],
+      "specialty": "Physiotherapist",
+      "qualifications": "DPT",
+      "hospital": "Professor Hospital",
+      "url": "/doctors/faisalabad/dr-saba-faisal/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "fort-abbas-dr-sidra-ali",
+      "name": "Dr. Sidra Ali",
+      "city": "Fort Abbas",
+      "cities": [
+        "Fort Abbas"
+      ],
+      "specialty": "Gynecologist & Obstetrician",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Sadiq Memorial Hospital",
+      "url": "/doctors/fort-abbas/dr-sidra-ali/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
       "id": "ghotki-dr-imran-ali-kalwar",
       "name": "Dr. Imran Ali Kalwar",
       "city": "Ghotki",
@@ -19,6 +79,21 @@
       "kind": "doctor"
     },
     {
+      "id": "gojra-dr-bilal-nazir",
+      "name": "Dr. Bilal Nazir",
+      "city": "Gojra",
+      "cities": [
+        "Gojra"
+      ],
+      "specialty": "General Physician",
+      "qualifications": "MBBS",
+      "hospital": "",
+      "url": "/doctors/gojra/dr-bilal-nazir/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
       "id": "hyderabad-dr-ali-haseeb-qazi",
       "name": "Dr. Ali Haseeb Qazi",
       "city": "Hyderabad",
@@ -31,6 +106,186 @@
       "url": "/doctors/hyderabad/dr-ali-haseeb-qazi/",
       "externalProfile": "https://slashcure.com/neurosurgeons/hyderabad/dr-ali-haseeb-qazi",
       "hospitalpro": "https://hospitalpro.online/dr-ali-haseeb-qazi.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "hyderabad-dr-rehana-asghar",
+      "name": "Dr. Rehana Asghar",
+      "city": "Hyderabad",
+      "cities": [
+        "Hyderabad"
+      ],
+      "specialty": "Dentist",
+      "qualifications": "BDS, MSc Orthodontics",
+      "hospital": "",
+      "url": "/doctors/hyderabad/dr-rehana-asghar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "islamabad-dr-tahira-ismail",
+      "name": "Dr. Tahira Ismail",
+      "city": "Islamabad",
+      "cities": [
+        "Islamabad"
+      ],
+      "specialty": "Gynecologist & Obstetrician, General Physician & Radiologist",
+      "qualifications": "MBBS, RMP, MCPS",
+      "hospital": "Ayyub Ismail Clinic",
+      "url": "/doctors/islamabad/dr-tahira-ismail/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "jhelum-dr-muhammad-usman-janjua",
+      "name": "Dr. Muhammad Usman Janjua",
+      "city": "Jhelum",
+      "cities": [
+        "Jhelum"
+      ],
+      "specialty": "Consultant Physician",
+      "qualifications": "MBBS, M.Med Internal Medicine, CHPE, DHPE",
+      "hospital": "Alkaram Hospital",
+      "url": "/doctors/jhelum/dr-muhammad-usman-janjua/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-adeeqa-aman",
+      "name": "Dr. Adeeqa Aman",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Neurophysician",
+      "qualifications": "MBBS, FCPS; post-fellowship training in neurovascular neurology",
+      "hospital": "",
+      "url": "/doctors/karachi/dr-adeeqa-aman/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-anozia-sabir",
+      "name": "Dr. Anozia Sabir",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Consultant Physiotherapist",
+      "qualifications": "DPT, MPhil, OMTC",
+      "hospital": "Astro Physiocare",
+      "url": "/doctors/karachi/dr-anozia-sabir/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-arooba-khayam",
+      "name": "Dr. Arooba Khayam",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Physiotherapist",
+      "qualifications": "DPT",
+      "hospital": "Astro Physiocare",
+      "url": "/doctors/karachi/dr-arooba-khayam/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-ayesha-anwar",
+      "name": "Dr. Ayesha Anwar",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Physiotherapist",
+      "qualifications": "DPT",
+      "hospital": "Astro Physiocare",
+      "url": "/doctors/karachi/dr-ayesha-anwar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-mahum-jamil",
+      "name": "Dr. Mahum Jamil",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Consultant Physiotherapist",
+      "qualifications": "DPT (LNH), MBA (Health & Hospital Management), NLP Diploma",
+      "hospital": "Astro Physiocare",
+      "url": "/doctors/karachi/dr-mahum-jamil/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-mariya-saleem",
+      "name": "Dr. Mariya Saleem",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Thoracic Surgeon",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Memon Medical Institute Hospital",
+      "url": "/doctors/karachi/dr-mariya-saleem/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-muhammad-nawaz-chachar",
+      "name": "Dr. Muhammad Nawaz Chachar",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Neurophysician",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Neuro Clinic and Falij Care",
+      "url": "/doctors/karachi/dr-muhammad-nawaz-chachar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-zarmeen-zehra",
+      "name": "Dr. Zarmeen Zehra",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Physiotherapist",
+      "qualifications": "DPT",
+      "hospital": "Astrophysiocare",
+      "url": "/doctors/karachi/dr-zarmeen-zehra/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "karachi-dr-zeeshan",
+      "name": "Dr. Zeeshan",
+      "city": "Karachi",
+      "cities": [
+        "Karachi"
+      ],
+      "specialty": "Thoracic Surgeon",
+      "qualifications": "MBBS, MS, PhD",
+      "hospital": "Patel Hospital",
+      "url": "/doctors/karachi/dr-zeeshan/",
+      "externalProfile": "",
+      "hospitalpro": "",
       "kind": "doctor"
     },
     {
@@ -349,6 +604,36 @@
       "kind": "doctor"
     },
     {
+      "id": "lakhi-ghulam-shah-dr-muhammad-faheemullah",
+      "name": "Dr. Muhammad Faheemullah",
+      "city": "Lakhi Ghulam Shah",
+      "cities": [
+        "Lakhi Ghulam Shah"
+      ],
+      "specialty": "Consultant Physician",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "THQ Hospital Lakhi Ghulam Shah",
+      "url": "/doctors/lakhi-ghulam-shah/dr-muhammad-faheemullah/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lakhi-ghulam-shah-dr-tahir-ali-soomro",
+      "name": "Dr. Tahir Ali Soomro",
+      "city": "Lakhi Ghulam Shah",
+      "cities": [
+        "Lakhi Ghulam Shah"
+      ],
+      "specialty": "General Physician",
+      "qualifications": "MBBS, RMP",
+      "hospital": "THQ Hospital Lakhi Ghulam Shah",
+      "url": "/doctors/lakhi-ghulam-shah/dr-tahir-ali-soomro/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
       "id": "larkana-dr-sajid-abbasi",
       "name": "Dr. Sajid Abbasi",
       "city": "Larkana",
@@ -361,6 +646,246 @@
       "url": "/doctors/larkana/dr-sajid-abbasi/",
       "externalProfile": "https://slashcure.com/urologists/larkana/dr-sajid-abbasi",
       "hospitalpro": "https://hospitalpro.online/dr-sajid-abbasi.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "mian-channu-dr-hafiz-muhammad-umar",
+      "name": "Dr. Hafiz Muhammad Umar",
+      "city": "Mian Channu",
+      "cities": [
+        "Mian Channu"
+      ],
+      "specialty": "Orthopedic Surgeon",
+      "qualifications": "MBBS, FCPS; fellowship in trauma",
+      "hospital": "",
+      "url": "/doctors/mian-channu/dr-hafiz-muhammad-umar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "mian-channu-dr-talha-anwar",
+      "name": "Dr. Talha Anwar",
+      "city": "Mian Channu",
+      "cities": [
+        "Mian Channu"
+      ],
+      "specialty": "General Physician",
+      "qualifications": "MBBS",
+      "hospital": "Nishtar Clinic",
+      "url": "/doctors/mian-channu/dr-talha-anwar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "pakpattan-dr-kashif-ali",
+      "name": "Dr. Kashif Ali",
+      "city": "Pakpattan",
+      "cities": [
+        "Pakpattan"
+      ],
+      "specialty": "Dentist",
+      "qualifications": "BDS, RDS; training in clear aligners",
+      "hospital": "Sadiq Dental Care",
+      "url": "/doctors/pakpattan/dr-kashif-ali/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "pano-aqil-dr-farooq-illahi",
+      "name": "Dr. Farooq Illahi",
+      "city": "Pano Aqil",
+      "cities": [
+        "Pano Aqil"
+      ],
+      "specialty": "Paediatrician",
+      "qualifications": "MBBS, FCPS, EPEMC",
+      "hospital": "Alkhair Clinic",
+      "url": "/doctors/pano-aqil/dr-farooq-illahi/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "pano-aqil-dr-parvez-ahmed",
+      "name": "Dr. Parvez Ahmed",
+      "city": "Pano Aqil",
+      "cities": [
+        "Pano Aqil"
+      ],
+      "specialty": "General Physician, ENT Specialist & Family Medicine",
+      "qualifications": "MBBS, MCPS",
+      "hospital": "Al Khair Clinic",
+      "url": "/doctors/pano-aqil/dr-parvez-ahmed/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "peshawar-dr-rehmat-khan",
+      "name": "Dr. Rehmat Khan",
+      "city": "Peshawar",
+      "cities": [
+        "Peshawar"
+      ],
+      "specialty": "Orthopedic, Spine & Sports Surgeon",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Alshifa Health Care Center",
+      "url": "/doctors/peshawar/dr-rehmat-khan/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "quetta-dr-muhammad-yasir-sajjad",
+      "name": "Dr. Muhammad Yasir Sajjad",
+      "city": "Quetta",
+      "cities": [
+        "Quetta"
+      ],
+      "specialty": "Physiotherapist",
+      "qualifications": "DPT",
+      "hospital": "Wellness Physiotherapy Clinic",
+      "url": "/doctors/quetta/dr-muhammad-yasir-sajjad/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "quetta-dr-muqadas-marri",
+      "name": "Dr. Muqadas Marri",
+      "city": "Quetta",
+      "cities": [
+        "Quetta"
+      ],
+      "specialty": "Physiotherapist",
+      "qualifications": "Consultant Physiotherapist",
+      "hospital": "Wellness Physiotherapy and Rehabilitation Center",
+      "url": "/doctors/quetta/dr-muqadas-marri/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "rawalpindi-dr-ahmad-hassan",
+      "name": "Dr. Ahmad Hassan",
+      "city": "Rawalpindi",
+      "cities": [
+        "Rawalpindi"
+      ],
+      "specialty": "Paediatrician",
+      "qualifications": "MBBS, PGPN (USA); NICU and paediatric emergency certifications",
+      "hospital": "Family Care Medical Center",
+      "url": "/doctors/rawalpindi/dr-ahmad-hassan/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "rawalpindi-dr-naila-khan",
+      "name": "Dr. Naila Khan",
+      "city": "Rawalpindi",
+      "cities": [
+        "Rawalpindi"
+      ],
+      "specialty": "Gynecologist & Obstetrician",
+      "qualifications": "MBBS, FCPS, MRCOG Part 2",
+      "hospital": "Dar Medical Complex",
+      "url": "/doctors/rawalpindi/dr-naila-khan/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sheikhupura-dr-hafiz-abdul-rehman",
+      "name": "Dr. Hafiz Abdul Rehman",
+      "city": "Sheikhupura",
+      "cities": [
+        "Sheikhupura"
+      ],
+      "specialty": "General Physician",
+      "qualifications": "MBBS",
+      "hospital": "Abu Al Hassan Hospital",
+      "url": "/doctors/sheikhupura/dr-hafiz-abdul-rehman/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sheikhupura-dr-laeeq-ahmad",
+      "name": "Dr. Laeeq Ahmad",
+      "city": "Sheikhupura",
+      "cities": [
+        "Sheikhupura"
+      ],
+      "specialty": "Paediatric Surgeon",
+      "qualifications": "MBBS, MS",
+      "hospital": "Shakir Hospital",
+      "url": "/doctors/sheikhupura/dr-laeeq-ahmad/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "shikarpur-dr-ali-ilyas-napar",
+      "name": "Dr. Ali Ilyas Napar",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Physiotherapist",
+      "qualifications": "Doctor of Physiotherapy",
+      "hospital": "Muhammad Ilyas Medical Center",
+      "url": "/doctors/shikarpur/dr-ali-ilyas-napar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "shikarpur-dr-muhammad-ali",
+      "name": "Dr. Muhammad Ali",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "General & Laparoscopic Surgeon",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Muhammad Ilyas Medical Center",
+      "url": "/doctors/shikarpur/dr-muhammad-ali/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "shikarpur-dr-rahim-bux-bhutto",
+      "name": "Dr. Rahim Bux Bhutto",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Dermatologist",
+      "qualifications": "MBBS, D-Derm, Diploma in Aesthetic Medicine",
+      "hospital": "Bhutto Medicare Unit",
+      "url": "/doctors/shikarpur/dr-rahim-bux-bhutto/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sobhodero-dr-bisharat-ali-sahito",
+      "name": "Dr. Bisharat Ali Sahito",
+      "city": "Sobhodero",
+      "cities": [
+        "Sobhodero"
+      ],
+      "specialty": "Paediatrician",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Muhammadi Medicare Clinic",
+      "url": "/doctors/sobhodero/dr-bisharat-ali-sahito/",
+      "externalProfile": "",
+      "hospitalpro": "",
       "kind": "doctor"
     },
     {
@@ -749,6 +1274,36 @@
       "hospital": "THQ Hospital Ubauro",
       "qualifications": "MBBS, RMP, FCPS (Internal Medicine)",
       "url": "/doctors/ubauro/dr-aabid-raza/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "ubauro-dr-shoukat-gul-rind",
+      "name": "Dr. Shoukat Gul Rind",
+      "city": "Ubauro",
+      "cities": [
+        "Ubauro"
+      ],
+      "specialty": "General Physician, Diabetologist & Family Physician",
+      "qualifications": "MBBS, MCPS (Family Medicine)",
+      "hospital": "Al-Ghaffar Medical and Surgical Complex",
+      "url": "/doctors/ubauro/dr-shoukat-gul-rind/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "wari-dr-mahboob-ali",
+      "name": "Dr. Mahboob Ali",
+      "city": "Wari",
+      "cities": [
+        "Wari"
+      ],
+      "specialty": "Orthopedic Surgeon",
+      "qualifications": "MBBS, MCPS (General Surgery), FCPS (Orthopedic Surgery)",
+      "hospital": "Doctor Medical Centre",
+      "url": "/doctors/wari/dr-mahboob-ali/",
       "externalProfile": "",
       "hospitalpro": "",
       "kind": "doctor"
