@@ -1,0 +1,51 @@
+/* Dr. Ziauddin Hospital Sukkur — scoped editorial directory page */
+.zia-page-hero{position:relative;overflow:hidden;padding:62px 0 58px;background:radial-gradient(ellipse at 80% 20%,#2764a04d,transparent 56%),linear-gradient(125deg,#102650,#112f62 58%,#21517b);color:#edf7ff}
+.zia-page-hero .wrap{position:relative;z-index:1}
+.zia-page-hero .sp-crumb,.zia-page-hero .sp-crumb a{color:#c8e7fa}
+.zia-page-hero .sp-crumb span{padding:0 7px}
+.zia-page-hero .zia-kicker{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:900;color:#8fe5d9;margin:20px 0 12px}
+.zia-page-hero h1{color:#fff;max-width:950px;letter-spacing:-.06em;line-height:1.08;font-size:clamp(2.25rem,5.1vw,4.2rem);margin:0 0 17px}
+.zia-page-hero .zia-subtitle{max-width:820px;font-size:clamp(1rem,1.65vw,1.25rem);color:#cce1f5;line-height:1.65}
+.zia-hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin:25px 0 25px}
+.zia-hero-badges span{border:1px solid #9dccea68;background:#ffffff14;border-radius:100px;padding:8px 12px;font-size:12px;color:#e3f5ff;font-weight:750}
+.zia-hero-actions{display:flex;flex-wrap:wrap;gap:11px}
+.zia-hero-actions a{display:inline-flex;align-items:center;justify-content:center;padding:11px 17px;border-radius:11px;background:#8be7db;color:#12304e;font-weight:850;font-size:13px}
+.zia-hero-actions a+ a{background:#ffffff13;color:#e6f6ff;border:1px solid #a5cfde75}
+.zia-intro{padding:56px 0;background:#fff}
+.zia-intro-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(235px,.8fr);gap:29px}
+.zia-intro h2,.zia-doctors h2,.zia-services h2,.zia-faq h2{font-size:clamp(1.7rem,3.2vw,2.5rem);letter-spacing:-.05em;line-height:1.18;color:#162f57;margin:8px 0 16px}
+.zia-intro p,.zia-services p,.zia-faq p{color:#60718a;font-size:14px;line-height:1.85}
+.zia-label{font-size:11px;color:#3e65a5;letter-spacing:.13em;text-transform:uppercase;font-weight:900}
+.zia-facts{padding:25px;border:1px solid #dce7f3;border-radius:19px;background:#f2f7fd}
+.zia-fact{padding:13px 0;border-bottom:1px solid #dce6f2}
+.zia-fact:first-child{padding-top:0}
+.zia-fact:last-child{border-bottom:0;padding-bottom:0}
+.zia-fact dt{color:#687c96;font-size:10px;font-weight:850;letter-spacing:.09em;text-transform:uppercase}
+.zia-fact dd{margin:5px 0 0;font-size:13px;line-height:1.55;color:#1a3962;font-weight:750}
+.zia-fact a{text-decoration:underline;text-underline-offset:3px;color:#214e94}
+.zia-doctors{background:#f2f6fc;padding:58px 0}
+.zia-doctors .zia-lead{color:#60718b;max-width:880px;font-size:14px;line-height:1.8;margin:0 0 25px}
+.zia-doctor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.zia-doc-card{display:flex;flex-direction:column;position:relative;overflow:hidden;border:1px solid #dee7f3;border-radius:19px;background:#fff;padding:24px;box-shadow:0 10px 25px #091b4110}
+.zia-doc-top{display:flex;align-items:center;gap:13px}
+.zia-doc-icon{display:grid;place-items:center;flex:0 0 51px;width:51px;height:51px;border-radius:14px;border:1px solid #d6e4f4;background:#eef5ff;color:#3167a2}
+.zia-doc-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.zia-doc-card h3{font-size:17px;line-height:1.4;color:#1d355f;margin:0}
+.zia-doc-card h3 a:hover{text-decoration:underline;text-underline-offset:3px}
+.zia-doc-specialty{margin:2px 0 0!important;color:#326c7f!important;font-size:12px!important;font-weight:850}
+.zia-doc-card .zia-doc-explainer{color:#61738e;font-size:13px;line-height:1.7;margin:17px 0}
+.zia-doc-ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
+.zia-doc-ctas a{border:1px solid #d7e3f2;padding:9px 13px;border-radius:10px;color:#214d95;font-size:12px;font-weight:800;background:#f8faff}
+.zia-doc-ctas a:first-child{background:#244a87;color:#fff;border-color:#244a87}
+.zia-doctor-caution{font-size:12px;color:#70819b;margin:21px 0 0;line-height:1.7}
+.zia-services{padding:56px 0;background:#fff}
+.zia-services-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:23px}
+.zia-services-list span{display:block;border-radius:12px;background:#eef5fe;border:1px solid #dfebf6;padding:12px 11px;text-align:center;font-size:12px;color:#2f5480;font-weight:800}
+.zia-faq{padding:50px 0 62px;background:#f6f9ff}
+.zia-faq details{background:#fff;border:1px solid #dce7f3;border-radius:14px;margin-top:10px;padding:17px 18px}
+.zia-faq summary{font-weight:800;color:#1b3b64;cursor:pointer;font-size:14px}
+.zia-faq details p{margin:10px 0 0}
+.zia-faq a{color:#265baa;text-decoration:underline;text-underline-offset:3px}
+.zia-sep-note{margin-top:22px;padding:17px;border-radius:12px;background:#edf6fa;color:#466077;font-size:12px;line-height:1.7}
+@media(max-width:820px){.zia-intro-layout{grid-template-columns:1fr}.zia-services-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.zia-page-hero{padding:43px 0 40px}.zia-intro,.zia-doctors,.zia-services,.zia-faq{padding:39px 0}.zia-doctor-grid{grid-template-columns:1fr}.zia-doc-card{padding:20px}.zia-services-list{grid-template-columns:repeat(2,minmax(0,1fr))}.zia-hero-actions a{width:100%}}
