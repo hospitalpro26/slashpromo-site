@@ -23,16 +23,16 @@ The code is committed, but the editing system cannot operate until the Cloudflar
 ## D. Protect administrator routes with Cloudflare Access
 1. Cloudflare → Zero Trust → Access controls → Applications → Create new application.
 2. Choose Self-hosted. Name the application SlashPromo Admin.
-3. On slashpromo.com, protect both /admin/* and /api/admin/* paths, preferably using a single application with multiple protected paths.
+3. On slashpromo.com, protect the /admin/* path. All campaign editing endpoints now live under /admin/api/*, so one Access app is sufficient.
 4. Create an Allow policy for your exact administrator email address. Never use an Allow Everyone policy.
 5. Select a verified sign-in method, such as one-time PIN to that email address.
 6. Find the Cloudflare team domain and Application Audience (AUD) tag in the Access application settings.
-7. If the interface requires two apps for these two paths, use the same exact-email allowlist, and record both application AUD tags.
+7. Use just this one Access application and its Audience (AUD) tag.
 
 ## E. Set Pages variables
 Workers & Pages → slashpromo-site → Settings → Variables and Secrets, or the Environment Variables section:
 - ACCESS_TEAM_DOMAIN = your team domain, for example https://YOUR-TEAM.cloudflareaccess.com
-- ACCESS_AUD = Access app Audience tag. If there are two apps, comma-separate the two AUD tags.
+- ACCESS_AUD = The SlashPromo Admin Access application's Audience tag.
 - ADMIN_EMAILS = the administrator email address, or comma-separated addresses explicitly permitted.
 These values belong only in Cloudflare; never put personal account tokens or passwords in GitHub.
 Save, redeploy production, and test.
@@ -42,7 +42,7 @@ Save, redeploy production, and test.
 2. Create a draft campaign with accurate provider name, description, city, category, and HTTPS destination URL.
 3. Review the copy and image permissions. Move status from Draft to Pending or Approved.
 4. Select Live to publish. Only Live campaigns whose schedule includes the current time appear publicly.
-5. Check the relevant city or category page and verify it is marked Sponsored.
+5. Check the relevant city or category page and verify it is marked Sponsored. Campaign-editing requests go to /admin/api/campaigns.
 6. Visit an ad link and confirm the aggregate click counter increases. Counts represent outbound redirects, not unique people or true viewable impressions.
 
 ## Security and deployment notes
