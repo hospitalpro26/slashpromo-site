@@ -26,7 +26,7 @@ const render=()=>{
   const action=document.createElement("td"),edit=cell("button","Edit");edit.type="button";edit.addEventListener("click",()=>editCampaign(c.id));action.append(edit);tr.append(action);list.append(tr);
  }
  $("total-count").textContent=String(campaigns.length);
- $("live-count").textContent=String(campaigns.filter(c=>c.status==="live").length);
+ $("live-count").textContent=String(campaigns.filter(c=>c.status==="live"&&(!c.start_at||c.start_at<=new Date().toISOString())&&(!c.end_at||c.end_at>new Date().toISOString())).length);
  $("pending-count").textContent=String(campaigns.filter(c=>c.status==="pending").length);
  $("click-count").textContent=campaigns.reduce((sum,c)=>sum+Number(c.clicks||0),0).toLocaleString();
 };
@@ -42,7 +42,7 @@ form.addEventListener("submit",async e=>{
  e.preventDefault();hide();const submit=$("save");submit.disabled=true;submit.textContent="Saving…";
  try{const data=read();if(data.status==="live"&&!window.confirm("Publish this campaign publicly as Sponsored? Confirm all claims and image permissions are approved.")){return}
  const method=editing?"PUT":"POST",url=editing?"/admin/api/campaigns/"+encodeURIComponent(editing):"/admin/api/campaigns";
- const result=await request(url,{method,body:JSON.stringify(data)});await load();show(result.message||"Campaign saved.");if(!editing)reset();
+ const result=await request(url,{method,body:JSON.stringify(data)});const wasNew=!editing;await load();if(wasNew)reset();show(result.message||"Campaign saved.");
  }catch(e){show(e.message,true)}finally{submit.disabled=false;submit.textContent="Save campaign"}
 });
 $("new-campaign").addEventListener("click",reset);
