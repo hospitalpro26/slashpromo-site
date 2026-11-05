@@ -1,0 +1,24 @@
+/* SlashPromo x Slashcure slim referral banner — distinct from sponsored campaign inventory. */
+.sc-strip-section{padding:29px 0 35px;background:#f2f5fa}
+.sc-strip-section.sc-strip-on-white{background:#fff}
+.sc-promo-strip{position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:25px 28px 23px;border:1px solid #cfdef3;border-radius:18px;background:linear-gradient(112deg,#e7f3ff 0%,#fff 53%,#e8f6ff 100%);box-shadow:0 12px 30px #1e5b9a1a;color:#142c53}
+.sc-promo-strip *{box-sizing:border-box}
+.sc-promo-strip:before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#2361bf,#39cfdd,#6bdca8,#f5bb5c,#ee667b,#735ce0,#2361bf);background-size:230% 100%;animation:sc-strip-gradient-flow 6s linear infinite}
+.sc-promo-copy{min-width:0;flex:1}
+.sc-promo-mark{color:#0750a9;font-size:clamp(25px,2.9vw,33px);font-weight:900;letter-spacing:-.065em;line-height:1.12}
+.sc-promo-mark strong{color:#e21d3d;font-weight:900}
+.sc-promo-mark small{font-size:.58em;letter-spacing:-.02em;color:#345e91;font-weight:800}
+.sc-promo-heading{font-size:clamp(15px,1.6vw,19px);font-weight:850;letter-spacing:-.035em;line-height:1.4;color:#113967;margin:10px 0 3px}
+.sc-promo-description{font-size:clamp(12px,1.04vw,14px);line-height:1.55;color:#506a87;margin:5px 0 0;max-width:750px}
+.sc-promo-tagline{font-weight:750;font-size:11px;color:#657c98;letter-spacing:.018em;margin:6px 0 0}
+.sc-promo-button{min-height:49px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:999px;padding:12px 21px;background:#d81836;color:white!important;text-decoration:none!important;box-shadow:0 7px 18px #cd17343d;font-weight:850;font-size:13px;white-space:nowrap;transition:transform .18s,background .18s,box-shadow .18s}
+.sc-promo-button:hover,.sc-promo-button:focus-visible{background:#bd1532;transform:translateY(-2px);box-shadow:0 12px 26px #cd173444}
+.sc-promo-button:focus-visible{outline:3px solid #2064bf;outline-offset:3px}
+.sc-promo-button-letters{display:flex;align-items:center}
+.sc-promo-wave-letter{display:inline-block;animation:sc-strip-letter-wave 2.7s ease-in-out infinite;animation-delay:calc(var(--sc-i)*.065s);will-change:transform}
+.sc-promo-button .sc-promo-arrow{font-size:18px;line-height:1}
+@keyframes sc-strip-gradient-flow{to{background-position:230% 0}}
+@keyframes sc-strip-letter-wave{0%,12%,45%,100%{transform:translateY(0)}24%{transform:translateY(-6px)}36%{transform:translateY(3px)}}
+@media(max-width:680px){.sc-strip-section{padding:19px 0 24px}.sc-promo-strip{padding:25px 18px 19px;flex-direction:column;align-items:stretch;gap:17px}.sc-promo-mark{font-size:27px}.sc-promo-heading{font-size:16px}.sc-promo-button{align-self:stretch;white-space:normal;text-align:center}.sc-promo-description{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.sc-promo-strip:before,.sc-promo-wave-letter{animation:none!important}.sc-promo-button{transition:none!important}}
+@media print{.sc-strip-section{display:none!important}}
