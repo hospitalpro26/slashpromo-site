@@ -889,6 +889,21 @@
       "kind": "doctor"
     },
     {
+      "id": "sukkur-dr-aabid-raza",
+      "name": "Dr. Aabid Raza",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Physician",
+      "qualifications": "MBBS, RMP, FCPS (Internal Medicine)",
+      "hospital": "",
+      "url": "/doctors/sukkur/dr-aabid-raza/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
       "id": "sukkur-dr-abdul-ahad-solangi",
       "name": "Dr. Abdul Ahad Solangi",
       "city": "Sukkur",
