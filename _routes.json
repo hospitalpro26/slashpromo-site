@@ -3,7 +3,7 @@
   "include": [
     "/admin",
     "/admin/*",
-    "/api/*",
+    "/api/campaigns",
     "/go/*"
   ],
   "exclude": []
