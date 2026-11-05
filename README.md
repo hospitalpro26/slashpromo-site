@@ -31,7 +31,13 @@ Contact for advertising and corrections: info@slashcure.com
 
 ## Nationwide doctor finder
 - The homepage's `#find-doctors` section has searchable name/keyword, city/area suggestions (open to any city), and an exact specialty select.
-- `assets/doctor-finder.js` forwards the search to Slashcure's authoritative `/doctors` directory rather than maintaining a duplicate static doctor list. Known city slugs use the `city` parameter; other city/area text uses `loc`. The keyword is forwarded as `q` and specialties as `specialty`.
-- The search intentionally opens results on Slashcure, so newly added approved doctors appear in the source directory without a SlashPromo redeploy. It does not yet display results directly on SlashPromo.
-- City and specialty URL filtering is supported by the public directory. Verify name/keyword filtering against Slashcure's live query handling when testing the deployment; coordinate with the Slashcure search implementation if its query parameter differs.
-- Privacy policy discloses the cross-domain search handoff; no patient details should be entered into the public search.
+- `assets/native-directory.js` performs native in-browser filtering of `assets/directory.json`; it never redirects searches to Slashcure. Known city slugs use the `city` parameter; other city/area text uses `loc`. The keyword is forwarded as `q` and specialties as `specialty`.
+- Newly approved providers are added to `assets/directory.json` and receive a dedicated local profile page. Directory additions currently require a repository update until the private admin publishing workflow is completed.
+- All filtering occurs on SlashPromo, including name/keyword, city and specialty.
+- Privacy policy describes the local browser search; do not enter private patient information into public search.
+
+## Local profile publishing
+- Directory data: `assets/directory.json` (currently seeded from HospitalPro published registries and additional Sukkur profile information).
+- Doctor pages: `/doctors/<city>/<doctor-name>/`; Sukkur hospital pages: `/hospitals/sukkur/<facility-name>/`.
+- Update both JSON and profile page when adding doctors. Never claim live OPD timings without verified current provider updates.
+- Search is an independent SlashPromo experience; public profile links to Slashcure or HospitalPro may be offered for reference only.
