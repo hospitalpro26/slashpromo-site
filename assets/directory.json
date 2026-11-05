@@ -364,21 +364,6 @@
       "kind": "doctor"
     },
     {
-      "id": "sukkur-dr-aabid-raza",
-      "name": "Dr. Aabid Raza",
-      "city": "Sukkur",
-      "cities": [
-        "Sukkur"
-      ],
-      "specialty": "Consultant Physician",
-      "hospital": "",
-      "qualifications": "MBBS, RMP, FCPS (Internal Medicine)",
-      "url": "/doctors/sukkur/dr-aabid-raza/",
-      "externalProfile": "",
-      "hospitalpro": "",
-      "kind": "doctor"
-    },
-    {
       "id": "sukkur-dr-abdul-ahad-solangi",
       "name": "Dr. Abdul Ahad Solangi",
       "city": "Sukkur",
@@ -499,8 +484,8 @@
       "kind": "doctor"
     },
     {
-      "id": "sukkur-dr-deepak",
-      "name": "Dr. Deepak",
+      "id": "sukkur-dr-deepak-kumar",
+      "name": "Dr. Deepak Kumar",
       "city": "Sukkur",
       "cities": [
         "Sukkur"
@@ -508,7 +493,7 @@
       "specialty": "Consultant Prosthodontist",
       "hospital": "Hira Medical Centre, Sukkur",
       "qualifications": "BDS, FCPS (Prosthodontics)",
-      "url": "/doctors/sukkur/dr-deepak/",
+      "url": "/doctors/sukkur/dr-deepak-kumar/",
       "externalProfile": "",
       "hospitalpro": "",
       "kind": "doctor"
@@ -751,6 +736,21 @@
       "url": "/doctors/sukkur/prof-dr-kirpal-das-makheja/",
       "externalProfile": "https://slashcure.com/consultant-physicians/sukkur/dr-kirpal-das-makheja",
       "hospitalpro": "https://hospitalpro.online/dr-kirpal-das-makheja.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "ubauro-dr-aabid-raza",
+      "name": "Dr. Aabid Raza",
+      "city": "Ubauro",
+      "cities": [
+        "Ubauro"
+      ],
+      "specialty": "Consultant Physician",
+      "hospital": "THQ Hospital Ubauro",
+      "qualifications": "MBBS, RMP, FCPS (Internal Medicine)",
+      "url": "/doctors/ubauro/dr-aabid-raza/",
+      "externalProfile": "",
+      "hospitalpro": "",
       "kind": "doctor"
     }
   ],
