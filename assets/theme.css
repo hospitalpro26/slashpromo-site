@@ -159,3 +159,29 @@
 @media(max-width:870px){.sp-slashcure-frame{grid-template-columns:1fr}.sp-slashcure-art{min-height:220px}.sp-ad-orbit{width:178px;height:178px}.sp-slashcure-content{text-align:left}}
 @media(max-width:650px){.sp-hospital-guide-grid{grid-template-columns:1fr}.sp-hospital-guide-card{padding:22px}.sp-sukkur-guide{padding:47px 0}.sp-slashcure-ad{padding:42px 0}.sp-slashcure-frame{padding:31px 22px;border-radius:24px;gap:15px}.sp-slashcure-content h2{font-size:2.25rem}.sp-slashcure-art{min-height:230px}.sp-ad-typing{font-size:1rem}}
 @media(prefers-reduced-motion:reduce){.sp-ad-orbit,.sp-ad-orbit:before,.sp-ad-orbit:after,.sp-ad-letter{animation:none!important}}
+
+
+/* Sukkur doctor cards: organ-specific clinical line icons beside each doctor's name.
+   Other cities and healthcare facility cards retain their existing design. */
+#listed-doctors[data-city="Sukkur"] .sp-specialty-card{position:relative;align-items:flex-start;gap:14px;transition:transform .18s,box-shadow .18s,border-color .18s}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-card:hover{border-color:#a4bedc;box-shadow:0 16px 34px #11285222}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-icon{--specialty-color:#276b88;--specialty-bg:#e7f3fa;--specialty-outline:#cce2f0;display:grid;place-items:center;flex:0 0 52px;width:52px;height:52px;border:1px solid var(--specialty-outline);border-radius:16px;background:var(--specialty-bg);color:var(--specialty-color);font-size:0;box-shadow:inset 0 1px 0 #ffffffbd}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-icon svg{display:block;width:31px;height:31px;overflow:visible}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-card h3{font-size:16px;line-height:1.4;margin:6px 0 7px;overflow-wrap:anywhere}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-card .sp-card-specialty{width:fit-content;max-width:100%;display:block;border-radius:9px;padding:4px 9px;margin:4px 0 7px!important;background:#f0f5fc;color:#3a5674!important;font-size:11px!important;line-height:1.55;overflow-wrap:anywhere}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-brain{--specialty-color:#7354b7;--specialty-bg:#f2eefe;--specialty-outline:#e2d7f9}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-heart{--specialty-color:#c24464;--specialty-bg:#fff0f3;--specialty-outline:#f9d8e0}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-stomach{--specialty-color:#b9722c;--specialty-bg:#fff4e7;--specialty-outline:#f8e0bf}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-liver{--specialty-color:#ac6c35;--specialty-bg:#fff3e5;--specialty-outline:#f0dbc0}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-bone{--specialty-color:#4268b8;--specialty-bg:#eef4ff;--specialty-outline:#d9e3ff}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-kidney{--specialty-color:#238a8f;--specialty-bg:#e9fafa;--specialty-outline:#c8eeee}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-uterus{--specialty-color:#b05290;--specialty-bg:#fff0f8;--specialty-outline:#f7d9eb}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-tooth{--specialty-color:#2886ab;--specialty-bg:#e9f8fd;--specialty-outline:#c7eaf6}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-movement{--specialty-color:#27886b;--specialty-bg:#eafbf3;--specialty-outline:#c9edd9}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-baby{--specialty-color:#b37c23;--specialty-bg:#fff9df;--specialty-outline:#f7ebbf}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-lungs{--specialty-color:#337cb2;--specialty-bg:#edf7ff;--specialty-outline:#cfe5fb}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-blood{--specialty-color:#b53d4e;--specialty-bg:#fff0f0;--specialty-outline:#f2d8dc}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-scalpel{--specialty-color:#6274a4;--specialty-bg:#eff2fb;--specialty-outline:#d8dff3}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-glucose{--specialty-color:#a64e87;--specialty-bg:#fff1f9;--specialty-outline:#f2d9e9}
+#listed-doctors[data-city="Sukkur"] .sp-specialty-medicine{--specialty-color:#277b82;--specialty-bg:#e8f8f5;--specialty-outline:#cdebe7}
+@media(max-width:460px){#listed-doctors[data-city="Sukkur"] .sp-specialty-card{padding:16px;gap:11px}#listed-doctors[data-city="Sukkur"] .sp-specialty-icon{width:47px;height:47px;flex-basis:47px;border-radius:13px}#listed-doctors[data-city="Sukkur"] .sp-specialty-icon svg{width:28px;height:28px}}
