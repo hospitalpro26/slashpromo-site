@@ -65,3 +65,11 @@
 @media(max-width:1080px){.doctor-finder-fields{grid-template-columns:repeat(3,minmax(0,1fr))}.finder-name{grid-column:span 3}.finder-submit{min-width:0}}
 @media(max-width:700px){.doctor-finder-section{margin-top:-26px;padding-bottom:24px;background:linear-gradient(180deg,transparent 0 26px,#f2f5fb 26px)}.doctor-finder-panel{border-radius:20px;padding:26px 18px 16px}.finder-head{margin-bottom:20px}.finder-head h2{font-size:1.85rem}.finder-side{display:none}.doctor-finder-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.finder-name{grid-column:span 2}.finder-submit{grid-column:span 2}.finder-quick-row{gap:9px}.finder-clear{margin-left:0}.finder-bottom{align-items:flex-start;flex-direction:column}}
 @media(max-width:460px){.doctor-finder-fields{display:flex;flex-direction:column;align-items:stretch}.finder-control{width:100%}.finder-submit{width:100%}.finder-chips button{font-size:10px;padding:7px 10px}.finder-head h2{font-size:1.65rem}}
+
+
+/* Invitations are nationwide even when only some cities have dedicated pages. */
+.nationwide-note{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:22px;padding:24px 28px;background:#fff;border:1px solid #dce6f5;border-radius:20px;box-shadow:0 12px 27px #192c550c}
+.nationwide-note strong{font-size:1.02rem;letter-spacing:-.02em;color:#192b4e}
+.nationwide-note p{font-size:13px;color:#69778d;margin:5px 0 0;max-width:760px}
+.nationwide-note .btn{white-space:nowrap;flex:0 0 auto}
+@media(max-width:650px){.nationwide-note{align-items:flex-start;flex-direction:column;padding:22px 20px}.nationwide-note .btn{width:100%}}
