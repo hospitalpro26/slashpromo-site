@@ -37,11 +37,11 @@ function editCampaign(id){
  form.elements.start_at.value=localDate(c.start_at);form.elements.end_at.value=localDate(c.end_at);
  $("editor-title").textContent="Edit campaign";$("editor-mode").textContent="Editing";hide();$("editor-title").scrollIntoView({behavior:"smooth",block:"start"});
 }
-const load=async()=>{try{const data=await request("/api/admin/campaigns");campaigns=data.campaigns||[];$("admin-email").textContent=data.admin||"Authenticated administrator";render();hide();}catch(e){show(e.message,true);list.replaceChildren();const tr=document.createElement("tr"),td=cell("td","Administrator API is not ready. See the error above.");td.colSpan=4;tr.append(td);list.append(tr)}};
+const load=async()=>{try{const data=await request("/admin/api/campaigns");campaigns=data.campaigns||[];$("admin-email").textContent=data.admin||"Authenticated administrator";render();hide();}catch(e){show(e.message,true);list.replaceChildren();const tr=document.createElement("tr"),td=cell("td","Administrator API is not ready. See the error above.");td.colSpan=4;tr.append(td);list.append(tr)}};
 form.addEventListener("submit",async e=>{
  e.preventDefault();hide();const submit=$("save");submit.disabled=true;submit.textContent="Saving…";
  try{const data=read();if(data.status==="live"&&!window.confirm("Publish this campaign publicly as Sponsored? Confirm all claims and image permissions are approved.")){return}
- const method=editing?"PUT":"POST",url=editing?"/api/admin/campaigns/"+encodeURIComponent(editing):"/api/admin/campaigns";
+ const method=editing?"PUT":"POST",url=editing?"/admin/api/campaigns/"+encodeURIComponent(editing):"/admin/api/campaigns";
  const result=await request(url,{method,body:JSON.stringify(data)});await load();show(result.message||"Campaign saved.");if(!editing)reset();
  }catch(e){show(e.message,true)}finally{submit.disabled=false;submit.textContent="Save campaign"}
 });
