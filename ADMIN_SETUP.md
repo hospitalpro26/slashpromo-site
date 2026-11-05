@@ -65,3 +65,6 @@ Save, redeploy production, and test.
 - Cloudflare build errors: inspect the latest deployment logs before changing DNS.
 
 Source files: admin/index.html, assets/admin.js, assets/admin.css, assets/sponsored.js, functions/api, functions/admin, functions/go, schema.sql.
+
+## Deployment after linking D1
+Once the production Pages D1 binding `DB` → `slashpromo_ads` is saved, a new commit on `main` triggers Cloudflare's automatic production deployment. This setup-document update also triggers a build. Verify the newest deployment's status under Cloudflare → Workers & Pages → `slashpromo-site` → Deployments. A successful GitHub commit does not guarantee successful production deployment.
