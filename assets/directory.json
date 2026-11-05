@@ -1,0 +1,913 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-06",
+  "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
+  "doctors": [
+    {
+      "id": "ghotki-dr-imran-ali-kalwar",
+      "name": "Dr. Imran Ali Kalwar",
+      "city": "Ghotki",
+      "cities": [
+        "Ghotki"
+      ],
+      "specialty": "Pulmonology",
+      "hospital": "",
+      "qualifications": "",
+      "url": "/doctors/ghotki/dr-imran-ali-kalwar/",
+      "externalProfile": "https://slashcure.com/consultant-pulmonologists/ghotki/dr-imran-ali",
+      "hospitalpro": "https://hospitalpro.online/dr-imran-ali-kalwar.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "hyderabad-dr-ali-haseeb-qazi",
+      "name": "Dr. Ali Haseeb Qazi",
+      "city": "Hyderabad",
+      "cities": [
+        "Hyderabad"
+      ],
+      "specialty": "Neurosurgery",
+      "hospital": "",
+      "qualifications": "",
+      "url": "/doctors/hyderabad/dr-ali-haseeb-qazi/",
+      "externalProfile": "https://slashcure.com/neurosurgeons/hyderabad/dr-ali-haseeb-qazi",
+      "hospitalpro": "https://hospitalpro.online/dr-ali-haseeb-qazi.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "khairpur-dr-ashfaque-ali-baloch",
+      "name": "Dr. Ashfaque Ali Baloch",
+      "city": "Khairpur",
+      "cities": [
+        "Khairpur"
+      ],
+      "specialty": "Consultant Physician",
+      "hospital": "",
+      "qualifications": "",
+      "url": "/doctors/khairpur/dr-ashfaque-ali-baloch/",
+      "externalProfile": "https://slashcure.com/general-physicians/khairpur/dr-ashfaque-ali-baloch",
+      "hospitalpro": "https://hospitalpro.online/dr-ashfaque-ali-baloch.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "khairpur-dr-kanwal-aijaz",
+      "name": "Dr. Kanwal Aijaz",
+      "city": "Khairpur",
+      "cities": [
+        "Khairpur"
+      ],
+      "specialty": "Neurology",
+      "hospital": "",
+      "qualifications": "",
+      "url": "/doctors/khairpur/dr-kanwal-aijaz/",
+      "externalProfile": "https://slashcure.com/neurophysicians/khairpur/dr-kanwal-aijaz",
+      "hospitalpro": "https://hospitalpro.online/dr-kanwal-aijaz.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-aftab-ansar-lodhi",
+      "name": "Dr Aftab Ansar Lodhi (PT)",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Consultant Physiotherapist",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "DPT",
+      "url": "/doctors/lahore/dr-aftab-ansar-lodhi/",
+      "externalProfile": "https://slashcure.com/consultant-physiotherapists/lahore/dr-aftab-ansar-lodhi-pt",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-tallal-ejaz",
+      "name": "Dr Tallal Ejaz",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Dentist",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "BDS, RDS",
+      "url": "/doctors/lahore/dr-tallal-ejaz/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-ammara-gill",
+      "name": "Dr. Ammara Gill",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Gynecologist & Obstetrician",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, MCPS, FCPS",
+      "url": "/doctors/lahore/dr-ammara-gill/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-aurangzaib-muhyuddin",
+      "name": "Dr. Aurangzaib Muhyuddin",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Pediatrician",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, MCPS",
+      "url": "/doctors/lahore/dr-aurangzaib-muhyuddin/",
+      "externalProfile": "https://slashcure.com/pediatricians/lahore/dr-aurangzaib-muhyuddin",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-awais-malik",
+      "name": "Dr. Awais Malik",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Advanced Laparoscopic & Bariatric Surgeon",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/lahore/dr-awais-malik/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-ayman",
+      "name": "Dr. Ayman",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Gynecologist & Obstetrician",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, FCPS, CHPE",
+      "url": "/doctors/lahore/dr-ayman/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-aymen-javed",
+      "name": "Dr. Aymen Javed",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Gynecologist & Obstetrician",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/lahore/dr-aymen-javed/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-kareem-nawaz",
+      "name": "Dr. Kareem Nawaz",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Consultant Physiotherapist",
+      "hospital": "Rehab Expert Physiotherapy and Rehabilitation · Canal View, near Thokar Niaz Baig",
+      "qualifications": "DPT",
+      "url": "/doctors/lahore/dr-kareem-nawaz/",
+      "externalProfile": "https://slashcure.com/consultant-physiotherapists/lahore/dr-kareem-nawaz",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-m-amir-ishaq",
+      "name": "Dr. M. Amir Ishaq",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Neonatal & Pediatric Laparoscopic Surgeon",
+      "hospital": "Lahore clinics",
+      "qualifications": "MBBS, FCPS (Pediatric Surgery)",
+      "url": "/doctors/lahore/dr-m-amir-ishaq/",
+      "externalProfile": "https://slashcure.com/paediatric-surgeons/lahore/dr-muhammad-amir-ishaq",
+      "hospitalpro": "https://hospitalpro.online/dr-muhammad-amir-ishaq.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-muhammad-haris-burki",
+      "name": "Dr. Muhammad Haris Burki",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Psychiatrist & Sexual Medicine Specialist",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, PhD (Sexology), FECSM",
+      "url": "/doctors/lahore/dr-muhammad-haris-burki/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-muhammad-irfan-shakir",
+      "name": "Dr. Muhammad Irfan Shakir",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Family Medicine",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, MCPS",
+      "url": "/doctors/lahore/dr-muhammad-irfan-shakir/",
+      "externalProfile": "https://slashcure.com/family-physicians/lahore/dr-muhammad-irfan-shakir",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-muhammad-umair-arshad",
+      "name": "Dr. Muhammad Umair Arshad",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Paediatric Surgeon & Urologist",
+      "hospital": "Hamayon Hospital, Wapda Town · Iqa Medical Complex",
+      "qualifications": "MBBS, MS (Paediatric Surgery)",
+      "url": "/doctors/lahore/dr-muhammad-umair-arshad/",
+      "externalProfile": "https://slashcure.com/paediatric-surgeons/lahore/dr-muhammad-umair-arshad",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-osman-mohsin",
+      "name": "Dr. Osman Mohsin",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Dermatologist",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, Diploma in Dermatology",
+      "url": "/doctors/lahore/dr-osman-mohsin/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-rafia-shah",
+      "name": "Dr. Rafia Shah",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Dentist",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "BDS, RDS",
+      "url": "/doctors/lahore/dr-rafia-shah/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-sadiya-binish",
+      "name": "Dr. Sadiya Binish",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Gynecologist & Obstetrician",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/lahore/dr-sadiya-binish/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-sara-tariq",
+      "name": "Dr. Sara Tariq",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Endocrinologist (Diabetes)",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/lahore/dr-sara-tariq/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-tayyaba-tariq",
+      "name": "Dr. Tayyaba Tariq",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Neurosurgeon",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/lahore/dr-tayyaba-tariq/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-tehreem-rauf",
+      "name": "Dr. Tehreem Rauf",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Family Medicine",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "MBBS, MCPS",
+      "url": "/doctors/lahore/dr-tehreem-rauf/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-usman-ahmad-kamboh",
+      "name": "Dr. Usman Ahmad Kamboh",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Consultant Neurosurgeon & Brain and Spine Surgeon",
+      "hospital": "Iqra Medical Complex · Johar Town, Lahore",
+      "qualifications": "MBBS, FCPS (Neurosurgery)",
+      "url": "/doctors/lahore/dr-usman-ahmad-kamboh/",
+      "externalProfile": "https://slashcure.com/neurosurgeons/lahore/dr-usman-ahmad-kamboh",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "larkana-dr-sajid-abbasi",
+      "name": "Dr. Sajid Abbasi",
+      "city": "Larkana",
+      "cities": [
+        "Larkana"
+      ],
+      "specialty": "Urology",
+      "hospital": "",
+      "qualifications": "",
+      "url": "/doctors/larkana/dr-sajid-abbasi/",
+      "externalProfile": "https://slashcure.com/urologists/larkana/dr-sajid-abbasi",
+      "hospitalpro": "https://hospitalpro.online/dr-sajid-abbasi.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-aabid-raza",
+      "name": "Dr. Aabid Raza",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Physician",
+      "hospital": "",
+      "qualifications": "MBBS, RMP, FCPS (Internal Medicine)",
+      "url": "/doctors/sukkur/dr-aabid-raza/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-abdul-ahad-solangi",
+      "name": "Dr. Abdul Ahad Solangi",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "General Physician & Paediatrician",
+      "hospital": "",
+      "qualifications": "Medical practitioner",
+      "url": "/doctors/sukkur/dr-abdul-ahad-solangi/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-agha-wasif",
+      "name": "Dr. Agha Wasif",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Psychiatrist",
+      "hospital": "Bhatti Children Hospital, Sukkur",
+      "qualifications": "Psychiatry specialist",
+      "url": "/doctors/sukkur/dr-agha-wasif/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-ahmed-raza-laghari",
+      "name": "Dr. Ahmed Raza Laghari",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Orthopedics",
+      "hospital": "Hira Medical Centre, Sukkur",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/sukkur/dr-ahmed-raza-laghari/",
+      "externalProfile": "https://slashcure.com/orthopedic-surgeons/sukkur/dr-ahmed-raza-laghari",
+      "hospitalpro": "https://hospitalpro.online/dr-ahmed-raza-laghari.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-aisha-aman",
+      "name": "Dr. Aisha Aman",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Gynecology & Obstetrics",
+      "hospital": "Dr. Ziauddin Hospital, Sukkur",
+      "qualifications": "MBBS, MS, CHPE · Associate Member RCOG (UK)",
+      "url": "/doctors/sukkur/dr-aisha-aman/",
+      "externalProfile": "https://slashcure.com/gynecologists-obstetricians/sukkur/dr-aisha-aman",
+      "hospitalpro": "https://hospitalpro.online/dr-aaisha-aman.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-amjad-ali-kalwar",
+      "name": "Dr. Amjad Ali Kalwar",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Postgraduate Trainee – Internal Medicine",
+      "hospital": "Medicine Unit-I, GMC Teaching Hospital Sukkur",
+      "qualifications": "MBBS, RMP",
+      "url": "/doctors/sukkur/dr-amjad-ali-kalwar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-ammara-bhatti",
+      "name": "Dr. Ammara Bhatti (PT)",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Physiotherapist & Dry Needling Practitioner",
+      "hospital": "Dr. Shahid Mirani Hospital, Teer Chowk, Sukkur",
+      "qualifications": "DPT (JPMC), MPhil (Rehabilitation Sciences), Certified Dry Needling Practitioner (UK)",
+      "url": "/doctors/sukkur/dr-ammara-bhatti/",
+      "externalProfile": "https://slashcure.com/dr-ammara-bhatti",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-aneel-ahmed-ghanghro",
+      "name": "Dr. Aneel Ahmed Ghanghro",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Cardiology",
+      "hospital": "Hira Medical Centre, Sukkur",
+      "qualifications": "MBBS, FCPS (Cardiology)",
+      "url": "/doctors/sukkur/dr-aneel-ahmed-ghanghro/",
+      "externalProfile": "https://slashcure.com/consultant-cardiologists/sukkur/dr-aneel-ahmed-ghanghro",
+      "hospitalpro": "https://hospitalpro.online/dr-aneel-ahmed-ghanghro.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-arif-soomro",
+      "name": "Dr. Arif Soomro",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Prosthodontist & Aesthetic Dentist",
+      "hospital": "Advance Dental Clinic, Sukkur",
+      "qualifications": "BDS, RDS, FCPS",
+      "url": "/doctors/sukkur/dr-arif-soomro/",
+      "externalProfile": "https://slashcure.com/dentists/sukkur/dr-arif-soomro",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-deepak",
+      "name": "Dr. Deepak",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Prosthodontist",
+      "hospital": "Hira Medical Centre, Sukkur",
+      "qualifications": "BDS, FCPS (Prosthodontics)",
+      "url": "/doctors/sukkur/dr-deepak/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-dost-muhammad",
+      "name": "Dr. Dost Muhammad",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Orthopedics",
+      "hospital": "Dr. Ziauddin Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/sukkur/dr-dost-muhammad/",
+      "externalProfile": "https://slashcure.com/orthopedic-surgeons/sukkur/dr-dost-muhammad",
+      "hospitalpro": "https://hospitalpro.online/dr-dost-muhammad.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-habibullah-maitlo",
+      "name": "Dr. Habibullah Maitlo",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Paediatric Surgery",
+      "hospital": "Dr. Ziauddin Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS · 5+ years of experience listed",
+      "url": "/doctors/sukkur/dr-habibullah-maitlo/",
+      "externalProfile": "https://slashcure.com/paediatric-surgeons/sukkur/dr-habibullah-maitlo",
+      "hospitalpro": "https://hospitalpro.online/dr-habibullah-maitlo.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-halar-dahar",
+      "name": "Dr. Halar Dahar",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant General & Laparoscopic Surgeon",
+      "hospital": "",
+      "qualifications": "Consultant General Surgeon",
+      "url": "/doctors/sukkur/dr-halar-dahar/",
+      "externalProfile": "https://slashcure.com/general-surgeons-laproscopic-surgeons/sukkur/dr-halar-dahar",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-iqra-chachar",
+      "name": "Dr. Iqra Chachar",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Dentist",
+      "hospital": "Advance Dental Care Clinic, Sukkur",
+      "qualifications": "",
+      "url": "/doctors/sukkur/dr-iqra-chachar/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-israr-ahmed-shaikh",
+      "name": "Dr. Israr Ahmed Shaikh",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Hematologist",
+      "hospital": "Sukkur Diagnostic Centre",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/sukkur/dr-israr-ahmed-shaikh/",
+      "externalProfile": "https://slashcure.com/hospitals/sukkur/sukkur-diagnostic-centre",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-komal-kandhir",
+      "name": "Dr. Komal Kandhir",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Physiotherapy",
+      "hospital": "Mustafai Trust Hospital, Sukkur",
+      "qualifications": "DPT",
+      "url": "/doctors/sukkur/dr-komal-kandhir/",
+      "externalProfile": "https://slashcure.com/consultant-physiotherapists/sukkur/dr-komal-kandhir-pt",
+      "hospitalpro": "https://hospitalpro.online/dr-komal-kandhir.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-muhammad-nasir-soomro",
+      "name": "Dr. Muhammad Nasir Soomro",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Chest Specialist",
+      "hospital": "Dr. Shahid Mirani Hospital, Sukkur",
+      "qualifications": "Chest specialist",
+      "url": "/doctors/sukkur/dr-muhammad-nasir-soomro/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-murk-channa",
+      "name": "Dr. Murk Channa",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Gastroenterology",
+      "hospital": "River City Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/sukkur/dr-murk-channa/",
+      "externalProfile": "https://slashcure.com/gastroenterologists/sukkur/dr-murk-channa",
+      "hospitalpro": "https://hospitalpro.online/dr-murk-channa.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-naveed-ahmed-mahar",
+      "name": "Dr. Naveed Ahmed Mahar",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Urology",
+      "hospital": "Dr. Ziauddin Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS (Urology), FACS, MRCS, CHPE",
+      "url": "/doctors/sukkur/dr-naveed-ahmed-mahar/",
+      "externalProfile": "https://slashcure.com/urologists/sukkur/dr-naveed-ahmed-mahar",
+      "hospitalpro": "https://hospitalpro.online/dr-naveed-ahmed-mahar.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-noor-jhulan",
+      "name": "Dr. Noor Jhulan",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Dentist",
+      "hospital": "Advance Dental Care Clinic, Airport Road, Sukkur",
+      "qualifications": "BDS, RDS",
+      "url": "/doctors/sukkur/dr-noor-jhulan/",
+      "externalProfile": "https://slashcure.com/dentists/sukkur/dr-noor-jhulan",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-riaz-hussain-hakro",
+      "name": "Dr. Riaz Hussain Hakro",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Pulmonology",
+      "hospital": "",
+      "qualifications": "MBBS, FCPS · 20+ years of experience",
+      "url": "/doctors/sukkur/dr-riaz-hussain-hakro/",
+      "externalProfile": "https://slashcure.com/pulmonologists/sukkur/dr-riaz-hussain-hakro",
+      "hospitalpro": "https://hospitalpro.online/dr-riaz-hussain-hakro.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-saima-shaikh",
+      "name": "Dr. Saima Shaikh",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Gynecology & Obstetrics",
+      "hospital": "River City Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/sukkur/dr-saima-shaikh/",
+      "externalProfile": "",
+      "hospitalpro": "https://hospitalpro.online/dr-saima-shaikh.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-sajid-khadim",
+      "name": "Dr. Sajid Khadim",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Pediatrics",
+      "hospital": "",
+      "qualifications": "MBBS · FCPS (Paediatrics) · PGPN Pro · 9+ years' experience",
+      "url": "/doctors/sukkur/dr-sajid-khadim/",
+      "externalProfile": "https://slashcure.com/pediatricians/sukkur/dr-sajid-khadim",
+      "hospitalpro": "https://hospitalpro.online/dr-sajid-khadim.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-tahir-mumtaz-memon",
+      "name": "Dr. Tahir Mumtaz Memon",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Cardiologist",
+      "hospital": "SICVD, Sukkur",
+      "qualifications": "Cardiology specialist",
+      "url": "/doctors/sukkur/dr-tahir-mumtaz-memon/",
+      "externalProfile": "",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-dr-tofique-ahmed-kamboh",
+      "name": "Dr. Tofique Ahmed Kamboh",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Physician",
+      "hospital": "Red Crescent Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS",
+      "url": "/doctors/sukkur/dr-tofique-ahmed-kamboh/",
+      "externalProfile": "https://slashcure.com/consultant-physicians/sukkur/dr-tofique-ahmed-kamboh",
+      "hospitalpro": "https://hospitalpro.online/dr-tofique-ahmed-kamboh.html",
+      "kind": "doctor"
+    },
+    {
+      "id": "sukkur-prof-dr-kirpal-das-makheja",
+      "name": "Prof. Dr. Kirpal Das Makheja",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Gastroenterology & Hepatology",
+      "hospital": "Hira Medical Centre",
+      "qualifications": "MBBS, MD (USA), FCPS (Pakistan), FACP (USA), MRCP (Ireland), MRCP (UK), FRCP (Ireland), FRCP (Glasgow), FRCP (London)",
+      "url": "/doctors/sukkur/prof-dr-kirpal-das-makheja/",
+      "externalProfile": "https://slashcure.com/consultant-physicians/sukkur/dr-kirpal-das-makheja",
+      "hospitalpro": "https://hospitalpro.online/dr-kirpal-das-makheja.html",
+      "kind": "doctor"
+    }
+  ],
+  "hospitals": [
+    {
+      "id": "sukkur-alkhidmat-mother-child-health-care-center",
+      "name": "Alkhidmat Mother & Child Health Care Center",
+      "city": "Sukkur",
+      "category": "Mother and child care",
+      "description": "Healthcare centre highlighted in the Sukkur directory.",
+      "url": "/hospitals/sukkur/alkhidmat-mother-child-health-care-center/",
+      "hospitalpro": "https://hospitalpro.online/hospitals/alkhidmat-mother-child-health-care-center/",
+      "externalProfile": "https://slashcure.com/hospitals/sukkur/alkhidmatmchcc",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-bhatti-children-hospital-sukkur",
+      "name": "Bhatti Children Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Children's hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/bhatti-children-hospital-sukkur/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-dr-shahid-mirani-hospital-sukkur",
+      "name": "Dr. Shahid Mirani Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-dr-ziauddin-hospital-sukkur",
+      "name": "Dr. Ziauddin Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "Featured doctors in urology, gynecology, paediatrics, paediatric surgery and orthopaedics.",
+      "url": "/hospitals/sukkur/dr-ziauddin-hospital-sukkur/",
+      "hospitalpro": "https://hospitalpro.online/hospitals/dr-ziauddin-hospital-sukkur/",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-ghulam-muhammad-mahar-medical-teaching-hospital",
+      "name": "Ghulam Muhammad Mahar Medical Teaching Hospital",
+      "city": "Sukkur",
+      "category": "Teaching hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/ghulam-muhammad-mahar-medical-teaching-hospital/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-halar-memon-hospital-sukkur",
+      "name": "Halar Memon Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/halar-memon-hospital-sukkur/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-hira-medical-centre",
+      "name": "Hira Medical Centre",
+      "city": "Sukkur",
+      "category": "Medical centre",
+      "description": "Featured specialists in internal medicine, gastroenterology, cardiology, pulmonology and orthopaedics.",
+      "url": "/hospitals/sukkur/hira-medical-centre/",
+      "hospitalpro": "https://hospitalpro.online/hospitals/hira-medical-centre-sukkur/",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-mustafai-trust-hospital-sukkur",
+      "name": "Mustafai Trust Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/mustafai-trust-hospital-sukkur/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-red-crescent-hospital-sukkur",
+      "name": "Red Crescent Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/red-crescent-hospital-sukkur/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-river-city-hospital",
+      "name": "River City Hospital",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "Featured consultations in gastroenterology and women's health.",
+      "url": "/hospitals/sukkur/river-city-hospital/",
+      "hospitalpro": "https://hospitalpro.online/hospitals/river-city-hospital-sukkur/",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-sicvd-hospital-sukkur",
+      "name": "SICVD Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Cardiac care hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/sicvd-hospital-sukkur/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-siut-hospital-sukkur",
+      "name": "SIUT Hospital Sukkur",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/siut-hospital-sukkur/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-sukkur-blood-bank-hospital",
+      "name": "Sukkur Blood Bank Hospital",
+      "city": "Sukkur",
+      "category": "Hospital",
+      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "url": "/hospitals/sukkur/sukkur-blood-bank-hospital/",
+      "hospitalpro": "",
+      "externalProfile": "",
+      "kind": "hospital"
+    },
+    {
+      "id": "sukkur-sukkur-diagnostic-centre",
+      "name": "Sukkur Diagnostic Centre",
+      "city": "Sukkur",
+      "category": "Diagnostic centre",
+      "description": "Healthcare centre featured in the Sukkur directory.",
+      "url": "/hospitals/sukkur/sukkur-diagnostic-centre/",
+      "hospitalpro": "https://hospitalpro.online/hospitals/sukkur-diagnostic-centre/",
+      "externalProfile": "https://slashcure.com/hospitals/sukkur/sukkur-diagnostic-centre",
+      "kind": "hospital"
+    }
+  ]
+}
