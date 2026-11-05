@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://slashpromo.com/</loc></url>
-  <url><loc>https://slashpromo.com/privacy.html</loc></url>
+  <url><loc>https://slashpromo.com/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/cities/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/doctors/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/hospitals/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/laboratories/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/clinics/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/about/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/advertise/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/contact/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/faq/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/privacy/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/terms/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/cookie-policy/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/advertising-policy/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/editorial-policy/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/accessibility/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/sukkur/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/khairpur/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/shikarpur/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/ghotki/</loc><lastmod>2026-11-05</lastmod></url>
+  <url><loc>https://slashpromo.com/karachi/</loc><lastmod>2026-11-05</lastmod></url>
 </urlset>
