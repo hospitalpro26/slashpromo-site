@@ -33,3 +33,6 @@
 })();
 /* Activate live sponsored placements without changing existing site routes. */
 import("/assets/sponsored.js").catch(()=>{});
+
+/* Show the approved contextual Slashcure strip on suitable public pages. */
+import("/assets/slashcure-strip.js").catch(()=>{});
