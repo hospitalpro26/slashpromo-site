@@ -11,3 +11,6 @@
 .kh-cta{padding:55px 0;background:linear-gradient(120deg,#e9f5ff,#f8fbff)}.kh-cta-inner{display:flex;align-items:center;justify-content:space-between;gap:25px;flex-wrap:wrap}.kh-cta h2{font-size:clamp(25px,3vw,38px);color:#173a68;margin:0 0 9px}.kh-cta p{color:#516c84;max-width:700px;margin:0;font-size:14px;line-height:1.8}
 @media(max-width:760px){.kh-shortcut-grid,.kh-card-grid{grid-template-columns:1fr}.kh-hero{padding:41px 0 53px}.kh-section{padding:43px 0}.kh-shortcuts{padding:20px 0}.kh-hero-actions .kh-button{flex:1 1 100%}.kh-card-copy{padding:21px}.kh-directory{padding:43px 0}.kh-section-head{margin-bottom:22px}}
 @media(prefers-reduced-motion:reduce){.kh-button{transition:none}.kh-button:hover{transform:none}}
+
+/* Khairpur: white background makes dark Slashcure lettering readable in hero links. */
+.kh-hero .kh-button.secondary[href*="slashcure.com"]{background:#fff;color:#173a66;border-color:#fff}
