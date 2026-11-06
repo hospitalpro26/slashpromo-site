@@ -1,9 +1,10 @@
 /* SlashPromo lightweight interactions — no cookies, trackers, or external dependencies. */
 (function(){
   "use strict";
-/* Compact text-only navigation: Home / Sukkur / Karachi / Hyderabad / Shikarpur. */
+
+/* A small, text-only city navigation row and GEO-specific search copy. */
   const header=document.querySelector(".site-header");
-  if(header&&!document.querySelector("[data-sp-city-nav]"))header.insertAdjacentHTML("afterend","<nav class=\"sp-quicknav\" aria-label=\"Quick city links\" data-sp-city-nav><div class=\"wrap sp-quicknav-inner\"><a href=\"/\" data-city-shortcut=\"home\">Home</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/sukkur/\" data-city-shortcut=\"sukkur\">Sukkur</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/karachi/\" data-city-shortcut=\"karachi\">Karachi</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/hyderabad/\" data-city-shortcut=\"hyderabad\">Hyderabad</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/shikarpur/\" data-city-shortcut=\"shikarpur\">Shikarpur</a></div></nav>");
+  if(header&&!document.querySelector("[data-sp-city-nav]"))header.insertAdjacentHTML("afterend","<nav class=\"sp-quicknav\" aria-label=\"Quick city links\" data-sp-city-nav><div class=\"wrap\"><div class=\"sp-quicknav-inner\"><a href=\"/\" data-city-shortcut=\"home\">Home</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/sukkur/\" data-city-shortcut=\"sukkur\">Sukkur</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/karachi/\" data-city-shortcut=\"karachi\">Karachi</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/hyderabad/\" data-city-shortcut=\"hyderabad\">Hyderabad</a><span class=\"sp-quicknav-sep\" aria-hidden=\"true\">/</span><a href=\"/shikarpur/\" data-city-shortcut=\"shikarpur\">Shikarpur</a></div><p class=\"sp-quicknav-message\">Find the best doctors in Sukkur, Karachi, Hyderabad and Shikarpur. View complete weekly OPD schedules, check published availability and explore online appointment options.</p></div></nav>");
   const activeShortcut=location.pathname==="/"
     ? "home"
     : location.pathname.match(/^\/(?:doctors\/|hospitals\/)?(sukkur|karachi|hyderabad|shikarpur)(?:\/|$)/i)?.[1]?.toLowerCase();
@@ -11,6 +12,9 @@
     const activeLink=document.querySelector('[data-sp-city-nav] [data-city-shortcut="'+activeShortcut+'"]');
     if(activeLink)activeLink.setAttribute("aria-current","page");
   }
+  const cityCopy=document.querySelector(".sp-quicknav-message");
+  const cityLabel={sukkur:"Sukkur",karachi:"Karachi",hyderabad:"Hyderabad",shikarpur:"Shikarpur"}[activeShortcut];
+  if(cityCopy&&cityLabel)cityCopy.textContent="Find the best doctors in "+cityLabel+", Sindh. View complete weekly OPD schedules, check published availability and explore online appointment options.";
 
   const navButton=document.querySelector("[data-menu-toggle]");
   const nav=document.querySelector("[data-nav]");
