@@ -46,3 +46,68 @@
 .astro-doc h3 a{color:inherit}
 @media(max-width:960px){.astro-hero-grid,.astro-about-grid{grid-template-columns:1fr}.astro-logo-card{max-width:620px;min-height:260px}.astro-step-grid{grid-template-columns:repeat(2,1fr)}.astro-branch-grid,.astro-team-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.astro-hero{padding:22px 0 48px}.astro-logo-card{min-height:180px;padding:19px}.astro-buttons{flex-direction:column;align-items:stretch}.astro-buttons a{text-align:center;width:100%}.astro-service-grid,.astro-step-grid,.astro-branch-grid,.astro-team-grid{grid-template-columns:1fr}.astro-about-grid{gap:22px}.astro-service-panel{padding:21px}.astro-hero h1{font-size:35px}}
+
+
+/* Clinic motion system and prominent team hierarchy — November 2026. */
+.astro-hero{background-size:160% 160%;animation:astro-hero-drift 16s ease-in-out infinite alternate}
+.astro-logo-card{position:relative;overflow:hidden;isolation:isolate}
+.astro-logo-card::before{content:"";position:absolute;z-index:-1;inset:-60% -30% auto auto;width:86%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(245,128,32,.1),transparent 65%);animation:astro-halo-shift 9s ease-in-out infinite alternate}
+.astro-rehab-scene{width:100%;max-width:510px;margin:0 auto 12px;padding:4px 9px 0;border-radius:18px;background:linear-gradient(120deg,#f9fbff,#fff8f2)}
+.astro-rehab-scene svg{display:block;width:100%;height:auto;max-height:105px}
+.astro-rehab-words{display:flex;align-items:center;justify-content:space-evenly;gap:8px;flex-wrap:wrap;padding:0 0 10px;font-size:11px;font-weight:800;color:#304683;letter-spacing:.04em}
+.astro-rehab-arm{transform-origin:70px 51px;animation:astro-arm-reach 3.5s ease-in-out infinite alternate}
+.astro-rehab-track{animation:astro-track-progress 13s linear infinite}
+.astro-rehab-node{animation:astro-node-breathe 3.2s ease-in-out infinite}
+.astro-rehab-orbit{animation:astro-ring-breathe 5.5s ease-in-out infinite;transform-origin:67px 63px}
+.astro-team-top{padding-top:54px;padding-bottom:66px;scroll-margin-top:20px}
+.astro-team-section-head{margin-bottom:21px}
+.astro-team-section-head h2{font-size:clamp(29px,4vw,43px);letter-spacing:-.025em}
+.astro-team-section-head .lead{max-width:900px;line-height:1.8}
+.astro-team-section-head strong{color:#17467d;font-weight:900}
+.astro-founder-feature{position:relative;display:grid;grid-template-columns:minmax(0,1.4fr) minmax(240px,.6fr);gap:28px;align-items:center;background:linear-gradient(113deg,#eff7ff 0%,#fff 62%,#fff4e8 100%);border:2px solid #bbd9f1;border-radius:23px;padding:31px 35px;box-shadow:0 18px 42px rgba(30,78,140,.07);overflow:hidden}
+.astro-founder-feature::before{content:"";height:5px;position:absolute;top:0;left:0;right:0;background:linear-gradient(90deg,#303e88,#6492cf,#f58020);background-size:200% 100%;animation:astro-founder-line 7s linear infinite}
+.astro-founder-kicker{display:inline-block;padding:7px 11px;background:#173f7c;color:#fff;border-radius:8px;font-size:11px;letter-spacing:.08em;font-weight:900}
+.astro-founder-feature h3{margin:17px 0 10px;color:#1f3871;font-size:clamp(28px,3.3vw,41px);letter-spacing:-.025em;line-height:1.22}
+.astro-founder-feature h3 strong{font-weight:950}
+.astro-founder-tag{display:block;font-size:clamp(15px,2vw,20px);margin-top:7px;color:#c26016;font-weight:900;letter-spacing:0}
+.astro-founder-role{font-size:15px;color:#315c83;font-weight:850;margin-bottom:13px}
+.astro-founder-intro{max-width:730px;color:#536d87;font-size:14px;line-height:1.86}
+.astro-founder-credentials{color:#3b5b7d;font-size:13px;line-height:1.7}
+.astro-founder-art{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:210px}
+.astro-founder-art-label{color:#245e98;font-size:11px;letter-spacing:.18em;font-weight:900}
+.astro-founder-art svg{display:block;width:100%;max-width:250px;height:auto;filter:drop-shadow(0 12px 17px rgba(40,60,140,.08))}
+.astro-founder-art-caption{color:#5d77a0;font-size:10px;font-weight:850;text-align:center}
+.astro-founder-halo{transform-origin:122px 100px;animation:astro-ring-breathe 6s ease-in-out infinite}
+.astro-founder-move{transform-origin:160px 69px;animation:astro-arm-reach 3.5s ease-in-out infinite alternate}
+.astro-founder-trace{animation:astro-track-progress 10s linear infinite}
+.astro-founder-feature .astro-doctor-actions{margin-top:18px}
+.astro-team-ordered{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:21px;gap:15px}
+.astro-team-ordered .astro-doc{position:relative;padding:20px;display:flex;flex-direction:column;align-items:flex-start;min-width:0;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.astro-team-ordered .astro-doc:hover,.astro-team-ordered .astro-doc:focus-within{transform:translateY(-4px);box-shadow:0 14px 27px rgba(25,66,124,.1);border-color:#b6d4ee}
+.astro-team-icon{width:46px;height:46px;border-radius:13px;background:#e9f3ff;color:#405fa2;margin-top:10px;display:flex;align-items:center;justify-content:center}
+.astro-team-icon svg{width:31px;height:31px}
+.astro-team-ordered .astro-doc h3{font-size:19px;line-height:1.3;margin:14px 0 7px}
+.astro-team-ordered .astro-doc h3 a{color:#1a4079}
+.astro-team-role{font-size:13px;color:#516b85;font-weight:800;line-height:1.6}
+.astro-team-ordered .astro-credentials{font-size:12px;line-height:1.65;min-height:0}
+.astro-team-ordered .astro-doctor-actions{margin-top:auto;padding-top:18px;display:flex;flex-wrap:wrap;gap:7px}
+.astro-team-ordered .astro-doctor-actions a,.astro-founder-feature .astro-doctor-actions a{font-size:11px;font-weight:850;white-space:normal;line-height:1.45;border:1px solid #c8dfee;border-radius:9px}
+.astro-team-footer{margin-top:22px}
+.astro-team-footer>p{font-size:12px;color:#627b90;line-height:1.65}
+.astro-team-footer .sp-related-links{margin-top:9px}
+.astro-team-ordered .astro-doc{animation:astro-card-arrive .6s ease-out both}
+.astro-team-ordered .astro-doc:nth-child(2){animation-delay:.1s}
+.astro-team-ordered .astro-doc:nth-child(3){animation-delay:.2s}
+.astro-team-ordered .astro-doc:nth-child(4){animation-delay:.3s}
+@keyframes astro-hero-drift{from{background-position:0% 30%}to{background-position:100% 70%}}
+@keyframes astro-halo-shift{from{transform:translate(-7%,0) scale(.94)}to{transform:translate(4%,9%) scale(1.12)}}
+@keyframes astro-arm-reach{from{transform:rotate(-12deg)}to{transform:rotate(13deg)}}
+@keyframes astro-track-progress{from{stroke-dashoffset:0}to{stroke-dashoffset:-200}}
+@keyframes astro-node-breathe{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.08)}}
+@keyframes astro-ring-breathe{0%,100%{opacity:.55;transform:scale(.96)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes astro-founder-line{from{background-position:0% 0}to{background-position:200% 0}}
+@keyframes astro-card-arrive{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1090px){.astro-team-ordered{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.astro-founder-feature{grid-template-columns:1fr;padding:24px}.astro-founder-art{min-height:0}.astro-founder-art svg{max-width:175px}.astro-hero{background-size:220% 220%}}
+@media(max-width:620px){.astro-team-top{padding:35px 0 44px}.astro-team-ordered{grid-template-columns:1fr}.astro-team-ordered .astro-doc{padding:22px}.astro-founder-feature h3{font-size:30px}.astro-founder-tag{font-size:16px}.astro-rehab-scene{padding:4px 4px 0}.astro-rehab-words{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.astro-hero,.astro-logo-card::before,.astro-rehab-arm,.astro-rehab-track,.astro-rehab-node,.astro-rehab-orbit,.astro-founder-feature::before,.astro-founder-halo,.astro-founder-move,.astro-founder-trace,.astro-team-ordered .astro-doc{animation:none!important}.astro-team-ordered .astro-doc:hover,.astro-team-ordered .astro-doc:focus-within{transform:none!important}}
