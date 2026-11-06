@@ -111,3 +111,13 @@
 @media(max-width:760px){.astro-founder-feature{grid-template-columns:1fr;padding:24px}.astro-founder-art{min-height:0}.astro-founder-art svg{max-width:175px}.astro-hero{background-size:220% 220%}}
 @media(max-width:620px){.astro-team-top{padding:35px 0 44px}.astro-team-ordered{grid-template-columns:1fr}.astro-team-ordered .astro-doc{padding:22px}.astro-founder-feature h3{font-size:30px}.astro-founder-tag{font-size:16px}.astro-rehab-scene{padding:4px 4px 0}.astro-rehab-words{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.astro-hero,.astro-logo-card::before,.astro-rehab-arm,.astro-rehab-track,.astro-rehab-node,.astro-rehab-orbit,.astro-founder-feature::before,.astro-founder-halo,.astro-founder-move,.astro-founder-trace,.astro-team-ordered .astro-doc{animation:none!important}.astro-team-ordered .astro-doc:hover,.astro-team-ordered .astro-doc:focus-within{transform:none!important}}
+
+/* Matching, accessible real doctor portraits for the Astro Physiocare team. */
+.astro-team-ordered .astro-team-photo-link{display:block;align-self:center;width:min(100%,172px);aspect-ratio:1;margin:14px auto 6px;border-radius:50%;overflow:hidden;box-shadow:0 8px 22px rgba(26,73,125,.14);transition:transform .2s ease}
+.astro-team-ordered .astro-team-photo-link:hover{transform:scale(1.035)}
+.astro-team-ordered .astro-team-photo{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;background:#fff}
+.astro-founder-portrait{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px!important}
+.astro-founder-portrait>a{display:block;width:min(100%,245px);aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 14px 30px rgba(20,62,118,.16)}
+.astro-founder-portrait img{width:100%;height:100%;display:block;object-fit:cover;border-radius:50%;background:#fff}
+.astro-founder-portrait .astro-founder-art-caption{max-width:300px;line-height:1.5;text-align:center;margin-top:11px}
+@media(prefers-reduced-motion:reduce){.astro-team-ordered .astro-team-photo-link{transition:none}.astro-team-ordered .astro-team-photo-link:hover{transform:none}}
