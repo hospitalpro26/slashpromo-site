@@ -187,45 +187,13 @@
 @media(max-width:460px){#listed-doctors[data-city="Sukkur"] .sp-specialty-card{padding:16px;gap:11px}#listed-doctors[data-city="Sukkur"] .sp-specialty-icon{width:47px;height:47px;flex-basis:47px;border-radius:13px}#listed-doctors[data-city="Sukkur"] .sp-specialty-icon svg{width:28px;height:28px}}
 
 
-/* City-first shortcuts, inspired by the approved blue navigation concept. */
-.sp-city-nav{position:relative;z-index:12;color:#fff;background:linear-gradient(105deg,#11549b 0%,#133d85 50%,#0a2c66 100%);border-top:2px solid #2180c5;border-bottom:1px solid #6cb4e7;box-shadow:0 12px 25px rgba(5,37,91,.13)}
-.sp-city-nav-inner{display:grid;grid-template-columns:minmax(188px,1.18fr) minmax(0,4fr);align-items:center;gap:17px;padding:12px 0}
-.sp-city-nav-label{display:flex;gap:11px;align-items:center;color:#fff;min-width:0}
-.sp-city-nav-pin{display:grid;place-items:center;flex-shrink:0;width:33px;height:38px;border-radius:12px;font-size:34px;line-height:1;color:#cce9ff}
-.sp-city-nav-label strong{display:block;font-size:14px;line-height:1.25;font-weight:900;letter-spacing:-.03em}
-.sp-city-nav-label small{display:block;font-size:11px;line-height:1.5;color:#d4e7fa;font-weight:600;margin-top:3px}
-.sp-city-nav-scroll{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;min-width:0}
-.sp-city-link{position:relative;isolation:isolate;display:flex;align-items:center;gap:6px;min-height:67px;border:1.5px solid #a7dbff;border-radius:17px;background:linear-gradient(135deg,#ffffff20,#ffffff05);box-shadow:inset 0 1px 0 #ffffff80;overflow:hidden;color:#fff;padding:0 12px 0 0;transition:background .2s,transform .2s,border-color .2s,box-shadow .2s}
-.sp-city-link:hover,.sp-city-link.is-active{transform:translateY(-2px);border-color:#fff;background:linear-gradient(120deg,#3194d2ad,#ffffff16);box-shadow:0 5px 19px #010d2550,inset 0 1px 0 #ffffff8f}
-.sp-city-link[aria-current=page]{border-color:#e2f9ff;box-shadow:0 0 0 2px #41c6ff80,inset 0 1px 0 #ffffff8f}
-.sp-city-thumb{display:grid;place-items:center;width:72px;min-height:65px;flex-shrink:0;color:#d4e9ff;background:radial-gradient(circle at 65% 33%,#ffffffa3,#8faee945 46%,#ffffff08 75%);overflow:hidden}
-.sp-city-artwork{display:block;width:78px;height:65px;filter:drop-shadow(0 3px 2px #0c264251)}
-.sp-city-link-sukkur .sp-city-thumb{color:#ffe2bd;background:linear-gradient(120deg,#db985650,#233e86)}
-.sp-city-link-karachi .sp-city-thumb{color:#f2e8d9;background:linear-gradient(130deg,#ded5bc85,#3b78ad)}
-.sp-city-link-shikarpur .sp-city-thumb{color:#ffdfc5;background:linear-gradient(130deg,#b08b615e,#2759a5)}
-.sp-city-link-hyderabad .sp-city-thumb{color:#f5deae;background:linear-gradient(130deg,#d895517d,#274d97)}
-.sp-city-name{font-size:13px;font-weight:880;white-space:nowrap;line-height:1.2}
-.sp-city-chevron{margin-left:auto;color:#e1f5ff;font-size:23px;line-height:1;font-weight:900}
-.sp-city-nav a:focus-visible,.sp-city-nav-scroll:focus-visible{outline:3px solid #ffe2a6;outline-offset:2px}
-.sp-cities-spotlight{padding:38px 0 43px;background:linear-gradient(180deg,#fafdff,#ecf4ff);border-bottom:1px solid #ddeafb}
-.sp-cities-spotlight-intro{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:20px}
-.sp-cities-spotlight-intro h2{color:#163763;margin:4px 0 8px;font-size:clamp(25px,3vw,35px)}
-.sp-cities-spotlight-intro p{margin:0;color:#62758d;font-size:13px;line-height:1.7}
-.sp-cities-see-all{color:#174f8b;font-size:12px;font-weight:850;white-space:nowrap}
-.sp-cities-spotlight-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-.sp-city-spot-card{display:flex;align-items:center;gap:12px;min-width:0;background:#fff;border:1px solid #cbdcec;border-radius:16px;box-shadow:0 6px 15px #1e4e8c14;overflow:hidden;transition:transform .2s,box-shadow .2s}
-.sp-city-spot-card:hover{transform:translateY(-4px);box-shadow:0 12px 25px #1e4e8c24}
-.sp-city-spot-art{display:grid;place-items:center;flex-shrink:0;width:79px;height:80px;background:linear-gradient(145deg,#dcecff,#8ec1e6);color:#325c91}
-.sp-city-spot-art .sp-city-artwork{width:75px;height:67px;filter:none}
-.sp-city-spot-card.sp-city-link-sukkur .sp-city-spot-art{background:linear-gradient(130deg,#d2e9ff,#cdb197);color:#385b88}
-.sp-city-spot-card.sp-city-link-shikarpur .sp-city-spot-art{background:linear-gradient(130deg,#dae8f9,#dabb9c);color:#475479}
-.sp-city-spot-card.sp-city-link-hyderabad .sp-city-spot-art{background:linear-gradient(130deg,#e2efff,#f5d49b);color:#344e8c}
-.sp-city-spot-copy{display:flex;flex-direction:column;min-width:0;gap:4px}
-.sp-city-spot-copy strong{font-size:17px;line-height:1.2;color:#152e59}
-.sp-city-spot-copy small{font-size:11px;line-height:1.4;color:#62778b}
-.sp-city-spot-arrow{font-size:16px;color:#2465a9;margin-left:auto;padding-right:10px}
+/* Minimal city text links — no illustrations, cards, icons, or oversized navigation. */
+.sp-quicknav{position:relative;z-index:12;background:#11182f;border-bottom:1px solid #283b60;color:#dce5f7}
+.sp-quicknav-inner{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;min-height:36px;padding:7px 0}
+.sp-quicknav a{display:inline-block;color:#dce5f7;font-size:13px;font-weight:650;line-height:1.7;text-decoration:none;white-space:nowrap}
+.sp-quicknav a:hover,.sp-quicknav a[aria-current="page"]{color:#81e6d8;text-decoration:underline;text-underline-offset:4px}
+.sp-quicknav .sp-quicknav-sep{color:#73819c;font-size:13px;user-select:none}
+.sp-quicknav a:focus-visible{outline:2px solid #80e6da;outline-offset:4px;border-radius:2px}
+/* Keep the existing six-card /cities/ directory grid balanced. */
 .sp-city-directory-grid .city-tile:nth-child(4),.sp-city-directory-grid .city-tile:nth-child(5){grid-column:span 2;min-height:315px}
-@media(max-width:1100px){.sp-city-nav-inner{grid-template-columns:1fr;gap:9px}.sp-city-nav-label{justify-content:center}.sp-city-nav-scroll{width:100%}.sp-city-link{min-height:62px}.sp-city-thumb{min-height:60px;height:60px;width:66px}.sp-city-artwork{height:60px;width:67px}}
-@media(max-width:700px){.sp-city-nav-inner{gap:8px;padding:10px 0}.sp-city-nav-label{justify-content:flex-start}.sp-city-nav-label strong{font-size:12px}.sp-city-nav-label small{font-size:10px}.sp-city-nav-pin{height:30px;width:30px;font-size:25px}.sp-city-nav-scroll{display:flex;gap:8px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x proximity;scrollbar-width:thin;padding:3px 2px 8px}.sp-city-link{flex:0 0 170px;scroll-snap-align:start;min-height:56px;border-radius:13px}.sp-city-thumb{min-height:54px;height:54px;width:58px}.sp-city-artwork{height:54px;width:63px}.sp-city-name{font-size:12px}.sp-cities-spotlight{padding:30px 0}.sp-cities-spotlight-intro{align-items:start;flex-direction:column;gap:8px}.sp-cities-spotlight-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.sp-city-spot-art{width:61px;height:68px}.sp-city-spot-art .sp-city-artwork{width:60px;height:63px}.sp-city-spot-card{gap:7px}.sp-city-spot-copy strong{font-size:13px}.sp-city-spot-copy small{font-size:10px}.sp-city-spot-arrow{display:none}}
-@media(max-width:370px){.sp-cities-spotlight-grid{grid-template-columns:1fr}.sp-city-nav-label{gap:7px}}
-@media(prefers-reduced-motion:reduce){.sp-city-link,.sp-city-spot-card{transition:none}.sp-city-link:hover,.sp-city-link.is-active,.sp-city-spot-card:hover{transform:none}}
+@media(max-width:560px){.sp-quicknav-inner{gap:1px 8px;padding:6px 0;min-height:33px}.sp-quicknav a,.sp-quicknav .sp-quicknav-sep{font-size:12px}}
