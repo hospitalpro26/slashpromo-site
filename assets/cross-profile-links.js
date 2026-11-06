@@ -6,7 +6,7 @@
   "use strict";
   const pathOf = path => String(path || "/").replace(/\/+/g, "/").replace(/\/?$/, "/");
   const currentPath = pathOf(location.pathname);
-  const css = "/assets/cross-profile-links.css";
+  const css = "/assets/cross-profile-links.css?v=20261106-white-slashcure-links";
   if(!document.querySelector('link[href="'+css+'"]')){
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet"; stylesheet.href = css;
