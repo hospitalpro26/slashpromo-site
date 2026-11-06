@@ -24,3 +24,8 @@ a.sp-cross-link-external .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!
 .sp-cross-link-fallback:hover{background:#eef6ff}
 .zia-page-hero .sp-cross-profile-actions{margin:18px 0 10px}
 .zia-page-hero .sp-cross-link{box-shadow:0 4px 18px #071a3633}
+
+/* Same dark, legible blue/red wordmark for every verified and fallback profile link. */
+.sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback){background:#fff!important;border-color:#b5d4eb!important}
+.sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback) .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
+.sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback) .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
