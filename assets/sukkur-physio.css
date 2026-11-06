@@ -1,0 +1,58 @@
+/* Sukkur physiotherapist specialty landing: accessible, responsive, SEO-first. */
+.sp-physio-hero{background:linear-gradient(140deg,#111f3d 2%,#1a4166 63%,#26588a 100%);color:#fff}
+.sp-physio-hero h1{max-width:1020px;color:#fff;font-size:clamp(36px,5.2vw,66px);line-height:1.1;letter-spacing:-.025em}
+.sp-physio-hero h1 em{color:#8bd5fa;font-style:normal}
+.sp-physio-hero p{max-width:930px;line-height:1.85;color:#e0ecfa}
+.sp-physio-hero .breadcrumbs,.sp-physio-hero .breadcrumbs a,.sp-physio-hero .kicker{color:#c9e8fa}
+.sp-physio-hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:25px}
+.sp-physio-hero .btn.secondary{background:#fff;color:#163f6a}
+.sp-physio-hero-note{font-size:12px;color:#bfd3e7!important;margin-top:19px}
+.sp-physio-intro-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,.8fr);gap:34px;align-items:start}
+.sp-physio-intro-grid p{font-size:14px;color:#50647b;line-height:1.9;max-width:870px}
+.sp-physio-guide{background:#eef5fc;border:1px solid #d6e5f2;border-radius:18px;padding:24px}
+.sp-physio-guide strong{color:#193b61;font-size:18px}
+.sp-physio-guide ul{padding-left:21px;color:#506783;font-size:13px;line-height:1.85}
+.sp-physio-guide a{font-size:12px;color:#125189;font-weight:800;text-decoration:underline}
+.sp-physio-directory{padding:62px 0}
+.sp-physio-doctor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:25px}
+.sp-physio-doctor-card{background:#fff;padding:25px;border-radius:20px;border:1px solid #d9e5f1;box-shadow:0 14px 35px rgba(23,59,100,.07)}
+.sp-physio-card-top{display:flex;align-items:start;gap:15px}
+.sp-physio-monogram{flex:none;width:54px;height:54px;display:flex;justify-content:center;align-items:center;border-radius:15px;background:#e5f2ff;color:#23598b;font-weight:950;font-size:18px}
+.sp-physio-eyebrow{font-size:11px;font-weight:850;color:#406c91;text-transform:uppercase;letter-spacing:.08em}
+.sp-physio-card-top h3{font-size:21px;color:#203956;margin:7px 0 4px}
+.sp-physio-card-top h3 a{color:inherit}
+.sp-physio-title{font-size:13px;color:#52677b;margin:0;line-height:1.6}
+.sp-physio-metrics{display:flex;gap:10px;flex-wrap:wrap;margin:17px 0}
+.sp-physio-metrics span{padding:8px 11px;background:#edf6fc;border-radius:10px;color:#386383;font-size:12px}
+.sp-physio-metrics strong{color:#184776}
+.sp-physio-summary{font-size:13px;line-height:1.8;color:#526a80}
+.sp-physio-facts{margin:16px 0;padding:16px;background:#f8fbff;border:1px solid #e1eaf4;border-radius:12px}
+.sp-physio-facts div+div{margin-top:13px}
+.sp-physio-facts dt{font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:800;color:#668096}
+.sp-physio-facts dd{font-size:13px;color:#25405e;line-height:1.7;margin:4px 0 0}
+.sp-physio-facts dd a{color:#1b5891;text-decoration:underline}
+.sp-physio-doctor-card h4{font-size:14px;margin:18px 0 9px;color:#1c3f64}
+.sp-physio-focus{padding-left:21px;margin:0;color:#536a82;font-size:13px;line-height:1.9}
+.sp-physio-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.sp-physio-actions a{line-height:1.5}
+.sp-physio-doctor-card .sp-care-status{margin-top:16px}
+.sp-physio-strip{padding:24px 0}
+.sp-physio-services-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:27px}
+.sp-physio-service{background:#f7fbff;border:1px solid #dce9f5;border-radius:16px;padding:22px}
+.sp-physio-service span{color:#3679a9;font-size:11px;font-weight:900}
+.sp-physio-service h3{color:#1b3d63;font-size:17px;margin:9px 0}
+.sp-physio-service p{color:#5f7389;font-size:13px;line-height:1.8}
+.sp-physio-caution{font-size:13px;color:#3d5c7b;line-height:1.7;margin:22px 0 0}
+.sp-physio-locations .sp-area-grid{margin-top:22px}
+.sp-physio-tips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:22px}
+.sp-physio-tips article{border:1px solid #dce6f1;border-radius:15px;padding:20px}
+.sp-physio-tips strong{font-size:13px;color:#3274a4}
+.sp-physio-tips h3{font-size:16px;color:#1a4269;margin:8px 0}
+.sp-physio-tips p{font-size:13px;line-height:1.75;color:#62788e}
+.sp-physio-faq .sp-discovery-faq{max-width:100%}
+.sp-sukkur-physio-spotlight{padding-top:40px;padding-bottom:40px}
+.sp-sukkur-physio-spotlight .sp-physio-spotlight-box{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding:23px 26px;border:1px solid #d8e8f8;border-radius:17px;background:linear-gradient(120deg,#eff7ff,#fafcff)}
+.sp-sukkur-physio-spotlight h2{font-size:24px;color:#1a3a5c;margin:8px 0}
+.sp-sukkur-physio-spotlight p{max-width:800px;color:#4d6a85;line-height:1.75;margin:0;font-size:13px}
+@media(max-width:960px){.sp-physio-intro-grid,.sp-physio-doctor-grid,.sp-sukkur-physio-spotlight .sp-physio-spotlight-box{grid-template-columns:1fr}.sp-physio-services-grid,.sp-physio-tips{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.sp-physio-hero-actions{flex-direction:column;align-items:stretch}.sp-physio-hero-actions a{text-align:center}.sp-physio-card-top h3{font-size:19px}.sp-physio-services-grid,.sp-physio-tips{grid-template-columns:1fr}.sp-physio-doctor-card{padding:20px}.sp-physio-directory{padding:40px 0}}
