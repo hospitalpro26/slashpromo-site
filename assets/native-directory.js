@@ -104,7 +104,8 @@
     const linkedDoctors = new Set((db.doctors||[]).map(d=>d.id));
     const items = (type === "hospital" ? db.hospitals : db.doctors).filter(r =>
       (type !== "hospital" || (Array.isArray(r.linkedDoctorIds) && r.linkedDoctorIds.some(id=>linkedDoctors.has(id)))) &&
-      (!initialCity || (r.cities||[r.city]).some(c=>normal(c) === normal(initialCity))));
+      (!initialCity || (r.cities||[r.city]).some(c=>normal(c) === normal(initialCity))) &&
+      (!root.dataset.specialtyMatch || normal(title(r)).includes(normal(root.dataset.specialtyMatch))));
     const form = root.querySelector("[data-native-search]");
     const query = root.querySelector("[data-native-query]");
     const city = root.querySelector("[data-native-city]");
@@ -141,7 +142,7 @@
         (!cv||(r.cities||[r.city]).some(c=>normal(c).includes(cv))) &&
         (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av) && (!hv||hospitalKey(r.hospital)===hv)).sort((a,b)=>a.name.localeCompare(b.name));
       const current=matches.slice(0,showing);
-      const sukDoctorIcons=scope === "sukkur" && type === "doctor";
+      const sukDoctorIcons=(scope === "sukkur" || scope === "karachi") && type === "doctor";
       output.innerHTML=current.map(r=>card(r,sukDoctorIcons)).join("");
       const state=matches.length===0?"No matching profiles yet. Try a different name, city or specialty.":`${matches.length} ${type === "hospital"?"healthcare facilities":"doctor profiles"} found`;
       if(label)label.textContent=state;

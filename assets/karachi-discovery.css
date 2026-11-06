@@ -1,0 +1,21 @@
+/* Karachi city and physiotherapy discovery pages — aligned with Sukkur theme. */
+.sp-karachi-hero .wrap{padding-top:18px;padding-bottom:16px}
+.sp-karachi-hero h1{max-width:1010px}
+.sp-karachi-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.sp-karachi-intro .sp-discovery-chips{margin-top:24px}
+.sp-karachi-directory{padding-top:52px;padding-bottom:53px}
+.sp-karachi-direct-links{margin:10px 0 26px}
+.sp-karachi-direct-links .sp-sukkur-direct-details{border:1px solid #bfd8ed;border-radius:14px;background:#f4f9ff;padding:16px 20px}
+.sp-karachi-direct-links summary{font-size:14px;line-height:1.7;color:#14518d;cursor:pointer}
+.sp-karachi-direct-links summary:focus-visible{outline:3px solid #6c9ece;outline-offset:3px}
+.sp-karachi-direct-links p{color:#405b73;font-size:13px;line-height:1.7}
+.sp-karachi-direct-links .sp-sukkur-direct-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:9px;margin-top:12px}
+.sp-karachi-direct-links .sp-sukkur-direct-grid a{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;background:#fff;border:1px solid #ccdeeb;border-radius:9px;text-decoration:none;color:#14518d;font-size:13px;font-weight:750}
+.sp-karachi-direct-links .sp-sukkur-direct-grid a:hover{border-color:#b82743;color:#a7102e}
+.sp-karachi-directory .sp-directory-grid{margin-top:18px}
+.sp-karachi-directory .sp-cross-profile-actions{display:flex;gap:8px;flex-wrap:wrap}
+.sp-karachi-ad{padding-top:20px;padding-bottom:20px}
+.sp-karachi-clinics .sp-area-grid{margin-top:20px}
+.sp-karachi-note{font-size:13px;line-height:1.75;margin-top:20px;color:#61748a}
+.sp-karachi-faq .wrap{max-width:1160px}
+@media(max-width:700px){.sp-karachi-hero-actions{flex-direction:column;align-items:stretch}.sp-karachi-hero-actions .btn{justify-content:center;text-align:center}.sp-karachi-direct-links .sp-sukkur-direct-grid{grid-template-columns:1fr}.sp-karachi-directory{padding-top:38px;padding-bottom:40px}}
