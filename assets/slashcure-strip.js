@@ -178,10 +178,10 @@
   else anchor=sections[1]||sections[0];
   if(!anchor) return;
   anchor.insertAdjacentElement("afterend",section);
-  if(!document.querySelector('link[href="/assets/slashcure-strip.css"]')){
+  if(!document.querySelector('link[href^="/assets/slashcure-strip.css"]')){
     const css=document.createElement("link");
     css.rel="stylesheet";
-    css.href="/assets/slashcure-strip.css";
+    css.href="/assets/slashcure-strip.css?v=20261106-darkbrand3";
     document.head.append(css);
   }
 })();
