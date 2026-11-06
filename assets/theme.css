@@ -225,11 +225,11 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
 :is(.page-hero,.site-footer,.sp-slashcure-frame,.sc-promo-strip,
 .sp-shk-action-partner,.sp-shk-slashcure,
 .sp-shk-aside-link,.sp-shk-action-partner,.sp-gastro-hero,
-.sp-profile-hero,.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-blue{color:#8cd0ff!important}
+.sp-profile-hero,.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
 :is(.page-hero,.site-footer,.sp-slashcure-frame,.sc-promo-strip,
 .sp-shk-action-partner,.sp-shk-slashcure,
 .sp-shk-aside-link,.sp-gastro-hero,.sp-profile-hero,
-.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-red{color:#ff8895!important}
+.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
 
 
 /* Profile link color harmonization: match the darker blue/red Iqra Chachar style. */
@@ -240,3 +240,8 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
 /* White secondary buttons use the legible dark Slashcure wordmark, including the Sukkur direct-profile-links button. */
 .btn.secondary .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
 .btn.secondary .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
+
+/* 2026-11-06: approved high-contrast Slashcure brand on every location's doctor and hospital links. */
+:is(.page-hero,.site-footer,.sp-slashcure-frame,.sp-gastro-hero,.sp-profile-hero,.sp-shk-hospital-hero,.btn.dark,.kh-hero) .sp-slashcure-wordmark{display:inline-block;background:#fff!important;padding:1px 4px;border-radius:5px;white-space:nowrap}
+.sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
+.sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
