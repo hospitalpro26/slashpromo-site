@@ -6,6 +6,12 @@
   "use strict";
   const normalizePath = pathname => pathname.replace(/\/+/g,"/").replace(/\/?$/,"/");
   const docPath = normalizePath(location.pathname);
+  if(!document.querySelector('link[href="/assets/cross-profile-links.css"]')){
+    const stylesheet=document.createElement("link");
+    stylesheet.rel="stylesheet";
+    stylesheet.href="/assets/cross-profile-links.css";
+    document.head.append(stylesheet);
+  }
   const safeProfile = raw => {
     if(!raw) return null;
     try {
