@@ -236,3 +236,7 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
 .sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback){background:#fff!important;border-color:#b5d4eb!important}
 .sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback) .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
 .sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback) .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
+
+/* White secondary buttons use the legible dark Slashcure wordmark, including the Sukkur direct-profile-links button. */
+.btn.secondary .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
+.btn.secondary .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
