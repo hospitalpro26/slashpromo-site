@@ -21,3 +21,8 @@
 .sp-area-filter select{min-width:200px;padding:11px 13px;border-radius:11px;border:1px solid #94b6dc;background:#fff;color:#18355c;font-size:13px}
 .sp-area-filter small{color:#acc5dc;font-size:11px;font-weight:500}
 @media(max-width:680px){.sp-area-grid{grid-template-columns:1fr}.sp-area-filter{align-items:stretch;flex-direction:column}.sp-area-filter select{width:100%}}
+
+/* Patient-first context for condition and procedure pages. */
+.sp-topic-questions{max-width:880px;color:#4d6580;line-height:1.9;font-size:14px;padding-left:25px;margin:10px 0 20px}
+.sp-topic-questions li{padding:3px 0}
+.sp-topic-warning{max-width:950px!important;background:#eef5ff;border-left:3px solid #396aaa;border-radius:9px;padding:15px 17px;color:#294d7d!important}
