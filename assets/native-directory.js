@@ -98,7 +98,7 @@
     if(specialties)specialties.innerHTML='<option value="">All specialties</option>'+
       specs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
     if(area){const areas=[...new Set(items.map(r=>r.area||"").filter(Boolean))].sort();area.innerHTML='<option value="">All listed areas</option>'+areas.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");}
-    const hospitalKey = value => normal(value).replace(/ sukku?r$/,"").trim();
+    const hospitalKey = value => normal(value).replace(/(?: sukku?r| airport road| teer chowk)+$/,"").trim();
     if(hospital){
       const names=new Map();
       items.filter(r=>r.hospital).forEach(r=>{const key=hospitalKey(r.hospital);if(key&&!names.has(key))names.set(key,r.hospital.replace(/,\s*Sukkur$/i,""));});
