@@ -1,0 +1,57 @@
+name: Publish Astro Physiocare doctor photos
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-astro-team-photos.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import-doctor-portraits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download four uploaded portraits as permanent same-site assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/astro-team
+          curl -fL --retry 3 --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3JaW7DlIJsrst0WwFMqIPBqWjtC/2ee5bcd2-8485-4c2e-8809-6edf82b3ead0.jpg' -o assets/astro-team/dr-zarmeen-zehra.jpg
+          curl -fL --retry 3 --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3JaW7DlIJsrst0WwFMqIPBqWjtC/d4471918-013d-4837-8816-d334ec0f93bc.png' -o assets/astro-team/dr-ayesha-anwar.png
+          curl -fL --retry 3 --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3JaW7DlIJsrst0WwFMqIPBqWjtC/171f8aaf-ba59-44dd-ab3f-7ab155c3d283.png' -o assets/astro-team/dr-arooba-khayam.png
+          curl -fL --retry 3 --silent --show-error 'https://d2ol7oe51mr4n9.cloudfront.net/user_3JaW7DlIJsrst0WwFMqIPBqWjtC/1ac6c290-5336-4432-a0b7-ebd7ebb88f54.jpg' -o assets/astro-team/dr-mahum-jamil.jpg
+          test "$(stat -c%s assets/astro-team/dr-zarmeen-zehra.jpg)" -gt 10000
+          test "$(stat -c%s assets/astro-team/dr-ayesha-anwar.png)" -gt 10000
+          test "$(stat -c%s assets/astro-team/dr-arooba-khayam.png)" -gt 10000
+          test "$(stat -c%s assets/astro-team/dr-mahum-jamil.jpg)" -gt 10000
+          file assets/astro-team/*
+      - name: Replace external portrait URLs with permanent local files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          urls = {
+            'https://www.slashcure.com/doctors/wij5ApdU5NXXOckx27PHFsOZlhx1/photo?v=1793866499763': '/assets/astro-team/dr-zarmeen-zehra.jpg',
+            'https://slashcure.com/doctors/n27Svte0QcTyCvyfMRNMNNeu4RZ2/photo?v=1793889597480': '/assets/astro-team/dr-ayesha-anwar.png',
+            'https://slashcure.com/doctors/8pvRMJ0VVHZO8qF3ywmcTdLJ5YT2/photo?v=1793881749724': '/assets/astro-team/dr-arooba-khayam.png',
+            'https://www.slashcure.com/doctors/oopBASXH8Ufz9Xms7N9XI2JMYiH3/photo?v=1793804477736': '/assets/astro-team/dr-mahum-jamil.jpg',
+          }
+          pages = [Path('hospitals/karachi/astro-physiocare/index.html')]
+          pages += [Path('doctors/karachi') / name / 'index.html' for name in ['dr-zarmeen-zehra','dr-ayesha-anwar','dr-arooba-khayam','dr-mahum-jamil']]
+          for page in pages:
+            content = page.read_text()
+            for old,new in urls.items():
+              content = content.replace(old,new)
+            page.write_text(content)
+          PY
+      - name: Commit same-site assets and corrected page links
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/astro-team hospitals/karachi/astro-physiocare/index.html doctors/karachi
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish verified Astro Physiocare portraits as local assets"
+            git push origin HEAD:main
+          fi
