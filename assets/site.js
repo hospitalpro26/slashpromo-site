@@ -52,6 +52,8 @@ import("/assets/sponsored.js").catch(()=>{});
 
 /* Show the approved contextual Slashcure strip on suitable public pages. */
 import("/assets/slashcure-strip.js?v=20261106-darkbrand3").catch(()=>{});
+  // City-specific advertiser space beside each city introduction.
+  import("/assets/city-sidebar-ads.js?v=20261106-sideads1").catch(()=>{});
 
 /* Present verified SlashPromo and Slashcure profile destinations together. */
 import("/assets/cross-profile-links.js?v=20261106-doctor-darkwordmark").catch(()=>{});
