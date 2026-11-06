@@ -296,8 +296,8 @@
         "Khairpur"
       ],
       "specialty": "Consultant Physician",
-      "hospital": "",
-      "qualifications": "",
+      "hospital": "Ali Medical Center Khairpur Mir's",
+      "qualifications": "MBBS, RMP, MD (Internal Medicine)",
       "url": "/doctors/khairpur/dr-ashfaque-ali-baloch/",
       "externalProfile": "https://slashcure.com/general-physicians/khairpur/dr-ashfaque-ali-baloch",
       "hospitalpro": "https://hospitalpro.online/dr-ashfaque-ali-baloch.html",
@@ -311,8 +311,8 @@
         "Khairpur"
       ],
       "specialty": "Neurology",
-      "hospital": "",
-      "qualifications": "",
+      "hospital": "Health Care Clinic Khairpur",
+      "qualifications": "MBBS, FCPS (Neurology)",
       "url": "/doctors/khairpur/dr-kanwal-aijaz/",
       "externalProfile": "https://slashcure.com/neurophysicians/khairpur/dr-kanwal-aijaz",
       "hospitalpro": "https://hospitalpro.online/dr-kanwal-aijaz.html",
@@ -1339,6 +1339,99 @@
   ],
   "hospitals": [
     {
+      "id": "karachi-astro-physiocare",
+      "name": "Astro Physiocare",
+      "city": "Karachi",
+      "category": "Physiotherapy & Rehabilitation Centre",
+      "description": "Physiotherapy and rehabilitation centre in Karachi, with a DHA Phase VI clinic and additional published Korangi and North Nazimabad branch addresses. Services include musculoskeletal, spine, sports, neurological and women's health rehabilitation.",
+      "address": "Office No. 102, First Floor, Building No. 19-C, Bukhari Commercial Lane No. 9, DHA Phase VI, Karachi, Sindh, Pakistan",
+      "phone": "+92 346 8078687",
+      "url": "/hospitals/karachi/astro-physiocare/",
+      "externalProfile": "https://slashcure.com/hospitals/karachi/astro-physiocare",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": [
+        "karachi-dr-anozia-sabir",
+        "karachi-dr-arooba-khayam",
+        "karachi-dr-ayesha-anwar",
+        "karachi-dr-mahum-jamil",
+        "karachi-dr-zarmeen-zehra"
+      ]
+    },
+    {
+      "id": "khairpur-ali-medical-center-khairpur",
+      "name": "Ali Medical Center Khairpur Mir's",
+      "city": "Khairpur",
+      "category": "Medical center",
+      "description": "Medical centre in Khairpur Mir's offering specialist doctor consultations, OPD services and published healthcare information.",
+      "url": "/hospitals/khairpur/ali-medical-center-khairpur/",
+      "hospitalpro": "https://hospitalpro.online/hospitals/khairpur/ali-medical-center-khairpur",
+      "externalProfile": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur",
+      "kind": "hospital",
+      "linkedDoctorIds": [
+        "khairpur-dr-ashfaque-ali-baloch"
+      ]
+    },
+    {
+      "id": "khairpur-health-care-clinic-khairpur",
+      "name": "Health Care Clinic Khairpur",
+      "city": "Khairpur",
+      "category": "Clinic",
+      "description": "Khairpur clinic associated with Dr. Kanwal Aijaz, Consultant Neurophysician, with linked clinic information on Slashcure.",
+      "url": "/hospitals/khairpur/health-care-clinic-khairpur/",
+      "hospitalpro": "https://hospitalpro.online/hospitals/khairpur/health-care-clinic-khairpur",
+      "externalProfile": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur",
+      "kind": "hospital",
+      "linkedDoctorIds": [
+        "khairpur-dr-kanwal-aijaz"
+      ]
+    },
+    {
+      "id": "shikarpur-alkhidmat-medical-center",
+      "name": "Alkhidmat Medical Center",
+      "city": "Shikarpur",
+      "category": "Medical centre",
+      "description": "Alkhidmat Medical Center provides outpatient specialist consultations and diagnostic services on Foujdari Road, Shikarpur. Published medical specialties include cardiology, orthopedics, ophthalmology, gynaecology and neurology. The centre also lists a pathology laboratory, sample collection, ultrasound, ECG, echocardiography and pharmacy services.",
+      "address": "Foujdari Road, Begari Wah, Shikarpur, Sindh, Pakistan",
+      "phone": "0726512252",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": []
+    },
+    {
+      "id": "shikarpur-haji-lutufullah-bhayo-memorial",
+      "name": "Haji Lutufullah Bhayo Memorial Hospital Karan Shareef",
+      "city": "Shikarpur",
+      "category": "Hospital",
+      "description": "Haji Lutufullah Bhayo Memorial Hospital is a community-focused medical facility in Karan Shareef on Main Larkana Road, serving patients from Shikarpur and surrounding communities. Published services include internal medicine, general surgery, obstetrics and gynaecology, orthopedics, diagnostic tests, pharmacy and emergency care.",
+      "address": "Village Karan Shareef, Main Larkana Road, District Shikarpur, Sindh, Pakistan",
+      "phone": "03463557403",
+      "url": "/hospitals/shikarpur/haji-lutufullah-bhayo-memorial/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/haji-lutufullah-bhayo-memorial",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": []
+    },
+    {
+      "id": "shikarpur-muhammad-ilyas-medical-center",
+      "name": "Muhammad Ilyas Medical Center",
+      "city": "Shikarpur",
+      "category": "Multispecialty medical centre",
+      "description": "Muhammad Ilyas Medical Center is a multispecialty healthcare facility on New Faujdari Road, Shikarpur. Its published departments include surgery, orthopedics, cardiology, paediatrics, gynaecology, dermatology, dentistry and physiotherapy, with inpatient and outpatient facilities, diagnostics and 24-hour emergency services.",
+      "address": "New Faujdari Road, Behind FAST Petrol Pump, Shikarpur, Sindh 78100, Pakistan",
+      "phone": "03361120352",
+      "url": "/hospitals/shikarpur/muhammad-ilyas-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/muhammad-ilyas-medical-center",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": [
+        "shikarpur-dr-ali-ilyas-napar",
+        "shikarpur-dr-muhammad-ali"
+      ]
+    },
+    {
       "id": "sukkur-bhatti-children-hospital-sukkur",
       "name": "Bhatti Children Hospital Sukkur",
       "city": "Sukkur",
@@ -1485,71 +1578,6 @@
       "kind": "hospital",
       "linkedDoctorIds": [
         "sukkur-dr-israr-ahmed-shaikh"
-      ]
-    },
-    {
-      "id": "karachi-astro-physiocare",
-      "name": "Astro Physiocare",
-      "city": "Karachi",
-      "category": "Physiotherapy & Rehabilitation Centre",
-      "description": "Physiotherapy and rehabilitation centre in Karachi, with a DHA Phase VI clinic and additional published Korangi and North Nazimabad branch addresses. Services include musculoskeletal, spine, sports, neurological and women's health rehabilitation.",
-      "address": "Office No. 102, First Floor, Building No. 19-C, Bukhari Commercial Lane No. 9, DHA Phase VI, Karachi, Sindh, Pakistan",
-      "phone": "+92 346 8078687",
-      "url": "/hospitals/karachi/astro-physiocare/",
-      "externalProfile": "https://slashcure.com/hospitals/karachi/astro-physiocare",
-      "hospitalpro": "",
-      "kind": "hospital",
-      "linkedDoctorIds": [
-        "karachi-dr-anozia-sabir",
-        "karachi-dr-arooba-khayam",
-        "karachi-dr-ayesha-anwar",
-        "karachi-dr-mahum-jamil",
-        "karachi-dr-zarmeen-zehra"
-      ]
-    },
-    {
-      "id": "shikarpur-alkhidmat-medical-center",
-      "name": "Alkhidmat Medical Center",
-      "city": "Shikarpur",
-      "category": "Medical centre",
-      "description": "Alkhidmat Medical Center provides outpatient specialist consultations and diagnostic services on Foujdari Road, Shikarpur. Published medical specialties include cardiology, orthopedics, ophthalmology, gynaecology and neurology. The centre also lists a pathology laboratory, sample collection, ultrasound, ECG, echocardiography and pharmacy services.",
-      "address": "Foujdari Road, Begari Wah, Shikarpur, Sindh, Pakistan",
-      "phone": "0726512252",
-      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
-      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
-      "hospitalpro": "",
-      "kind": "hospital",
-      "linkedDoctorIds": []
-    },
-    {
-      "id": "shikarpur-haji-lutufullah-bhayo-memorial",
-      "name": "Haji Lutufullah Bhayo Memorial Hospital Karan Shareef",
-      "city": "Shikarpur",
-      "category": "Hospital",
-      "description": "Haji Lutufullah Bhayo Memorial Hospital is a community-focused medical facility in Karan Shareef on Main Larkana Road, serving patients from Shikarpur and surrounding communities. Published services include internal medicine, general surgery, obstetrics and gynaecology, orthopedics, diagnostic tests, pharmacy and emergency care.",
-      "address": "Village Karan Shareef, Main Larkana Road, District Shikarpur, Sindh, Pakistan",
-      "phone": "03463557403",
-      "url": "/hospitals/shikarpur/haji-lutufullah-bhayo-memorial/",
-      "externalProfile": "https://slashcure.com/hospitals/shikarpur/haji-lutufullah-bhayo-memorial",
-      "hospitalpro": "",
-      "kind": "hospital",
-      "linkedDoctorIds": []
-    },
-    {
-      "id": "shikarpur-muhammad-ilyas-medical-center",
-      "name": "Muhammad Ilyas Medical Center",
-      "city": "Shikarpur",
-      "category": "Multispecialty medical centre",
-      "description": "Muhammad Ilyas Medical Center is a multispecialty healthcare facility on New Faujdari Road, Shikarpur. Its published departments include surgery, orthopedics, cardiology, paediatrics, gynaecology, dermatology, dentistry and physiotherapy, with inpatient and outpatient facilities, diagnostics and 24-hour emergency services.",
-      "address": "New Faujdari Road, Behind FAST Petrol Pump, Shikarpur, Sindh 78100, Pakistan",
-      "phone": "03361120352",
-      "url": "/hospitals/shikarpur/muhammad-ilyas-medical-center/",
-      "externalProfile": "https://slashcure.com/hospitals/shikarpur/muhammad-ilyas-medical-center",
-      "hospitalpro": "",
-      "kind": "hospital",
-      "linkedDoctorIds": [
-        "shikarpur-dr-ali-ilyas-napar",
-        "shikarpur-dr-muhammad-ali"
       ]
     }
   ]
