@@ -78,8 +78,10 @@
     const type = root.dataset.kind || "doctor";
     const scope = root.dataset.scope || "all";
     const initialCity = root.dataset.city || "";
+    const linkedDoctors = new Set((db.doctors||[]).map(d=>d.id));
     const items = (type === "hospital" ? db.hospitals : db.doctors).filter(r =>
-      !initialCity || (r.cities||[r.city]).some(c=>normal(c) === normal(initialCity)));
+      (type !== "hospital" || (Array.isArray(r.linkedDoctorIds) && r.linkedDoctorIds.some(id=>linkedDoctors.has(id)))) &&
+      (!initialCity || (r.cities||[r.city]).some(c=>normal(c) === normal(initialCity))));
     const form = root.querySelector("[data-native-search]");
     const query = root.querySelector("[data-native-query]");
     const city = root.querySelector("[data-native-city]");
