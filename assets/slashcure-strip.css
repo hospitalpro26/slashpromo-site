@@ -5,9 +5,9 @@
 .sc-promo-strip *{box-sizing:border-box}
 .sc-promo-strip:before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#2361bf,#39cfdd,#6bdca8,#f5bb5c,#ee667b,#735ce0,#2361bf);background-size:230% 100%;animation:sc-strip-gradient-flow 6s linear infinite}
 .sc-promo-copy{min-width:0;flex:1}
-.sc-promo-mark{color:#0750a9;font-size:clamp(25px,2.9vw,33px);font-weight:900;letter-spacing:-.065em;line-height:1.12}
-.sc-promo-mark strong{color:#e21d3d;font-weight:900}
-.sc-promo-mark small{font-size:.58em;letter-spacing:-.02em;color:#345e91;font-weight:800}
+.sc-promo-mark{color:#195eb4;font-size:clamp(25px,2.9vw,33px);font-weight:900;letter-spacing:-.065em;line-height:1.12}
+.sc-promo-mark strong{color:#c62d43;font-weight:900}
+.sc-promo-mark small{font-size:.58em;letter-spacing:-.02em;color:#195eb4;font-weight:800}
 .sc-promo-heading{font-size:clamp(15px,1.6vw,19px);font-weight:850;letter-spacing:-.035em;line-height:1.4;color:#113967;margin:10px 0 3px}
 .sc-promo-description{font-size:clamp(12px,1.04vw,14px);line-height:1.55;color:#506a87;margin:5px 0 0;max-width:750px}
 .sc-promo-tagline{font-weight:750;font-size:11px;color:#657c98;letter-spacing:.018em;margin:6px 0 0}
@@ -22,3 +22,8 @@
 @media(max-width:680px){.sc-strip-section{padding:19px 0 24px}.sc-promo-strip{padding:25px 18px 19px;flex-direction:column;align-items:stretch;gap:17px}.sc-promo-mark{font-size:27px}.sc-promo-heading{font-size:16px}.sc-promo-button{align-self:stretch;white-space:normal;text-align:center}.sc-promo-description{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.sc-promo-strip:before,.sc-promo-wave-letter{animation:none!important}.sc-promo-button{transition:none!important}}
 @media print{.sc-strip-section{display:none!important}}
+
+/* Standard dark-blue and dark-red Slashcure mark, one unbroken word on a light surface. */
+.sc-promo-mark{color:#195eb4!important;white-space:nowrap}
+.sc-promo-mark strong{color:#c62d43!important}
+.sc-promo-mark small{color:#195eb4!important}
