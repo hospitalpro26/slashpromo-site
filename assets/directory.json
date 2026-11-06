@@ -1339,17 +1339,6 @@
   ],
   "hospitals": [
     {
-      "id": "sukkur-alkhidmat-mother-child-health-care-center",
-      "name": "Alkhidmat Mother & Child Health Care Center",
-      "city": "Sukkur",
-      "category": "Mother and child care",
-      "description": "Healthcare centre highlighted in the Sukkur directory.",
-      "url": "/hospitals/sukkur/alkhidmat-mother-child-health-care-center/",
-      "hospitalpro": "https://hospitalpro.online/hospitals/alkhidmat-mother-child-health-care-center/",
-      "externalProfile": "https://slashcure.com/hospitals/sukkur/alkhidmatmchcc",
-      "kind": "hospital"
-    },
-    {
       "id": "sukkur-bhatti-children-hospital-sukkur",
       "name": "Bhatti Children Hospital Sukkur",
       "city": "Sukkur",
@@ -1389,17 +1378,6 @@
       "category": "Teaching hospital",
       "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
       "url": "/hospitals/sukkur/ghulam-muhammad-mahar-medical-teaching-hospital/",
-      "hospitalpro": "",
-      "externalProfile": "",
-      "kind": "hospital"
-    },
-    {
-      "id": "sukkur-halar-memon-hospital-sukkur",
-      "name": "Halar Memon Hospital Sukkur",
-      "city": "Sukkur",
-      "category": "Hospital",
-      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
-      "url": "/hospitals/sukkur/halar-memon-hospital-sukkur/",
       "hospitalpro": "",
       "externalProfile": "",
       "kind": "hospital"
@@ -1455,28 +1433,6 @@
       "category": "Cardiac care hospital",
       "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
       "url": "/hospitals/sukkur/sicvd-hospital-sukkur/",
-      "hospitalpro": "",
-      "externalProfile": "",
-      "kind": "hospital"
-    },
-    {
-      "id": "sukkur-siut-hospital-sukkur",
-      "name": "SIUT Hospital Sukkur",
-      "city": "Sukkur",
-      "category": "Hospital",
-      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
-      "url": "/hospitals/sukkur/siut-hospital-sukkur/",
-      "hospitalpro": "",
-      "externalProfile": "",
-      "kind": "hospital"
-    },
-    {
-      "id": "sukkur-sukkur-blood-bank-hospital",
-      "name": "Sukkur Blood Bank Hospital",
-      "city": "Sukkur",
-      "category": "Hospital",
-      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
-      "url": "/hospitals/sukkur/sukkur-blood-bank-hospital/",
       "hospitalpro": "",
       "externalProfile": "",
       "kind": "hospital"

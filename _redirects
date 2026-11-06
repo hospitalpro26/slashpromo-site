@@ -3,3 +3,9 @@
 
 /doctors/sukkur/dr-aabid-raza/ /doctors/ubauro/dr-aabid-raza/ 301
 /doctors/sukkur/dr-deepak/ /doctors/sukkur/dr-deepak-kumar/ 301
+
+# Legacy hospital-only pages without associated SlashPromo doctor profiles.
+/hospitals/sukkur/alkhidmat-mother-child-health-care-center/ /sukkur/ 301
+/hospitals/sukkur/halar-memon-hospital-sukkur/ /sukkur/ 301
+/hospitals/sukkur/siut-hospital-sukkur/ /sukkur/ 301
+/hospitals/sukkur/sukkur-blood-bank-hospital/ /sukkur/ 301
