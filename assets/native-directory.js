@@ -103,7 +103,7 @@
     const initialCity = root.dataset.city || "";
     const linkedDoctors = new Set((db.doctors||[]).map(d=>d.id));
     const items = (type === "hospital" ? db.hospitals : db.doctors).filter(r =>
-      (type !== "hospital" || (Array.isArray(r.linkedDoctorIds) && r.linkedDoctorIds.some(id=>linkedDoctors.has(id)))) &&
+      (type !== "hospital" || (Array.isArray(r.linkedDoctorIds) && r.linkedDoctorIds.some(id=>linkedDoctors.has(id))) || /^https:\/\/(?:www\.)?slashcure\.com\/hospitals\/[^/]+\/[^/]+\/?$/i.test(r.externalProfile||"")) &&
       (!initialCity || (r.cities||[r.city]).some(c=>normal(c) === normal(initialCity))) &&
       (!root.dataset.specialtyMatch || normal(title(r)).includes(normal(root.dataset.specialtyMatch))));
     const form = root.querySelector("[data-native-search]");

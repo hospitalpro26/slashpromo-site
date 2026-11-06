@@ -1506,6 +1506,51 @@
         "karachi-dr-mahum-jamil",
         "karachi-dr-zarmeen-zehra"
       ]
+    },
+    {
+      "id": "shikarpur-alkhidmat-medical-center",
+      "name": "Alkhidmat Medical Center",
+      "city": "Shikarpur",
+      "category": "Medical centre",
+      "description": "Alkhidmat Medical Center provides outpatient specialist consultations and diagnostic services on Foujdari Road, Shikarpur. Published medical specialties include cardiology, orthopedics, ophthalmology, gynaecology and neurology. The centre also lists a pathology laboratory, sample collection, ultrasound, ECG, echocardiography and pharmacy services.",
+      "address": "Foujdari Road, Begari Wah, Shikarpur, Sindh, Pakistan",
+      "phone": "0726512252",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": []
+    },
+    {
+      "id": "shikarpur-haji-lutufullah-bhayo-memorial",
+      "name": "Haji Lutufullah Bhayo Memorial Hospital Karan Shareef",
+      "city": "Shikarpur",
+      "category": "Hospital",
+      "description": "Haji Lutufullah Bhayo Memorial Hospital is a community-focused medical facility in Karan Shareef on Main Larkana Road, serving patients from Shikarpur and surrounding communities. Published services include internal medicine, general surgery, obstetrics and gynaecology, orthopedics, diagnostic tests, pharmacy and emergency care.",
+      "address": "Village Karan Shareef, Main Larkana Road, District Shikarpur, Sindh, Pakistan",
+      "phone": "03463557403",
+      "url": "/hospitals/shikarpur/haji-lutufullah-bhayo-memorial/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/haji-lutufullah-bhayo-memorial",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": []
+    },
+    {
+      "id": "shikarpur-muhammad-ilyas-medical-center",
+      "name": "Muhammad Ilyas Medical Center",
+      "city": "Shikarpur",
+      "category": "Multispecialty medical centre",
+      "description": "Muhammad Ilyas Medical Center is a multispecialty healthcare facility on New Faujdari Road, Shikarpur. Its published departments include surgery, orthopedics, cardiology, paediatrics, gynaecology, dermatology, dentistry and physiotherapy, with inpatient and outpatient facilities, diagnostics and 24-hour emergency services.",
+      "address": "New Faujdari Road, Behind FAST Petrol Pump, Shikarpur, Sindh 78100, Pakistan",
+      "phone": "03361120352",
+      "url": "/hospitals/shikarpur/muhammad-ilyas-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/muhammad-ilyas-medical-center",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": [
+        "shikarpur-dr-ali-ilyas-napar",
+        "shikarpur-dr-muhammad-ali"
+      ]
     }
   ]
 }

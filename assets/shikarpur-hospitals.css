@@ -1,0 +1,37 @@
+/* Shikarpur hospital previews and facility pages — 2026-11-06 */
+.sp-shk-hospital-showcase{padding:57px 0;background:#f4f8ff}
+.sp-shk-hospital-showcase h2{max-width:880px}
+.sp-shk-hospital-showcase .lead{max-width:880px;line-height:1.8}
+.sp-shk-hospital-grid{display:grid;grid-template-columns:1fr;gap:17px;margin-top:27px}
+.sp-shk-hospital-card{display:flex;gap:17px;padding:22px;border:1px solid #d5e3f2;border-radius:18px;background:#fff;box-shadow:0 9px 22px rgba(20,54,94,.055)}
+.sp-shk-hospital-mark{display:grid;flex:0 0 54px;height:54px;place-items:center;background:#e6f5fa;border-radius:15px;color:#205f9c;font-weight:900;font-size:27px}
+.sp-shk-hospital-detail{min-width:0}
+.sp-shk-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#2c698e;font-weight:850}
+.sp-shk-hospital-card h3{font-size:21px;line-height:1.35;color:#183b66;margin:9px 0}
+.sp-shk-hospital-card h3 a{color:inherit}
+.sp-shk-hospital-address{color:#3d6784;font-size:13px;font-weight:750;line-height:1.7;margin:0 0 10px}
+.sp-shk-hospital-summary{color:#576f89;font-size:13px;line-height:1.85;margin:0 0 15px}
+.sp-shk-hospital-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.sp-shk-hospital-tags span{font-size:11px;font-weight:750;color:#286785;background:#eef7fd;padding:7px 10px;border-radius:9px}
+.sp-shk-hospital-actions{display:flex;flex-wrap:wrap;gap:9px}
+.sp-shk-hospital-actions a{display:inline-flex;align-items:center;padding:11px 13px;border-radius:10px;font-size:12px;line-height:1.5;font-weight:850}
+.sp-shk-local{background:#e8f1fb;color:#214f7d}
+.sp-shk-slashcure{background:#143a67;color:#fff}
+.sp-shk-hospital-hero h1{max-width:1060px;font-size:clamp(34px,5vw,62px)}
+.sp-shk-hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:22px}
+.sp-shk-profile-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:30px;align-items:start}
+.sp-shk-profile-content p,.sp-shk-profile-content li{font-size:14px;color:#506a82;line-height:1.85}
+.sp-shk-service-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px;padding:0 0 0 19px}
+.sp-shk-profile-content h2{margin-top:27px;font-size:clamp(23px,3vw,34px)}
+.sp-shk-info-panel,.sp-shk-other-facilities{background:#f0f6fd;border:1px solid #d5e5f5;padding:23px;border-radius:17px;margin-bottom:18px}
+.sp-shk-info-panel h2{font-size:24px;color:#1a426c}
+.sp-shk-info-panel p{color:#516e88;line-height:1.6;font-size:13px}
+.sp-shk-info-panel strong{display:block;color:#183c62;margin-bottom:5px}
+.sp-shk-info-panel a:not(.sp-shk-aside-link){text-decoration:underline;color:#1d568e}
+.sp-shk-aside-link{display:inline-block;background:#14416d;color:#fff;padding:10px 13px;border-radius:10px;font-weight:850;font-size:12px;margin-top:9px}
+.sp-shk-other-facilities h3{font-size:19px;color:#173a62}
+.sp-shk-other-facilities .sp-profile-links{display:flex;flex-direction:column;gap:9px}
+.sp-shk-disclaimer{border-left:3px solid #dd8c4b;padding-left:13px}
+.sp-shk-city-directory .sp-shk-hospital-grid{margin-top:24px}
+@media(max-width:850px){.sp-shk-profile-grid{grid-template-columns:1fr}}
+@media(max-width:610px){.sp-shk-hospital-card{padding:17px;gap:12px}.sp-shk-hospital-mark{flex-basis:42px;height:42px;font-size:22px}.sp-shk-hospital-card h3{font-size:19px}.sp-shk-hospital-actions{flex-direction:column;align-items:stretch}.sp-shk-hospital-actions a{text-align:center}.sp-shk-service-list{grid-template-columns:1fr}.sp-shk-hero-actions{flex-direction:column;align-items:stretch}.sp-shk-hero-actions .btn{text-align:center}}
