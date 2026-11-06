@@ -1,0 +1,23 @@
+/* Expand Sukkur's current design without changing the design system. */
+.sp-specialty-directory .sp-directory-grid{margin-top:20px}
+.sp-care-status{color:#68788f!important;font-size:11px!important;line-height:1.55!important;margin:9px 0!important}
+.sp-secondary-link{display:inline-block;margin:9px 0 0 12px;font-size:11px;font-weight:800;color:#32549c;text-decoration:underline;text-underline-offset:3px}
+.sp-specialty-help{padding:45px 0}
+.sp-specialty-help h2{max-width:830px}
+.sp-specialty-help p{font-size:14px;color:#66768b;max-width:890px;line-height:1.8}
+.sp-related-links{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
+.sp-related-links a,.sp-discovery-chip{display:inline-block;padding:10px 14px;border-radius:12px;background:#eaf3ff;color:#214b85;font-size:12px;font-weight:850;border:1px solid #d4e5f8;transition:background .15s}
+.sp-related-links a:hover,.sp-discovery-chip:hover{background:#d9ebff}
+.sp-discovery-chips{display:flex;flex-wrap:wrap;gap:11px;margin-top:20px}
+.sp-discovery-faq{max-width:940px;background:#fff;border:1px solid #dce5f3;padding:17px 19px;border-radius:13px;margin:10px 0}
+.sp-discovery-faq summary{font-size:14px;color:#1b365d;cursor:pointer;font-weight:800}
+.sp-discovery-faq p{font-size:13px;color:#61748a;line-height:1.75;margin:11px 0 0}
+.sp-area-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.sp-area-card{padding:19px;border-radius:15px;border:1px solid #dce5f4;background:#fff}
+.sp-area-card h3{font-size:16px;color:#18375a;margin:0 0 9px}
+.sp-area-card p{font-size:13px;color:#60738b;line-height:1.65;margin:0 0 12px}
+.sp-area-card a{font-size:12px;color:#24569f;font-weight:850}
+.sp-area-filter{display:flex;align-items:center;gap:15px;flex-wrap:wrap;margin:13px 0 10px;color:#d6e7f5;font-weight:800;font-size:12px}
+.sp-area-filter select{min-width:200px;padding:11px 13px;border-radius:11px;border:1px solid #94b6dc;background:#fff;color:#18355c;font-size:13px}
+.sp-area-filter small{color:#acc5dc;font-size:11px;font-weight:500}
+@media(max-width:680px){.sp-area-grid{grid-template-columns:1fr}.sp-area-filter{align-items:stretch;flex-direction:column}.sp-area-filter select{width:100%}}
