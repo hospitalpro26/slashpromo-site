@@ -1,0 +1,78 @@
+/* Sukkur gastroenterology directory + related physiotherapy doctor spotlight */
+.sp-gastro-hero{background:linear-gradient(133deg,#112342 3%,#1b5676 70%,#1e667d 100%);color:#fff}
+.sp-gastro-hero h1{font-size:clamp(36px,5.2vw,64px);line-height:1.1;color:#fff;max-width:1060px}
+.sp-gastro-hero h1 em{font-style:normal;color:#a3ecdb}
+.sp-gastro-hero p{max-width:920px;color:#e6f4f8;line-height:1.85}
+.sp-gastro-hero .breadcrumbs,.sp-gastro-hero .breadcrumbs a,.sp-gastro-hero .kicker{color:#c1e6ed}
+.sp-gastro-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.sp-gastro-hero-actions .btn.secondary{background:#fff;color:#1a4f70}
+.sp-gastro-hero-disclaimer{font-size:12px;color:#cae2eb!important;margin-top:19px}
+.sp-gastro-intro-grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,.75fr);gap:34px}
+.sp-gastro-intro-grid p{font-size:14px;line-height:1.85;color:#526981}
+.sp-gastro-overview{background:#ecf7f6;border:1px solid #cbe4e4;border-radius:19px;padding:26px}
+.sp-gastro-overview .sp-gastro-counter{display:block;font-size:42px;font-weight:900;color:#147e75;line-height:1.1}
+.sp-gastro-overview h3{font-size:20px;color:#1f4960;margin:12px 0}
+.sp-gastro-overview a{font-size:12px;font-weight:850;color:#14627e;text-decoration:underline}
+.sp-gastro-directory{padding-top:60px;padding-bottom:58px}
+.sp-gastro-doctor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:21px;margin-top:26px}
+.sp-gastro-doctor-card{padding:25px;background:#fff;border:1px solid #d8e6ec;border-radius:19px;box-shadow:0 13px 34px rgba(29,72,105,.06)}
+.sp-gastro-card-top{display:flex;gap:15px;align-items:flex-start}
+.sp-gastro-circle{width:54px;height:54px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:17px;background:#e6f4f2;color:#18796f;font-weight:900}
+.sp-gastro-tag{font-size:11px;font-weight:800;text-transform:uppercase;color:#47867f;letter-spacing:.07em}
+.sp-gastro-card-top h3{font-size:22px;margin:7px 0;color:#183e5b}
+.sp-gastro-card-top h3 a{color:inherit}
+.sp-gastro-card-top p{font-size:13px;color:#557186;line-height:1.7}
+.sp-gastro-facts{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0}
+.sp-gastro-facts span{background:#edf6f8;padding:8px 10px;border-radius:10px;font-size:11px;color:#315d70;line-height:1.55}
+.sp-gastro-facts strong{color:#19455d}
+.sp-gastro-bio{font-size:13px;color:#567086;line-height:1.85}
+.sp-gastro-clinic{font-size:13px;color:#31566f;line-height:1.7;background:#f5f9fc;padding:12px 14px;border-radius:11px}
+.sp-gastro-clinic a{color:#1b5d86;text-decoration:underline}
+.sp-gastro-doctor-card h4{font-size:14px;color:#214a66;margin:20px 0 10px}
+.sp-gastro-care-list{margin:0 0 18px;padding-left:20px;font-size:13px;line-height:1.87;color:#577289}
+.sp-gastro-weekly{background:#f8fbff;border:1px solid #dce8f0;border-radius:12px;padding:13px 15px;margin-bottom:17px}
+.sp-gastro-weekly summary{font-size:13px;color:#1b5574;font-weight:850;cursor:pointer}
+.sp-gastro-weekly p{display:flex;flex-direction:column;gap:3px;color:#507086;font-size:12px;line-height:1.5;border-bottom:1px solid #e2eaf1;padding-bottom:8px}
+.sp-gastro-weekly small{color:#6d7e8c;font-size:11px}
+.sp-gastro-actions{display:flex;flex-wrap:wrap;gap:9px}
+.sp-gastro-strip{padding:24px 0}
+.sp-gastro-services-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:23px}
+.sp-gastro-service{border:1px solid #d9e8f0;border-radius:17px;background:#f8fcfd;padding:22px}
+.sp-gastro-service span{font-size:11px;font-weight:850;color:#158075}
+.sp-gastro-service h3{font-size:16px;color:#16465f;margin:9px 0}
+.sp-gastro-service p{font-size:13px;color:#597185;line-height:1.75}
+.sp-gastro-caution{font-size:13px;color:#465f77;line-height:1.8;margin-top:20px}
+.sp-gastro-clinic-section .sp-area-grid{margin-top:22px}
+.sp-gastro-adjacent-grid{display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;background:#f0f7fd;border:1px solid #d7e6f4;padding:25px;border-radius:18px}
+.sp-gastro-adjacent-grid p{line-height:1.8;font-size:13px;color:#547088}
+.sp-gastro-faq .sp-discovery-faq{max-width:100%}
+.sp-sukkur-gastro-spotlight{padding:32px 0}
+.sp-gastro-spotlight-grid{display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center;background:#eff9f6;border:1px solid #d1e9e2;border-radius:18px;padding:25px}
+.sp-gastro-spotlight-grid h2{font-size:24px;color:#205266;margin:9px 0}
+.sp-gastro-spotlight-grid p{font-size:13px;color:#526c7d;line-height:1.75;margin:0;max-width:820px}
+.sp-komal-promo{overflow:hidden;border:1px solid #badde9;border-radius:16px;margin:0 0 27px;box-shadow:0 9px 24px rgba(10,47,78,.09)}
+.sp-komal-promo-top{position:relative;background:linear-gradient(135deg,#133857,#11698d);padding:20px;color:#fff}
+.sp-komal-promo-eyebrow{font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#bbebf1;font-size:10px}
+.sp-komal-promo-pt{position:absolute;right:15px;top:14px;background:#ffffff2b;border:1px solid #ffffff57;border-radius:10px;padding:9px;color:#fff;font-size:13px;font-weight:900}
+.sp-komal-promo-top h3{color:#fff!important;font-size:20px!important;line-height:1.3;margin:12px 0 7px}
+.sp-komal-promo-top p{color:#f1faff!important;font-size:14px!important;line-height:1.5;margin:0 0 6px!important}
+.sp-komal-promo-role{font-size:12px;color:#d3e8f2}
+.sp-komal-promo-body{background:#f3faff;padding:17px}
+.sp-komal-promo-body p{color:#375d77;font-size:12px;line-height:1.75}
+.sp-komal-promo-location{font-weight:850}
+.sp-komal-promo-cta{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+.sp-komal-promo-cta a{border-radius:10px;background:#1c5779;color:#fff!important;text-decoration:none;padding:10px 12px;font-size:11px;font-weight:850}
+.sp-komal-promo-cta a+ a{background:#f2ffff;color:#18597a!important;border:1px solid #9fc9df}
+.sp-komal-promo-category{display:block;font-weight:850;color:#195b7a!important;font-size:11px;margin-top:17px;text-decoration:underline}
+.sp-komal-promo small{display:block;color:#6b8190;font-size:10px;line-height:1.65;margin-top:13px}
+.sp-gastro-profile-experience{margin:20px 0 22px}
+.sp-gastro-profile-experience p,.sp-gastro-profile-experience li{font-size:13px;color:#536e85;line-height:1.9}
+.sp-gastro-profile-experience h3{font-size:18px;color:#1e4666;margin-top:23px}
+.sp-gastro-profile-experience ul{padding-left:22px}
+.sp-gastro-profile-schedules{border:1px solid #e0eaf1;border-radius:13px;padding:10px 18px;background:#f7fbfd}
+.sp-gastro-profile-clinic{padding:11px 0;display:flex;flex-direction:column;gap:4px;border-bottom:1px solid #e0eaf1;font-size:12px;color:#5b7488}
+.sp-gastro-profile-clinic:last-child{border-bottom:0}
+.sp-gastro-profile-clinic strong{color:#254b65}
+.sp-gastro-profile-official{display:inline-block;color:#185d8f;font-weight:850;font-size:12px;margin-top:12px;text-decoration:underline}
+@media(max-width:990px){.sp-gastro-intro-grid,.sp-gastro-doctor-grid{grid-template-columns:1fr}.sp-gastro-services-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sp-gastro-adjacent-grid,.sp-gastro-spotlight-grid{grid-template-columns:1fr}}
+@media(max-width:650px){.sp-gastro-hero-actions{flex-direction:column;align-items:stretch}.sp-gastro-hero-actions .btn{text-align:center}.sp-gastro-services-grid{grid-template-columns:1fr}.sp-gastro-doctor-card{padding:20px}.sp-gastro-directory{padding:41px 0}}
