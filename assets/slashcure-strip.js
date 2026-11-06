@@ -20,7 +20,9 @@
   };
   const page = path.split("/").filter(Boolean);
   const prettify = slug => slug.split("-").map(word=>word[0] ? word[0].toUpperCase()+word.slice(1) : "").join(" ");
-  const doctorProfile = page.length===3 && page[0]==="doctors";
+  const specialtyDirectory = page.length===3 && page[0]==="doctors" && !/^(dr-|prof-)/.test(page[2]);
+  const doctorProfile = page.length===3 && page[0]==="doctors" && !specialtyDirectory;
+  const healthTopic = path.startsWith("/sukkur/health-topics/");
   const hospitalProfile = page.length===3 && page[0]==="hospitals";
   const cityName = cityPages[path] || (doctorProfile||hospitalProfile ? prettify(page[1]) : "");
   const profileName = main.querySelector("h1")?.textContent?.trim()?.slice(0,115) || "";
@@ -75,6 +77,15 @@
   } else if (path==="/laboratories/"){
     heading="Explore diagnostic centres & healthcare services in Pakistan";
     description="Find healthcare and diagnostic service information on SlashPromo, then visit Slashcure for doctor profiles, hospitals and available published clinic updates.";
+  } else if (specialtyDirectory){
+    context="specialty";
+    const topic=main.querySelector("h1")?.textContent?.trim()?.slice(0,110)||"specialist doctors";
+    heading="Explore more "+topic.toLowerCase()+" in "+cityName;
+    description="Find doctor profiles, associated clinics and published OPD information in "+cityName+". Explore Slashcure for additional specialist listings and available schedule notices.";
+  } else if(healthTopic){
+    context="health-topic";
+    heading="Explore doctors and health information in Sukkur";
+    description="Browse Sukkur doctors by specialty, find hospitals and clinics, and check published OPD updates on Slashcure. For urgent symptoms, seek emergency medical help rather than relying on a directory.";
   } else if (doctorProfile){
     const group=specialtyGroup(specialty);
     context="specialty";

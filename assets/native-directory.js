@@ -11,7 +11,7 @@
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[s]);
   const title = record => record.specialty || record.category || "Healthcare professional";
-  const searchable = record => normal([record.name,record.city,...(record.cities||[]),title(record),record.hospital,record.qualifications].join(" "));
+  const searchable = record => normal([record.name,record.city,...(record.cities||[]),title(record),record.hospital,record.area,record.qualifications].join(" "));
   const symbol = record => {
     const s=normal(title(record));
     if(record.kind === "hospital")return "✚";
@@ -84,6 +84,7 @@
     const query = root.querySelector("[data-native-query]");
     const city = root.querySelector("[data-native-city]");
     const specialties = root.querySelector("[data-native-specialty]");
+    const area = root.querySelector("[data-native-area]");
     const datalist = root.querySelector("[data-native-city-list]");
     const output = root.querySelector("[data-native-results]");
     const label = root.querySelector("[data-native-count]");
@@ -95,15 +96,17 @@
     if(datalist)datalist.innerHTML=cities.map(v=>`<option value="${esc(v)}"></option>`).join("");
     if(specialties)specialties.innerHTML='<option value="">All specialties</option>'+
       specs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+    if(area){const areas=[...new Set(items.map(r=>r.area||"").filter(Boolean))].sort();area.innerHTML='<option value="">All listed areas</option>'+areas.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");}
     if(city&&initialCity)city.value=initialCity;
     let showing = scope === "home" ? 6 : scope === "all" ? 18 : 40;
     const render = () => {
       const q=normal(query?.value);
       const cv=normal(city?.value);
       const sv=normal(specialties?.value);
+      const av=normal(area?.value);
       const matches=items.filter(r=>(!q||searchable(r).includes(q)) &&
         (!cv||(r.cities||[r.city]).some(c=>normal(c).includes(cv))) &&
-        (!sv||normal(title(r)) === sv)).sort((a,b)=>a.name.localeCompare(b.name));
+        (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av)).sort((a,b)=>a.name.localeCompare(b.name));
       const current=matches.slice(0,showing);
       const sukDoctorIcons=scope === "sukkur" && type === "doctor";
       output.innerHTML=current.map(r=>card(r,sukDoctorIcons)).join("");
@@ -115,14 +118,15 @@
       root.setAttribute("data-ready","true");
     };
     form?.addEventListener("submit",e=>{e.preventDefault();showing=1000;render();root.querySelector("[data-native-results]")?.scrollIntoView({behavior:"smooth",block:"start"});});
-    [query,city,specialties].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{showing=scope==="home"?6:1000;render();}));
-    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";showing=scope==="home"?6:scope==="all"?18:40;render();});
+    [query,city,specialties,area].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{showing=scope==="home"?6:1000;render();}));
+    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";showing=scope==="home"?6:scope==="all"?18:40;render();});
     load?.addEventListener("click",()=>{showing+=18;render();});
     const params=new URLSearchParams(window.location.search);
     if(scope==="all" && !initialCity){
       if(query&&params.has("q"))query.value=params.get("q").slice(0,100);
       if(city&&params.has("city"))city.value=params.get("city").slice(0,100);
     }
+    if(scope==="sukkur" && type==="doctor" && area && params.has("area")){const wanted=params.get("area").slice(0,100);if([...area.options].some(o=>o.value===wanted))area.value=wanted;}
     render();
   };
   fetch("/assets/directory.json",{cache:"no-store"}).then(r=>{

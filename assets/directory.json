@@ -946,7 +946,8 @@
       "url": "/doctors/sukkur/dr-ahmed-raza-laghari/",
       "externalProfile": "https://slashcure.com/orthopedic-surgeons/sukkur/dr-ahmed-raza-laghari",
       "hospitalpro": "https://hospitalpro.online/dr-ahmed-raza-laghari.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Barrage Colony"
     },
     {
       "id": "sukkur-dr-aisha-aman",
@@ -961,7 +962,8 @@
       "url": "/doctors/sukkur/dr-aisha-aman/",
       "externalProfile": "https://slashcure.com/gynecologists-obstetricians/sukkur/dr-aisha-aman",
       "hospitalpro": "https://hospitalpro.online/dr-aaisha-aman.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Shikarpur Road"
     },
     {
       "id": "sukkur-dr-amjad-ali-kalwar",
@@ -991,7 +993,8 @@
       "url": "/doctors/sukkur/dr-ammara-bhatti/",
       "externalProfile": "https://slashcure.com/dr-ammara-bhatti",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Teer Chowk"
     },
     {
       "id": "sukkur-dr-aneel-ahmed-ghanghro",
@@ -1006,7 +1009,8 @@
       "url": "/doctors/sukkur/dr-aneel-ahmed-ghanghro/",
       "externalProfile": "https://slashcure.com/consultant-cardiologists/sukkur/dr-aneel-ahmed-ghanghro",
       "hospitalpro": "https://hospitalpro.online/dr-aneel-ahmed-ghanghro.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Barrage Colony"
     },
     {
       "id": "sukkur-dr-arif-soomro",
@@ -1021,7 +1025,8 @@
       "url": "/doctors/sukkur/dr-arif-soomro/",
       "externalProfile": "https://slashcure.com/dentists/sukkur/dr-arif-soomro",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Airport Road"
     },
     {
       "id": "sukkur-dr-deepak-kumar",
@@ -1036,7 +1041,8 @@
       "url": "/doctors/sukkur/dr-deepak-kumar/",
       "externalProfile": "",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Barrage Colony"
     },
     {
       "id": "sukkur-dr-dost-muhammad",
@@ -1051,7 +1057,8 @@
       "url": "/doctors/sukkur/dr-dost-muhammad/",
       "externalProfile": "https://slashcure.com/orthopedic-surgeons/sukkur/dr-dost-muhammad",
       "hospitalpro": "https://hospitalpro.online/dr-dost-muhammad.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Shikarpur Road"
     },
     {
       "id": "sukkur-dr-habibullah-maitlo",
@@ -1066,7 +1073,8 @@
       "url": "/doctors/sukkur/dr-habibullah-maitlo/",
       "externalProfile": "https://slashcure.com/paediatric-surgeons/sukkur/dr-habibullah-maitlo",
       "hospitalpro": "https://hospitalpro.online/dr-habibullah-maitlo.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Shikarpur Road"
     },
     {
       "id": "sukkur-dr-halar-dahar",
@@ -1096,7 +1104,8 @@
       "url": "/doctors/sukkur/dr-iqra-chachar/",
       "externalProfile": "",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Airport Road"
     },
     {
       "id": "sukkur-dr-israr-ahmed-shaikh",
@@ -1171,7 +1180,8 @@
       "url": "/doctors/sukkur/dr-naveed-ahmed-mahar/",
       "externalProfile": "https://slashcure.com/urologists/sukkur/dr-naveed-ahmed-mahar",
       "hospitalpro": "https://hospitalpro.online/dr-naveed-ahmed-mahar.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Shikarpur Road"
     },
     {
       "id": "sukkur-dr-noor-jhulan",
@@ -1186,7 +1196,8 @@
       "url": "/doctors/sukkur/dr-noor-jhulan/",
       "externalProfile": "https://slashcure.com/dentists/sukkur/dr-noor-jhulan",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Airport Road"
     },
     {
       "id": "sukkur-dr-riaz-hussain-hakro",
@@ -1231,7 +1242,8 @@
       "url": "/doctors/sukkur/dr-sajid-khadim/",
       "externalProfile": "https://slashcure.com/pediatricians/sukkur/dr-sajid-khadim",
       "hospitalpro": "https://hospitalpro.online/dr-sajid-khadim.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Shikarpur Road"
     },
     {
       "id": "sukkur-dr-tahir-mumtaz-memon",
@@ -1276,7 +1288,8 @@
       "url": "/doctors/sukkur/prof-dr-kirpal-das-makheja/",
       "externalProfile": "https://slashcure.com/consultant-physicians/sukkur/dr-kirpal-das-makheja",
       "hospitalpro": "https://hospitalpro.online/dr-kirpal-das-makheja.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Barrage Colony"
     },
     {
       "id": "ubauro-dr-aabid-raza",
