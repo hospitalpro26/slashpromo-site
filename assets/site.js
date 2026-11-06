@@ -51,7 +51,7 @@
 import("/assets/sponsored.js").catch(()=>{});
 
 /* Show the approved contextual Slashcure strip on suitable public pages. */
-import("/assets/slashcure-strip.js").catch(()=>{});
+import("/assets/slashcure-strip.js?v=20261106-darkbrand3").catch(()=>{});
 
 /* Present verified SlashPromo and Slashcure profile destinations together. */
 import("/assets/cross-profile-links.js?v=20261106-doctor-darkwordmark").catch(()=>{});
