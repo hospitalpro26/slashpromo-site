@@ -61,6 +61,15 @@ for(const facility of db.hospitals){
       errors.push(d.name+": doctor profile does not link back to "+facility.name);
     }
   }
+  // A hospital page must not list doctors beyond its declared associations.
+  // Reciprocal links are separately checked above, so both directions agree.
+  const allowedDoctorUrls=new Set(ids.map(id=>doctors.get(id)?.url).filter(Boolean));
+  const linkedDoctorUrls=new Set([...html.matchAll(/href="(\\/doctors\\/[^"#?]+\\/)"/g)].map(match=>match[1]));
+  for(const doctorUrl of linkedDoctorUrls){
+    if(!allowedDoctorUrls.has(doctorUrl)){
+      errors.push(facility.name+": unrelated doctor linked on hospital page: "+doctorUrl);
+    }
+  }
   if(!sitemap.includes("<loc>https://slashpromo.com"+facility.url+"</loc>"))errors.push("Hospital omitted from sitemap: "+facility.url);
 }
 const dirs=await readdir(path.join(root,"hospitals"),{withFileTypes:true});
@@ -82,6 +91,15 @@ for(const route of retiredHospitalRoutes){
   const redirect=route+" /sukkur/ 301";
   if(!redirects.split(/\r?\n/).some(line=>line.trim()===redirect)){
     errors.push("Retired hospital lacks redirect: "+route);
+  }
+}
+// The static hospital and Sukkur discovery pages must not link to unlisted facilities.
+for(const [label,html] of [["hospital directory",hospitalIndex],["Sukkur city page",sukPage]]){
+  const linkedHospitals=new Set([...html.matchAll(/href="(\\/hospitals\\/[^"#?]+\\/)"/g)].map(match=>match[1]));
+  for(const linkedUrl of linkedHospitals){
+    if(!listedFiles.has(urlPath(linkedUrl))){
+      errors.push(label+": unsupported hospital link: "+linkedUrl);
+    }
   }
 }
 const sitemapHospitals=[...sitemap.matchAll(/<loc>https:\/\/slashpromo\.com(\/hospitals\/[^<]+)<\/loc>/g)].map(m=>m[1]);
