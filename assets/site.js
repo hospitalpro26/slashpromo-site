@@ -55,3 +55,74 @@ import("/assets/slashcure-strip.js").catch(()=>{});
 
 /* Present verified SlashPromo and Slashcure profile destinations together. */
 import("/assets/cross-profile-links.js").catch(()=>{});
+
+
+/* Enhance the text "Slashcure" everywhere, including dynamically generated
+   directory cards. Link destinations, accessible link text and indexing stay intact. */
+(function () {
+  "use strict";
+  const BRAND = /slashcure/i;
+  const PARTS = /(slashcure)/gi;
+  const EXCLUDE = "script,style,noscript,textarea,option,select,svg,math,code,pre,[contenteditable],[data-sp-slashcure-wordmark]";
+  const styleId = "sp-slashcure-colorwordmark-v1";
+
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.textContent = "\n/* Site-wide Slashcure typography: Slash blue + cure red; text only, no icon. */\n.sp-slashcure-wordmark{\n  display:inline;\n  white-space:nowrap;\n  font-weight:850;\n  letter-spacing:-.015em;\n}\n.sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}\n.sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}\n:is(.page-hero,.site-footer,.sp-slashcure-frame,.sc-promo-strip,\n.sp-cross-link-external,.sp-shk-action-partner,.sp-shk-slashcure,\n.sp-shk-aside-link,.sp-shk-action-partner,.sp-gastro-hero,\n.sp-profile-hero,.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-blue{color:#8cd0ff!important}\n:is(.page-hero,.site-footer,.sp-slashcure-frame,.sc-promo-strip,\n.sp-cross-link-external,.sp-shk-action-partner,.sp-shk-slashcure,\n.sp-shk-aside-link,.sp-gastro-hero,.sp-profile-hero,\n.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-red{color:#ff8895!important}\n";
+    document.head.appendChild(style);
+  }
+
+  const upgrade = (node) => {
+    if (!node || node.nodeType !== 3 || !BRAND.test(node.nodeValue || "")) return;
+    const parent = node.parentElement;
+    if (!parent || parent.closest(EXCLUDE)) return;
+    const pieces = node.nodeValue.split(PARTS);
+    if (pieces.length === 1) return;
+    const frag = document.createDocumentFragment();
+    for (const part of pieces) {
+      if (!part) continue;
+      if (!/^slashcure$/i.test(part)) {
+        frag.appendChild(document.createTextNode(part));
+        continue;
+      }
+      const mark = document.createElement("span");
+      mark.className = "sp-slashcure-wordmark";
+      mark.dataset.spSlashcureWordmark = "";
+      const blue = document.createElement("span");
+      blue.className = "sp-slashcure-blue";
+      blue.textContent = "Slash";
+      const red = document.createElement("span");
+      red.className = "sp-slashcure-red";
+      red.textContent = "cure";
+      mark.append(blue, red);
+      frag.appendChild(mark);
+    }
+    parent.replaceChild(frag, node);
+  };
+
+  const scan = (root) => {
+    if (!root) return;
+    if (root.nodeType === 3) return upgrade(root);
+    if (root.nodeType !== 1 && root.nodeType !== 11) return;
+    if (root.nodeType === 1 && (root.matches(EXCLUDE) || root.closest("[data-sp-slashcure-wordmark]"))) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const targets = [];
+    let current;
+    while ((current = walker.nextNode())) if (BRAND.test(current.nodeValue || "")) targets.push(current);
+    for (const target of targets) upgrade(target);
+  };
+
+  const init = () => {
+    scan(document.body);
+    if (!window.MutationObserver || !document.body) return;
+    new MutationObserver((changes) => {
+      for (const change of changes) {
+        if (change.type === "characterData") scan(change.target);
+        else for (const added of change.addedNodes) scan(added);
+      }
+    }).observe(document.body, {subtree:true,childList:true,characterData:true});
+  };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, {once:true});
+  else init();
+})();

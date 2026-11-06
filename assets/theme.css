@@ -210,3 +210,23 @@ nav.sp-quicknav[data-sp-city-nav] .sp-quicknav-sep{flex:0 0 auto!important;color
 nav.sp-quicknav[data-sp-city-nav] p.sp-quicknav-message{display:block!important;margin:7px 0 0!important;padding:8px 0 0!important;border-top:1px solid #ffffff27!important;background:transparent!important;color:#cad9ef!important;font-size:12px!important;font-weight:450!important;line-height:1.65!important;letter-spacing:0!important;max-width:100%!important}
 nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!important;outline-offset:3px!important;border-radius:2px!important}
 @media(max-width:560px){nav.sp-quicknav[data-sp-city-nav]>.wrap{padding-top:9px!important;padding-bottom:11px!important}nav.sp-quicknav[data-sp-city-nav] .sp-quicknav-inner{gap:0 7px!important}nav.sp-quicknav[data-sp-city-nav] a{font-size:12px!important}nav.sp-quicknav[data-sp-city-nav] .sp-quicknav-sep{font-size:11px!important}nav.sp-quicknav[data-sp-city-nav] p.sp-quicknav-message{font-size:11.5px!important;line-height:1.55!important}}
+
+/* sp-slashcure-colorwordmark-v1 */
+
+/* Site-wide Slashcure typography: Slash blue + cure red; text only, no icon. */
+.sp-slashcure-wordmark{
+  display:inline;
+  white-space:nowrap;
+  font-weight:850;
+  letter-spacing:-.015em;
+}
+.sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
+.sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
+:is(.page-hero,.site-footer,.sp-slashcure-frame,.sc-promo-strip,
+.sp-cross-link-external,.sp-shk-action-partner,.sp-shk-slashcure,
+.sp-shk-aside-link,.sp-shk-action-partner,.sp-gastro-hero,
+.sp-profile-hero,.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-blue{color:#8cd0ff!important}
+:is(.page-hero,.site-footer,.sp-slashcure-frame,.sc-promo-strip,
+.sp-cross-link-external,.sp-shk-action-partner,.sp-shk-slashcure,
+.sp-shk-aside-link,.sp-gastro-hero,.sp-profile-hero,
+.sp-shk-hospital-hero,.btn.dark) .sp-slashcure-wordmark .sp-slashcure-red{color:#ff8895!important}
