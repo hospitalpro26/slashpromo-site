@@ -26,11 +26,23 @@ const associationMatches=(facility,doctor)=>{
   return s.includes(name);
 };
 const sitemap=await read("sitemap.xml");
+const hospitalIndex=await read("hospitals/index.html");
+const sukPage=await read("sukkur/index.html");
+const redirects=await read("_redirects");
+const retiredHospitalRoutes=[
+  "/hospitals/sukkur/alkhidmat-mother-child-health-care-center/",
+  "/hospitals/sukkur/halar-memon-hospital-sukkur/",
+  "/hospitals/sukkur/siut-hospital-sukkur/",
+  "/hospitals/sukkur/sukkur-blood-bank-hospital/"
+];
 const listedFiles=new Set();
 for(const facility of db.hospitals){
   const file=urlPath(facility.url);
   if(listedFiles.has(file))errors.push("Duplicate hospital record: "+file);
   listedFiles.add(file);
+  for(const [label,html] of [["hospital directory",hospitalIndex],["Sukkur city page",sukPage]]){
+    if(!html.includes('href="'+facility.url+'"'))errors.push(facility.name+": missing from "+label);
+  }
   const ids=facility.linkedDoctorIds;
   if(!Array.isArray(ids)||ids.length===0){errors.push(facility.name+": no linkedDoctorIds");continue;}
   const unique=new Set(ids);
@@ -43,7 +55,11 @@ for(const facility of db.hospitals){
     if(d.city!==facility.city)errors.push(facility.name+": city mismatch for "+d.name);
     if(!associationMatches(facility,d))errors.push(facility.name+": no supporting hospital affiliation in "+d.name+"'s directory record");
     if(!html.includes('href="'+d.url+'"'))errors.push(facility.name+": no linked profile in page for "+d.name);
-    try{await access(path.join(root,urlPath(d.url)))}catch{errors.push(facility.name+": doctor page missing "+d.url);}
+    let doctorHtml="";
+    try{doctorHtml=await read(urlPath(d.url))}catch{errors.push(facility.name+": doctor page missing "+d.url);}
+    if(doctorHtml&&!doctorHtml.includes('href="'+facility.url+'"')){
+      errors.push(d.name+": doctor profile does not link back to "+facility.name);
+    }
   }
   if(!sitemap.includes("<loc>https://slashpromo.com"+facility.url+"</loc>"))errors.push("Hospital omitted from sitemap: "+facility.url);
 }
@@ -55,6 +71,22 @@ for(const city of dirs.filter(e=>e.isDirectory())){
     try{await access(path.join(root,candidate))}catch{continue;}
     if(!listedFiles.has(candidate))errors.push("Unlisted hospital page with no verified linked doctors: "+candidate);
   }
+}
+for(const route of retiredHospitalRoutes){
+  if(sitemap.includes("<loc>https://slashpromo.com"+route+"</loc>")){
+    errors.push("Retired hospital still appears in sitemap: "+route);
+  }
+  for(const [label,html] of [["hospital directory",hospitalIndex],["Sukkur city page",sukPage]]){
+    if(html.includes('href="'+route+'"'))errors.push("Retired hospital still linked from "+label+": "+route);
+  }
+  const redirect=route+" /sukkur/ 301";
+  if(!redirects.split(/\\r?\\n/).some(line=>line.trim()===redirect)){
+    errors.push("Retired hospital lacks redirect: "+route);
+  }
+}
+const sitemapHospitals=[...sitemap.matchAll(/<loc>https:\/\/slashpromo\.com(\/hospitals\/[^<]+)<\/loc>/g)].map(m=>m[1]);
+for(const route of sitemapHospitals){
+  if(!listedFiles.has(urlPath(route)))errors.push("Sitemap lists unassociated hospital: "+route);
 }
 if(errors.length){
   for(const e of errors)console.error("ERROR:",e);
