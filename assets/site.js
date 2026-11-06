@@ -36,3 +36,6 @@ import("/assets/sponsored.js").catch(()=>{});
 
 /* Show the approved contextual Slashcure strip on suitable public pages. */
 import("/assets/slashcure-strip.js").catch(()=>{});
+
+/* Present verified SlashPromo and Slashcure profile destinations together. */
+import("/assets/cross-profile-links.js").catch(()=>{});
