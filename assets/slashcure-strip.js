@@ -53,7 +53,7 @@
   };
   const cityDescriptions = {
     Sukkur:"Explore consultant physicians, gastroenterologists, cardiologists, gynecologists and other doctors in Sukkur. Browse hospitals including Hira Medical Centre, River City Hospital and Dr. Ziauddin Hospital, then check published OPD schedules and updates where available.",
-    Khairpur:"Looking for doctors in Khairpur? Explore consultant physicians, neurology specialists, hospital and clinic profiles across Khairpur, Sindh. Visit Slashcure for published doctor schedules and OPD updates where available.",
+    Khairpur:"Find the best doctors in Khairpur for your needs. Explore consultant physicians, neurophysicians and local hospitals including Ali Medical Center and Health Care Clinic Khairpur. Check published OPD timings and appointment or contact options on Slashcure.",
     Karachi:"Find doctors and specialist care in Karachi, Sindh. Explore physiotherapists, rehabilitation services, neurologists and other medical professionals; check published clinic schedules and hospital information where available.",
     Shikarpur:"Discover doctors in Shikarpur, Sindh, including physiotherapy, general medicine and other specialties. Explore provider information and check published OPD timings, clinics and availability updates where available.",
     Ghotki:"Looking for doctors in Ghotki, Sindh? Explore physicians, chest specialists and healthcare facilities. Check published doctor profiles, OPD hours and clinic notices on Slashcure where available."
@@ -145,7 +145,7 @@
   copy.append(mark,h2,p,tagline);
   const cta=document.createElement("a");
   cta.className="sc-promo-button";
-  cta.href=cityName==="Sukkur" ? "https://slashcure.com/doctors/sukkur" : "https://slashcure.com/doctors";
+  cta.href=cityName==="Sukkur" ? "https://slashcure.com/doctors/sukkur" : cityName==="Khairpur" ? "https://slashcure.com/khairpur" : "https://slashcure.com/doctors";
   cta.target="_blank";
   cta.rel="noopener noreferrer";
   cta.setAttribute("aria-label","Visit Slashcure.com");
