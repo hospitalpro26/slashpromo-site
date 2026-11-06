@@ -1,0 +1,57 @@
+name: Publish high-contrast Slashcure wordmark assets
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-dark-slashcure-wordmark.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-sitewide-asset-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Refresh cached theme and branding JS across HTML pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          roots = ['site.js','theme.css','slashcure-strip.css','cross-profile-links.css','khairpur-city.css']
+          pattern = re.compile(r'(/assets/(?:'+'|'.join(re.escape(x) for x in roots)+r'))(?:\?v=[^"\x27\s<>]*)?')
+          count = 0
+          for page in Path('.').rglob('*.html'):
+              if '.git' in page.parts:
+                  continue
+              before = page.read_text(encoding='utf-8')
+              after = pattern.sub(lambda m:m.group(1)+'?v=20261106-darkbrand3', before)
+              if after != before:
+                  page.write_text(after,encoding='utf-8')
+                  count += 1
+          print(f'Refreshed asset versions on {count} HTML pages')
+          assert count >= 8, 'Expected multiple city and provider HTML pages'
+          for target in ('khairpur/index.html','hospitals/khairpur/ali-medical-center-khairpur/index.html','hospitals/khairpur/health-care-clinic-khairpur/index.html','sukkur/index.html','karachi/index.html'):
+              page=Path(target).read_text(encoding='utf-8')
+              assert '/assets/theme.css?v=20261106-darkbrand3' in page,target
+              assert '/assets/site.js?v=20261106-darkbrand3' in page,target
+          for path in ('assets/theme.css','assets/site.js'):
+              source=Path(path).read_text(encoding='utf-8').lower()
+              assert '#8cd0ff!important' not in source, path
+              assert '#ff8895!important' not in source, path
+          PY
+          node --check assets/site.js
+          node --check assets/slashcure-strip.js
+      - name: Commit HTML cache refresh for production
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -u
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh dark blue/red Slashcure wordmark assets on all pages'
+            git push origin HEAD:main
+          fi
