@@ -1,0 +1,16 @@
+name: Hospital directory integrity
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  audit-hospital-profiles:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify that every hospital page has associated doctors
+        run: node scripts/audit-hospital-affiliations.mjs
