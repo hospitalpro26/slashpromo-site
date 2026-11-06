@@ -1,0 +1,38 @@
+name: Verify dark Slashcure colors on public site
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-dark-slashcure-colors.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-public:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test published wordmark CSS and shared JS plus city pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "https://slashpromo.com/assets/theme.css?v=20261106-darkbrand3&verify=$GITHUB_SHA" -o /tmp/theme.css || true
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "https://slashpromo.com/assets/site.js?v=20261106-darkbrand3&verify=$GITHUB_SHA" -o /tmp/site.js || true
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "https://slashpromo.com/khairpur/?verify=$GITHUB_SHA" -o /tmp/khairpur.html || true
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "https://slashpromo.com/hospitals/khairpur/ali-medical-center-khairpur/?verify=$GITHUB_SHA" -o /tmp/ali.html || true
+            if grep -q 'darkbrand3' /tmp/khairpur.html &&
+               grep -q 'darkbrand3' /tmp/ali.html &&
+               grep -q 'sp-slashcure-colorwordmark-v3' /tmp/site.js &&
+               grep -q '#195eb4!important' /tmp/theme.css &&
+               grep -q '#c62d43!important' /tmp/theme.css &&
+               ! grep -qi '#8cd0ff!important' /tmp/theme.css &&
+               ! grep -qi '#ff8895!important' /tmp/theme.css; then
+              echo 'PASS: live Khairpur city and hospital pages load updated theme/script with approved dark wordmark.'
+              exit 0
+            fi
+            if [ "$attempt" = 6 ]; then
+              echo 'Live pages have not yet been confirmed to serve dark colors.' >&2
+              exit 1
+            fi
+            sleep 15
+          done
