@@ -64,7 +64,7 @@ for(const facility of db.hospitals){
   // A hospital page must not list doctors beyond its declared associations.
   // Reciprocal links are separately checked above, so both directions agree.
   const allowedDoctorUrls=new Set(ids.map(id=>doctors.get(id)?.url).filter(Boolean));
-  const linkedDoctorUrls=new Set([...html.matchAll(/href="(\\/doctors\\/[^"#?]+\\/)"/g)].map(match=>match[1]));
+  const linkedDoctorUrls=new Set([...html.matchAll(/href="(\/doctors\/[^"#?]+\/)"/g)].map(match=>match[1]));
   for(const doctorUrl of linkedDoctorUrls){
     if(!allowedDoctorUrls.has(doctorUrl)){
       errors.push(facility.name+": unrelated doctor linked on hospital page: "+doctorUrl);
@@ -95,7 +95,7 @@ for(const route of retiredHospitalRoutes){
 }
 // The static hospital and Sukkur discovery pages must not link to unlisted facilities.
 for(const [label,html] of [["hospital directory",hospitalIndex],["Sukkur city page",sukPage]]){
-  const linkedHospitals=new Set([...html.matchAll(/href="(\\/hospitals\\/[^"#?]+\\/)"/g)].map(match=>match[1]));
+  const linkedHospitals=new Set([...html.matchAll(/href="(\/hospitals\/[^"#?]+\/)"/g)].map(match=>match[1]));
   for(const linkedUrl of linkedHospitals){
     if(!listedFiles.has(urlPath(linkedUrl))){
       errors.push(label+": unsupported hospital link: "+linkedUrl);
