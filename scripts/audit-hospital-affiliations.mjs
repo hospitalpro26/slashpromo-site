@@ -80,7 +80,7 @@ for(const route of retiredHospitalRoutes){
     if(html.includes('href="'+route+'"'))errors.push("Retired hospital still linked from "+label+": "+route);
   }
   const redirect=route+" /sukkur/ 301";
-  if(!redirects.split(/\\r?\\n/).some(line=>line.trim()===redirect)){
+  if(!redirects.split(/\r?\n/).some(line=>line.trim()===redirect)){
     errors.push("Retired hospital lacks redirect: "+route);
   }
 }
