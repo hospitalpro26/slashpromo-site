@@ -1,0 +1,17 @@
+/* Cross-platform actions on existing SlashPromo cards & profile pages. */
+.sp-cross-profile-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:15px}
+.sp-cross-link{display:inline-flex;align-items:center;justify-content:center;min-height:35px;padding:8px 11px;border-radius:9px;font:750 11px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:-.01em;text-align:center;text-decoration:none!important;white-space:normal;max-width:100%;border:1px solid transparent}
+a.sp-cross-link{transition:transform .16s ease,box-shadow .16s ease}
+a.sp-cross-link:focus-visible{outline:3px solid #62a2d5;outline-offset:3px}
+a.sp-cross-link:hover{transform:translateY(-1px);box-shadow:0 5px 12px #07385d19}
+.sp-cross-link-local,.sp-cross-link-current{background:#e9f2fe;color:#1f5288!important;border-color:#cfe2f5}
+.sp-cross-link-external{background:#db163b;color:#fff!important;border-color:#db163b}
+.sp-cross-link-external:hover{background:#b30f31}
+.sp-cross-link-facility{background:#fff7ed;color:#955824!important;border-color:#f4dfc3}
+.sp-cross-link-pending{background:#f5f7fb;color:#66788c;border-color:#e1e7ef;font-weight:650}
+.sp-cross-profile-hero{margin:18px 0 4px;gap:10px}
+.sp-cross-profile-hero .sp-cross-link{padding:11px 17px;min-height:43px;border-radius:12px;font-size:12px}
+.sp-profile-hero .sp-cross-link-current{background:#eff5fc;color:#184d85!important}
+.sp-profile-hero .sp-cross-link-pending{color:#68768a}
+@media(max-width:550px){.sp-cross-profile-actions{align-items:stretch}.sp-cross-profile-actions .sp-cross-link{flex:1 1 100%;width:100%}.sp-cross-profile-hero .sp-cross-link{width:auto;flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){a.sp-cross-link{transition:none!important}}
