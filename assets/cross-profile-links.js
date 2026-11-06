@@ -1,109 +1,114 @@
-/* Cross-platform doctor and hospital profile links.
- * Never pass off a hospital page or a generic search URL as a doctor's personal profile.
- * Directory-backed and shared on static and dynamically refreshed cards.
+/* Paired SlashPromo and Slashcure links for doctors and hospitals.
+ * Individual Slashcure links are used only when the directory includes a matching profile URL.
+ * Generic directories and hospital URLs are never described as personal doctor profiles.
  */
 (() => {
   "use strict";
-  const normalizePath = pathname => pathname.replace(/\/+/g,"/").replace(/\/?$/,"/");
-  const docPath = normalizePath(location.pathname);
-  if(!document.querySelector('link[href="/assets/cross-profile-links.css"]')){
-    const stylesheet=document.createElement("link");
-    stylesheet.rel="stylesheet";
-    stylesheet.href="/assets/cross-profile-links.css";
+  const pathOf = path => String(path || "/").replace(/\/+/g, "/").replace(/\/?$/, "/");
+  const currentPath = pathOf(location.pathname);
+  const css = "/assets/cross-profile-links.css";
+  if(!document.querySelector('link[href="'+css+'"]')){
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet"; stylesheet.href = css;
     document.head.append(stylesheet);
   }
-  const safeProfile = raw => {
+  const parse = raw => {
     if(!raw) return null;
     try {
-      const url = new URL(raw);
-      if(url.protocol!=="https:" || !/^(?:www\.)?slashcure\.com$/i.test(url.hostname))return null;
-      const path=normalizePath(url.pathname);
-      if(path==="/" || path==="/doctors/" || path==="/hospitals/" || path==="/live-updates/")return null;
-      return {url:url.href,category:path.startsWith("/hospitals/")?"hospital":"doctor"};
-    } catch {return null;}
+      const u = new URL(raw);
+      if(u.protocol !== "https:" || !/^(?:www\.)?slashcure\.com$/i.test(u.hostname)) return null;
+      const pathname = pathOf(u.pathname);
+      if(u.search || u.hash) return null;
+      if(/^\/hospitals\/[^/]+\/[^/]+\/$/.test(pathname)) return {url:u.href,kind:"hospital"};
+      if(/^\/dr-[a-z0-9-]+\/$/i.test(pathname) || /^\/[a-z0-9-]+\/[a-z0-9-]+\/dr-[a-z0-9-]+\/$/i.test(pathname))
+        return {url:u.href,kind:"doctor"};
+    }catch(_){}
+    return null;
   };
-  const el = (tag,cls,text) => {
-    const n=document.createElement(tag);
-    if(cls)n.className=cls;
-    if(text)n.textContent=text;
-    return n;
+  const fallback = (record,kind) => {
+    if(kind === "hospital") return {url:"https://slashcure.com/hospitals",label:"Browse hospitals on Slashcure ↗",direct:false};
+    const query = new URL("https://slashcure.com/doctors");
+    query.searchParams.set("type","all");
+    if(record.city) query.searchParams.set("loc",record.city);
+    if(record.name) query.searchParams.set("q",record.name);
+    return {url:query.href,label:"Find doctor on Slashcure ↗",direct:false};
   };
-  const action = (url,cls,label) => {
-    const a=el("a",cls,label);
+  const destination = (record,kind) => {
+    const profile=parse(record.externalProfile);
+    if(profile && profile.kind===kind)
+      return {url:profile.url,label:kind==="hospital"?"View hospital on Slashcure ↗":"View doctor on Slashcure ↗",direct:true};
+    return fallback(record,kind);
+  };
+  const el = (tag,className,text) => {
+    const node=document.createElement(tag);
+    if(className)node.className=className;
+    if(text)node.textContent=text;
+    return node;
+  };
+  const link = (url,className,label) => {
+    const a=el("a",className,label);
     a.href=url;
-    if(url.startsWith("https://")) {
-      a.target="_blank";
-      a.rel="noopener noreferrer";
-    }
+    if(/^https:\/\//.test(url)){a.target="_blank";a.rel="noopener noreferrer";}
     return a;
   };
-  const extraAction = (record,kind) => {
-    const profile=safeProfile(record.externalProfile);
-    if(profile && profile.category===kind)
-      return action(profile.url,"sp-cross-link sp-cross-link-external","View Slashcure Profile ↗");
-    if(kind==="doctor" && profile && profile.category==="hospital")
-      return action(profile.url,"sp-cross-link sp-cross-link-facility","View Hospital on Slashcure ↗");
-    return el("span","sp-cross-link sp-cross-link-pending","Slashcure profile not linked yet");
-  };
-  const linked = (record,kind,hero) => {
-    const container=el("div","sp-cross-profile-actions"+(hero?" sp-cross-profile-hero":""));
-    container.setAttribute("aria-label","SlashPromo and Slashcure profile links");
-    if(hero){
-      const badge=el("span","sp-cross-link sp-cross-link-current","✓ Viewing SlashPromo Profile");
-      badge.setAttribute("aria-current","page");
-      container.append(badge);
-    } else {
-      container.append(action(record.url,"sp-cross-link sp-cross-link-local","View SlashPromo Profile ↗"));
+  const pair = (record,kind,isProfile) => {
+    const container=el("div","sp-cross-profile-actions"+(isProfile?" sp-cross-profile-hero":""));
+    container.setAttribute("aria-label","SlashPromo and Slashcure navigation");
+    if(isProfile){
+      const now=el("span","sp-cross-link sp-cross-link-current","✓ Viewing SlashPromo Profile");
+      now.setAttribute("aria-current","page");
+      container.append(now);
+    }else{
+      container.append(link(record.url,"sp-cross-link sp-cross-link-local","View SlashPromo Profile ↗"));
     }
-    container.append(extraAction(record,kind));
+    const target=destination(record,kind);
+    container.append(link(target.url,"sp-cross-link "+(target.direct?"sp-cross-link-external":"sp-cross-link-fallback"),target.label));
     return container;
   };
-  fetch("/assets/directory.json",{cache:"no-store"}).then(response=>{
-    if(!response.ok)throw new Error("Directory unavailable");
-    return response.json();
+  fetch("/assets/directory.json",{cache:"no-store"}).then(res=>{
+    if(!res.ok)throw new Error("SlashPromo directory unavailable");
+    return res.json();
   }).then(db=>{
-    const doctorMap=new Map((db.doctors||[]).map(r=>[normalizePath(r.url),r]));
-    const hospitalMap=new Map((db.hospitals||[]).map(r=>[normalizePath(r.url),r]));
-    const patchCard=card=>{
+    const doctorMap=new Map((db.doctors||[]).map(record=>[pathOf(record.url),record]));
+    const hospitalMap=new Map((db.hospitals||[]).map(record=>[pathOf(record.url),record]));
+    const patchCard = card => {
       if(card.querySelector(".sp-cross-profile-actions"))return;
-      const href=card.querySelector("h3 a[href]")?.getAttribute("href");
-      if(!href||!href.startsWith("/"))return;
-      const path=normalizePath(href.split(/[?#]/)[0]);
-      const record=doctorMap.get(path)||hospitalMap.get(path);
+      const local=card.querySelector('h3 a[href^="/"]');
+      if(!local)return;
+      const localPath=pathOf(local.getAttribute("href").split(/[?#]/)[0]);
+      const record=doctorMap.get(localPath)||hospitalMap.get(localPath);
       if(!record)return;
-      const original=card.querySelector(".sp-card-link");
-      if(original){
-        const parent=original.parentNode;
-        if(!parent)return;
-        parent.replaceChild(linked(record,doctorMap.has(path)?"doctor":"hospital",false),original);
-      }else{
-        const body=card.querySelector(".sp-directory-body")||card;
-        body.append(linked(record,doctorMap.has(path)?"doctor":"hospital",false));
-      }
+      const existing=card.querySelector(".sp-card-link");
+      const duo=pair(record,doctorMap.has(localPath)?"doctor":"hospital",false);
+      if(existing)existing.replaceWith(duo);
+      else (card.querySelector(".sp-directory-body")||card).append(duo);
     };
     const patchCards=root=>(root||document).querySelectorAll(".sp-directory-card").forEach(patchCard);
     patchCards();
     document.querySelectorAll(".sp-directory-grid[data-native-results]").forEach(root=>{
-      if(root.dataset.spCrossObserved==="true")return;
+      if(root.dataset.spCrossObserved)return;
       root.dataset.spCrossObserved="true";
-      const observer=new MutationObserver(()=>patchCards(root));
-      observer.observe(root,{childList:true});
+      new MutationObserver(()=>patchCards(root)).observe(root,{childList:true});
     });
-    const record=doctorMap.get(docPath)||hospitalMap.get(docPath);
+    const record=doctorMap.get(currentPath)||hospitalMap.get(currentPath);
     if(!record)return;
-    const hero=document.querySelector(".sp-profile-hero .wrap");
+    const kind=doctorMap.has(currentPath)?"doctor":"hospital";
+    const hero=document.querySelector(".sp-profile-hero .wrap, .zia-page-hero .wrap");
     if(hero&&!hero.querySelector(".sp-cross-profile-actions")){
-      const target=hero.querySelector(".sp-profile-tags")||hero.querySelector("h1");
-      if(target)target.insertAdjacentElement("afterend",linked(record,doctorMap.has(docPath)?"doctor":"hospital",true));
+      const anchor=hero.querySelector(".sp-profile-tags, .zia-hero-badges, h1");
+      if(anchor)anchor.insertAdjacentElement("afterend",pair(record,kind,true));
     }
-    const details=document.querySelector(".sp-profile-links");
-    const profile=safeProfile(record.externalProfile);
-    if(details&&profile){
-      const kind=doctorMap.has(docPath)?"doctor":"hospital";
-      const existing=[...details.querySelectorAll('a[href]')].find(a=>a.href===profile.url);
-      const text=kind==="doctor"&&profile.category==="hospital"?"View Associated Hospital on Slashcure ↗":"View Slashcure Profile ↗";
-      if(existing)existing.textContent=text;
-      else details.append(action(profile.url,"",text));
+    const sidebar=document.querySelector(".sp-profile-links");
+    if(sidebar){
+      const direct=parse(record.externalProfile);
+      const target=destination(record,kind);
+      let matching=[...sidebar.querySelectorAll('a[href]')].find(a=>a.href===target.url);
+      if(matching)matching.textContent=target.label;
+      else sidebar.append(link(target.url,"",target.label));
+      if(kind==="doctor" && direct && direct.kind==="hospital"){
+        const facility=[...sidebar.querySelectorAll('a[href]')].find(a=>a.href===direct.url);
+        if(facility)facility.textContent="View associated hospital on Slashcure ↗";
+      }
     }
-  }).catch(()=>{/* Keep existing profile navigation intact when directory data is unavailable. */});
+  }).catch(()=>{/* Keep native SlashPromo navigation intact if the directory cannot load. */});
 })();

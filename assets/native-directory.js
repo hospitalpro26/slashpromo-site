@@ -60,19 +60,42 @@
     medicine:'<path d="M7 3v7a5 5 0 0 0 10 0V3M5 4h4M15 4h4M12 15v2.3a3.7 3.7 0 1 0 3.7-3.7"/><circle cx="18.5" cy="13.8" r="2.2"/>'
   });
   const specialtyIcon = type => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" focusable="false" aria-hidden="true">'+(specialtyPaths[type]||specialtyPaths.medicine)+'</svg>';
+  const slashcureLink = r => {
+    let external = null;
+    try{
+      const parsed = new URL(r.externalProfile || "");
+      const path = parsed.pathname.replace(/\/?$/, "/");
+      if(parsed.protocol==="https:" && /^(?:www\.)?slashcure\.com$/i.test(parsed.hostname)
+         && !parsed.search && !parsed.hash){
+        if(r.kind==="hospital" && /^\/hospitals\/[^/]+\/[^/]+\/$/.test(path)) external=parsed.href;
+        if(r.kind!=="hospital" && (/^\/dr-[a-z0-9-]+\/$/i.test(path) || /^\/[a-z0-9-]+\/[a-z0-9-]+\/dr-[a-z0-9-]+\/$/i.test(path))) external=parsed.href;
+      }
+    }catch(_){}
+    if(external)return {url:external,label:r.kind==="hospital"?"View hospital on Slashcure ↗":"View doctor on Slashcure ↗",direct:true};
+    if(r.kind==="hospital")return {url:"https://slashcure.com/hospitals",label:"Browse hospitals on Slashcure ↗",direct:false};
+    const search = new URL("https://slashcure.com/doctors");
+    search.searchParams.set("type","all");
+    if(r.city)search.searchParams.set("loc",r.city);
+    if(r.name)search.searchParams.set("q",r.name);
+    return {url:search.href,label:"Find doctor on Slashcure ↗",direct:false};
+  };
   const card = (r, sukDoctorIcons=false) => {
     const type=sukDoctorIcons ? specialtyIconType(r) : "";
     const icon=sukDoctorIcons ? '<div class="sp-directory-icon sp-specialty-icon sp-specialty-'+type+'" aria-hidden="true">'+specialtyIcon(type)+'</div>'
       : '<div class="sp-directory-icon" aria-hidden="true">'+esc(symbol(r))+'</div>';
-    return `<article class="sp-directory-card${sukDoctorIcons ? " sp-specialty-card" : ""}">
-    ${icon}
-    <div class="sp-directory-body">
-      <span class="sp-card-type">${r.kind==="hospital"?"HEALTHCARE FACILITY":"DOCTOR PROFILE"} · ${esc(r.city)}</span>
-      <h3><a href="${esc(r.url)}">${esc(r.name)}</a></h3>
-      <p class="sp-card-specialty">${esc(title(r))}</p>
-      ${r.hospital?`<p class="sp-card-clinic">⌖ ${esc(r.hospital)}</p>`:""}
-      <a class="sp-card-link" href="${esc(r.url)}">Explore profile <span aria-hidden="true">↗</span></a>
-    </div></article>`;
+    const external=slashcureLink(r);
+    return '<article class="sp-directory-card'+(sukDoctorIcons ? " sp-specialty-card" : "")+'">'+
+      icon+
+      '<div class="sp-directory-body">'+
+        '<span class="sp-card-type">'+(r.kind==="hospital"?"HEALTHCARE FACILITY":"DOCTOR PROFILE")+' · '+esc(r.city)+'</span>'+
+        '<h3><a href="'+esc(r.url)+'">'+esc(r.name)+'</a></h3>'+
+        '<p class="sp-card-specialty">'+esc(title(r))+'</p>'+
+        (r.hospital?'<p class="sp-card-clinic">⌖ '+esc(r.hospital)+'</p>':"")+
+        '<div class="sp-cross-profile-actions" aria-label="SlashPromo and Slashcure navigation">'+
+          '<a class="sp-cross-link sp-cross-link-local" href="'+esc(r.url)+'">View SlashPromo Profile ↗</a>'+
+          '<a class="sp-cross-link '+(external.direct?'sp-cross-link-external':'sp-cross-link-fallback')+'" href="'+esc(external.url)+'" target="_blank" rel="noopener noreferrer">'+esc(external.label)+'</a>'+
+        '</div>'+
+      '</div></article>';
   };
   const setup = (root,db) => {
     const type = root.dataset.kind || "doctor";

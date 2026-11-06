@@ -15,3 +15,9 @@ a.sp-cross-link:hover{transform:translateY(-1px);box-shadow:0 5px 12px #07385d19
 .sp-profile-hero .sp-cross-link-pending{color:#68768a}
 @media(max-width:550px){.sp-cross-profile-actions{align-items:stretch}.sp-cross-profile-actions .sp-cross-link{flex:1 1 100%;width:100%}.sp-cross-profile-hero .sp-cross-link{width:auto;flex:1 1 auto}}
 @media(prefers-reduced-motion:reduce){a.sp-cross-link{transition:none!important}}
+
+/* Clearly labeled fallback to Slashcure directory searches, distinct from confirmed profiles. */
+.sp-cross-link-fallback{background:#ffffff;color:#0e5b9a!important;border-color:#b5d4eb}
+.sp-cross-link-fallback:hover{background:#eef6ff}
+.zia-page-hero .sp-cross-profile-actions{margin:18px 0 10px}
+.zia-page-hero .sp-cross-link{box-shadow:0 4px 18px #071a3633}
