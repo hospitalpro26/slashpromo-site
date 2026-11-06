@@ -179,7 +179,7 @@
       "qualifications": "DPT, MPhil, OMTC",
       "hospital": "Astro Physiocare",
       "url": "/doctors/karachi/dr-anozia-sabir/",
-      "externalProfile": "https://slashcure.com/physiotherapists/karachi/dr-anozia-sabir",
+      "externalProfile": "https://slashcure.com/consultant-physiotherapists/karachi/dr-anozia-sabir",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -1485,6 +1485,26 @@
       "kind": "hospital",
       "linkedDoctorIds": [
         "sukkur-dr-israr-ahmed-shaikh"
+      ]
+    },
+    {
+      "id": "karachi-astro-physiocare",
+      "name": "Astro Physiocare",
+      "city": "Karachi",
+      "category": "Physiotherapy & Rehabilitation Centre",
+      "description": "Physiotherapy and rehabilitation centre in Karachi, with a DHA Phase VI clinic and additional published Korangi and North Nazimabad branch addresses. Services include musculoskeletal, spine, sports, neurological and women's health rehabilitation.",
+      "address": "Office No. 102, First Floor, Building No. 19-C, Bukhari Commercial Lane No. 9, DHA Phase VI, Karachi, Sindh, Pakistan",
+      "phone": "+92 346 8078687",
+      "url": "/hospitals/karachi/astro-physiocare/",
+      "externalProfile": "https://slashcure.com/hospitals/karachi/astro-physiocare",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": [
+        "karachi-dr-anozia-sabir",
+        "karachi-dr-arooba-khayam",
+        "karachi-dr-ayesha-anwar",
+        "karachi-dr-mahum-jamil",
+        "karachi-dr-zarmeen-zehra"
       ]
     }
   ]
