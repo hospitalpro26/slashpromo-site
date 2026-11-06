@@ -85,6 +85,7 @@
     const city = root.querySelector("[data-native-city]");
     const specialties = root.querySelector("[data-native-specialty]");
     const area = root.querySelector("[data-native-area]");
+    const hospital = root.querySelector("[data-native-hospital]");
     const datalist = root.querySelector("[data-native-city-list]");
     const output = root.querySelector("[data-native-results]");
     const label = root.querySelector("[data-native-count]");
@@ -97,6 +98,12 @@
     if(specialties)specialties.innerHTML='<option value="">All specialties</option>'+
       specs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
     if(area){const areas=[...new Set(items.map(r=>r.area||"").filter(Boolean))].sort();area.innerHTML='<option value="">All listed areas</option>'+areas.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");}
+    const hospitalKey = value => normal(value).replace(/ sukku?r$/,"").trim();
+    if(hospital){
+      const names=new Map();
+      items.filter(r=>r.hospital).forEach(r=>{const key=hospitalKey(r.hospital);if(key&&!names.has(key))names.set(key,r.hospital.replace(/,\s*Sukkur$/i,""));});
+      hospital.innerHTML='<option value="">All listed hospitals</option>'+[...names].sort((a,b)=>a[1].localeCompare(b[1])).map(([key,label])=>`<option value="${esc(key)}">${esc(label)}</option>`).join("");
+    }
     if(city&&initialCity)city.value=initialCity;
     let showing = scope === "home" ? 6 : scope === "all" ? 18 : 40;
     const render = () => {
@@ -104,9 +111,10 @@
       const cv=normal(city?.value);
       const sv=normal(specialties?.value);
       const av=normal(area?.value);
+      const hv=normal(hospital?.value);
       const matches=items.filter(r=>(!q||searchable(r).includes(q)) &&
         (!cv||(r.cities||[r.city]).some(c=>normal(c).includes(cv))) &&
-        (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av)).sort((a,b)=>a.name.localeCompare(b.name));
+        (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av) && (!hv||hospitalKey(r.hospital)===hv)).sort((a,b)=>a.name.localeCompare(b.name));
       const current=matches.slice(0,showing);
       const sukDoctorIcons=scope === "sukkur" && type === "doctor";
       output.innerHTML=current.map(r=>card(r,sukDoctorIcons)).join("");
@@ -118,8 +126,8 @@
       root.setAttribute("data-ready","true");
     };
     form?.addEventListener("submit",e=>{e.preventDefault();showing=1000;render();root.querySelector("[data-native-results]")?.scrollIntoView({behavior:"smooth",block:"start"});});
-    [query,city,specialties,area].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{showing=scope==="home"?6:1000;render();}));
-    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";showing=scope==="home"?6:scope==="all"?18:40;render();});
+    [query,city,specialties,area,hospital].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{showing=scope==="home"?6:1000;render();}));
+    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";if(hospital)hospital.value="";showing=scope==="home"?6:scope==="all"?18:40;render();});
     load?.addEventListener("click",()=>{showing+=18;render();});
     const params=new URLSearchParams(window.location.search);
     if(scope==="all" && !initialCity){
@@ -127,6 +135,7 @@
       if(city&&params.has("city"))city.value=params.get("city").slice(0,100);
     }
     if(scope==="sukkur" && type==="doctor" && area && params.has("area")){const wanted=params.get("area").slice(0,100);if([...area.options].some(o=>o.value===wanted))area.value=wanted;}
+    if(scope==="sukkur" && type==="doctor" && hospital && params.has("hospital")){const wanted=params.get("hospital").slice(0,100);if([...hospital.options].some(o=>o.value===wanted))hospital.value=wanted;}
     render();
   };
   fetch("/assets/directory.json",{cache:"no-store"}).then(r=>{
