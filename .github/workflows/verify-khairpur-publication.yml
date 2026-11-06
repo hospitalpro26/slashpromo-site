@@ -1,0 +1,38 @@
+name: Verify public Khairpur city page
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-khairpur-publication.yml'
+      - 'khairpur/index.html'
+      - 'hospitals/khairpur/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-public-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify Khairpur page and published provider links
+        shell: bash
+        run: |
+          set -euo pipefail
+          page='https://slashpromo.com/khairpur/'
+          for attempt in 1 2 3 4 5 6; do
+            if curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "${page}?khairpur-check=${GITHUB_SHA}" -o /tmp/khairpur.html; then
+              if grep -q 'Find the Best Doctors' /tmp/khairpur.html && grep -q 'khairpur-doctors' /tmp/khairpur.html && grep -q 'khairpur-hospitals' /tmp/khairpur.html; then
+                echo 'Khairpur city page contains updated content.'
+                break
+              fi
+            fi
+            if [ "$attempt" = '6' ]; then
+              echo 'Khairpur page not yet confirmed on public site' >&2
+              exit 1
+            fi
+            sleep 15
+          done
+          for url in 'https://slashpromo.com/hospitals/khairpur/ali-medical-center-khairpur/' 'https://slashpromo.com/hospitals/khairpur/health-care-clinic-khairpur/'; do
+            curl -fLsS --retry 3 --max-time 20 "$url" -o /tmp/provider.html
+            grep -q '<h1>' /tmp/provider.html
+            echo "Verified $url"
+          done
