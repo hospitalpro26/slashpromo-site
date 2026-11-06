@@ -914,7 +914,7 @@
       "hospital": "",
       "qualifications": "Medical practitioner",
       "url": "/doctors/sukkur/dr-abdul-ahad-solangi/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/general-physicians/sukkur/dr-abdul-ahad-solangi",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -929,7 +929,7 @@
       "hospital": "Bhatti Children Hospital, Sukkur",
       "qualifications": "Psychiatry specialist",
       "url": "/doctors/sukkur/dr-agha-wasif/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/psychiatrists/sukkur/dr-agha-wasif",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -976,7 +976,7 @@
       "hospital": "Medicine Unit-I, GMC Teaching Hospital Sukkur",
       "qualifications": "MBBS, RMP",
       "url": "/doctors/sukkur/dr-amjad-ali-kalwar/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/postgraduate-trainees-internal-medicine/sukkur/dr-amjad-ali-kalwar",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -991,7 +991,7 @@
       "hospital": "Dr. Shahid Mirani Hospital, Teer Chowk, Sukkur",
       "qualifications": "DPT (JPMC), MPhil (Rehabilitation Sciences), Certified Dry Needling Practitioner (UK)",
       "url": "/doctors/sukkur/dr-ammara-bhatti/",
-      "externalProfile": "https://slashcure.com/dr-ammara-bhatti",
+      "externalProfile": "https://slashcure.com/physiotherapists/sukkur/dr-ammara-bhatti",
       "hospitalpro": "",
       "kind": "doctor",
       "area": "Teer Chowk"
@@ -1007,7 +1007,7 @@
       "hospital": "Hira Medical Centre, Sukkur",
       "qualifications": "MBBS, FCPS (Cardiology)",
       "url": "/doctors/sukkur/dr-aneel-ahmed-ghanghro/",
-      "externalProfile": "https://slashcure.com/consultant-cardiologists/sukkur/dr-aneel-ahmed-ghanghro",
+      "externalProfile": "https://slashcure.com/cardiologists/sukkur/dr-aneel-ahmed-ghanghro",
       "hospitalpro": "https://hospitalpro.online/dr-aneel-ahmed-ghanghro.html",
       "kind": "doctor",
       "area": "Barrage Colony"
@@ -1039,7 +1039,7 @@
       "hospital": "Hira Medical Centre, Sukkur",
       "qualifications": "BDS, FCPS (Prosthodontics)",
       "url": "/doctors/sukkur/dr-deepak-kumar/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/dentists/sukkur/dr-deepak-kumar",
       "hospitalpro": "",
       "kind": "doctor",
       "area": "Barrage Colony"
@@ -1133,7 +1133,7 @@
       "hospital": "Mustafai Trust Hospital, Sukkur",
       "qualifications": "DPT",
       "url": "/doctors/sukkur/dr-komal-kandhir/",
-      "externalProfile": "https://slashcure.com/consultant-physiotherapists/sukkur/dr-komal-kandhir-pt",
+      "externalProfile": "https://slashcure.com/physiotherapists/sukkur/dr-komal-kandhir-pt",
       "hospitalpro": "https://hospitalpro.online/dr-komal-kandhir.html",
       "kind": "doctor"
     },
@@ -1148,7 +1148,7 @@
       "hospital": "Dr. Shahid Mirani Hospital, Sukkur",
       "qualifications": "Chest specialist",
       "url": "/doctors/sukkur/dr-muhammad-nasir-soomro/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/pulmonologists/sukkur/dr-muhammad-nasir-soomro",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -1225,7 +1225,7 @@
       "hospital": "River City Hospital, Sukkur",
       "qualifications": "MBBS, FCPS",
       "url": "/doctors/sukkur/dr-saima-shaikh/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/gynecologists-obstetricians/sukkur/dr-saima-shaikh",
       "hospitalpro": "https://hospitalpro.online/dr-saima-shaikh.html",
       "kind": "doctor"
     },
@@ -1240,7 +1240,7 @@
       "hospital": "Dr. Ziauddin Hospital Sukkur",
       "qualifications": "MBBS · FCPS (Paediatrics) · PGPN Pro · 9+ years' experience",
       "url": "/doctors/sukkur/dr-sajid-khadim/",
-      "externalProfile": "https://slashcure.com/pediatricians/sukkur/dr-sajid-khadim",
+      "externalProfile": "https://slashcure.com/paediatricians/sukkur/dr-sajid-khadim",
       "hospitalpro": "https://hospitalpro.online/dr-sajid-khadim.html",
       "kind": "doctor",
       "area": "Shikarpur Road"
@@ -1256,7 +1256,7 @@
       "hospital": "SICVD, Sukkur",
       "qualifications": "Cardiology specialist",
       "url": "/doctors/sukkur/dr-tahir-mumtaz-memon/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/cardiologists/sukkur/dr-tahir-mumtaz",
       "hospitalpro": "",
       "kind": "doctor"
     },
