@@ -36,6 +36,26 @@
             <label>Your question
               <textarea name="question" required minlength="12" maxlength="700" rows="4" placeholder="For example: Where can I find a pulmonologist in ${label}, and what are the published OPD timings?"></textarea>
             </label>
+            <fieldset class="sp-qa-personal">
+              <legend>Your details <span>(private — visible only to our team)</span></legend>
+              <div class="sp-qa-personal-grid">
+                <label>Your name <span class="sp-qa-required">Required</span>
+                  <input name="visitorName" type="text" autocomplete="name" required minlength="2" maxlength="100" placeholder="Enter your name">
+                </label>
+                <label>Your city <span class="sp-qa-required">Required</span>
+                  <input name="visitorCity" type="text" autocomplete="address-level2" required minlength="2" maxlength="80" placeholder="Your city">
+                </label>
+              </div>
+              <label>WhatsApp number <span class="sp-qa-optional">Optional · private</span>
+                <input name="visitorWhatsApp" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="e.g. +92 300 1234567">
+              </label>
+              <p class="sp-qa-note">Your WhatsApp number is never shown on the public website. Our team may contact you about your question only if you provide a number and agree below.</p>
+              <label class="sp-qa-check"><input type="checkbox" name="contactConsent"><span>I agree that the SlashPromo team may contact me on WhatsApp about this question.</span></label>
+              <label>How can we improve? <span class="sp-qa-optional">Optional · private</span>
+                <textarea name="visitorSuggestion" rows="3" maxlength="1200" placeholder="Share a suggestion, a solution you'd like, or an improvement you want to see on SlashPromo."></textarea>
+              </label>
+              <p class="sp-qa-note">Your name, city, WhatsApp number and suggestions are saved privately for authorized staff. Only an approved question and our response appear publicly.</p>
+            </fieldset>
             <label class="sp-qa-honeypot" aria-hidden="true">Leave this field blank<input name="website" tabindex="-1" autocomplete="off"></label>
             <div class="sp-qa-security" id="sp-qa-security" aria-label="Spam-prevention check"></div>
             <div class="sp-qa-actions"><button type="submit" id="sp-qa-submit" disabled>Submit for review</button></div>
@@ -54,6 +74,7 @@
   if(fallback) fallback.replaceWith(section);
   else main.appendChild(section);
   const form=section.querySelector("#sp-qa-form");
+  form.elements.visitorCity.value=label;
   const feedback=section.querySelector("#sp-qa-feedback");
   const button=section.querySelector("#sp-qa-submit");
   const results=section.querySelector("#sp-qa-questions");
@@ -110,15 +131,27 @@
     event.preventDefault();
     if(!isReady||!turnstileToken)return;
     button.disabled=true;
-    const payload={city,category:form.elements.category.value,question:form.elements.question.value,website:form.elements.website.value,turnstileToken};
+    const payload={
+      city,
+      category:form.elements.category.value,
+      question:form.elements.question.value,
+      visitorName:form.elements.visitorName.value,
+      visitorCity:form.elements.visitorCity.value,
+      visitorWhatsApp:form.elements.visitorWhatsApp.value,
+      visitorSuggestion:form.elements.visitorSuggestion.value,
+      contactConsent:form.elements.contactConsent.checked,
+      website:form.elements.website.value,
+      turnstileToken
+    };
     try{
       const response=await fetch("/api/questions",{
         method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(payload)
       });
       const data=await response.json();
       if(!response.ok)throw Error(data.error||"Please try again later.");
-      form.elements.question.value="";
-      notice("Thank you. Your question has been received and is awaiting review. It will appear here only if approved.","success");
+      form.reset();
+      form.elements.visitorCity.value=label;
+      notice("Thank you. Your question and private details have been saved for the team. Only an approved question and answer will appear publicly.","success");
     }catch(error){notice(error.message||"Could not submit your question.","error");}
     finally{
       turnstileToken="";
