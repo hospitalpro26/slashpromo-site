@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-06",
+  "updatedAt": "2026-11-07",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
@@ -919,6 +919,22 @@
       "kind": "doctor"
     },
     {
+      "id": "sukkur-dr-aftab-ahmed-mughal",
+      "name": "Dr. Aftab Ahmed Mughal",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Senior Consultant General & Laparoscopic Surgeon · Emergency & Oncological Surgery",
+      "hospital": "Red Crescent Hospital Sukkur",
+      "qualifications": "MBBS, FCPS (General Surgery) · 20+ years of experience",
+      "url": "/doctors/sukkur/dr-aftab-ahmed-mughal/",
+      "externalProfile": "https://slashcure.com/general-surgeons-laproscopic-surgeons/sukkur/dr-aftab-ahmed-mughal",
+      "hospitalpro": "",
+      "kind": "doctor",
+      "area": "Minara Road, near SIUT, Sukkur"
+    },
+    {
       "id": "sukkur-dr-agha-wasif",
       "name": "Dr. Agha Wasif",
       "city": "Sukkur",
@@ -1528,13 +1544,14 @@
       "name": "Red Crescent Hospital Sukkur",
       "city": "Sukkur",
       "category": "Hospital",
-      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "description": "Red Crescent Hospital, Minara Road near SIUT, Sukkur. Published doctor associations include consultant physician and general and laparoscopic surgery services. Verify current schedules with the hospital.",
       "url": "/hospitals/sukkur/red-crescent-hospital-sukkur/",
       "hospitalpro": "",
       "externalProfile": "",
       "kind": "hospital",
       "linkedDoctorIds": [
-        "sukkur-dr-tofique-ahmed-kamboh"
+        "sukkur-dr-tofique-ahmed-kamboh",
+        "sukkur-dr-aftab-ahmed-mughal"
       ]
     },
     {
