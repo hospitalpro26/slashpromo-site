@@ -1,0 +1,127 @@
+/* Public city Q&A. Questions remain private until reviewed by SlashPromo. */
+(() => {
+  "use strict";
+  const cityMap={sukkur:"Sukkur",khairpur:"Khairpur",shikarpur:"Shikarpur",ghotki:"Ghotki",karachi:"Karachi",hyderabad:"Hyderabad"};
+  const parts=location.pathname.toLowerCase().split("/").filter(Boolean);
+  if(parts.length!==1||!cityMap[parts[0]])return;
+  const city=parts[0],label=cityMap[city];
+  const main=document.querySelector("main");
+  if(!main||document.querySelector("#community-questions"))return;
+  const stylesheet=document.createElement("link");
+  stylesheet.rel="stylesheet";stylesheet.href="/assets/city-questions.css?v=20261108-1";document.head.appendChild(stylesheet);
+  const section=document.createElement("section");
+  section.id="community-questions";section.className="sp-qa-section";
+  section.setAttribute("aria-labelledby","sp-qa-title");
+  section.innerHTML=`
+    <div class="wrap sp-qa-shell">
+      <div class="sp-qa-heading">
+        <span class="sp-qa-eyebrow">Community health questions · ${label}</span>
+        <h2 id="sp-qa-title">Questions &amp; Answers about healthcare in ${label}</h2>
+        <p>Ask about doctors, clinic contact numbers, OPD timings, appointments, hospitals, or general health information in ${label}. Our team reviews questions before publishing answers.</p>
+      </div>
+      <div class="sp-qa-grid">
+        <div class="sp-qa-card">
+          <h3>Ask a question</h3>
+          <form class="sp-qa-form" id="sp-qa-form">
+            <label>What is your question about?
+              <select name="category" required>
+                <option value="Health questions">General health question</option>
+                <option value="OPD timings">Doctor OPD timings</option>
+                <option value="Doctor contact">Public doctor/clinic contact number</option>
+                <option value="Doctors &amp; hospitals">Doctors and hospitals</option>
+                <option value="Appointments">Appointments and bookings</option>
+                <option value="Other">Other healthcare query</option>
+              </select>
+            </label>
+            <label>Your question
+              <textarea name="question" required minlength="12" maxlength="700" rows="4" placeholder="For example: Where can I find a pulmonologist in ${label}, and what are the published OPD timings?"></textarea>
+            </label>
+            <label class="sp-qa-honeypot" aria-hidden="true">Leave this field blank<input name="website" tabindex="-1" autocomplete="off"></label>
+            <div class="sp-qa-security" id="sp-qa-security" aria-label="Spam-prevention check"></div>
+            <div class="sp-qa-actions"><button type="submit" id="sp-qa-submit" disabled>Submit for review</button></div>
+            <p id="sp-qa-feedback" class="sp-qa-feedback" role="status" aria-live="polite" hidden></p>
+            <p class="sp-qa-note">Please do not include your name, phone number, email, medical reports, or other identifying health details. Questions are public only after approval.</p>
+          </form>
+        </div>
+        <div class="sp-qa-card">
+          <h3>Answered questions in ${label}</h3>
+          <div id="sp-qa-questions" class="sp-qa-questions" aria-live="polite"><p class="sp-qa-note">Loading approved questions…</p></div>
+          <div class="sp-qa-privacy"><strong>For information, not diagnosis.</strong> General health answers cannot replace examination by a qualified clinician. For emergencies, seek urgent medical care. OPD schedules and contact numbers must be confirmed with the provider before travel.</div>
+        </div>
+      </div>
+    </div>`;
+  main.appendChild(section);
+  const form=section.querySelector("#sp-qa-form");
+  const feedback=section.querySelector("#sp-qa-feedback");
+  const button=section.querySelector("#sp-qa-submit");
+  const results=section.querySelector("#sp-qa-questions");
+  const security=section.querySelector("#sp-qa-security");
+  let turnstileId=null,turnstileToken="",isReady=false;
+  function notice(message,kind="info"){feedback.hidden=false;feedback.dataset.kind=kind;feedback.textContent=message;}
+  function renderQuestions(items){
+    results.replaceChildren();
+    if(!items.length){
+      const p=document.createElement("p");p.className="sp-qa-note";
+      p.textContent="No approved questions here yet. Useful questions and verified answers will appear after review.";
+      results.append(p);return;
+    }
+    for(const item of items){
+      const article=document.createElement("article");article.className="sp-qa-item";
+      const category=document.createElement("span");category.className="sp-qa-item-category";category.textContent=item.category||"Healthcare";
+      const question=document.createElement("h4");question.textContent=item.question;
+      const label=document.createElement("span");label.className="sp-qa-answer-label";label.textContent="SlashPromo team response";
+      const answer=document.createElement("p");answer.textContent=item.answer||"";
+      article.append(category,question,label,answer);results.append(article);
+    }
+  }
+  function enableSecurity(siteKey){
+    const script=document.createElement("script");
+    script.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async=true;
+    script.onload=()=>{
+      try {
+        turnstileId=window.turnstile.render(security,{
+          sitekey:siteKey,
+          callback:(token)=>{turnstileToken=token;button.disabled=false;},
+          "expired-callback":()=>{turnstileToken="";button.disabled=true;},
+          "error-callback":()=>{turnstileToken="";button.disabled=true;notice("The security check could not load. Please refresh and try again.","error");}
+        });
+      }catch{notice("Security verification is unavailable. Please try again later.","error");}
+    };
+    script.onerror=()=>notice("Could not load the security check. Please try again later.","error");
+    document.head.appendChild(script);
+  }
+  async function load(){
+    try{
+      const response=await fetch("/api/questions?city="+encodeURIComponent(city),{headers:{"Accept":"application/json"}});
+      if(!response.ok)throw Error("Service unavailable");
+      const data=await response.json();
+      renderQuestions(Array.isArray(data.questions)?data.questions:[]);
+      if(data.enabled&&data.siteKey){isReady=true;enableSecurity(data.siteKey);}
+      else notice("Question submissions are being set up. For now, please use the published doctor and hospital contact details on this page.");
+    }catch{
+      renderQuestions([]);
+      notice("Questions are temporarily unavailable. Please check again later.","error");
+    }
+  }
+  form.addEventListener("submit",async(event)=>{
+    event.preventDefault();
+    if(!isReady||!turnstileToken)return;
+    button.disabled=true;
+    const payload={city,category:form.elements.category.value,question:form.elements.question.value,website:form.elements.website.value,turnstileToken};
+    try{
+      const response=await fetch("/api/questions",{
+        method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(payload)
+      });
+      const data=await response.json();
+      if(!response.ok)throw Error(data.error||"Please try again later.");
+      form.elements.question.value="";
+      notice("Thank you. Your question has been received and is awaiting review. It will appear here only if approved.","success");
+    }catch(error){notice(error.message||"Could not submit your question.","error");}
+    finally{
+      turnstileToken="";
+      if(window.turnstile&&turnstileId!==null)window.turnstile.reset(turnstileId);
+    }
+  });
+  load();
+})();
