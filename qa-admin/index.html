@@ -68,6 +68,7 @@ async function load(){
      privateGrid.append(field);
    }
    detail("Visitor name",q.visitor_name);
+   detail("Public name permission",q.public_name_consent===1?"Yes — show with approved question":"No — keep name private (earlier submission)");
    detail("Visitor city",q.visitor_city);
    detail("WhatsApp number",q.visitor_whatsapp||"Not provided");
    detail("WhatsApp contact consent",q.contact_consent===1?"Yes — may contact about this inquiry":"Not provided / no consent");
