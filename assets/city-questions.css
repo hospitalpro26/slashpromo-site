@@ -1,0 +1,31 @@
+/* SlashPromo city Questions & Answers — isolated from existing card and navigation styles. */
+.sp-qa-section{padding:58px 0 70px;background:linear-gradient(145deg,#f4f8ff,#fff 60%,#fff8f9);border-top:1px solid #d9e4f4}
+.sp-qa-shell{max-width:1120px;margin:auto}
+.sp-qa-heading{max-width:760px;margin-bottom:25px}
+.sp-qa-eyebrow{display:inline-block;color:#c53450;font-size:12px;letter-spacing:.12em;font-weight:850;text-transform:uppercase}
+.sp-qa-heading h2{font-size:clamp(1.8rem,4vw,2.7rem);line-height:1.15;letter-spacing:-.045em;color:#152c56;margin:8px 0 10px}
+.sp-qa-heading p{margin:0;color:#566985;font-size:15px;line-height:1.7}
+.sp-qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.sp-qa-card{background:#fff;border:1px solid #dce6f3;border-radius:19px;box-shadow:0 15px 38px rgba(18,46,84,.07);padding:25px;min-width:0}
+.sp-qa-card h3{font-size:1.26rem;color:#132950;margin:0 0 15px}
+.sp-qa-form{display:grid;gap:13px}
+.sp-qa-form label{display:grid;gap:6px;color:#223854;font-weight:750;font-size:14px}
+.sp-qa-form select,.sp-qa-form textarea{display:block;width:100%;border:1px solid #b8cbe4;border-radius:11px;background:#fbfdff;color:#152b51;padding:12px;font:inherit;font-size:15px;line-height:1.45}
+.sp-qa-form textarea{resize:vertical;min-height:118px}
+.sp-qa-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;background:#1955a4;color:#fff;border:0;border-radius:11px;padding:11px 20px;font-weight:800}
+.sp-qa-actions button:hover:not(:disabled){background:#133f7e}
+.sp-qa-actions button:disabled{opacity:.55;cursor:not-allowed}
+.sp-qa-note{font-size:12.5px;color:#677890;line-height:1.65;margin:0}
+.sp-qa-security{min-height:65px}
+.sp-qa-feedback{padding:10px 12px;margin:0;border-radius:10px;font-size:14px;line-height:1.6;background:#f0f6ff;color:#194474}
+.sp-qa-feedback[data-kind=error]{background:#fff0f2;color:#9c1f38}
+.sp-qa-feedback[data-kind=success]{background:#eaf8f0;color:#1e6b46}
+.sp-qa-questions{display:grid;gap:13px;max-height:750px;overflow-y:auto}
+.sp-qa-item{border:1px solid #e0e9f4;border-radius:12px;padding:16px;background:#f9fbff}
+.sp-qa-item-category{color:#c33953;font-size:11px;font-weight:850;letter-spacing:.07em;text-transform:uppercase}
+.sp-qa-item h4{font-size:15px;line-height:1.45;margin:5px 0 9px;color:#142c53;overflow-wrap:anywhere}
+.sp-qa-item p{margin:0;color:#4c627f;line-height:1.7;font-size:14px;overflow-wrap:anywhere;white-space:pre-wrap}
+.sp-qa-answer-label{display:block;margin-bottom:3px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;font-weight:850;color:#326d5b}
+.sp-qa-privacy{margin-top:15px;padding:12px 14px;border-radius:12px;background:#eaf1fc;color:#405c7d;font-size:13px;line-height:1.7}
+.sp-qa-honeypot{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+@media(max-width:780px){.sp-qa-section{padding:40px 0 50px}.sp-qa-grid{grid-template-columns:1fr}.sp-qa-card{padding:19px}.sp-qa-heading h2{font-size:1.85rem}}
