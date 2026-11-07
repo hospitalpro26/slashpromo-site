@@ -37,15 +37,16 @@
               <textarea name="question" required minlength="12" maxlength="700" rows="4" placeholder="For example: Where can I find a pulmonologist in ${label}, and what are the published OPD timings?"></textarea>
             </label>
             <fieldset class="sp-qa-personal">
-              <legend>Your details <span>(private — visible only to our team)</span></legend>
+              <legend>Your details <span>(name shown publicly after approval; other details private)</span></legend>
               <div class="sp-qa-personal-grid">
-                <label>Your name <span class="sp-qa-required">Required</span>
+                <label>Your name <span class="sp-qa-required">Required · public when approved</span>
                   <input name="visitorName" type="text" autocomplete="name" required minlength="2" maxlength="100" placeholder="Enter your name">
                 </label>
                 <label>Your city <span class="sp-qa-required">Required</span>
                   <input name="visitorCity" type="text" autocomplete="address-level2" required minlength="2" maxlength="80" placeholder="Your city">
                 </label>
               </div>
+              <label class="sp-qa-check"><input type="checkbox" name="publicNameConsent" required><span><strong>I understand and agree that my name will appear publicly with my question if it is approved.</strong></span></label>
               <label>WhatsApp number <span class="sp-qa-optional">Optional · private</span>
                 <input name="visitorWhatsApp" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" placeholder="e.g. +92 300 1234567">
               </label>
@@ -54,13 +55,13 @@
               <label>How can we improve? <span class="sp-qa-optional">Optional · private</span>
                 <textarea name="visitorSuggestion" rows="3" maxlength="1200" placeholder="Share a suggestion, a solution you'd like, or an improvement you want to see on SlashPromo."></textarea>
               </label>
-              <p class="sp-qa-note">Your name, city, WhatsApp number and suggestions are saved privately for authorized staff. Only an approved question and our response appear publicly.</p>
+              <p class="sp-qa-note">Your name will be shown beside your approved question. Your city, WhatsApp number and improvement suggestions remain private and visible only to the SlashPromo team.</p>
             </fieldset>
             <label class="sp-qa-honeypot" aria-hidden="true">Leave this field blank<input name="website" tabindex="-1" autocomplete="off"></label>
             <div class="sp-qa-security" id="sp-qa-security" aria-label="Spam-prevention check"></div>
             <div class="sp-qa-actions"><button type="submit" id="sp-qa-submit" disabled>Submit for review</button></div>
             <p id="sp-qa-feedback" class="sp-qa-feedback" role="status" aria-live="polite" hidden></p>
-            <p class="sp-qa-note">Please do not include your name, phone number, email, medical reports, or other identifying health details. Questions are public only after approval.</p>
+            <p class="sp-qa-note">Your name appears publicly only with an approved question. Do not include phone numbers, email addresses, patient details or medical reports in the question itself.</p>
           </form>
         </div>
         <div class="sp-qa-card">
@@ -94,7 +95,14 @@
       const question=document.createElement("h4");question.textContent=item.question;
       const label=document.createElement("span");label.className="sp-qa-answer-label";label.textContent="SlashPromo team response";
       const answer=document.createElement("p");answer.textContent=item.answer||"";
-      article.append(category,question,label,answer);results.append(article);
+      article.append(category,question);
+      if(typeof item.author_name==="string"&&item.author_name.trim()){
+        const byline=document.createElement("p");
+        byline.className="sp-qa-byline";
+        byline.textContent="Asked by "+item.author_name;
+        article.append(byline);
+      }
+      article.append(label,answer);results.append(article);
     }
   }
   function enableSecurity(siteKey){
@@ -140,6 +148,7 @@
       visitorWhatsApp:form.elements.visitorWhatsApp.value,
       visitorSuggestion:form.elements.visitorSuggestion.value,
       contactConsent:form.elements.contactConsent.checked,
+      publicNameConsent:form.elements.publicNameConsent.checked,
       website:form.elements.website.value,
       turnstileToken
     };
@@ -151,7 +160,7 @@
       if(!response.ok)throw Error(data.error||"Please try again later.");
       form.reset();
       form.elements.visitorCity.value=label;
-      notice("Thank you. Your question and private details have been saved for the team. Only an approved question and answer will appear publicly.","success");
+      notice("Thank you! Your question is awaiting review. If approved, your name, question and the team’s answer will appear publicly; your other details stay private.","success");
     }catch(error){notice(error.message||"Could not submit your question.","error");}
     finally{
       turnstileToken="";
