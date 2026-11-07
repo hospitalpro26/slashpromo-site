@@ -8,7 +8,7 @@
   const main=document.querySelector("main");
   if(!main||document.querySelector("#community-questions"))return;
   const stylesheet=document.createElement("link");
-  stylesheet.rel="stylesheet";stylesheet.href="/assets/city-questions.css?v=20261108-1";document.head.appendChild(stylesheet);
+  stylesheet.rel="stylesheet";stylesheet.href="/assets/city-questions.css?v=20261108-public-author5";document.head.appendChild(stylesheet);
   const section=document.createElement("section");
   section.id="community-questions";section.className="sp-qa-section";
   section.setAttribute("aria-labelledby","sp-qa-title");
