@@ -1,0 +1,40 @@
+name: Verify Dr. Aftab Mughal's public SlashPromo pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-aftab-mughal-publication.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-live-doctor-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm doctor, specialty, Sukkur, hospital and directory are published
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=https://slashpromo.com
+          for attempt in 1 2 3 4 5 6 7 8; do
+            ok=1
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "$base/doctors/sukkur/dr-aftab-ahmed-mughal/?check=$GITHUB_SHA" -o /tmp/doctor.html || ok=0
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "$base/doctors/sukkur/general-surgeons/?check=$GITHUB_SHA" -o /tmp/specialty.html || ok=0
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "$base/sukkur/?check=$GITHUB_SHA" -o /tmp/city.html || ok=0
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "$base/hospitals/sukkur/red-crescent-hospital-sukkur/?check=$GITHUB_SHA" -o /tmp/hospital.html || ok=0
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "$base/doctors/?check=$GITHUB_SHA" -o /tmp/directory.html || ok=0
+            curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "$base/sitemap.xml?check=$GITHUB_SHA" -o /tmp/sitemap.xml || ok=0
+            if [ "$ok" = "1" ] &&
+               grep -Fq '<h1>Dr. Aftab Ahmed Mughal</h1>' /tmp/doctor.html &&
+               grep -Fq 'Red Crescent Hospital Sukkur' /tmp/doctor.html &&
+               grep -Fq 'dr-aftab-ahmed-mughal/' /tmp/specialty.html &&
+               grep -Fq 'dr-aftab-ahmed-mughal/' /tmp/city.html &&
+               grep -Fq 'dr-aftab-ahmed-mughal/' /tmp/hospital.html &&
+               grep -Fq 'dr-aftab-ahmed-mughal/' /tmp/directory.html &&
+               grep -Fq 'https://slashpromo.com/doctors/sukkur/dr-aftab-ahmed-mughal/' /tmp/sitemap.xml; then
+              echo 'PASS: Dr. Aftab Ahmed Mughal and all five relevant public directory/specialty/hospital/Sukkur routes are published.'
+              exit 0
+            fi
+            if [ "$attempt" = "8" ]; then echo 'ERROR: Cloudflare website has not yet published all new surgeon links.' >&2; exit 1; fi
+            sleep 12
+          done
