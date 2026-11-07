@@ -8,7 +8,7 @@ export async function onRequestGet({request,env}){
   try{
     await ensureDb(env);
     const status=new URL(request.url).searchParams.get("status")==="approved"?"approved":"pending";
-    const rows=await env.QA_DB.prepare("SELECT id,city,category,question,answer,status,created_at,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent FROM questions WHERE status=? ORDER BY created_at DESC LIMIT 100").bind(status).all();
+    const rows=await env.QA_DB.prepare("SELECT id,city,category,question,answer,status,created_at,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent FROM questions WHERE status=? ORDER BY created_at DESC LIMIT 100").bind(status).all();
     return reply({questions:rows.results||[]});
   }catch{return reply({error:"Could not load the moderation queue."},503);}
 }
