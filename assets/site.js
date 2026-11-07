@@ -126,3 +126,6 @@ import("/assets/cross-profile-links.js?v=20261106-doctor-darkwordmark").catch(()
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, {once:true});
   else init();
 })();
+
+/* Add moderated public Q&A to each published city landing page. */
+import("/assets/city-questions.js?v=20261108-1").catch(()=>{});
