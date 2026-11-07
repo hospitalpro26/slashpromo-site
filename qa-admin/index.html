@@ -15,6 +15,15 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 #items{display:grid;gap:15px}.item{background:#fff;border:1px solid #dae4f2;border-radius:13px;padding:18px;box-shadow:0 10px 28px #152b5009}
 .item small{font-weight:800;color:#a62d50}.item h2{font-size:1.1rem;margin:7px 0 14px;overflow-wrap:anywhere}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 #status{color:#13508c;font-weight:650}
+.private-card{background:#f0f6ff;border:1px solid #c6d8f3;border-radius:12px;margin:12px 0 18px;padding:15px}
+.private-card h3{font-size:15px;color:#173b69;margin:0 0 5px}
+.private-card>p{font-size:12px;margin:0 0 13px;color:#526b8b}
+.private-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.private-value{margin:0;white-space:pre-wrap;overflow-wrap:anywhere;color:#203a5c;font-weight:600}
+.private-field strong{display:block;font-size:12px;color:#576d8d;margin:0 0 3px}
+.private-full{grid-column:1/-1}
+.private-value a{color:#145aa9;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:640px){.private-grid{grid-template-columns:1fr}.private-full{grid-column:auto}}
 </style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1>
@@ -49,6 +58,32 @@ async function load(){
   for(const q of data.questions){
    const card=node("article","item");const small=node("small","",q.city.toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
    const title=node("h2","",q.question);
+   const privateCard=node("section","private-card");
+   privateCard.append(node("h3","","Private visitor details · admin only"));
+   privateCard.append(node("p","","This information is never returned by the public Questions & Answers API. Do not copy it into your published answer."));
+   const privateGrid=node("div","private-grid");
+   function detail(label,value,full=false){
+     const field=node("div","private-field"+(full?" private-full":""));
+     field.append(node("strong","",label),node("p","private-value",value??"Not provided (older submission)"));
+     privateGrid.append(field);
+   }
+   detail("Visitor name",q.visitor_name);
+   detail("Visitor city",q.visitor_city);
+   detail("WhatsApp number",q.visitor_whatsapp||"Not provided");
+   detail("WhatsApp contact consent",q.contact_consent===1?"Yes — may contact about this inquiry":"Not provided / no consent");
+   detail("Suggestion / requested improvements",q.visitor_suggestion||"No suggestion provided",true);
+   if(q.visitor_whatsapp&&q.contact_consent===1){
+     let digits=q.visitor_whatsapp.replace(/\D/g,"");
+     if(digits.startsWith("0")&&digits.length===11)digits="92"+digits.slice(1);
+     if(digits.length>=10&&digits.length<=15){
+       const link=document.createElement("a");
+       link.href="https://wa.me/"+digits;
+       link.target="_blank";link.rel="noopener noreferrer";
+       link.textContent="Contact on WhatsApp ↗";
+       const wrap=node("div","private-field private-full");wrap.append(link);privateGrid.append(wrap);
+     }
+   }
+   privateCard.append(privateGrid);
    const label=node("label","");label.append(node("span","","Answer for the public (review facts first)"));
    const answer=node("textarea","");answer.maxLength=2000;answer.value=q.answer||"";label.append(answer);
    const actions=node("div","buttons");const publish=node("button","","Publish answer");const reject=node("button","reject","Reject question");
@@ -59,7 +94,7 @@ async function load(){
     catch(e){say(e.message);publish.disabled=false;reject.disabled=false;}
    }
    publish.addEventListener("click",()=>submit("approved"));reject.addEventListener("click",()=>submit("rejected"));
-   actions.append(publish,reject);card.append(small,title,label,actions);items.append(card);
+   actions.append(publish,reject);card.append(small,title,privateCard,label,actions);items.append(card);
   }
  }catch(e){say(e.message);}
 }
