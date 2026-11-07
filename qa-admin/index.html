@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<title>Private Q&A Moderation | SlashPromo</title>
+<style>
+*{box-sizing:border-box}body{font:15px/1.6 system-ui,sans-serif;margin:0;background:#f4f7fc;color:#142a50}
+main{max-width:1050px;margin:auto;padding:26px 18px}h1{margin:0 0 5px;font-size:1.8rem}
+p{color:#50647f}.notice{background:#fff4e9;border:1px solid #f2d3ae;padding:13px;border-radius:10px}
+.toolbar{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin:22px 0}
+label{display:grid;gap:5px;font-weight:650}input,select,textarea{border:1px solid #bccde4;border-radius:9px;padding:10px;font:inherit;min-width:180px;max-width:100%}
+input[type=password]{width:min(410px,90vw)}
+textarea{width:100%;min-height:80px}
+button{background:#1653a0;color:#fff;border:0;border-radius:9px;padding:11px 15px;font-weight:750;cursor:pointer}
+button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
+#items{display:grid;gap:15px}.item{background:#fff;border:1px solid #dae4f2;border-radius:13px;padding:18px;box-shadow:0 10px 28px #152b5009}
+.item small{font-weight:800;color:#a62d50}.item h2{font-size:1.1rem;margin:7px 0 14px;overflow-wrap:anywhere}.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+#status{color:#13508c;font-weight:650}
+</style></head>
+<body><main>
+<h1>SlashPromo · Private Q&A moderation</h1>
+<p>Review visitor questions by city. Only publish verified information and public doctor or clinic contact numbers. Never publish sensitive patient details or provide individual diagnoses.</p>
+<p class="notice">This dashboard requires the private QA_ADMIN_KEY configured in Cloudflare. The key stays in this browser tab's memory and is not saved or included in public pages. Use HTTPS only.</p>
+<div class="toolbar">
+<label>Admin key <input type="password" id="key" autocomplete="off" placeholder="Paste private admin key"></label>
+<label>View <select id="filter"><option value="pending">Awaiting review</option><option value="approved">Published</option></select></label>
+<button type="button" id="load">Load questions</button>
+</div><p id="status" role="status" aria-live="polite"></p><div id="items"></div>
+</main>
+<script>
+"use strict";
+const key=document.querySelector("#key"),filter=document.querySelector("#filter"),items=document.querySelector("#items"),status=document.querySelector("#status");
+function say(t){status.textContent=t;}
+function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
+async function request(method,payload){
+ const response=await fetch("/api/qa-admin"+(method==="GET"?"?status="+encodeURIComponent(filter.value):""),{
+  method,headers:{"X-QA-Admin-Key":key.value.trim(),"Accept":"application/json",...(method==="POST"?{"Content-Type":"application/json"}:{})},
+  ...(method==="POST"?{body:JSON.stringify(payload)}:{})
+ });
+ const data=await response.json();
+ if(!response.ok)throw Error(data.error||"Request failed.");
+ return data;
+}
+async function load(){
+ if(!key.value.trim()){say("Enter your admin key first.");return;}
+ say("Loading…");items.replaceChildren();
+ try{
+  const data=await request("GET");
+  say(data.questions.length+" "+filter.value+" questions.");
+  for(const q of data.questions){
+   const card=node("article","item");const small=node("small","",q.city.toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
+   const title=node("h2","",q.question);
+   const label=node("label","");label.append(node("span","","Answer for the public (review facts first)"));
+   const answer=node("textarea","");answer.maxLength=2000;answer.value=q.answer||"";label.append(answer);
+   const actions=node("div","buttons");const publish=node("button","","Publish answer");const reject=node("button","reject","Reject question");
+   async function submit(next){
+    if(next==="approved"&&answer.value.trim().length<12){say("A verified answer of at least 12 characters is required.");return;}
+    publish.disabled=true;reject.disabled=true;
+    try{await request("POST",{id:q.id,status:next,answer:answer.value});say(next==="approved"?"Answer published.":"Question rejected.");card.remove();}
+    catch(e){say(e.message);publish.disabled=false;reject.disabled=false;}
+   }
+   publish.addEventListener("click",()=>submit("approved"));reject.addEventListener("click",()=>submit("rejected"));
+   actions.append(publish,reject);card.append(small,title,label,actions);items.append(card);
+  }
+ }catch(e){say(e.message);}
+}
+document.querySelector("#load").addEventListener("click",load);
+filter.addEventListener("change",()=>{items.replaceChildren();say("Click Load questions to refresh.");});
+</script></body></html>
