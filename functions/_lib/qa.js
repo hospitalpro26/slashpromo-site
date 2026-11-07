@@ -41,6 +41,12 @@ export async function ensureDb(env){
     try{await env.QA_DB.prepare("ALTER TABLE questions ADD COLUMN contact_consent INTEGER NOT NULL DEFAULT 0").run();}
     catch(error){if(!/duplicate column name/i.test(String(error)))throw error;}
   }
+  // Opt-in is explicit and defaults to false for every earlier submission,
+  // since those visitors were told their names would stay private.
+  if(!existing.has("public_name_consent")){
+    try{await env.QA_DB.prepare("ALTER TABLE questions ADD COLUMN public_name_consent INTEGER NOT NULL DEFAULT 0").run();}
+    catch(error){if(!/duplicate column name/i.test(String(error)))throw error;}
+  }
   return true;
 }
 export function sameOrigin(request){
