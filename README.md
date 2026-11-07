@@ -83,3 +83,5 @@ To prevent unsupported hospital listings reappearing, run `node scripts/audit-ho
 - Do not accept patient-identifying or highly sensitive medical details in public Q&A. Refer emergencies to in-person urgent care. Do not present general information as a diagnosis or clinical encounter.
 - Publish only professional contact numbers that are already public and verified; ask patients to confirm schedules and availability with the clinic. Do not invent a doctor's phone number or appointments.
 - Update the privacy page when processing practices materially change.
+
+Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SECRET, and QA_ADMIN_KEY in the Cloudflare Pages production environment, push a fresh commit to trigger deployment and apply those runtime settings. This documentation update is that deployment trigger; publishing must still be checked in Cloudflare.
