@@ -127,5 +127,4 @@ import("/assets/cross-profile-links.js?v=20261106-doctor-darkwordmark").catch(()
   else init();
 })();
 
-/* Add moderated public Q&A to each published city landing page. */
-import("/assets/city-questions.js?v=20261108-1").catch(()=>{});
+/* City Q&A is directly loaded on each city page to avoid duplicate cached scripts. */
