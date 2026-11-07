@@ -63,11 +63,11 @@ To prevent unsupported hospital listings reappearing, run `node scripts/audit-ho
 - All changes stay within the SlashPromo repository; HospitalPro and Slashcure source sites are not modified by this rollout.
 
 ## City questions and answers (8 November 2026)
-- Shared module: `assets/city-questions.js`, loaded once by `assets/site.js`; styles: `assets/city-questions.css`.
+- Shared module: `assets/city-questions.js`, directly referenced on all six city pages; styles: `assets/city-questions.css`.
 - City landing pages: /sukkur/, /khairpur/, /shikarpur/, /ghotki/, /karachi/, /hyderabad/. Only these six published city root pages receive the public Q&A section, near the page footer. Add new city slugs to both `assets/city-questions.js` and `functions/_lib/qa.js` when publishing future city pages.
 - Public API: `GET /api/questions?city=sukkur` displays approved answers; `POST /api/questions` accepts anonymous questions **pending moderation**, protected by Cloudflare Turnstile, rate limits, and content checks.
 - Private moderation: `/qa-admin/` (not indexed) calls `/api/qa-admin` with a private administrator key entered into the form. Never share or publish the key. The API checks the key on the server for every request. Admins can publish reviewed answers or reject questions; no question automatically becomes public.
-- The API automatically creates its minimal D1 table/indexes on first request once the binding is attached, so there is no migration script to execute.
+- The API automatically creates the D1 table/indexes on first request and adds private-field columns to existing `questions` tables with additive migrations. Older approved questions remain intact; older questions have no private visitor fields.
 - Public submissions are **disabled until all four runtime settings below exist**. The page displays an honest setup message rather than pretending a submission was saved.
 
 ### One-time Cloudflare Pages configuration to activate submissions
@@ -79,9 +79,15 @@ To prevent unsupported hospital listings reappearing, run `node scripts/audit-ho
 6. Maintain Cloudflare-hosted protections, review the moderation queue regularly, and remove inappropriate or outdated content.
 
 ### Safety and privacy
-- Questions are posted without visitor name/email/phone. Submissions are reviewed before publication and IPs are only stored as keyed hashes for the four-per-24-hours anti-spam limit. Cloudflare security checks process the security token/IP.
+- Name and city are required private submission fields. WhatsApp and suggestions are optional private fields. A provided WhatsApp number requires opt-in consent for follow-up. These fields are visible ONLY via the administrator-authenticated moderation API/dashboard; they are deliberately excluded from public GET `/api/questions`. The public question/answer is reviewed before publication and IPs are stored as keyed hashes for the four-per-24-hours anti-spam limit. Cloudflare security checks process security tokens and IP addresses.
 - Do not accept patient-identifying or highly sensitive medical details in public Q&A. Refer emergencies to in-person urgent care. Do not present general information as a diagnosis or clinical encounter.
 - Publish only professional contact numbers that are already public and verified; ask patients to confirm schedules and availability with the clinic. Do not invent a doctor's phone number or appointments.
 - Update the privacy page when processing practices materially change.
 
 Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SECRET, and QA_ADMIN_KEY in the Cloudflare Pages production environment, push a fresh commit to trigger deployment and apply those runtime settings. This documentation update is that deployment trigger; publishing must still be checked in Cloudflare.
+
+### Private details and suggestions update (8 November 2026)
+- The question form collects visitor name, visitor city, optional WhatsApp, opt-in contact consent, and optional suggestions for improvements. Only category, question and editorial answer appear publicly.
+- Stored separately in D1 columns: `visitor_name`, `visitor_city`, `visitor_whatsapp`, `visitor_suggestion`, `contact_consent`. They are shown on `/qa-admin/` for pending and approved questions, not returned by `GET /api/questions`.
+- The moderation dashboard offers an opt-in-only WhatsApp contact link for authorized administrators. Do not copy visitor details into the public editorial answer.
+- No Cloudflare variable changes are required for this update. Save private details using the existing `QA_DB` binding and `QA_ADMIN_KEY`; the schema update runs automatically when the API is invoked. Redeploy from the production GitHub branch to activate.
