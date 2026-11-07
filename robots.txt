@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /qa-admin/
 
 Sitemap: https://slashpromo.com/sitemap.xml
-
-User-agent: *
-Disallow: /qa-admin/
