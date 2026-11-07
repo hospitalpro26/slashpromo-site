@@ -24,6 +24,23 @@ export async function ensureDb(env){
     env.QA_DB.prepare("CREATE INDEX IF NOT EXISTS idx_qa_public ON questions(city,status,answered_at)"),
     env.QA_DB.prepare("CREATE INDEX IF NOT EXISTS idx_qa_limit ON questions(ip_hash,created_at)")
   ]);
+  // Existing D1 databases predate the private visitor fields.
+  // ALTER TABLE is intentionally additive so previously approved answers survive.
+  const columns=await env.QA_DB.prepare("PRAGMA table_info(questions)").all();
+  const existing=new Set((columns.results||[]).map(col=>col.name));
+  for(const name of ["visitor_name","visitor_city","visitor_whatsapp","visitor_suggestion"]){
+    if(!existing.has(name)){
+      try{await env.QA_DB.prepare("ALTER TABLE questions ADD COLUMN "+name+" TEXT").run();}
+      catch(error){
+        // Another Pages request may have completed the same migration.
+        if(!/duplicate column name/i.test(String(error)))throw error;
+      }
+    }
+  }
+  if(!existing.has("contact_consent")){
+    try{await env.QA_DB.prepare("ALTER TABLE questions ADD COLUMN contact_consent INTEGER NOT NULL DEFAULT 0").run();}
+    catch(error){if(!/duplicate column name/i.test(String(error)))throw error;}
+  }
   return true;
 }
 export function sameOrigin(request){
