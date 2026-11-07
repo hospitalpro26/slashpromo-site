@@ -87,7 +87,13 @@ To prevent unsupported hospital listings reappearing, run `node scripts/audit-ho
 Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SECRET, and QA_ADMIN_KEY in the Cloudflare Pages production environment, push a fresh commit to trigger deployment and apply those runtime settings. This documentation update is that deployment trigger; publishing must still be checked in Cloudflare.
 
 ### Private details and suggestions update (8 November 2026)
-- The question form collects visitor name, visitor city, optional WhatsApp, opt-in contact consent, and optional suggestions for improvements. Only category, question and editorial answer appear publicly.
+- The question form collects visitor name, visitor city, optional WhatsApp, opt-in contact consent, and optional suggestions for improvements. Only category, question, explicitly consented visitor name, and editorial answer appear publicly. The city entry, WhatsApp and suggestions remain private.
 - Stored separately in D1 columns: `visitor_name`, `visitor_city`, `visitor_whatsapp`, `visitor_suggestion`, `contact_consent`. They are shown on `/qa-admin/` for pending and approved questions, not returned by `GET /api/questions`.
 - The moderation dashboard offers an opt-in-only WhatsApp contact link for authorized administrators. Do not copy visitor details into the public editorial answer.
 - No Cloudflare variable changes are required for this update. Save private details using the existing `QA_DB` binding and `QA_ADMIN_KEY`; the schema update runs automatically when the API is invoked. Redeploy from the production GitHub branch to activate.
+
+### Public name attribution (8 November 2026)
+- New question submissions require visitors to explicitly agree that their supplied name will be displayed alongside a question if the administrator approves it. The form clearly explains this before submission.
+- An additive D1 column `public_name_consent INTEGER NOT NULL DEFAULT 0` prevents older, previously private visitor names from becoming public automatically. To publish an older visitor's name, separately obtain that visitor's permission using an appropriate mechanism; there is no automatic override.
+- The public read endpoint selects only `CASE WHEN public_name_consent=1 THEN visitor_name ELSE NULL END AS author_name` plus existing public fields. WhatsApp, suggestions, and visitor city are never returned in the public JSON response.
+- The admin dashboard displays whether a visitor has given name publication permission. Continue moderating question and answer text to avoid accidentally sharing contact details inside freeform content.
