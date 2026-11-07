@@ -50,7 +50,9 @@
         </div>
       </div>
     </div>`;
-  main.appendChild(section);
+  const fallback=document.getElementById("sp-qa-fallback");
+  if(fallback) fallback.replaceWith(section);
+  else main.appendChild(section);
   const form=section.querySelector("#sp-qa-form");
   const feedback=section.querySelector("#sp-qa-feedback");
   const button=section.querySelector("#sp-qa-submit");
