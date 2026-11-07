@@ -4,7 +4,9 @@
     "/admin",
     "/admin/*",
     "/api/campaigns",
-    "/go/*"
+    "/go/*",
+    "/api/questions",
+    "/api/qa-admin"
   ],
   "exclude": []
 }
