@@ -61,3 +61,25 @@ To prevent unsupported hospital listings reappearing, run `node scripts/audit-ho
 - The shared cross-profile script also places both destinations on doctor and hospital hero sections, including the custom Dr. Ziauddin Hospital page.
 - Exact individual Slashcure profile URLs appear only where the provider record contains a correctly shaped, matching doctor or hospital URL. Missing doctor destinations use a clearly labeled name-and-city Slashcure search; missing hospital destinations use the Slashcure hospitals directory. A hospital link is never mislabeled as a doctor's personal profile.
 - All changes stay within the SlashPromo repository; HospitalPro and Slashcure source sites are not modified by this rollout.
+
+## City questions and answers (8 November 2026)
+- Shared module: `assets/city-questions.js`, loaded once by `assets/site.js`; styles: `assets/city-questions.css`.
+- City landing pages: /sukkur/, /khairpur/, /shikarpur/, /ghotki/, /karachi/, /hyderabad/. Only these six published city root pages receive the public Q&A section, near the page footer. Add new city slugs to both `assets/city-questions.js` and `functions/_lib/qa.js` when publishing future city pages.
+- Public API: `GET /api/questions?city=sukkur` displays approved answers; `POST /api/questions` accepts anonymous questions **pending moderation**, protected by Cloudflare Turnstile, rate limits, and content checks.
+- Private moderation: `/qa-admin/` (not indexed) calls `/api/qa-admin` with a private administrator key entered into the form. Never share or publish the key. The API checks the key on the server for every request. Admins can publish reviewed answers or reject questions; no question automatically becomes public.
+- The API automatically creates its minimal D1 table/indexes on first request once the binding is attached, so there is no migration script to execute.
+- Public submissions are **disabled until all four runtime settings below exist**. The page displays an honest setup message rather than pretending a submission was saved.
+
+### One-time Cloudflare Pages configuration to activate submissions
+1. Cloudflare dashboard → Workers & Pages → D1 → create a new D1 database named `slashpromo-questions`.
+2. Open the SlashPromo Pages project → Settings → Bindings → Add D1 database. Variable name **QA_DB**, choose `slashpromo-questions`. Configure for production, and preview if needed.
+3. Create a Cloudflare Turnstile widget for **slashpromo.com** and **www.slashpromo.com**. Add its **site key** as a Pages variable `QA_TURNSTILE_SITE_KEY` and its **secret key** as an encrypted Pages secret `QA_TURNSTILE_SECRET`.
+4. Add a separate random 32+ character encrypted Pages secret **QA_ADMIN_KEY**. Use that value only in the private admin dashboard at `/qa-admin/`. Never commit it to Git.
+5. Save configuration and redeploy the Pages project after attaching bindings/variables. Check `/api/questions?city=sukkur` returns `"enabled":true`; test a submission, confirm it appears in the admin queue, approve a verified answer, and check it becomes visible only in the correct city.
+6. Maintain Cloudflare-hosted protections, review the moderation queue regularly, and remove inappropriate or outdated content.
+
+### Safety and privacy
+- Questions are posted without visitor name/email/phone. Submissions are reviewed before publication and IPs are only stored as keyed hashes for the four-per-24-hours anti-spam limit. Cloudflare security checks process the security token/IP.
+- Do not accept patient-identifying or highly sensitive medical details in public Q&A. Refer emergencies to in-person urgent care. Do not present general information as a diagnosis or clinical encounter.
+- Publish only professional contact numbers that are already public and verified; ask patients to confirm schedules and availability with the clinic. Do not invent a doctor's phone number or appointments.
+- Update the privacy page when processing practices materially change.
