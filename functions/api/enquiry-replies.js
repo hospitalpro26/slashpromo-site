@@ -2,6 +2,20 @@
 import {respond,ensureEnquiryDb,cleanupEnquiries,constantTimeEqual,sameOrigin,whatsappDigits} from "../_lib/enquiries.js";
 
 const uuid=/^[a-f0-9-]{36}$/i;
+function whatsappLink(enquiry,enquiryId,text){
+  const digits=whatsappDigits(enquiry.visitor_phone);
+  if(!digits)return null;
+  const message=[
+    "Hello "+enquiry.visitor_name+",",
+    "Thank you for contacting the SlashPromo team.",
+    "Regarding enquiry #"+enquiryId.slice(0,8).toUpperCase()+":",
+    "",
+    text,
+    "",
+    "SlashPromo.com | Health Care, Connected."
+  ].join("\n");
+  return "https://wa.me/"+digits+"?text="+encodeURIComponent(message);
+}
 function authorized(request,env){
   return Boolean(env.QA_ADMIN_KEY&&constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY));
 }
@@ -16,7 +30,7 @@ export async function onRequestGet({request,env}){
     const enquiry=await env.QA_DB.prepare("SELECT id,visitor_name,visitor_phone,status FROM enquiries WHERE id=?").bind(enquiryId).first();
     if(!enquiry)return respond({error:"Enquiry not found."},404);
     const rows=await env.QA_DB.prepare("SELECT id,enquiry_id,reply_text,status,created_at,updated_at,sent_confirmed_at FROM enquiry_replies WHERE enquiry_id=? ORDER BY created_at DESC,id DESC LIMIT 100").bind(enquiryId).all();
-    return respond({replies:rows.results||[],canReplyByWhatsApp:Boolean(whatsappDigits(enquiry.visitor_phone)),
+    return respond({replies:(rows.results||[]).map(row=>({...row,whatsappUrl:row.status==='prepared'?whatsappLink(enquiry,enquiryId,row.reply_text):null})),canReplyByWhatsApp:Boolean(whatsappDigits(enquiry.visitor_phone)),
       note:"Prepared replies are not sent. Sent confirmation is a manual staff record, not a WhatsApp delivery receipt."});
   }catch{return respond({error:"Could not load private reply history."},503)}
 }
@@ -56,17 +70,7 @@ export async function onRequestPost({request,env}){
     const replyId=crypto.randomUUID(),status=action==="save_draft"?"draft":"prepared";
     await env.QA_DB.prepare("INSERT INTO enquiry_replies(id,enquiry_id,reply_text,status,created_at,updated_at) VALUES(?,?,?,?,?,?)")
       .bind(replyId,enquiryId,text,status,now,now).run();
-    let whatsappUrl=null;
-    if(action==="prepare"){
-      const message=["Hello "+enquiry.visitor_name+",",
-        "Thank you for contacting the SlashPromo team.",
-        "Regarding enquiry #"+enquiryId.slice(0,8).toUpperCase()+":",
-        "",
-        text,
-        "",
-        "SlashPromo.com | Health Care, Connected."].join("\n");
-      whatsappUrl="https://wa.me/"+digits+"?text="+encodeURIComponent(message);
-    }
+    const whatsappUrl=action==="prepare"?whatsappLink(enquiry,enquiryId,text):null;
     return respond({ok:true,saved:true,reply:{id:replyId,enquiry_id:enquiryId,reply_text:text,status,created_at:now,updated_at:now,sent_confirmed_at:null},
       whatsappUrl,note:action==="prepare"?"Reply prepared only. Click Open WhatsApp, send the message there, then manually mark sent.":"Private draft saved. It has not been sent."},201);
   }catch{return respond({error:"Could not save this private reply."},503)}
