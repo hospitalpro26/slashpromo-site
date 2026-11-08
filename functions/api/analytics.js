@@ -14,4 +14,11 @@ export async function onRequestPost({request,env}){
     return new Response(null,{status:204,headers:{"Cache-Control":"no-store","X-Robots-Tag":"noindex"}});
   }catch{return json({error:"Analytics temporarily unavailable."},503)}
 }
-export function onRequestGet(){return json({error:"Method not allowed."},405)}
+export async function onRequestGet({request,env}){
+  if(new URL(request.url).searchParams.get("health")==="1"){
+    if(!env.QA_DB)return json({enabled:false,error:"QA_DB binding is missing."},503);
+    try{await env.QA_DB.prepare("SELECT 1 AS ok").first();return json({enabled:true})}
+    catch{return json({enabled:false,error:"Analytics database is unavailable."},503)}
+  }
+  return json({error:"Method not allowed."},405);
+}

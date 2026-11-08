@@ -39,15 +39,16 @@ jobs:
             source=$(curl -sSL --max-time 18 -o /tmp/site-js.html -w '%{http_code}' 'https://slashpromo.com/assets/site.js?v=20261108-analytics4' || true)
             auth=$(curl -sSL --max-time 18 -o /tmp/report.json -w '%{http_code}' 'https://slashpromo.com/api/analytics-report?days=7' || true)
             method=$(curl -sSL --max-time 18 -o /tmp/method.json -w '%{http_code}' 'https://slashpromo.com/api/analytics' || true)
-            if [ "$dashboard" = 200 ] && [ "$source" = 200 ] && [ "$auth" = 401 ] && [ "$method" = 405 ] && \
+            health=$(curl -sSL --max-time 18 -o /tmp/health.json -w '%{http_code}' 'https://slashpromo.com/api/analytics?health=1' || true)
+            if [ "$dashboard" = 200 ] && [ "$source" = 200 ] && [ "$auth" = 401 ] && [ "$method" = 405 ] && [ "$health" = 200 ] && \
                grep -q 'Private Analytics Dashboard' /tmp/analytics.html && \
                grep -q 'window.slashpromoTrack' /tmp/site-js.html && \
-               grep -q 'Unauthorized' /tmp/report.json; then
-              echo 'PASS: dashboard loads; tracker deployed; unauthorized reporting rejected; GET ingestion blocked.'
+               grep -q 'Unauthorized' /tmp/report.json && grep -q '"enabled":true' /tmp/health.json; then
+              echo 'PASS: dashboard loads; tracker deployed; D1 DB connected; unauthorized reporting rejected; GET ingestion blocked.'
               echo "Live dashboard: https://slashpromo.com/analytics/"
               exit 0
             fi
-            echo "Attempt $attempt: dashboard=$dashboard JS=$source report-without-key=$auth GET-collector=$method"
+            echo "Attempt $attempt: dashboard=$dashboard JS=$source report-without-key=$auth GET-collector=$method DB-health=$health"
             sleep 12
           done
           echo 'Live analytics smoke test did not pass. Inspect production routing / Cloudflare D1 configuration.' >&2
