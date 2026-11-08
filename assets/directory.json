@@ -1429,6 +1429,7 @@
       "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
       "hospitalpro": "",
       "kind": "hospital",
+      "listingScope": "institutional-only",
       "linkedDoctorIds": []
     },
     {
@@ -1443,6 +1444,7 @@
       "externalProfile": "https://slashcure.com/hospitals/shikarpur/haji-lutufullah-bhayo-memorial",
       "hospitalpro": "",
       "kind": "hospital",
+      "listingScope": "institutional-only",
       "linkedDoctorIds": []
     },
     {
