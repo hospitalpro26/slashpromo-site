@@ -1,0 +1,76 @@
+name: Verify private SlashPromo Control Center
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-control-center.yml'
+      - 'functions/api/control-center.js'
+      - 'assets/admin-reply-templates.js'
+      - 'control-center/index.html'
+      - 'enquiries/index.html'
+      - '_routes.json'
+      - 'functions/_lib/enquiries.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-control-center:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Control Center source, routing and private-data boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check functions/api/control-center.js
+          node --check assets/admin-reply-templates.js
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          for source,output in [('control-center/index.html','/tmp/control-center.js'),('enquiries/index.html','/tmp/enquiries-inline.js')]:
+              text=Path(source).read_text(encoding='utf-8')
+              match=re.search(r'<script>(.*?)</script>',text,re.S)
+              assert match,source+' missing inline JS'
+              Path(output).write_text(match.group(1),encoding='utf-8')
+          assert 'noindex,nofollow' in Path('control-center/index.html').read_text(encoding='utf-8')
+          assert 'window.SlashpromoReplyTemplates' in Path('assets/admin-reply-templates.js').read_text(encoding='utf-8')
+          assert '/api/control-center' in Path('_routes.json').read_text(encoding='utf-8')
+          assert 'QA_ADMIN_KEY' in Path('functions/api/control-center.js').read_text(encoding='utf-8')
+          assert 'Visitor' not in Path('functions/api/control-center.js').read_text(encoding='utf-8').split('SELECT id,source_city')[1].split('FROM enquiries')[0]
+          assert 'admin-reply-templates.js"></script>' in Path('control-center/index.html').read_text(encoding='utf-8')
+          PY
+          node --check /tmp/control-center.js
+          node --check /tmp/enquiries-inline.js
+          grep -q 'Reply on WhatsApp' enquiries/index.html
+          grep -q 'Quick reply template (optional)' enquiries/index.html
+          grep -q 'control-center' _routes.json
+      - name: Verify published dashboard, D1 readiness and unauthorized report protection
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 15); do
+            page=$(curl -sSL --max-time 18 -o /tmp/sp-control.html -w '%{http_code}' "https://slashpromo.com/control-center/?v=$GITHUB_SHA" || true)
+            templates=$(curl -sSL --max-time 18 -o /tmp/sp-templates.js -w '%{http_code}' "https://slashpromo.com/assets/admin-reply-templates.js?v=$GITHUB_SHA" || true)
+            unauth=$(curl -sSL --max-time 18 -o /tmp/sp-control-private.json -w '%{http_code}' 'https://slashpromo.com/api/control-center' || true)
+            invalid=$(curl -sSL --max-time 18 -o /tmp/sp-control-invalid.json -w '%{http_code}' -H 'X-QA-Admin-Key: definitely-invalid' 'https://slashpromo.com/api/control-center' || true)
+            wrongmethod=$(curl -sSL --max-time 18 -o /tmp/sp-control-post.json -w '%{http_code}' -X POST 'https://slashpromo.com/api/control-center' || true)
+            health=$(curl -sSL --max-time 18 -o /tmp/sp-control-db.json -w '%{http_code}' 'https://slashpromo.com/api/analytics?health=1' || true)
+            inbox=$(curl -sSL --max-time 18 -o /tmp/sp-control-inbox.html -w '%{http_code}' "https://slashpromo.com/enquiries/?v=$GITHUB_SHA" || true)
+            if [ "$page" = 200 ] && [ "$templates" = 200 ] && [ "$unauth" = 401 ] && \
+               [ "$invalid" = 401 ] && [ "$wrongmethod" = 405 ] && \
+               [ "$health" = 200 ] && [ "$inbox" = 200 ] && \
+               grep -q 'Private Control Center' /tmp/sp-control.html && \
+               grep -q 'noindex,nofollow' /tmp/sp-control.html && \
+               grep -q 'SlashpromoReplyTemplates' /tmp/sp-templates.js && \
+               grep -q 'Quick reply template (optional)' /tmp/sp-control-inbox.html && \
+               grep -q '"enabled":true' /tmp/sp-control-db.json && \
+               grep -q '"Unauthorized' /tmp/sp-control-private.json; then
+              echo 'PASS: SlashPromo Control Center is published; private reports reject missing/invalid admin keys; D1 is connected; Quick Replies are available in Inbox.'
+              exit 0
+            fi
+            echo "Attempt $attempt page=$page templates=$templates unauth=$unauth invalid=$invalid post=$wrongmethod health=$health inbox=$inbox"
+            sleep 12
+          done
+          echo 'Control Center live validation failed. Inspect Cloudflare deployment / route authentication.' >&2
+          exit 1
