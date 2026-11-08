@@ -23,7 +23,7 @@ Framework-free static HTML, CSS and JavaScript:
 - The social icon block uses Slashcure's existing **official** Facebook, Instagram, WhatsApp and LinkedIn links, clearly indicating those profiles belong to the partner brand. SlashPromo profiles have not been invented.
 - Initial published profile cards are **editorial examples, not paid advertisements**. Mark actual paid placements as sponsored.
 - Existing external links may change; check them before promoting a campaign.
-- No analytics or paid billing is implemented yet; these require distinct decisions and policy updates.
+- First-party aggregate analytics use the existing QA_DB D1 binding and private analytics dashboard; paid billing is not implemented.
 - For city campaigns, create unique pages with reviewed descriptions and valid canonical URLs, then update sitemap.
 - Never use this repository to modify HospitalPro or Slashcure.
 
@@ -128,3 +128,13 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - Alkhidmat Medical Center and Haji Lutufullah Bhayo Memorial Hospital in Shikarpur are explicitly institution-only until named local doctor associations are verified. Their visible pages disclose that limitation and link to the associated Slashcure hospital listings.
 - Astro Physiocare is included in the national hospital index and associated Shikarpur doctor pages link back to Muhammad Ilyas Medical Center.
 - Repository data currently includes 16 hospital listings and 30 named doctor associations. GitHub Actions must still demonstrate successful post-fix audit runs; changes to code alone do not establish successful CI or IndexNow submission.
+
+
+## Site analytics dashboard (8 November 2026)
+- Private dashboard: https://slashpromo.com/analytics/ (not in sitemap; noindex). It uses the existing Cloudflare QA_ADMIN_KEY, entered only in the current tab.
+- Public event API: POST /api/analytics with only event and path. Report API: GET /api/analytics-report?days=7|30|90&city=sukkur, authenticated with X-QA-Admin-Key.
+- The existing QA_DB binding holds the site_analytics_daily table alongside Q&A; the table is auto-created on first write, with no new bindings required.
+- Only UTC date, public page path, derived page city, aggregate event type and total are stored. No IPs, unique identifiers, names, WhatsApp numbers, Q&A texts, query inputs, personal medical details or full referrers are stored in analytics.
+- Events: page_view (page loads, not unique people); slashcure_click (outbound clicks, not appointments); whatsapp_open and whatsapp_continue (form opens / opens WhatsApp, not sent messages); qa_submitted (successful form acknowledgement, not question contents).
+- No historical analytics are backfilled. The source-page attribution in WhatsApp is included only in the message the visitor decides to send.
+- Shared scripts site.js and city-questions.js post first-party event counters. The cache-refresh workflow rewrites versioned references on published HTML pages.

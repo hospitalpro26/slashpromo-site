@@ -1,4 +1,4 @@
-/* SlashPromo lightweight interactions — no cookies, trackers, or external dependencies. */
+/* SlashPromo lightweight interactions, with anonymous aggregate analytics. */
 (function(){
   "use strict";
 
@@ -139,7 +139,7 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
     &&supported.has(parts[1])&&parts.length>2;
   if(!(isCitySubpage||isProviderSubpage)||document.querySelector('script[src*="/assets/city-questions.js"]'))return;
   const script=document.createElement("script");
-  script.src="/assets/city-questions.js?v=20261108-nationwide-qa7";
+  script.src="/assets/city-questions.js?v=20261108-analytics4";
   script.async=true;
   document.head.appendChild(script);
 })();
@@ -231,7 +231,7 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
       if(next)form.elements.namedItem("visitorName").focus();
       else toggle.focus();
     }
-    toggle.addEventListener("click",()=>open(panel.hidden));
+    toggle.addEventListener("click",()=>{const opening=panel.hidden;open(opening);if(opening)window.slashpromoTrack?.("whatsapp_open");});
     panel.querySelector(".sp-wa-query-close").addEventListener("click",()=>open(false));
     document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!panel.hidden)open(false)});
     document.addEventListener("pointerdown",event=>{
@@ -260,9 +260,49 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
       outbound.href="https://wa.me/923352648572?text="+encodeURIComponent(message);
       outbound.target="_blank";outbound.rel="noopener noreferrer";
       outbound.hidden=true;document.body.appendChild(outbound);
+      window.slashpromoTrack?.("whatsapp_continue");
       outbound.click();outbound.remove();
     });
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});
   else setup();
+})();
+
+
+/* SlashPromo privacy-conscious site analytics: aggregate event counters only.
+   No cookies, visitor IDs, IPs, search terms, form names or medical details. */
+(function(){
+  "use strict";
+  if(/^\/(?:admin|qa-admin|analytics|api)(?:\/|$)/i.test(location.pathname))return;
+  const canonical=document.querySelector('link[rel="canonical"]');
+  let path=location.pathname;
+  try{
+    if(canonical){
+      const url=new URL(canonical.href,location.origin);
+      if(["slashpromo.com","www.slashpromo.com"].includes(url.hostname))path=url.pathname;
+    }
+  }catch{}
+  if(!/^\/(?:[a-z0-9-]+\/){0,5}$/.test(path))return;
+  const events=new Set(["page_view","slashcure_click","whatsapp_open","whatsapp_continue","qa_submitted"]);
+  window.slashpromoTrack=function(event){
+    if(!events.has(event))return;
+    const body=JSON.stringify({event,path});
+    try{
+      if(navigator.sendBeacon&&navigator.sendBeacon("/api/analytics",new Blob([body],{type:"text/plain;charset=UTF-8"})))return;
+      fetch("/api/analytics",{method:"POST",headers:{"Content-Type":"text/plain;charset=UTF-8"},body,keepalive:true,credentials:"omit"}).catch(()=>{});
+    }catch{}
+  };
+  const view=()=>window.slashpromoTrack("page_view");
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",view,{once:true});
+  else view();
+  document.addEventListener("click",event=>{
+    const anchor=event.target.closest?.("a[href]");
+    if(anchor){
+      try{
+        const dest=new URL(anchor.href,location.href);
+        if(dest.hostname==="slashcure.com"||dest.hostname==="www.slashcure.com")
+          window.slashpromoTrack("slashcure_click");
+      }catch{}
+    }
+  });
 })();

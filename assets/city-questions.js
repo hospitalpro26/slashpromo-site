@@ -174,6 +174,7 @@
       });
       const data=await response.json();
       if(!response.ok)throw Error(data.error||"Please try again later.");
+      window.slashpromoTrack?.("qa_submitted");
       form.reset();
       form.elements.visitorCity.value=label;
       notice("Thank you! Your question is awaiting review. If approved, your name, question and the team’s answer will appear publicly; your other details stay private.","success");
