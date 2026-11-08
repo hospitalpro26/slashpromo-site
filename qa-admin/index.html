@@ -27,7 +27,7 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 </style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1>
-<p>Review visitor questions by city. Only publish verified information and public doctor or clinic contact numbers. Never publish sensitive patient details or provide individual diagnoses.</p>
+<p>Review visitor questions by city and by source page, including Sukkur doctor profiles, specialty pages, hospitals and health topics. Only publish verified information and public doctor or clinic contact numbers. Never publish sensitive patient details or provide individual diagnoses.</p>
 <p class="notice">This dashboard requires the private QA_ADMIN_KEY configured in Cloudflare. The key stays in this browser tab's memory and is not saved or included in public pages. Use HTTPS only.</p>
 <div class="toolbar">
 <label>Admin key <input type="password" id="key" autocomplete="off" placeholder="Paste private admin key"></label>
@@ -58,6 +58,14 @@ async function load(){
   for(const q of data.questions){
    const card=node("article","item");const small=node("small","",q.city.toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
    const title=node("h2","",q.question);
+   const source=node("p","", "Submitted on: "+(q.page_path||"/"+q.city+"/"));
+   const rawPath=String(q.page_path||"/"+q.city+"/");
+   if(/^\/(?:[a-z0-9-]+\/){1,6}$/.test(rawPath)){
+     const link=document.createElement("a");
+     link.href=rawPath;link.target="_blank";link.rel="noopener noreferrer";
+     link.textContent="Open source page ↗";
+     source.append(" · ",link);
+   }
    const privateCard=node("section","private-card");
    privateCard.append(node("h3","","Private visitor details · admin only"));
    privateCard.append(node("p","","This information is never returned by the public Questions & Answers API. Do not copy it into your published answer."));
@@ -95,7 +103,7 @@ async function load(){
     catch(e){say(e.message);publish.disabled=false;reject.disabled=false;}
    }
    publish.addEventListener("click",()=>submit("approved"));reject.addEventListener("click",()=>submit("rejected"));
-   actions.append(publish,reject);card.append(small,title,privateCard,label,actions);items.append(card);
+   actions.append(publish,reject);card.append(small,title,source,privateCard,label,actions);items.append(card);
   }
  }catch(e){say(e.message);}
 }
