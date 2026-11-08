@@ -24,6 +24,14 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 .private-full{grid-column:1/-1}
 .private-value a{color:#145aa9;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:640px){.private-grid{grid-template-columns:1fr}.private-full{grid-column:auto}}
+
+#query{min-width:220px}
+#more{background:#476586}
+.summary{background:#e8f0fb;border:1px solid #cbdbef;padding:11px 14px;border-radius:10px;font-size:13px;color:#254b77;margin-bottom:18px}
+.item .source{background:#f5f8ff;border-radius:9px;padding:8px 10px;font-size:13px;overflow-wrap:anywhere}
+.item .source a{color:#1555a1}
+.empty{padding:22px;border-radius:13px;border:1px dashed #acc4df;background:#fff}
+@media(max-width:640px){#query{min-width:0;width:100%}}
 </style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1>
@@ -31,82 +39,161 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 <p class="notice">This dashboard requires the private QA_ADMIN_KEY configured in Cloudflare. The key stays in this browser tab's memory and is not saved or included in public pages. Use HTTPS only.</p>
 <div class="toolbar">
 <label>Admin key <input type="password" id="key" autocomplete="off" placeholder="Paste private admin key"></label>
-<label>View <select id="filter"><option value="pending">Awaiting review</option><option value="approved">Published</option></select></label>
+<label>View <select id="filter"><option value="pending">Awaiting review</option><option value="approved">Published</option><option value="rejected">Rejected</option></select></label>
+<label>City <select id="city-filter"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="ghotki">Ghotki</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option></select></label>
+<label>Page type <select id="type-filter"><option value="">All pages</option><option value="city">City homepage</option><option value="doctor">Doctor profile</option><option value="hospital">Hospital</option><option value="specialty">Specialty directory</option><option value="health">Health topic</option><option value="other">Other local page</option></select></label>
+<label>Search questions <input type="search" id="query" placeholder="Doctor, question or page" autocomplete="off"></label>
 <button type="button" id="load">Load questions</button>
-</div><p id="status" role="status" aria-live="polite"></p><div id="items"></div>
+<button type="button" id="more" hidden>Load older questions</button>
+</div><p id="status" role="status" aria-live="polite"></p><div class="summary" id="summary">Choose an approval status and city, then load the private moderation queue. Filters only affect the administrator's view.</div><div id="items"></div>
 </main>
 <script>
 "use strict";
-const key=document.querySelector("#key"),filter=document.querySelector("#filter"),items=document.querySelector("#items"),status=document.querySelector("#status");
-function say(t){status.textContent=t;}
-function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;}
-async function request(method,payload){
- const response=await fetch("/api/qa-admin"+(method==="GET"?"?status="+encodeURIComponent(filter.value):""),{
-  method,headers:{"X-QA-Admin-Key":key.value.trim(),"Accept":"application/json",...(method==="POST"?{"Content-Type":"application/json"}:{})},
-  ...(method==="POST"?{body:JSON.stringify(payload)}:{})
- });
- const data=await response.json();
- if(!response.ok)throw Error(data.error||"Request failed.");
- return data;
+// All patient contact details are accessed only through the authenticated API.
+const key=document.querySelector("#key");
+const statusFilter=document.querySelector("#filter");
+const cityFilter=document.querySelector("#city-filter");
+const typeFilter=document.querySelector("#type-filter");
+const queryInput=document.querySelector("#query");
+const items=document.querySelector("#items");
+const status=document.querySelector("#status");
+const summary=document.querySelector("#summary");
+const more=document.querySelector("#more");
+let questions=[],nextBefore=null,hasMore=false;
+function say(message){status.textContent=message;}
+function node(tag,cls,text){
+  const el=document.createElement(tag);
+  if(cls)el.className=cls;
+  if(text!==undefined)el.textContent=text;
+  return el;
 }
-async function load(){
- if(!key.value.trim()){say("Enter your admin key first.");return;}
- say("Loading…");items.replaceChildren();
- try{
-  const data=await request("GET");
-  say(data.questions.length+" "+filter.value+" questions.");
-  for(const q of data.questions){
-   const card=node("article","item");const small=node("small","",q.city.toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
-   const title=node("h2","",q.question);
-   const source=node("p","", "Submitted on: "+(q.page_path||"/"+q.city+"/"));
-   const rawPath=String(q.page_path||"/"+q.city+"/");
-   if(/^\/(?:[a-z0-9-]+\/){1,6}$/.test(rawPath)){
-     const link=document.createElement("a");
-     link.href=rawPath;link.target="_blank";link.rel="noopener noreferrer";
-     link.textContent="Open source page ↗";
-     source.append(" · ",link);
-   }
-   const privateCard=node("section","private-card");
-   privateCard.append(node("h3","","Private visitor details · admin only"));
-   privateCard.append(node("p","","This information is never returned by the public Questions & Answers API. Do not copy it into your published answer."));
-   const privateGrid=node("div","private-grid");
-   function detail(label,value,full=false){
-     const field=node("div","private-field"+(full?" private-full":""));
-     field.append(node("strong","",label),node("p","private-value",value??"Not provided (older submission)"));
-     privateGrid.append(field);
-   }
-   detail("Visitor name",q.visitor_name);
-   detail("Public name permission",q.public_name_consent===1?"Yes — show with approved question":"No — keep name private (earlier submission)");
-   detail("Visitor city",q.visitor_city);
-   detail("WhatsApp number",q.visitor_whatsapp||"Not provided");
-   detail("WhatsApp contact consent",q.contact_consent===1?"Yes — may contact about this inquiry":"Not provided / no consent");
-   detail("Suggestion / requested improvements",q.visitor_suggestion||"No suggestion provided",true);
-   if(q.visitor_whatsapp&&q.contact_consent===1){
-     let digits=q.visitor_whatsapp.replace(/\D/g,"");
-     if(digits.startsWith("0")&&digits.length===11)digits="92"+digits.slice(1);
-     if(digits.length>=10&&digits.length<=15){
-       const link=document.createElement("a");
-       link.href="https://wa.me/"+digits;
-       link.target="_blank";link.rel="noopener noreferrer";
-       link.textContent="Contact on WhatsApp ↗";
-       const wrap=node("div","private-field private-full");wrap.append(link);privateGrid.append(wrap);
-     }
-   }
-   privateCard.append(privateGrid);
-   const label=node("label","");label.append(node("span","","Answer for the public (review facts first)"));
-   const answer=node("textarea","");answer.maxLength=2000;answer.value=q.answer||"";label.append(answer);
-   const actions=node("div","buttons");const publish=node("button","","Publish answer");const reject=node("button","reject","Reject question");
-   async function submit(next){
-    if(next==="approved"&&answer.value.trim().length<12){say("A verified answer of at least 12 characters is required.");return;}
-    publish.disabled=true;reject.disabled=true;
-    try{await request("POST",{id:q.id,status:next,answer:answer.value});say(next==="approved"?"Answer published.":"Question rejected.");card.remove();}
-    catch(e){say(e.message);publish.disabled=false;reject.disabled=false;}
-   }
-   publish.addEventListener("click",()=>submit("approved"));reject.addEventListener("click",()=>submit("rejected"));
-   actions.append(publish,reject);card.append(small,title,source,privateCard,label,actions);items.append(card);
+async function request(method,payload,before){
+  const params=new URLSearchParams({status:statusFilter.value});
+  if(cityFilter.value)params.set("city",cityFilter.value);
+  if(before)params.set("before",before);
+  const url="/api/qa-admin"+(method==="GET"?"?"+params.toString():"");
+  const response=await fetch(url,{
+    method,
+    cache:"no-store",
+    headers:{"X-QA-Admin-Key":key.value.trim(),"Accept":"application/json",...(method==="POST"?{"Content-Type":"application/json"}:{})},
+    ...(method==="POST"?{body:JSON.stringify(payload)}:{})
+  });
+  const data=await response.json();
+  if(!response.ok)throw Error(data.error||"Request failed.");
+  return data;
+}
+function classify(q){
+  const parts=String(q.page_path||"/"+q.city+"/").split("/").filter(Boolean);
+  if(parts.length===1&&parts[0]===q.city)return "city";
+  if(parts[0]==="hospitals"&&parts[1]===q.city)return "hospital";
+  if(parts[0]==="doctors"&&parts[1]===q.city)
+    return parts.length===3&&/^(?:dr-|prof-dr-)/.test(parts[2])?"doctor":"specialty";
+  if(parts[0]===q.city&&parts[1]==="health-topics")return "health";
+  return "other";
+}
+function render(){
+  const needle=queryInput.value.trim().toLocaleLowerCase();
+  const type=typeFilter.value;
+  const visible=questions.filter(q=>{
+    if(type&&classify(q)!==type)return false;
+    if(!needle)return true;
+    return [q.question,q.category,q.page_path,q.visitor_name,q.visitor_city]
+      .some(value=>String(value||"").toLocaleLowerCase().includes(needle));
+  });
+  items.replaceChildren();
+  summary.textContent="Showing "+visible.length+" matching question(s) from "+questions.length+
+    " loaded "+statusFilter.value+" record(s)"+
+    (cityFilter.value?" in "+cityFilter.value:" across all cities")+
+    ". Private WhatsApp numbers, feedback and visitor cities are never published.";
+  more.hidden=!hasMore;
+  if(!visible.length){
+    items.append(node("p","empty",questions.length?"No loaded questions match these filters.":"No questions loaded for this selection."));
+    return;
   }
- }catch(e){say(e.message);}
+  for(const q of visible){
+    const card=node("article","item");
+    const meta=node("small","",String(q.city||"").toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
+    const question=node("h2","",q.question);
+    const rawPath=String(q.page_path||"/"+q.city+"/");
+    const source=node("p","source","Submitted on: "+rawPath+" · Page type: "+classify(q));
+    if(/^\/(?:[a-z0-9-]+\/){1,6}$/.test(rawPath)){
+      const link=node("a","","Open source page ↗");
+      link.href=rawPath;link.target="_blank";link.rel="noopener noreferrer";
+      source.append(" · ",link);
+    }
+    const privateCard=node("section","private-card");
+    privateCard.append(node("h3","","Private visitor details · admin only"));
+    privateCard.append(node("p","","Do not copy contact details or personal medical information into the public answer."));
+    const privateGrid=node("div","private-grid");
+    function detail(label,value,full=false){
+      const field=node("div","private-field"+(full?" private-full":""));
+      field.append(node("strong","",label),node("p","private-value",value??"Not provided (older submission)"));
+      privateGrid.append(field);
+    }
+    detail("Visitor name",q.visitor_name);
+    detail("Name publication permission",q.public_name_consent===1?"Yes — name may accompany approved question":"No — name must remain private");
+    detail("Visitor city",q.visitor_city);
+    detail("WhatsApp number",q.visitor_whatsapp||"Not provided");
+    detail("WhatsApp contact consent",q.contact_consent===1?"Yes — contact permitted":"No — do not contact");
+    detail("Suggestion / requested improvements",q.visitor_suggestion||"No suggestion provided",true);
+    if(q.visitor_whatsapp&&q.contact_consent===1){
+      let digits=q.visitor_whatsapp.replace(/\D/g,"");
+      if(digits.startsWith("0")&&digits.length===11)digits="92"+digits.slice(1);
+      if(digits.length>=10&&digits.length<=15){
+        const link=node("a","","Contact on WhatsApp ↗");
+        link.href="https://wa.me/"+digits;link.target="_blank";link.rel="noopener noreferrer";
+        privateGrid.append(node("div","private-field private-full"));
+        privateGrid.lastElementChild.append(link);
+      }
+    }
+    privateCard.append(privateGrid);
+    const label=node("label","");
+    label.append(node("span","","Answer for public display (verify all facts first)"));
+    const answer=node("textarea","");
+    answer.maxLength=2000;answer.value=q.answer||"";
+    label.append(answer);
+    const actions=node("div","buttons");
+    const publish=node("button","","Publish verified answer");
+    const reject=node("button","reject","Reject question");
+    async function submit(next){
+      if(next==="approved"&&answer.value.trim().length<12){
+        say("A verified public answer of at least 12 characters is required.");
+        return;
+      }
+      publish.disabled=true;reject.disabled=true;
+      try{
+        await request("POST",{id:q.id,status:next,answer:answer.value});
+        questions=questions.filter(row=>row.id!==q.id);
+        render();
+        say(next==="approved"?"Approved answer saved.":"Question rejected.");
+      }catch(error){
+        say(error.message);publish.disabled=false;reject.disabled=false;
+      }
+    }
+    publish.addEventListener("click",()=>submit("approved"));
+    reject.addEventListener("click",()=>submit("rejected"));
+    actions.append(publish,reject);
+    card.append(meta,question,source,privateCard,label,actions);
+    items.append(card);
+  }
 }
-document.querySelector("#load").addEventListener("click",load);
-filter.addEventListener("change",()=>{items.replaceChildren();say("Click Load questions to refresh.");});
+async function load(append=false){
+  if(!key.value.trim()){say("Enter your private admin key first.");return;}
+  if(append&&!nextBefore)return;
+  say(append?"Loading older questions…":"Loading moderation queue…");
+  try{
+    const data=await request("GET",null,append?nextBefore:null);
+    questions=append?questions.concat(data.questions||[]):(data.questions||[]);
+    nextBefore=data.nextBefore||null;
+    hasMore=Boolean(data.hasMore&&nextBefore);
+    render();
+    say("Moderation queue loaded.");
+  }catch(error){say(error.message);}
+}
+document.querySelector("#load").addEventListener("click",()=>load(false));
+more.addEventListener("click",()=>load(true));
+statusFilter.addEventListener("change",()=>{questions=[];nextBefore=null;hasMore=false;render();say("Select Load questions to refresh.");});
+cityFilter.addEventListener("change",()=>{questions=[];nextBefore=null;hasMore=false;render();say("Select Load questions to refresh.");});
+typeFilter.addEventListener("change",render);
+queryInput.addEventListener("input",render);
 </script></body></html>
