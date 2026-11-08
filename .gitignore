@@ -1,0 +1,5 @@
+# Private SlashPromo backup/export materials — never commit
+*.spbk
+*.private.sql
+*.d1.sql
+*.backup-plain.json
