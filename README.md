@@ -165,3 +165,13 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - Source task metadata is deliberately minimized: the Control Center never returns visitor names, phone numbers, full enquiry text or patient details. Full records remain in the authenticated Enquiry Inbox/Q&A moderation systems.
 - Reusable generic quick-reply templates are provided in assets/admin-reply-templates.js and shown on the Control Center and Enquiry Inbox. They are starting points only; placeholders must be replaced with verified public data before preparing a WhatsApp reply. Copying a template does not send or log a message.
 - This Control Center does not replace the separate secure inbox moderation actions or the full analytics dashboard. See privacy/index.html for disclosure.
+
+
+## Secure D1 backup & recovery phase (8 November 2026)
+- Private application: https://slashpromo.com/secure-backups/ (noindex), with a new Cloudflare Pages middleware gate and GET /api/secure-backup.
+- Both a valid RS256-signed Cloudflare Access JWT (existing validated authenticate helper) and QA_ADMIN_KEY are required before database integrity verification or row export. Without ACCESS_TEAM_DOMAIN, ACCESS_AUD and ADMIN_EMAILS, the exporter fails closed; setup steps are in docs/backup-recovery-runbook.md.
+- GET /api/secure-backup?mode=verify performs read-only PRAGMA quick_check, counts four QA_DB application tables and checks for orphaned enquiry replies. This is live-database health, NOT a proof of backup restore points.
+- Export API pages are allowlisted to four application tables; browser encrypts exported data locally with AES-256-GCM and PBKDF2-SHA256 (310000 iterations). Private archives contain no separate ads DB, expired rate counters, future tables or cloud-managed Time Travel history.
+- scripts/verify-slashpromo-archive.mjs authenticates AES-GCM, SHA-256 manifest counts, checks relationships and optionally generates staging-only SQL. scripts/test-secure-backup.mjs uses only synthetic data for automated round-trip verification.
+- Cloudflare D1 Time Travel is the primary point-in-time recovery mechanism (plan-limited). Independent full Wrangler SQL exports should be stored encrypted and tested separately, using the runbook. NO production restore API, automated offsite export or Access policy provisioning is performed by this repository.
+- Backup files are excluded from Git and should NEVER be shared with public services, chats or repository assets.

@@ -12,7 +12,10 @@
     "/api/enquiries",
     "/api/enquiries-admin",
     "/api/enquiry-replies",
-    "/api/control-center"
+    "/api/control-center",
+    "/secure-backups",
+    "/secure-backups/*",
+    "/api/secure-backup"
   ],
   "exclude": []
 }
