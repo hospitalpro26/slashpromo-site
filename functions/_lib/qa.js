@@ -1,6 +1,18 @@
 // SlashPromo public Q&A: only approved, non-sensitive content is public.
 export const CITIES = ["sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad"];
 export const CATEGORIES = ["Health questions","OPD timings","Doctor contact","Doctors & hospitals","Appointments","Other"];
+// Keep public threads attached to their actual pages. Old rows without page_path
+// remain visible only on the city root where they were originally submitted.
+export function questionPage(city,path){
+  if(!CITIES.includes(city)) return null;
+  if(path===undefined||path===null||path==="") return "/"+city+"/";
+  if(typeof path!=="string"||path.length>180||!/^\/(?:[a-z0-9-]+\/){1,6}$/.test(path)) return null;
+  if(path==="/"+city+"/") return path;
+  if(city!=="sukkur") return null;
+  if(/^\/sukkur\/(?:[a-z0-9-]+\/){1,5}$/.test(path))return path;
+  if(/^\/(?:doctors|hospitals|clinics|laboratories)\/sukkur\/(?:[a-z0-9-]+\/){1,4}$/.test(path))return path;
+  return null;
+}
 export function reply(value,status=200){
   return new Response(JSON.stringify(value),{status,headers:{"Content-Type":"application/json; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
 }
@@ -47,6 +59,12 @@ export async function ensureDb(env){
     try{await env.QA_DB.prepare("ALTER TABLE questions ADD COLUMN public_name_consent INTEGER NOT NULL DEFAULT 0").run();}
     catch(error){if(!/duplicate column name/i.test(String(error)))throw error;}
   }
+  // Page-level Sukkur Q&A: a nullable scope preserves old city-root questions.
+  if(!existing.has("page_path")){
+    try{await env.QA_DB.prepare("ALTER TABLE questions ADD COLUMN page_path TEXT").run();}
+    catch(error){if(!/duplicate column name/i.test(String(error)))throw error;}
+  }
+  await env.QA_DB.prepare("CREATE INDEX IF NOT EXISTS idx_qa_page ON questions(city,page_path,status,answered_at)").run();
   return true;
 }
 export function sameOrigin(request){
