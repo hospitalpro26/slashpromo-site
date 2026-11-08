@@ -1,0 +1,54 @@
+name: Diagnose live Bing crawler access
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/bing-crawl-diagnostic.yml
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Test public pages as browsers and a Bingbot user agent
+        shell: bash
+        run: |
+          set -u
+          echo "Testing from a GitHub-hosted runner; a Bingbot user agent does NOT verify that this request comes from Bing's IP addresses."
+          urls=(
+            "https://slashpromo.com/"
+            "https://slashpromo.com/robots.txt"
+            "https://slashpromo.com/sitemap.xml"
+            "https://slashpromo.com/doctors/sukkur/dr-bashir-ahmed-khoso/"
+            "https://www.slashpromo.com/doctors/sukkur/dr-bashir-ahmed-khoso/"
+            "https://slashpromo-site.pages.dev/doctors/sukkur/dr-bashir-ahmed-khoso/"
+          )
+          agents=(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0.0.0 Safari/537.36"
+            "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"
+          )
+          names=("Browser" "Bingbot user-agent (unverified)")
+          for index in 0 1; do
+            echo ""
+            echo "===== ${names[$index]} ====="
+            for url in "${urls[@]}"; do
+              header_file=$(mktemp)
+              body_file=$(mktemp)
+              echo "--- $url"
+              result=$(curl --silent --show-error --location --max-redirs 4 --max-time 18 --connect-timeout 8 \
+                --user-agent "${agents[$index]}" \
+                --dump-header "$header_file" --output "$body_file" \
+                --write-out 'status=%{http_code} final=%{url_effective} remote-ip=%{remote_ip} duration=%{time_total}s' \
+                "$url" 2>&1) || true
+              echo "$result"
+              grep -iE '^(content-type|location|server|cf-ray|cf-mitigated|x-robots-tag|retry-after|x-cache):' "$header_file" | tail -n 12 || true
+              if grep -qiE 'cloudflare.*(challenge|attention required)|just a moment|access denied|error 1[0-9][0-9][0-9]' "$body_file"; then
+                echo "Possible security challenge or block page detected"
+              fi
+              rm -f "$header_file" "$body_file"
+            done
+          done
+          echo "If both public requests succeed but Bing Live URL fails, inspect Cloudflare Security > Events for real verified Bingbot requests, rate limiting, and bot protection."
