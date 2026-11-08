@@ -941,14 +941,14 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Orthopedics",
+      "specialty": "Consultant Orthopedic Surgeon & Ilizarov Limb Reconstruction Specialist",
       "hospital": "Hira Medical Centre, Sukkur",
-      "qualifications": "MBBS, FCPS",
+      "qualifications": "MBBS, FCPS; Fellowship in Ilizarov Surgery (Lecco, Italy)",
       "url": "/doctors/sukkur/dr-ahmed-raza-laghari/",
       "externalProfile": "https://slashcure.com/orthopedic-surgeons/sukkur/dr-ahmed-raza-laghari",
       "hospitalpro": "https://hospitalpro.online/dr-ahmed-raza-laghari.html",
       "kind": "doctor",
-      "area": "Barrage Colony"
+      "area": "Barrage Colony, Sukkur"
     },
     {
       "id": "sukkur-dr-aisha-aman",
@@ -1004,14 +1004,14 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Cardiology",
+      "specialty": "Consultant Cardiologist & Advanced Cardiac Imaging Specialist",
       "hospital": "Hira Medical Centre, Sukkur",
-      "qualifications": "MBBS, FCPS (Cardiology)",
+      "qualifications": "MBBS, FCPS (Cardiology), FESC (UK), FACC (USA)",
       "url": "/doctors/sukkur/dr-aneel-ahmed-ghanghro/",
       "externalProfile": "https://slashcure.com/cardiologists/sukkur/dr-aneel-ahmed-ghanghro",
       "hospitalpro": "https://hospitalpro.online/dr-aneel-ahmed-ghanghro.html",
       "kind": "doctor",
-      "area": "Barrage Colony"
+      "area": "Workshop Road, Sukkur"
     },
     {
       "id": "sukkur-dr-arif-soomro",
@@ -1066,14 +1066,14 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Orthopedics",
+      "specialty": "Consultant Orthopedic, Spine, Paediatric Orthopaedic & Trauma Surgeon",
       "hospital": "Dr. Ziauddin Hospital, Sukkur",
-      "qualifications": "MBBS, FCPS",
+      "qualifications": "MBBS, FCPS, CHPE",
       "url": "/doctors/sukkur/dr-dost-muhammad/",
       "externalProfile": "https://slashcure.com/orthopedic-surgeons/sukkur/dr-dost-muhammad",
       "hospitalpro": "https://hospitalpro.online/dr-dost-muhammad.html",
       "kind": "doctor",
-      "area": "Shikarpur Road"
+      "area": "Shikarpur Road, Sukkur"
     },
     {
       "id": "sukkur-dr-habibullah-maitlo",
@@ -1271,12 +1271,13 @@
         "Sukkur"
       ],
       "specialty": "Consultant Cardiologist",
-      "hospital": "SICVD, Sukkur",
-      "qualifications": "Cardiology specialist",
+      "hospital": "SICVD Hospital Sukkur",
+      "qualifications": "MBBS, FCPS (Cardiology)",
       "url": "/doctors/sukkur/dr-tahir-mumtaz-memon/",
       "externalProfile": "https://slashcure.com/cardiologists/sukkur/dr-tahir-mumtaz",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Sukkur–Shikarpur Bypass"
     },
     {
       "id": "sukkur-dr-tofique-ahmed-kamboh",
