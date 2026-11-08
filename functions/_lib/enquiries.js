@@ -15,7 +15,9 @@ export async function ensureEnquiryDb(env){
     env.QA_DB.prepare("CREATE TABLE IF NOT EXISTS enquiries (id TEXT PRIMARY KEY, visitor_name TEXT NOT NULL, visitor_area TEXT NOT NULL, visitor_phone TEXT, enquiry_text TEXT NOT NULL, source_path TEXT NOT NULL, source_title TEXT NOT NULL, source_city TEXT NOT NULL, consent_at TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'new' CHECK(status IN ('new','contacted','resolved','closed')), admin_note TEXT, closed_at TEXT, whatsapp_sent_confirmed INTEGER NOT NULL DEFAULT 0)"),
     env.QA_DB.prepare("CREATE INDEX IF NOT EXISTS idx_enquiries_status ON enquiries(status,created_at)"),
     env.QA_DB.prepare("CREATE INDEX IF NOT EXISTS idx_enquiries_city ON enquiries(source_city,created_at)"),
-    env.QA_DB.prepare("CREATE TABLE IF NOT EXISTS enquiry_rate (day TEXT NOT NULL, ip_hash TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(day,ip_hash))")
+    env.QA_DB.prepare("CREATE TABLE IF NOT EXISTS enquiry_rate (day TEXT NOT NULL, ip_hash TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(day,ip_hash))"),
+    env.QA_DB.prepare("CREATE TABLE IF NOT EXISTS enquiry_replies (id TEXT PRIMARY KEY, enquiry_id TEXT NOT NULL REFERENCES enquiries(id) ON DELETE CASCADE, reply_text TEXT NOT NULL, status TEXT NOT NULL CHECK(status IN ('draft','prepared','sent_confirmed')), created_at TEXT NOT NULL, updated_at TEXT NOT NULL, sent_confirmed_at TEXT)"),
+    env.QA_DB.prepare("CREATE INDEX IF NOT EXISTS idx_enquiry_replies_enquiry ON enquiry_replies(enquiry_id,created_at)")
   ]);
 }
 export async function cleanupEnquiries(env){
@@ -23,6 +25,7 @@ export async function cleanupEnquiries(env){
   const limit=new Date(Date.now()-180*86400000).toISOString();
   const day=new Date(Date.now()-2*86400000).toISOString().slice(0,10);
   await env.QA_DB.batch([
+    env.QA_DB.prepare("DELETE FROM enquiry_replies WHERE enquiry_id IN (SELECT id FROM enquiries WHERE status='closed' AND closed_at IS NOT NULL AND closed_at<?)").bind(limit),
     env.QA_DB.prepare("DELETE FROM enquiries WHERE status='closed' AND closed_at IS NOT NULL AND closed_at<?").bind(limit),
     env.QA_DB.prepare("DELETE FROM enquiry_rate WHERE day<?").bind(day)
   ]);
@@ -39,4 +42,14 @@ export async function verifyTurnstile(env,token,request){
   if(!result.ok)return false;
   const checked=await result.json();
   return checked?.success===true;
+}
+
+/* WhatsApp phone normalization is only used after the admin explicitly prepares a reply. */
+export function whatsappDigits(value){
+  const phone=String(value||"").trim();
+  if(!phone||!validPhone(phone))return null;
+  const digits=phone.replace(/\D/g,"");
+  if(digits.length===11&&digits.startsWith("0"))return "92"+digits.slice(1);
+  if(digits.length>=10&&digits.length<=15&&!digits.startsWith("0"))return digits;
+  return null;
 }
