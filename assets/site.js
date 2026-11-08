@@ -139,7 +139,7 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
     &&supported.has(parts[1])&&parts.length>2;
   if(!(isCitySubpage||isProviderSubpage)||document.querySelector('script[src*="/assets/city-questions.js"]'))return;
   const script=document.createElement("script");
-  script.src="/assets/city-questions.js?v=20261108-analytics4";
+  script.src="/assets/city-questions.js?v=20261108-qahistory5";
   script.async=true;
   document.head.appendChild(script);
 })();
