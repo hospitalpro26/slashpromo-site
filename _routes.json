@@ -8,7 +8,9 @@
     "/api/questions",
     "/api/qa-admin",
     "/api/analytics",
-    "/api/analytics-report"
+    "/api/analytics-report",
+    "/api/enquiries",
+    "/api/enquiries-admin"
   ],
   "exclude": []
 }
