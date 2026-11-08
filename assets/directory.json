@@ -973,13 +973,14 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Postgraduate Trainee – Internal Medicine",
+      "specialty": "Senior Postgraduate Trainee – Internal Medicine",
       "hospital": "Medicine Unit-I, GMC Teaching Hospital Sukkur",
       "qualifications": "MBBS, RMP",
       "url": "/doctors/sukkur/dr-amjad-ali-kalwar/",
       "externalProfile": "https://slashcure.com/postgraduate-trainees-internal-medicine/sukkur/dr-amjad-ali-kalwar",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Near Regional Blood Centre, Sukkur"
     },
     {
       "id": "sukkur-dr-ammara-bhatti",
@@ -1082,14 +1083,14 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Paediatric Surgery",
+      "specialty": "Consultant Paediatric Surgeon",
       "hospital": "Dr. Ziauddin Hospital, Sukkur",
-      "qualifications": "MBBS, FCPS · 5+ years of experience listed",
+      "qualifications": "MBBS, FCPS",
       "url": "/doctors/sukkur/dr-habibullah-maitlo/",
       "externalProfile": "https://slashcure.com/paediatric-surgeons/sukkur/dr-habibullah-maitlo",
       "hospitalpro": "https://hospitalpro.online/dr-habibullah-maitlo.html",
       "kind": "doctor",
-      "area": "Shikarpur Road"
+      "area": "Shikarpur Road, Sukkur"
     },
     {
       "id": "sukkur-dr-halar-dahar",
@@ -1254,14 +1255,14 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Pediatrics",
-      "hospital": "Dr. Ziauddin Hospital Sukkur",
-      "qualifications": "MBBS · FCPS (Paediatrics) · PGPN Pro · 9+ years' experience",
+      "specialty": "Paediatrician & Neonatal Care Specialist",
+      "hospital": "Dr. Ziauddin Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS (Paediatrics), PGPN Pro",
       "url": "/doctors/sukkur/dr-sajid-khadim/",
       "externalProfile": "https://slashcure.com/paediatricians/sukkur/dr-sajid-khadim",
       "hospitalpro": "https://hospitalpro.online/dr-sajid-khadim.html",
       "kind": "doctor",
-      "area": "Shikarpur Road"
+      "area": "Shikarpur Road, Sukkur"
     },
     {
       "id": "sukkur-dr-tahir-mumtaz-memon",
@@ -1286,13 +1287,14 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Consultant Physician",
+      "specialty": "Consultant Physician & Internal Medicine Specialist",
       "hospital": "Red Crescent Hospital, Sukkur",
       "qualifications": "MBBS, FCPS",
       "url": "/doctors/sukkur/dr-tofique-ahmed-kamboh/",
       "externalProfile": "https://slashcure.com/consultant-physicians/sukkur/dr-tofique-ahmed-kamboh",
       "hospitalpro": "https://hospitalpro.online/dr-tofique-ahmed-kamboh.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Minara Road, Sukkur"
     },
     {
       "id": "sukkur-prof-dr-kirpal-das-makheja",
