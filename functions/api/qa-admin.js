@@ -1,4 +1,4 @@
-import {reply,ensureDb,constantTimeEqual} from "../_lib/qa.js";
+import {CITIES,reply,ensureDb,constantTimeEqual} from "../_lib/qa.js";
 function authorized(request,env){
   return Boolean(env.QA_ADMIN_KEY && constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY));
 }
@@ -7,11 +7,26 @@ export async function onRequestGet({request,env}){
   if(!env.QA_DB)return reply({error:"Configure QA_DB in Cloudflare first."},503);
   try{
     await ensureDb(env);
-    const status=new URL(request.url).searchParams.get("status")==="approved"?"approved":"pending";
-    const rows=await env.QA_DB.prepare("SELECT id,city,COALESCE(NULLIF(page_path,''),'/' || city || '/') AS page_path,category,question,answer,status,created_at,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent FROM questions WHERE status=? ORDER BY created_at DESC LIMIT 100").bind(status).all();
-    return reply({questions:rows.results||[]});
+    const params=new URL(request.url).searchParams;
+    const status=["pending","approved","rejected"].includes(params.get("status"))
+      ?params.get("status"):"pending";
+    const city=params.get("city")||"";
+    if(city&&!CITIES.includes(city))return reply({error:"Unsupported city filter."},400);
+    const before=params.get("before")||"";
+    if(before&&!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(before))
+      return reply({error:"Invalid pagination cursor."},400);
+    let sql="SELECT id,city,COALESCE(NULLIF(page_path,''),'/' || city || '/') AS page_path,category,question,answer,status,created_at,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent FROM questions WHERE status=?";
+    const binds=[status];
+    if(city){sql+=" AND city=?";binds.push(city);}
+    if(before){sql+=" AND created_at<?";binds.push(before);}
+    sql+=" ORDER BY created_at DESC LIMIT 101";
+    const rows=await env.QA_DB.prepare(sql).bind(...binds).all();
+    const found=rows.results||[];
+    const visible=found.slice(0,100);
+    return reply({questions:visible,hasMore:found.length>100,nextBefore:found.length>100?visible[visible.length-1].created_at:null});
   }catch{return reply({error:"Could not load the moderation queue."},503);}
 }
+
 export async function onRequestPost({request,env}){
   if(!authorized(request,env))return reply({error:"Unauthorized."},401);
   if(!env.QA_DB)return reply({error:"Configure QA_DB in Cloudflare first."},503);
