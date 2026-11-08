@@ -40,11 +40,34 @@ button:hover{background:#104b87}button:disabled{opacity:.55;cursor:wait}.muted-b
 #more{display:none;margin-top:15px}
 @media(max-width:920px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.entry-footer{grid-template-columns:1fr 1fr}.entry-footer .action{grid-column:1/-1}}
 @media(max-width:570px){main{padding:17px 12px 40px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{padding:12px}.entry{padding:13px}.entry-footer{grid-template-columns:1fr}.entry-footer .action{grid-column:auto}#search{width:min(280px,82vw)}}
+
+.reply-panel{margin:15px 0 0;padding:15px;border:1px solid #cfe0ed;border-radius:12px;background:#f7fbff}
+.reply-panel h4{margin:0 0 7px;font-size:15px;color:#17416d}
+.reply-panel p{font-size:12px;color:#4d657b;margin:5px 0 10px}
+.reply-panel label{display:grid;gap:5px}
+.reply-panel textarea{width:100%;min-height:98px;resize:vertical;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.reply-buttons{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:10px 0}
+.reply-buttons button{font-size:13px}
+.reply-buttons .outline{background:#fff;color:#14528b;border:1px solid #a8c4e3}
+.reply-buttons .outline:hover{background:#eaf3ff}
+.reply-history{display:grid;gap:9px;margin-top:9px}
+.reply-record{padding:12px;background:#fff;border:1px solid #d7e4ef;border-radius:9px}
+.reply-record p{color:#243e58;font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0}
+.reply-record .reply-state{font-weight:750;font-size:11px;color:#386a93}
+.reply-record .reply-state.sent_confirmed{color:#17613b}
+.reply-record .reply-state.prepared{color:#a26b18}
+.reply-feedback{font-size:12px!important;font-weight:650;color:#205c8b!important;white-space:pre-wrap}
+.reply-open-wa{display:inline-block;text-align:center;background:#087b41;color:#fff!important;text-decoration:none;border-radius:9px;font-weight:750;padding:10px 12px;font-size:12px;min-height:40px}
+.reply-open-wa:hover{background:#056b37}
+.reply-links{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:9px}
+.reply-links button{font-size:12px;min-height:40px;padding:8px 11px}
+.reply-panel :is(button,a,textarea):focus-visible{outline:3px solid #1b5fc1;outline-offset:3px}
+
 </style></head>
 <body><main>
 <header><div><a href="/" class="nav">← SlashPromo home</a><h1>Private Enquiry Inbox</h1><p>Manage saved visitor enquiries and follow-up statuses, organised by source page.</p></div>
 <div class="link-row nav"><a href="/qa-admin/">Q&amp;A dashboard ↗</a><a href="/analytics/">Analytics ↗</a></div></header>
-<p class="notice"><strong>Admin-only records:</strong> enter your existing <strong>QA_ADMIN_KEY</strong>. The key remains in this browser tab and is not stored by this page. Enquiries are saved only after visitors explicitly consent and pass security verification. <strong>A saved enquiry or WhatsApp handoff does not prove a WhatsApp message was sent.</strong> Do not copy visitors' private information into public replies. Closed records are automatically deleted after 180 days.</p>
+<p class="notice"><strong>Admin-only records:</strong> enter your existing <strong>QA_ADMIN_KEY</strong>. The key remains in this browser tab and is not stored by this page. Enquiries are saved only after visitors explicitly consent and pass security verification. <strong>A saved enquiry or WhatsApp handoff does not prove a WhatsApp message was sent.</strong> Reply drafts and prepared messages are stored privately. Only after you manually confirm sending will the inbox mark your outbound reply as sent; this is not a delivery receipt. Do not copy visitors' private information into public replies. Closed records are automatically deleted after 180 days.</p>
 <form class="filters" id="filters">
 <label>Private admin key<input id="key" type="password" autocomplete="off" required placeholder="Enter QA_ADMIN_KEY"></label>
 <label>Status<select id="filter"><option value="all">All saved</option><option value="new">New</option><option value="contacted">Contacted</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></label>
@@ -114,7 +137,99 @@ function render(){
       }catch(error){say("Could not save: "+error.message)}finally{save.disabled=false}
     });
     actions.append(save);footer.append(sLabel,noteLabel,actions);
-    card.append(top,heading,question,privacy,source,footer);
+
+    // Private reply composer. A prepared reply is NOT marked sent until staff confirms it.
+    const replyPanel=make("section","reply-panel");
+    replyPanel.append(make("h4","","Reply to this enquiry"));
+    replyPanel.append(make("p","","Write a helpful response. Save a draft, or prepare WhatsApp. Please avoid diagnoses, private patient records and sensitive health information."));
+    const composerLabel=make("label","","Your private reply");
+    const compose=make("textarea");
+    compose.maxLength=1200;compose.placeholder="Hello, thank you for contacting SlashPromo. Here is the publicly available information you requested…";
+    composerLabel.append(compose);replyPanel.append(composerLabel);
+    const replyButtons=make("div","reply-buttons");
+    const draftBtn=make("button","outline","Save private draft");
+    draftBtn.type="button";
+    const prepareBtn=make("button","","Reply on WhatsApp");
+    prepareBtn.type="button";
+    if(!item.visitor_phone){
+      prepareBtn.disabled=true;
+      prepareBtn.title="This visitor did not provide a WhatsApp number. You can still save a private reply draft.";
+    }
+    const historyBtn=make("button","outline","View reply history");
+    historyBtn.type="button";
+    replyButtons.append(draftBtn,prepareBtn,historyBtn);replyPanel.append(replyButtons);
+    const feedback=make("p","reply-feedback","");
+    feedback.setAttribute("role","status");feedback.setAttribute("aria-live","polite");
+    replyPanel.append(feedback);
+    const historyBox=make("div","reply-history");replyPanel.append(historyBox);
+    async function showHistory(){
+      historyBox.replaceChildren();
+      const data=await request("/api/enquiry-replies?enquiryId="+encodeURIComponent(item.id));
+      const saved=data.replies||[];
+      historyBtn.textContent="Refresh reply history ("+saved.length+")";
+      if(!saved.length){
+        historyBox.append(make("p","muted","No saved replies yet. Draft or prepare your first reply above."));
+        return;
+      }
+      for(const record of saved){
+        const row=make("article","reply-record");
+        const stateText=record.status==="sent_confirmed"?"Staff marked sent · delivery unverified":record.status==="prepared"?"Prepared for WhatsApp · not sent":"Private draft · not sent";
+        row.append(make("small","reply-state "+record.status,stateText+" · "+readableDate(record.created_at)));
+        row.append(make("p","",record.reply_text));
+        const actions=make("div","reply-links");
+        if(record.status==="draft"){
+          const use=make("button","outline","Use this draft");
+          use.type="button";
+          use.addEventListener("click",()=>{compose.value=record.reply_text;compose.focus();feedback.textContent="Draft loaded into the reply composer. Changes are not saved until you choose an action.";});
+          actions.append(use);
+        }
+        if(record.status==="prepared"){
+          if(typeof record.whatsappUrl==="string"&&record.whatsappUrl.startsWith("https://wa.me/")){
+            const link=make("a","reply-open-wa","Open prefilled WhatsApp ↗");
+            link.href=record.whatsappUrl;link.target="_blank";link.rel="noopener noreferrer";
+            actions.append(link);
+          }
+          const confirmed=make("button","outline","I sent this reply");
+          confirmed.type="button";
+          confirmed.addEventListener("click",async()=>{
+            if(!window.confirm("Only continue if you actually pressed Send in WhatsApp. This is a staff record, not proof of message delivery. Mark this reply as sent?"))return;
+            confirmed.disabled=true;feedback.textContent="Recording manual sent confirmation…";
+            try{
+              const done=await request("/api/enquiry-replies",{method:"POST",body:JSON.stringify({action:"confirm_sent",enquiryId:item.id,replyId:record.id})});
+              if(!done.saved)throw Error("Reply was not updated");
+              await load(false);
+              say("Staff-marked reply sent; New enquiries move to Contacted. WhatsApp delivery remains unverified.");
+            }catch(error){confirmed.disabled=false;feedback.textContent=error.message||"Could not confirm.";}
+          });
+          actions.append(confirmed);
+        }
+        if(actions.childNodes.length)row.append(actions);
+        historyBox.append(row);
+      }
+    }
+    async function saveReply(action){
+      if(!compose.value.trim()){feedback.textContent="Write your reply first.";compose.focus();return;}
+      if(action==="prepare"&&!item.visitor_phone){feedback.textContent="The visitor did not provide a WhatsApp number. Save a private draft instead.";return;}
+      draftBtn.disabled=true;prepareBtn.disabled=true;
+      feedback.textContent=action==="prepare"?"Preparing a private WhatsApp reply…":"Saving your private draft…";
+      try{
+        const result=await request("/api/enquiry-replies",{method:"POST",body:JSON.stringify({action,enquiryId:item.id,text:compose.value})});
+        if(!result.saved)throw Error("The reply was not saved.");
+        feedback.textContent=action==="prepare"?"Reply saved as PREPARED, not sent. Choose Open prefilled WhatsApp below, send it there, then click I sent this reply.":"Private draft saved. It has not been sent.";
+        await showHistory();
+      }catch(error){feedback.textContent=error.message||"Could not save your reply."}
+      finally{draftBtn.disabled=false;prepareBtn.disabled=!item.visitor_phone;}
+    }
+    draftBtn.addEventListener("click",()=>saveReply("save_draft"));
+    prepareBtn.addEventListener("click",()=>saveReply("prepare"));
+    historyBtn.addEventListener("click",async()=>{
+      historyBtn.disabled=true;feedback.textContent="Loading reply history…";
+      try{await showHistory();feedback.textContent="Private reply history loaded."}
+      catch(error){feedback.textContent=error.message||"Cannot load reply history."}
+      finally{historyBtn.disabled=false;}
+    });
+    card.append(top,heading,question,privacy,source,replyPanel,footer);
+
     card.append(make("p","footnote","Stored with visitor consent. Source and message contents are private. WhatsApp message sent: Not verified."));
     root.append(card);
   }
