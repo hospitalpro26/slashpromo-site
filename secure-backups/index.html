@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Secure D1 Backup &amp; Recovery | SlashPromo</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/private-backup.css">
+<script src="/assets/private-backup.js" defer></script>
+</head>
+<body>
+<main>
+<header>
+<div><p class="eyebrow">SlashPromo · Private administration</p><h1>Backup &amp; Recovery</h1><p class="intro">Protect your Q&amp;A, consented enquiries, reply history and aggregate analytics.</p></div>
+<nav aria-label="Private admin links"><a href="/control-center/">Control Center</a><a href="/enquiries/">Enquiry Inbox</a><a href="/qa-admin/">Q&amp;A</a></nav>
+</header>
+<section class="alert" aria-label="Security">
+<strong>Dual administrator protection.</strong> This page requires a verified Cloudflare Access login and your existing <code>QA_ADMIN_KEY</code>.
+No plaintext personal data is displayed on this page or stored in browser local storage. A browser-generated archive is encrypted before download. Never upload backup files to GitHub, public cloud storage or chats.
+</section>
+<form id="verify-form" class="panel" autocomplete="off">
+<h2>1 · Verify live D1 database health</h2>
+<div class="formline">
+<label>Private admin key<input id="admin-key" type="password" autocomplete="off" spellcheck="false" placeholder="Enter QA_ADMIN_KEY" required></label>
+<button type="submit" id="check">Check database</button>
+</div>
+<p class="note">Check read-only database integrity and table counts. This confirms the live database is readable; it does not prove a recoverable snapshot exists.</p>
+<p id="status" role="status" aria-live="polite">Sign in through Cloudflare Access, enter your key, and run verification.</p>
+<div id="health" hidden>
+<div class="grid">
+<div class="stat"><small>SQLite quick check</small><strong id="integrity">—</strong></div>
+<div class="stat"><small>Orphaned replies</small><strong id="orphans">—</strong></div>
+<div class="stat"><small>Questions</small><strong id="count-questions">—</strong></div>
+<div class="stat"><small>Enquiries</small><strong id="count-enquiries">—</strong></div>
+<div class="stat"><small>Reply records</small><strong id="count-enquiry_replies">—</strong></div>
+<div class="stat"><small>Daily analytics rows</small><strong id="count-site_analytics_daily">—</strong></div>
+</div>
+<p id="health-note" class="note"></p>
+</div>
+</form>
+<section class="panel">
+<h2>2 · Download an encrypted logical archive</h2>
+<p>This is a supplemental encrypted export of the <strong>four application tables above</strong>. It excludes short-lived anti-spam rate data and any separate advertising database. Use D1 Time Travel or a full Wrangler SQL export for a complete database recovery.</p>
+<div class="formline">
+<label>New archive passphrase (16+ characters)<input id="passphrase" type="password" minlength="16" autocomplete="new-password" spellcheck="false" placeholder="Use a different secret from your admin key"></label>
+<label>Confirm archive passphrase<input id="passphrase-confirm" type="password" minlength="16" autocomplete="new-password" spellcheck="false" placeholder="Re-enter the archive passphrase"></label>
+</div>
+<p class="note">Encryption: AES-256-GCM; key derived with PBKDF2-SHA256 (310,000 iterations), fresh random salt and IV. All encryption takes place locally in your browser. Losing the passphrase makes the archive unrecoverable.</p>
+<div class="formline"><button type="button" id="export" disabled>Generate encrypted backup</button><span id="export-status" role="status" aria-live="polite">Verify the database first.</span></div>
+</section>
+<section class="panel">
+<h2>3 · Recovery and verification</h2>
+<p><strong>Primary recovery:</strong> Cloudflare D1 Time Travel can restore the production database to a prior timestamp. It is a destructive operation, so stop writes and record the current bookmark before proceeding. Its retention is plan-dependent.</p>
+<p><strong>Independent backup:</strong> Use Wrangler to export a complete <code>.sql</code> database snapshot to a private, encrypted location. Periodically restore that SQL to a <em>separate test D1 database</em> and check the row counts.</p>
+<p><strong>Encrypted archive check:</strong> Use the repository’s offline <code>scripts/verify-slashpromo-archive.mjs</code> utility to decrypt and authenticate the archive without uploading it. It can produce a staging-only SQL file if needed.</p>
+<p><a href="https://developers.cloudflare.com/d1/reference/time-travel/" target="_blank" rel="noopener noreferrer">Cloudflare Time Travel documentation</a> · <a href="https://developers.cloudflare.com/d1/best-practices/import-export-data/" target="_blank" rel="noopener noreferrer">Cloudflare D1 SQL export/import guide</a> · <a href="https://github.com/hospitalpro26/slashpromo-site/blob/main/docs/backup-recovery-runbook.md" target="_blank" rel="noopener noreferrer">SlashPromo restore runbook</a></p>
+</section>
+<footer>
+  <p>Backups are not generated by simply opening this page. Download and verify your encrypted archive before relying on it. Cloudflare’s automatic Time Travel is separate from this dashboard.</p>
+</footer>
+</main>
+</body>
+</html>

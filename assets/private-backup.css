@@ -1,0 +1,24 @@
+:root{color-scheme:light;font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f8fc;color:#162d50}
+*{box-sizing:border-box}body{margin:0}main{max-width:1040px;margin:0 auto;padding:30px 18px 65px}
+header{display:flex;justify-content:space-between;gap:18px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
+h1{margin:4px 0;font-size:clamp(26px,4vw,39px);letter-spacing:-.035em}h2{font-size:19px;margin:0 0 12px}
+p{margin:8px 0 14px;color:#556981;line-height:1.7}
+.eyebrow{font-size:12px;color:#145aa1;text-transform:uppercase;letter-spacing:.1em;font-weight:850}
+.intro{margin-bottom:2px}nav{display:flex;flex-wrap:wrap;gap:15px;font-size:13px}
+a{color:#1559a1;text-underline-offset:3px}a:hover{color:#0d3970}
+.panel{border:1px solid #dce7f2;border-radius:14px;background:#fff;padding:20px;margin:17px 0;box-shadow:0 8px 22px #10335008}
+.alert{border:1px solid #b7d3ed;background:#eaf4ff;border-radius:12px;padding:15px 18px;color:#204d7f}
+.alert strong{display:block;margin-bottom:4px}code{font:13px/1.5 ui-monospace,Consolas,monospace;background:#edf4fb;border-radius:4px;padding:1px 4px;color:#1d4b7c}
+.formline{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin:13px 0}
+label{display:flex;flex:1 1 235px;flex-direction:column;gap:5px;font-weight:700;font-size:13px;max-width:390px}
+input{font:inherit;min-height:45px;padding:10px 12px;background:#fff;color:#183958;border:1px solid #b2c6db;border-radius:9px;width:100%}
+button{border:0;border-radius:9px;background:#155fae;color:#fff;font:inherit;font-weight:750;padding:11px 18px;min-height:45px;cursor:pointer}
+button:hover{background:#114e8c}button:disabled{opacity:.48;cursor:not-allowed}
+:focus-visible{outline:3px solid #2d79d1;outline-offset:3px}
+.note{font-size:12px;color:#647a90}
+#status,#export-status{font-size:13px;color:#1d568a;font-weight:700;overflow-wrap:anywhere}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:15px 0}
+.stat{border:1px solid #deeaf6;background:#f6faff;padding:14px;border-radius:10px}
+.stat small{font-size:11px;color:#607a95;display:block}.stat strong{font-size:21px;display:block;overflow-wrap:anywhere;color:#163d70}
+footer{font-size:12px;border-top:1px solid #dce6f2;margin-top:25px;padding-top:13px}
+@media(max-width:660px){main{padding:19px 12px 44px}.panel{padding:15px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
