@@ -6,7 +6,9 @@
     "/api/campaigns",
     "/go/*",
     "/api/questions",
-    "/api/qa-admin"
+    "/api/qa-admin",
+    "/api/analytics",
+    "/api/analytics-report"
   ],
   "exclude": []
 }
