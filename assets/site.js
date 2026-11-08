@@ -169,3 +169,100 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
   else init();
 })();
+
+
+/* Page-aware, opt-in WhatsApp enquiry form. The public contact button opens
+   this form; only the visitor's explicit WhatsApp Send action shares data. */
+(function(){
+  "use strict";
+  if(/^\/(?:qa-admin|admin|api)(?:\/|$)/i.test(location.pathname))return;
+  function setup(){
+    const old=document.getElementById("sp-team-whatsapp-float");
+    if(!old||document.getElementById("sp-wa-query-panel"))return;
+    const toggle=document.createElement("button");
+    toggle.type="button";toggle.id=old.id;toggle.className=old.className;
+    toggle.innerHTML=old.innerHTML;toggle.title="Ask SlashPromo a question on WhatsApp";
+    toggle.setAttribute("aria-label","Open WhatsApp enquiry form");
+    toggle.setAttribute("aria-controls","sp-wa-query-panel");
+    toggle.setAttribute("aria-expanded","false");
+    old.replaceWith(toggle);
+    const panel=document.createElement("section");
+    panel.id="sp-wa-query-panel";panel.className="sp-wa-query-panel";
+    panel.setAttribute("role","region");
+    panel.setAttribute("aria-labelledby","sp-wa-query-title");
+    panel.hidden=true;
+    panel.innerHTML=[
+      '<div class="sp-wa-query-head"><div><h2 id="sp-wa-query-title">WhatsApp enquiry</h2><p>Ask about doctors, hospitals or OPD</p></div><button type="button" class="sp-wa-query-close" aria-label="Close form">×</button></div>',
+      '<form id="sp-wa-query-form" class="sp-wa-query-form">',
+      '<label for="sp-wa-name">Your name *</label><input id="sp-wa-name" name="visitorName" type="text" maxlength="100" autocomplete="name" placeholder="Enter your name" required>',
+      '<label for="sp-wa-address">Address / City *</label><input id="sp-wa-address" name="visitorAddress" type="text" maxlength="150" autocomplete="address-level2" placeholder="Your area, town or city" required>',
+      '<label for="sp-wa-question">Your question or enquiry *</label><textarea id="sp-wa-question" name="query" rows="3" minlength="5" maxlength="1500" placeholder="What would you like to know?" required></textarea>',
+      '<div class="sp-wa-source"><strong>Automatically included page:</strong><span id="sp-wa-source-label"></span></div>',
+      '<p class="sp-wa-privacy">Your details are prepared in WhatsApp. Nothing is submitted to SlashPromo by this form. Review the message and tap <strong>Send</strong> in WhatsApp to share it. For emergencies, contact local emergency services.</p>',
+      '<button type="submit" class="sp-wa-submit">Continue to WhatsApp ↗</button>',
+      '</form>'
+    ].join("");
+    document.body.appendChild(panel);
+    const form=panel.querySelector("form");
+    const parts=location.pathname.toLowerCase().split("/").filter(Boolean);
+    const places=new Set(["sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad","lahore"]);
+    let category="Other SlashPromo page";
+    if(parts.length===0)category="Homepage";
+    else if(parts.length===1&&places.has(parts[0]))category=parts[0].charAt(0).toUpperCase()+parts[0].slice(1)+" landing page";
+    else if(parts[0]==="doctors"&&parts.length===3)category="Doctor profile";
+    else if(parts[0]==="hospitals"&&parts.length===3)category="Hospital profile";
+    else if(parts[0]==="doctors"&&parts.length===2)category="Specialty / city doctor directory";
+    else if(parts[0]==="hospitals")category="Hospital directory";
+    else if(parts[0]==="doctors")category="Doctors directory";
+    else if(places.has(parts[0]))category="City information page";
+    const title=(document.querySelector("main h1")?.textContent||document.title||"SlashPromo").replace(/\s+/g," ").trim().slice(0,130);
+    let url="https://slashpromo.com"+location.pathname;
+    try{
+      const canonical=document.querySelector('link[rel="canonical"]');
+      const link=new URL(canonical?.href||location.href,location.origin);
+      if(["slashpromo.com","www.slashpromo.com"].includes(link.hostname)){
+        link.search="";link.hash="";url=link.href;
+      }
+    }catch{}
+    panel.querySelector("#sp-wa-source-label").textContent=category+" — "+title;
+    function open(next){
+      panel.hidden=!next;
+      toggle.setAttribute("aria-expanded",next?"true":"false");
+      if(next)form.elements.namedItem("visitorName").focus();
+      else toggle.focus();
+    }
+    toggle.addEventListener("click",()=>open(panel.hidden));
+    panel.querySelector(".sp-wa-query-close").addEventListener("click",()=>open(false));
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!panel.hidden)open(false)});
+    document.addEventListener("pointerdown",event=>{
+      if(!panel.hidden&&!panel.contains(event.target)&&!toggle.contains(event.target)){
+        panel.hidden=true;toggle.setAttribute("aria-expanded","false");
+      }
+    });
+    form.addEventListener("submit",event=>{
+      event.preventDefault();
+      if(!form.reportValidity())return;
+      const name=form.elements.namedItem("visitorName").value.trim();
+      const address=form.elements.namedItem("visitorAddress").value.trim();
+      const question=form.elements.namedItem("query").value.trim();
+      if(!name||!address||question.length<5)return;
+      const message=[
+        "Hello SlashPromo Team, I have an enquiry.",
+        "Name: "+name,
+        "Address / City: "+address,
+        "Query: "+question,
+        "",
+        "From page type: "+category,
+        "From page title: "+title,
+        "From page URL: "+url
+      ].join("\n");
+      const outbound=document.createElement("a");
+      outbound.href="https://wa.me/923352648572?text="+encodeURIComponent(message);
+      outbound.target="_blank";outbound.rel="noopener noreferrer";
+      outbound.hidden=true;document.body.appendChild(outbound);
+      outbound.click();outbound.remove();
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});
+  else setup();
+})();
