@@ -32,6 +32,7 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 .item .source a{color:#1555a1}
 .empty{padding:22px;border-radius:13px;border:1px dashed #acc4df;background:#fff}
 @media(max-width:640px){#query{min-width:0;width:100%}}
+.qa-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.qa-kpis span{padding:12px;background:#fff;border:1px solid #cfdeef;border-radius:10px;font-size:12px;color:#365b85}.qa-kpis strong{display:block;font-size:23px;color:#163f70}.qa-status{display:inline-block;padding:3px 9px;margin-left:8px;border-radius:999px;background:#e1eaf8;color:#1b4575;font-weight:700;font-size:11px}.qa-status.approved{background:#e0f6e9;color:#125e39}.qa-status.rejected{background:#fae6e9;color:#962c43}.qa-draft{background:#2c688f}.qa-notice{font-size:12px;color:#456c8f}@media(max-width:640px){.qa-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1><p><a href="/analytics/" rel="nofollow">View aggregate website analytics ↗</a></p>
@@ -39,13 +40,13 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 <p class="notice">This dashboard requires the private QA_ADMIN_KEY configured in Cloudflare. The key stays in this browser tab's memory and is not saved or included in public pages. Use HTTPS only.</p>
 <div class="toolbar">
 <label>Admin key <input type="password" id="key" autocomplete="off" placeholder="Paste private admin key"></label>
-<label>View <select id="filter"><option value="pending">Awaiting review</option><option value="approved">Published</option><option value="rejected">Rejected</option></select></label>
+<label>View <select id="filter"><option value="all" selected>All saved questions</option><option value="pending">Awaiting review</option><option value="approved">Published</option><option value="rejected">Rejected</option></select></label>
 <label>City <select id="city-filter"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="ghotki">Ghotki</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option></select></label>
 <label>Page type <select id="type-filter"><option value="">All pages</option><option value="city">City homepage</option><option value="doctor">Doctor profile</option><option value="hospital">Hospital</option><option value="specialty">Specialty directory</option><option value="health">Health topic</option><option value="other">Other local page</option></select></label>
 <label>Search questions <input type="search" id="query" placeholder="Doctor, question or page" autocomplete="off"></label>
 <button type="button" id="load">Load questions</button>
 <button type="button" id="more" hidden>Load older questions</button>
-</div><p id="status" role="status" aria-live="polite"></p><div class="summary" id="summary">Choose an approval status and city, then load the private moderation queue. Filters only affect the administrator's view.</div><div id="items"></div>
+</div><p id="status" role="status" aria-live="polite"></p><div class="qa-kpis" id="qa-kpis" aria-label="Saved questions by status"><span>All saved <strong id="stat-total">—</strong></span><span>Pending <strong id="stat-pending">—</strong></span><span>Published <strong id="stat-approved">—</strong></span><span>Rejected <strong id="stat-rejected">—</strong></span></div><div class="summary" id="summary">Enter your admin key, choose a city (or All cities), then click Load questions to see all permanently saved submissions and published answers.</div><div id="items"></div>
 </main>
 <script>
 "use strict";
@@ -60,6 +61,7 @@ const status=document.querySelector("#status");
 const summary=document.querySelector("#summary");
 const more=document.querySelector("#more");
 let questions=[],nextBefore=null,hasMore=false;
+function updateStats(summary){for(const [id,field] of [["total","total"],["pending","pending"],["approved","approved"],["rejected","rejected"]]){document.getElementById("stat-"+id).textContent=String(Number(summary?.[field]||0));}}
 function say(message){status.textContent=message;}
 function node(tag,cls,text){
   const el=document.createElement(tag);
@@ -102,17 +104,18 @@ function render(){
   });
   items.replaceChildren();
   summary.textContent="Showing "+visible.length+" matching question(s) from "+questions.length+
-    " loaded "+statusFilter.value+" record(s)"+
+    " loaded "+statusFilter.value+" saved record(s)"+
     (cityFilter.value?" in "+cityFilter.value:" across all cities")+
     ". Private WhatsApp numbers, feedback and visitor cities are never published.";
   more.hidden=!hasMore;
   if(!visible.length){
-    items.append(node("p","empty",questions.length?"No loaded questions match these filters.":"No questions loaded for this selection."));
+    items.append(node("p","empty",questions.length?"No saved questions match these filters.":"No questions saved for this selection, or choose Load questions to refresh."));
     return;
   }
   for(const q of visible){
     const card=node("article","item");
     const meta=node("small","",String(q.city||"").toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
+    meta.append(node("span","qa-status "+q.status,q.status==="approved"?"Published":q.status==="rejected"?"Rejected":"Pending"));
     const question=node("h2","",q.question);
     const rawPath=String(q.page_path||"/"+q.city+"/");
     const source=node("p","source","Submitted on: "+rawPath+" · Page type: "+classify(q));
@@ -150,29 +153,34 @@ function render(){
     const label=node("label","");
     label.append(node("span","","Answer for public display (verify all facts first)"));
     const answer=node("textarea","");
-    answer.maxLength=2000;answer.value=q.answer||"";
+    answer.maxLength=2000;answer.value=q.draft_answer??q.answer??"";
     label.append(answer);
     const actions=node("div","buttons");
-    const publish=node("button","","Publish verified answer");
+    const saveDraft=node("button","qa-draft","Save private draft");
+    const publish=node("button","",q.status==="approved"?"Update published answer":"Publish verified answer");
     const reject=node("button","reject","Reject question");
     async function submit(next){
       if(next==="approved"&&answer.value.trim().length<12){
         say("A verified public answer of at least 12 characters is required.");
         return;
       }
-      publish.disabled=true;reject.disabled=true;
+      saveDraft.disabled=true;publish.disabled=true;reject.disabled=true;
       try{
         await request("POST",{id:q.id,status:next,answer:answer.value});
-        questions=questions.filter(row=>row.id!==q.id);
-        render();
-        say(next==="approved"?"Approved answer saved.":"Question rejected.");
-      }catch(error){
-        say(error.message);publish.disabled=false;reject.disabled=false;
-      }
+        if(next==="draft"){
+          q.draft_answer=answer.value.trim();
+          say("Private draft saved in the database. This answer is not public.");
+        }else{
+          await load(false);
+          say(next==="approved"?"Approved answer saved permanently in the database.":"Question archived as rejected and retained in the database.");
+        }
+      }catch(error){say(error.message);}
+      finally{saveDraft.disabled=false;publish.disabled=false;reject.disabled=false;}
     }
+    saveDraft.addEventListener("click",()=>submit("draft"));
     publish.addEventListener("click",()=>submit("approved"));
     reject.addEventListener("click",()=>submit("rejected"));
-    actions.append(publish,reject);
+    actions.append(saveDraft,publish,reject);
     card.append(meta,question,source,privateCard,label,actions);
     items.append(card);
   }
@@ -186,8 +194,9 @@ async function load(append=false){
     questions=append?questions.concat(data.questions||[]):(data.questions||[]);
     nextBefore=data.nextBefore||null;
     hasMore=Boolean(data.hasMore&&nextBefore);
+    updateStats(data.summary);
     render();
-    say("Moderation queue loaded.");
+    say("Saved question history loaded from the database. Use View to show pending, published or rejected entries.");
   }catch(error){say(error.message);}
 }
 document.querySelector("#load").addEventListener("click",()=>load(false));
