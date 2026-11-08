@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-07",
+  "updatedAt": "2026-11-08",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
@@ -1045,6 +1045,21 @@
       "area": "Airport Road"
     },
     {
+      "id": "sukkur-dr-bashir-ahmed-khoso",
+      "name": "Dr. Bashir Ahmed Khoso",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Rheumatologist & Physician",
+      "qualifications": "MBBS, FCPS (Medicine), FCPS (Rheumatology)",
+      "hospital": "River City Hospital, Sukkur",
+      "url": "/doctors/sukkur/dr-bashir-ahmed-khoso/",
+      "externalProfile": "https://slashcure.com/rheumatologists/sukkur/dr-bashir-ahmed-khoso",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
       "id": "sukkur-dr-deepak-kumar",
       "name": "Dr. Deepak Kumar",
       "city": "Sukkur",
@@ -1559,14 +1574,15 @@
       "name": "River City Hospital",
       "city": "Sukkur",
       "category": "Hospital",
-      "description": "Featured consultations in gastroenterology and women's health.",
+      "description": "Featured consultations in gastroenterology, women's health, rheumatology and internal medicine.",
       "url": "/hospitals/sukkur/river-city-hospital/",
       "hospitalpro": "https://hospitalpro.online/hospitals/river-city-hospital-sukkur/",
       "externalProfile": "",
       "kind": "hospital",
       "linkedDoctorIds": [
         "sukkur-dr-murk-channa",
-        "sukkur-dr-saima-shaikh"
+        "sukkur-dr-saima-shaikh",
+        "sukkur-dr-bashir-ahmed-khoso"
       ]
     },
     {
