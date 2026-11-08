@@ -1,0 +1,78 @@
+name: Verify secure D1 backups and recovery safeguards
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-secure-backups.yml'
+      - 'functions/api/secure-backup.js'
+      - 'functions/_lib/secure-backup.js'
+      - 'functions/_lib/optional-access.js'
+      - 'functions/secure-backups/**'
+      - 'assets/private-backup.*'
+      - 'secure-backups/**'
+      - 'scripts/*backup*.mjs'
+      - 'scripts/verify-slashpromo-archive.mjs'
+      - 'docs/backup-recovery-runbook.md'
+      - '_routes.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backup-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint scripts and run synthetic encrypted backup round-trip
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in functions/api/secure-backup.js functions/_lib/secure-backup.js functions/_lib/optional-access.js functions/secure-backups/_middleware.js functions/secure-backups/index.js assets/private-backup.js scripts/test-secure-backup.mjs scripts/verify-slashpromo-archive.mjs; do
+            node --check "$file"
+          done
+          node scripts/test-secure-backup.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          routes=json.loads(Path("_routes.json").read_text(encoding="utf-8"))["include"]
+          assert "/api/secure-backup" in routes
+          assert "/secure-backups" in routes and "/secure-backups/*" in routes
+          html=Path("secure-backups/index.html").read_text(encoding="utf-8")
+          assert 'noindex,nofollow' in html
+          assert '/assets/private-backup.js' in html
+          api=Path("functions/api/secure-backup.js").read_text(encoding="utf-8")
+          assert 'authenticate(ctx)' in api and 'constantTimeEqual' in api
+          assert 'PRAGMA quick_check' in api
+          assert '"questions"' in Path("functions/_lib/secure-backup.js").read_text(encoding="utf-8")
+          assert 'ADMIN_ACCESS_REQUIRED' in Path("functions/_lib/optional-access.js").read_text(encoding="utf-8")
+          assert 'frame-ancestors' in Path("functions/secure-backups/_middleware.js").read_text(encoding="utf-8")
+          assert 'AES-GCM' in Path("assets/private-backup.js").read_text(encoding="utf-8")
+          assert 'SLASHPROMO_BACKUP_PASSPHRASE' in Path("docs/backup-recovery-runbook.md").read_text(encoding="utf-8")
+          PY
+          if git ls-files | grep -E '\.(spbk|private\.sql|d1\.sql)$'; then
+            echo 'FAIL: a private backup file was committed!' >&2
+            exit 1
+          fi
+          echo 'PASS: synthetic backup encrypted/decrypted and restored; no private archives tracked.'
+      - name: Check production route and verify unauthorized access is blocked
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 14); do
+            assets=$(curl -sS --max-time 18 -o /tmp/sp-secure-assets.js -w '%{http_code}' 'https://slashpromo.com/assets/private-backup.js' || true)
+            backup=$(curl -sS --max-time 18 -o /tmp/sp-secure-private.json -w '%{http_code}' 'https://slashpromo.com/api/secure-backup?mode=verify' || true)
+            invalid=$(curl -sS --max-time 18 -o /tmp/sp-secure-invalid.json -w '%{http_code}' -H 'X-QA-Admin-Key: not-a-valid-key' 'https://slashpromo.com/api/secure-backup?mode=export&table=questions' || true)
+            view=$(curl -sS --max-time 18 -o /tmp/sp-secure-admin.html -w '%{http_code}' 'https://slashpromo.com/secure-backups/' || true)
+            if [ "$assets" = 200 ] && grep -q 'slashpromo-encrypted-v1' /tmp/sp-secure-assets.js && \
+               { [ "$backup" = 401 ] || [ "$backup" = 302 ] || [ "$backup" = 403 ]; } && \
+               { [ "$invalid" = 401 ] || [ "$invalid" = 302 ] || [ "$invalid" = 403 ]; } && \
+               { [ "$view" = 503 ] || [ "$view" = 401 ] || [ "$view" = 302 ] || [ "$view" = 403 ]; }; then
+              echo "PASS: backup frontend asset deployed; private backup API blocked anonymous/invalid keys; Access-only page not publicly accessible."
+              echo "Access-only page HTTP status (without login): $view. A 503 means Cloudflare Access variables still require configuration."
+              exit 0
+            fi
+            echo "Attempt $attempt static-assets=$assets no-key=$backup invalid-key=$invalid Access-page=$view"
+            sleep 12
+          done
+          echo 'Secure backup deployment/safety verification failed. Review live Cloudflare routes and Access configuration.' >&2
+          exit 1
