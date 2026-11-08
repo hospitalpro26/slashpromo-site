@@ -1,0 +1,54 @@
+name: Verify live SlashPromo analytics
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-analytics-production.yml'
+      - 'functions/api/analytics.js'
+      - 'functions/api/analytics-report.js'
+      - 'functions/_lib/analytics.js'
+      - 'analytics/index.html'
+      - 'assets/site.js'
+      - 'assets/city-questions.js'
+      - '_routes.json'
+      - 'sukkur/index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-analytics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JavaScript and privacy invariants
+        run: |
+          set -euo pipefail
+          node --check assets/site.js
+          node --check assets/city-questions.js
+          grep -q 'window.slashpromoTrack' assets/site.js
+          grep -q 'sp-wa-query-form' assets/site.js
+          grep -q 'window.slashpromoTrack' assets/city-questions.js
+          grep -q 'analytics-report' _routes.json
+          grep -q 'noindex,nofollow' analytics/index.html
+      - name: Confirm the live dashboard and locked report endpoint
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            dashboard=$(curl -sSL --max-time 18 -o /tmp/analytics.html -w '%{http_code}' "https://slashpromo.com/analytics/?verify=$GITHUB_SHA" || true)
+            source=$(curl -sSL --max-time 18 -o /tmp/site-js.html -w '%{http_code}' 'https://slashpromo.com/assets/site.js?v=20261108-analytics4' || true)
+            auth=$(curl -sSL --max-time 18 -o /tmp/report.json -w '%{http_code}' 'https://slashpromo.com/api/analytics-report?days=7' || true)
+            method=$(curl -sSL --max-time 18 -o /tmp/method.json -w '%{http_code}' 'https://slashpromo.com/api/analytics' || true)
+            if [ "$dashboard" = 200 ] && [ "$source" = 200 ] && [ "$auth" = 401 ] && [ "$method" = 405 ] && \
+               grep -q 'Private Analytics Dashboard' /tmp/analytics.html && \
+               grep -q 'window.slashpromoTrack' /tmp/site-js.html && \
+               grep -q 'Unauthorized' /tmp/report.json; then
+              echo 'PASS: dashboard loads; tracker deployed; unauthorized reporting rejected; GET ingestion blocked.'
+              echo "Live dashboard: https://slashpromo.com/analytics/"
+              exit 0
+            fi
+            echo "Attempt $attempt: dashboard=$dashboard JS=$source report-without-key=$auth GET-collector=$method"
+            sleep 12
+          done
+          echo 'Live analytics smoke test did not pass. Inspect production routing / Cloudflare D1 configuration.' >&2
+          exit 1
