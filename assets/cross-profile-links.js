@@ -26,17 +26,17 @@
     return null;
   };
   const fallback = (record,kind) => {
-    if(kind === "hospital") return {url:"https://slashcure.com/hospitals",label:"Browse hospitals on Slashcure ↗",direct:false};
+    if(kind === "hospital") return {url:"https://slashcure.com/hospitals",label:"Find hospital and clinic details on Slashcure ↗",direct:false};
     const query = new URL("https://slashcure.com/doctors");
     query.searchParams.set("type","all");
     if(record.city) query.searchParams.set("loc",record.city);
     if(record.name) query.searchParams.set("q",record.name);
-    return {url:query.href,label:"Find doctor on Slashcure ↗",direct:false};
+    return {url:query.href,label:"Search doctor and OPD details on Slashcure ↗",direct:false};
   };
   const destination = (record,kind) => {
     const profile=parse(record.externalProfile);
     if(profile && profile.kind===kind)
-      return {url:profile.url,label:kind==="hospital"?"View hospital on Slashcure ↗":"View doctor on Slashcure ↗",direct:true};
+      return {url:profile.url,label:kind==="hospital"?"View hospital and doctors on Slashcure ↗":"Check doctor profile and published OPD details ↗",direct:true};
     return fallback(record,kind);
   };
   const el = (tag,className,text) => {
@@ -63,6 +63,10 @@
     }
     const target=destination(record,kind);
     container.append(link(target.url,"sp-cross-link "+(target.direct?"sp-cross-link-external":"sp-cross-link-fallback"),target.label));
+    const city=currentPath.split("/").filter(Boolean)[1];
+    if(isProfile&&["sukkur","karachi","khairpur","shikarpur","ghotki","hyderabad"].includes(city)){
+      container.append(link("#community-questions","sp-cross-link sp-cross-link-question","Ask about OPD timings or clinic details ↓"));
+    }
     return container;
   };
   fetch("/assets/directory.json",{cache:"no-store"}).then(res=>{
