@@ -127,16 +127,19 @@ import("/assets/cross-profile-links.js?v=20261106-doctor-darkwordmark").catch(()
   else init();
 })();
 
-/* City root pages include their own Q&A script. On Sukkur subpages, load the
-   same moderated component with a page-specific thread (no duplicate forms). */
+/* One moderated, page-specific Q&A for every published city doctor, hospital,
+   clinic, laboratory, local specialty and health-topic page. City roots load
+   the module directly. No duplicate forms or cross-city question threads. */
 (function(){
   "use strict";
+  const supported=new Set(["sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad"]);
   const parts=location.pathname.toLowerCase().split("/").filter(Boolean);
-  const isSukkurSubpage=(parts[0]==="sukkur"&&parts.length>1)
-    ||(["doctors","hospitals","clinics","laboratories"].includes(parts[0])&&parts[1]==="sukkur"&&parts.length>2);
-  if(!isSukkurSubpage||document.querySelector('script[src*="/assets/city-questions.js"]'))return;
+  const isCitySubpage=supported.has(parts[0])&&parts.length>1;
+  const isProviderSubpage=["doctors","hospitals","clinics","laboratories"].includes(parts[0])
+    &&supported.has(parts[1])&&parts.length>2;
+  if(!(isCitySubpage||isProviderSubpage)||document.querySelector('script[src*="/assets/city-questions.js"]'))return;
   const script=document.createElement("script");
-  script.src="/assets/city-questions.js?v=20261108-scoped-qa6";
+  script.src="/assets/city-questions.js?v=20261108-nationwide-qa7";
   script.async=true;
   document.head.appendChild(script);
 })();
