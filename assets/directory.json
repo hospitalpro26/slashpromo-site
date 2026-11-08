@@ -889,21 +889,6 @@
       "kind": "doctor"
     },
     {
-      "id": "sukkur-dr-aabid-raza",
-      "name": "Dr. Aabid Raza",
-      "city": "Sukkur",
-      "cities": [
-        "Sukkur"
-      ],
-      "specialty": "Consultant Physician",
-      "qualifications": "MBBS, RMP, FCPS (Internal Medicine)",
-      "hospital": "",
-      "url": "/doctors/sukkur/dr-aabid-raza/",
-      "externalProfile": "",
-      "hospitalpro": "",
-      "kind": "doctor"
-    },
-    {
       "id": "sukkur-dr-abdul-ahad-solangi",
       "name": "Dr. Abdul Ahad Solangi",
       "city": "Sukkur",
@@ -912,7 +897,7 @@
       ],
       "specialty": "General Physician & Paediatrician",
       "hospital": "Sindh Institute of Child Health and Neonatology, Sukkur",
-      "qualifications": "Medical practitioner",
+      "qualifications": "MBBS, RMP, MCPS (Paediatrics)",
       "url": "/doctors/sukkur/dr-abdul-ahad-solangi/",
       "externalProfile": "https://slashcure.com/general-physicians/sukkur/dr-abdul-ahad-solangi",
       "hospitalpro": "",
@@ -1115,12 +1100,13 @@
         "Sukkur"
       ],
       "specialty": "Consultant General & Laparoscopic Surgeon",
-      "hospital": "",
-      "qualifications": "Consultant General Surgeon",
+      "hospital": "Sindh Rangers Hospital, Sukkur",
+      "qualifications": "MBBS, FCPS (General Surgery), CHPE",
       "url": "/doctors/sukkur/dr-halar-dahar/",
       "externalProfile": "https://slashcure.com/general-surgeons-laproscopic-surgeons/sukkur/dr-halar-dahar",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Near Shikarpur Bus Stand, Sukkur"
     },
     {
       "id": "sukkur-dr-iqra-chachar",
@@ -1149,9 +1135,10 @@
       "hospital": "Sukkur Diagnostic Centre",
       "qualifications": "MBBS, FCPS",
       "url": "/doctors/sukkur/dr-israr-ahmed-shaikh/",
-      "externalProfile": "https://slashcure.com/hospitals/sukkur/sukkur-diagnostic-centre",
+      "externalProfile": "",
       "hospitalpro": "",
-      "kind": "doctor"
+      "kind": "doctor",
+      "facilityProfile": "https://slashcure.com/hospitals/sukkur/sukkur-diagnostic-centre"
     },
     {
       "id": "sukkur-dr-komal-kandhir",
@@ -1330,10 +1317,10 @@
         "Ubauro"
       ],
       "specialty": "Consultant Physician",
-      "hospital": "THQ Hospital Ubauro",
+      "hospital": "THQ Hospital Ubauro; Munawar Health Clinic, Ubauro",
       "qualifications": "MBBS, RMP, FCPS (Internal Medicine)",
       "url": "/doctors/ubauro/dr-aabid-raza/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/consultant-physicians/ubauro/dr-aabid-raza",
       "hospitalpro": "",
       "kind": "doctor"
     },
