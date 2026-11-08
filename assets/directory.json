@@ -1026,8 +1026,7 @@
       "url": "/doctors/sukkur/dr-arif-soomro/",
       "externalProfile": "https://slashcure.com/dentists/sukkur/dr-arif-soomro",
       "hospitalpro": "",
-      "kind": "doctor",
-      "area": "Airport Road"
+      "kind": "doctor"
     },
     {
       "id": "sukkur-dr-bashir-ahmed-khoso",
@@ -1230,7 +1229,8 @@
       "url": "/doctors/sukkur/dr-riaz-hussain-hakro/",
       "externalProfile": "https://slashcure.com/pulmonologists/sukkur/dr-riaz-hussain-hakro",
       "hospitalpro": "https://hospitalpro.online/dr-riaz-hussain-hakro.html",
-      "kind": "doctor"
+      "kind": "doctor",
+      "area": "Barrage Colony, Sukkur"
     },
     {
       "id": "sukkur-dr-saima-shaikh",
