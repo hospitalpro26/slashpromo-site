@@ -16,7 +16,8 @@ const urlPath=u=>u.replace(/^\/+/,"")+"index.html";
 const normalize=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 const aliases={
   "sukkur-ghulam-muhammad-mahar-medical-teaching-hospital":/gmc teaching hospital|ghulam muhammad mahar medical teaching/i,
-  "sukkur-sicvd-hospital-sukkur":/\bsicvd\b/i
+  "sukkur-sicvd-hospital-sukkur":/\bsicvd\b/i,
+  "karachi-astro-physiocare":/astro\s*physio\s*care|astrophysiocare/i
 };
 const associationMatches=(facility,doctor)=>{
   const s=normalize(doctor.hospital);
@@ -40,15 +41,38 @@ for(const facility of db.hospitals){
   const file=urlPath(facility.url);
   if(listedFiles.has(file))errors.push("Duplicate hospital record: "+file);
   listedFiles.add(file);
-  for(const [label,html] of [["hospital directory",hospitalIndex],["Sukkur city page",sukPage]]){
+  // Match each facility to its own city page, never to Sukkur by default.
+  const citySlug=facility.city.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+  let cityPage="";
+  try{cityPage=await read(citySlug+"/index.html")}
+  catch{errors.push(facility.name+": city landing page missing");}
+  for(const [label,html] of [["national hospital directory",hospitalIndex],[citySlug+" city page",cityPage]]){
     if(!html.includes('href="'+facility.url+'"'))errors.push(facility.name+": missing from "+label);
   }
   const ids=facility.linkedDoctorIds;
-  if(!Array.isArray(ids)||ids.length===0){errors.push(facility.name+": no linkedDoctorIds");continue;}
+  if(!Array.isArray(ids)){errors.push(facility.name+": linkedDoctorIds must be an array");continue;}
+  const institutionalOnly=ids.length===0 && facility.listingScope==="institutional-only";
+  if(ids.length===0&&!institutionalOnly){errors.push(facility.name+": no linked doctors or verified institutional-only declaration");continue;}
   const unique=new Set(ids);
   if(unique.size!==ids.length)errors.push(facility.name+": duplicate doctor association");
   let html="";
   try{html=await read(file)}catch{errors.push("Missing hospital page: "+file);continue;}
+  // Institutional-only pages can be listed if they link to a matching
+  // external facility profile and clearly avoid claiming locally verified doctors.
+  // This is NOT a verified doctor/affiliation relationship.
+  if(institutionalOnly){
+    const expected="https://slashcure.com"+facility.url;
+    if(facility.externalProfile!==expected)
+      errors.push(facility.name+": institutional-only listing requires matching Slashcure facility profile");
+    if(!html.includes("Doctor roster verification:")||!html.includes("Individual doctors are not yet independently linked"))
+      errors.push(facility.name+": missing public notice that doctors are not independently linked");
+    const doctorLinks=[...html.matchAll(/href="(\\/doctors\\/[^"#?]+\\/)"/g)].map(match=>match[1]);
+    for(const doctorLink of doctorLinks)if(doctorLink!=="/doctors/")
+      errors.push(facility.name+": unverified doctor profile linked: "+doctorLink);
+    if(!sitemap.includes("<loc>https://slashpromo.com"+facility.url+"</loc>"))
+      errors.push("Hospital omitted from sitemap: "+facility.url);
+    continue;
+  }
   for(const id of ids){
     const d=doctors.get(id);
     if(!d){errors.push(facility.name+": unknown doctor "+id);continue;}
