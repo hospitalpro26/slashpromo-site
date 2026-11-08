@@ -43,7 +43,7 @@ jobs:
           api=Path("functions/api/secure-backup.js").read_text(encoding="utf-8")
           assert 'authenticate(ctx)' in api and 'constantTimeEqual' in api
           assert 'PRAGMA quick_check' in api
-          assert '"questions"' in Path("functions/_lib/secure-backup.js").read_text(encoding="utf-8")
+          assert 'questions:Object.freeze' in Path("functions/_lib/secure-backup.js").read_text(encoding="utf-8")
           assert 'ADMIN_ACCESS_REQUIRED' in Path("functions/_lib/optional-access.js").read_text(encoding="utf-8")
           assert 'frame-ancestors' in Path("functions/secure-backups/_middleware.js").read_text(encoding="utf-8")
           assert 'AES-GCM' in Path("assets/private-backup.js").read_text(encoding="utf-8")
