@@ -7,12 +7,12 @@ export function questionPage(city,path){
   if(!CITIES.includes(city))return null;
   // Legacy city-level questions remain attached only to the city root.
   if(path===undefined||path===null||path==="")return "/"+city+"/";
-  if(typeof path!=="string"||path.length>180||!/^\\/(?:[a-z0-9-]+\\/){1,6}$/.test(path))return null;
+  if(typeof path!=="string"||path.length>180||!/^\/(?:[a-z0-9-]+\/){1,6}$/.test(path))return null;
   if(path==="/"+city+"/")return path;
   // A scoped question must belong to the city it claims. This stops users
   // posting Karachi questions into Sukkur and blocks arbitrary URL paths.
-  if(path.startsWith("/"+city+"/"))return /^\\/[a-z0-9-]+\\/(?:[a-z0-9-]+\\/){1,5}$/.test(path)?path:null;
-  if(/^\\/(?:doctors|hospitals|clinics|laboratories)\\/[a-z0-9-]+\\/(?:[a-z0-9-]+\\/){1,4}$/.test(path)){
+  if(path.startsWith("/"+city+"/"))return /^\/[a-z0-9-]+\/(?:[a-z0-9-]+\/){1,5}$/.test(path)?path:null;
+  if(/^\/(?:doctors|hospitals|clinics|laboratories)\/[a-z0-9-]+\/(?:[a-z0-9-]+\/){1,4}$/.test(path)){
     return path.split("/")[2]===city?path:null;
   }
   return null;
