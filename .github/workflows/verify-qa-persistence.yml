@@ -1,0 +1,61 @@
+name: Verify Q&A database and saved history
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-qa-persistence.yml'
+      - 'functions/api/questions.js'
+      - 'functions/api/qa-admin.js'
+      - 'functions/_lib/qa.js'
+      - 'functions/api/analytics-report.js'
+      - 'qa-admin/index.html'
+      - 'analytics/index.html'
+      - 'assets/city-questions.js'
+      - 'assets/site.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa-persistence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Q&A source and saved record features
+        run: |
+          set -euo pipefail
+          node --check assets/city-questions.js
+          node --check assets/site.js
+          node --check functions/api/questions.js
+          node --check functions/api/qa-admin.js
+          node --check functions/_lib/qa.js
+          node --check functions/api/analytics-report.js
+          grep -q 'draft_answer' functions/_lib/qa.js
+          grep -q 'status="approved"' functions/api/qa-admin.js || grep -q "status='approved'" functions/api/qa-admin.js
+          grep -q 'All saved questions' qa-admin/index.html
+          grep -q 'Save private draft' qa-admin/index.html
+          grep -q 'Saved Questions &amp; Answers' analytics/index.html
+          grep -q 'Your question has been saved' assets/city-questions.js
+      - name: Test live Q&A database binding and private dashboard routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            public=$(curl -sSL --max-time 18 -o /tmp/qa-public.json -w '%{http_code}' "https://slashpromo.com/api/questions?city=sukkur&pagePath=%2Fsukkur%2F&verify=$GITHUB_SHA" || true)
+            admin=$(curl -sSL --max-time 18 -o /tmp/qa-admin.json -w '%{http_code}' "https://slashpromo.com/api/qa-admin?status=all" || true)
+            page=$(curl -sSL --max-time 18 -o /tmp/qa-page.html -w '%{http_code}' "https://slashpromo.com/qa-admin/?verify=$GITHUB_SHA" || true)
+            script=$(curl -sSL --max-time 18 -o /tmp/qa-script.js -w '%{http_code}' 'https://slashpromo.com/assets/city-questions.js?v=20261108-qahistory5' || true)
+            if [ "$public" = 200 ] && [ "$admin" = 401 ] && [ "$page" = 200 ] && [ "$script" = 200 ] && \
+               grep -q '"enabled":true' /tmp/qa-public.json && \
+               grep -q 'Unauthorized' /tmp/qa-admin.json && \
+               grep -q 'All saved questions' /tmp/qa-page.html && \
+               grep -q 'data.reference' /tmp/qa-script.js; then
+              echo 'PASS: Production Q&A and Turnstile enabled, saved history admin visible, private API locked, confirmation reference deployed.'
+              exit 0
+            fi
+            echo "Attempt $attempt public=$public admin=$admin page=$page script=$script"
+            if [ "$public" = 200 ]; then grep -o '"enabled":[a-z]*' /tmp/qa-public.json || true; fi
+            sleep 12
+          done
+          echo 'Production Q&A validation failed: check live QA_DB, QA_ADMIN_KEY and Turnstile variables or Cloudflare publication.' >&2
+          exit 1
