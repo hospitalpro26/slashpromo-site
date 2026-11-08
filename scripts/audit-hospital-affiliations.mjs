@@ -66,7 +66,7 @@ for(const facility of db.hospitals){
       errors.push(facility.name+": institutional-only listing requires matching Slashcure facility profile");
     if(!html.includes("Doctor roster verification:")||!html.includes("Individual doctors are not yet independently linked"))
       errors.push(facility.name+": missing public notice that doctors are not independently linked");
-    const doctorLinks=[...html.matchAll(/href="(\\/doctors\\/[^"#?]+\\/)"/g)].map(match=>match[1]);
+    const doctorLinks=[...html.matchAll(/href="(\/doctors\/[^"#?]+\/)"/g)].map(match=>match[1]);
     for(const doctorLink of doctorLinks)if(doctorLink!=="/doctors/")
       errors.push(facility.name+": unverified doctor profile linked: "+doctorLink);
     if(!sitemap.includes("<loc>https://slashpromo.com"+facility.url+"</loc>"))
