@@ -63,10 +63,10 @@ button:hover{background:#104b87}button:disabled{opacity:.55;cursor:wait}.muted-b
 .reply-links button{font-size:12px;min-height:40px;padding:8px 11px}
 .reply-panel :is(button,a,textarea):focus-visible{outline:3px solid #1b5fc1;outline-offset:3px}
 
-</style></head>
+</style><script src="/assets/admin-reply-templates.js"></script></head>
 <body><main>
 <header><div><a href="/" class="nav">← SlashPromo home</a><h1>Private Enquiry Inbox</h1><p>Manage saved visitor enquiries and follow-up statuses, organised by source page.</p></div>
-<div class="link-row nav"><a href="/qa-admin/">Q&amp;A dashboard ↗</a><a href="/analytics/">Analytics ↗</a></div></header>
+<div class="link-row nav"><a href="/control-center/">Control Center ↗</a><a href="/qa-admin/">Q&amp;A dashboard ↗</a><a href="/analytics/">Analytics ↗</a></div></header>
 <p class="notice"><strong>Admin-only records:</strong> enter your existing <strong>QA_ADMIN_KEY</strong>. The key remains in this browser tab and is not stored by this page. Enquiries are saved only after visitors explicitly consent and pass security verification. <strong>A saved enquiry or WhatsApp handoff does not prove a WhatsApp message was sent.</strong> Reply drafts and prepared messages are stored privately. Only after you manually confirm sending will the inbox mark your outbound reply as sent; this is not a delivery receipt. Do not copy visitors' private information into public replies. Closed records are automatically deleted after 180 days.</p>
 <form class="filters" id="filters">
 <label>Private admin key<input id="key" type="password" autocomplete="off" required placeholder="Enter QA_ADMIN_KEY"></label>
@@ -142,10 +142,25 @@ function render(){
     const replyPanel=make("section","reply-panel");
     replyPanel.append(make("h4","","Reply to this enquiry"));
     replyPanel.append(make("p","","Write a helpful response. Save a draft, or prepare WhatsApp. Please avoid diagnoses, private patient records and sensitive health information."));
+    const templateLabel=make("label","","Quick reply template (optional)");
+    const templateSelect=make("select");
+    const initial=make("option","","Choose a verified-information starting point");
+    initial.value="";templateSelect.append(initial);
+    const templates=Array.isArray(window.SlashpromoReplyTemplates)?window.SlashpromoReplyTemplates:[];
+    for(const template of templates){const option=make("option","",template.label);option.value=template.id;templateSelect.append(option)}
+    templateLabel.append(templateSelect);
+    replyPanel.append(templateLabel);
     const composerLabel=make("label","","Your private reply");
     const compose=make("textarea");
     compose.maxLength=1200;compose.placeholder="Hello, thank you for contacting SlashPromo. Here is the publicly available information you requested…";
     composerLabel.append(compose);replyPanel.append(composerLabel);
+    templateSelect.addEventListener("change",()=>{
+      const selected=templates.find(t=>t.id===templateSelect.value);
+      if(!selected)return;
+      if(compose.value.trim()&&!window.confirm("Replace the reply text currently in this composer with the selected template?")){templateSelect.value="";return}
+      compose.value=selected.text;
+      compose.focus();
+    });
     const replyButtons=make("div","reply-buttons");
     const draftBtn=make("button","outline","Save private draft");
     draftBtn.type="button";
@@ -210,6 +225,7 @@ function render(){
     async function saveReply(action){
       if(!compose.value.trim()){feedback.textContent="Write your reply first.";compose.focus();return;}
       if(action==="prepare"&&!item.visitor_phone){feedback.textContent="The visitor did not provide a WhatsApp number. Save a private draft instead.";return;}
+      if(action==="prepare"&&/\[[^\]\n]{2,80}\]/.test(compose.value)){feedback.textContent="Please replace all [bracketed template placeholders] with verified details before preparing WhatsApp.";return;}
       draftBtn.disabled=true;prepareBtn.disabled=true;
       feedback.textContent=action==="prepare"?"Preparing a private WhatsApp reply…":"Saving your private draft…";
       try{
