@@ -1,0 +1,25 @@
+name: Audit doctor profiles and OPD information quality
+on:
+  push:
+    branches: [main]
+    paths:
+      - assets/directory.json
+      - 'doctors/**/index.html'
+      - sitemap.xml
+      - scripts/audit-doctor-profiles.mjs
+      - .github/workflows/doctor-quality.yml
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Audit public profile metadata and highlight manual reviews
+        run: node scripts/audit-doctor-profiles.mjs
