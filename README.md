@@ -156,3 +156,12 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - `prepare` requires a phone number already consented to and saved on the enquiry. It stores a prepared reply and returns a WhatsApp deeplink based on that saved phone, the enquiry reference and the reply. The visitor's WhatsApp number cannot be changed from the reply composer.
 - Opening WhatsApp **does not** mark a reply as sent; `confirm_sent` requires a separate human action after actually pressing Send in WhatsApp. It records a *staff assertion*, **not** a WhatsApp delivery/read receipt, and changes New enquiries to Contacted. Resolved/Closed statuses are not automatically downgraded.
 - No patient records or sensitive medical information should be placed in private replies. Private replies are not shared with public Q&A, analytics or external visitors unless an admin intentionally sends them through WhatsApp.
+
+
+## Unified SlashPromo Control Center (8 November 2026)
+- Private operations page at https://slashpromo.com/control-center/ (noindex) backed by GET /api/control-center. The API requires the same QA_ADMIN_KEY in X-QA-Admin-Key on every request; the key stays in the browser tab, never the URL or local storage.
+- Uses existing QA_DB D1 tables for 7-day page views, Slashcure referrals, WhatsApp handoffs, pending moderated questions, new/open enquiries and private reply-status summaries. Returns queue counts, 12 oldest pending questions and 12 oldest open enquiries, and the 8 most-visited cities.
+- In-dashboard notifications show new enquiries, pending Q&A, and items older than 24 hours. These are on-demand alerts when the operator loads the page, not push/email alerts or real-time delivery. The user must click Refresh to update.
+- Source task metadata is deliberately minimized: the Control Center never returns visitor names, phone numbers, full enquiry text or patient details. Full records remain in the authenticated Enquiry Inbox/Q&A moderation systems.
+- Reusable generic quick-reply templates are provided in assets/admin-reply-templates.js and shown on the Control Center and Enquiry Inbox. They are starting points only; placeholders must be replaced with verified public data before preparing a WhatsApp reply. Copying a template does not send or log a message.
+- This Control Center does not replace the separate secure inbox moderation actions or the full analytics dashboard. See privacy/index.html for disclosure.
