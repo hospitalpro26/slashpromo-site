@@ -1,5 +1,6 @@
 import {constantTimeEqual} from "../_lib/qa.js";
 import {json,ensureAnalytics,CITY_NAMES} from "../_lib/analytics.js";
+import {ensureDb} from "../_lib/qa.js";
 /* The same private QA_ADMIN_KEY protects analytics. Never expose private Q&A fields. */
 export async function onRequestGet({request,env}){
   const provided=request.headers.get("X-QA-Admin-Key")||"";
@@ -23,6 +24,17 @@ export async function onRequestGet({request,env}){
       env.QA_DB.prepare("SELECT city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues FROM site_analytics_daily "+where+" GROUP BY city ORDER BY views DESC LIMIT 30").bind(...binds)
     ];
     const [totals,daily,pages,cities]=await env.QA_DB.batch(statements);
-    return json({since,days,city:city||"all",generatedAt:new Date().toISOString(),totals:totals.results||[],daily:daily.results||[],pages:pages.results||[],cities:cities.results||[],note:"Aggregate events, not unique people. WhatsApp continues do not confirm that a message was sent."});
+    await ensureDb(env);
+    const qaCity=city&&city!=="other"?city:"";
+    const qaArgs=qaCity?[qaCity]:[];
+    const qaFilter=qaCity?" WHERE city=?":"";
+    const qCounts=await env.QA_DB.prepare("SELECT status,COUNT(*) AS total FROM questions"+qaFilter+" GROUP BY status").bind(...qaArgs).all();
+    const qaSummary={total:0,pending:0,approved:0,rejected:0};
+    for(const record of qCounts.results||[]){
+      const n=Number(record.total)||0;
+      if(Object.hasOwn(qaSummary,record.status)){qaSummary[record.status]=n;qaSummary.total+=n;}
+    }
+    const qaRecent=await env.QA_DB.prepare("SELECT id,city,COALESCE(NULLIF(page_path,''),'/'||city||'/') AS page_path,category,question,answer,status,created_at,answered_at FROM questions"+qaFilter+" ORDER BY created_at DESC LIMIT 20").bind(...qaArgs).all();
+    return json({since,days,city:city||"all",generatedAt:new Date().toISOString(),totals:totals.results||[],daily:daily.results||[],pages:pages.results||[],cities:cities.results||[],qaSummary,qaRecent:qaRecent.results||[],note:"Aggregate events, not unique people. WhatsApp continues do not confirm that a message was sent. Saved Q&A records are not limited to the analytics date filter."});
   }catch{return json({error:"Could not load analytics. Confirm QA_DB is connected."},503)}
 }

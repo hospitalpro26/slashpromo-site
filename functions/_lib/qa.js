@@ -44,7 +44,7 @@ export async function ensureDb(env){
   // ALTER TABLE is intentionally additive so previously approved answers survive.
   const columns=await env.QA_DB.prepare("PRAGMA table_info(questions)").all();
   const existing=new Set((columns.results||[]).map(col=>col.name));
-  for(const name of ["visitor_name","visitor_city","visitor_whatsapp","visitor_suggestion"]){
+  for(const name of ["visitor_name","visitor_city","visitor_whatsapp","visitor_suggestion","draft_answer","updated_at"]){
     if(!existing.has(name)){
       try{await env.QA_DB.prepare("ALTER TABLE questions ADD COLUMN "+name+" TEXT").run();}
       catch(error){
