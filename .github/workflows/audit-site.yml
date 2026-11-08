@@ -1,0 +1,38 @@
+name: Audit SlashPromo SEO and question routes
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - sitemap.xml
+      - robots.txt
+      - assets/site.js
+      - assets/city-questions.js
+      - functions/_lib/qa.js
+      - scripts/audit-site.mjs
+      - .github/workflows/audit-site.yml
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check client and API JavaScript syntax
+        run: |
+          node --check assets/site.js
+          node --check assets/city-questions.js
+          node --check functions/_lib/qa.js
+          node --check functions/api/questions.js
+          node --check functions/api/qa-admin.js
+          node --check scripts/indexnow.mjs
+      - name: Audit SEO, sitemap and page-specific Q&A
+        run: node scripts/audit-site.mjs
