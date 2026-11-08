@@ -45,7 +45,7 @@ const check=(doctor)=>{
       issues.push("Indexing directives need manual review");
     if(!html.includes("<h1"))issues.push("Missing on-page heading");
   }
-  if(!sitemap.includes("<loc>"+BASE+route+"</loc>"))errors.push(doctor.name+": missing from sitemap");
+  if(!sitemap.includes("<loc>"+BASE+route+"</loc>"))issues.push("Not in sitemap (may be a retired or legacy page); review canonical/redirect before indexing");
   if(!doctor.qualifications)issues.push("Qualifications not specified");
   if(!doctor.hospital)issues.push("Clinic/hospital affiliation not specified");
   if(!doctor.externalProfile)issues.push("No direct Slashcure link provided");
