@@ -11,7 +11,8 @@
     "/api/analytics-report",
     "/api/enquiries",
     "/api/enquiries-admin",
-    "/api/enquiry-replies"
+    "/api/enquiry-replies",
+    "/api/control-center"
   ],
   "exclude": []
 }
