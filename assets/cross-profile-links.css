@@ -29,3 +29,7 @@ a.sp-cross-link-external .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!
 .sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback){background:#fff!important;border-color:#b5d4eb!important}
 .sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback) .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
 .sp-cross-link:is(.sp-cross-link-external,.sp-cross-link-fallback) .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
+
+/* Direct visitors to the moderated page-specific question form. */
+.sp-cross-link-question{background:#eaf8f5!important;color:#145749!important;border-color:#a2dacb!important}
+.sp-cross-link-question:hover{background:#dcf2ed!important}
