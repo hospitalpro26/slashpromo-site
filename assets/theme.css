@@ -245,3 +245,38 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
 :is(.page-hero,.site-footer,.sp-slashcure-frame,.sp-gastro-hero,.sp-profile-hero,.sp-shk-hospital-hero,.btn.dark,.kh-hero) .sp-slashcure-wordmark{display:inline-block;background:#fff!important;padding:1px 4px;border-radius:5px;white-space:nowrap}
 .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
 .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
+
+
+/* Small, accessible contact pill. Never displays private visitor contact details. */
+.sp-team-whatsapp-float{
+  position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px));
+  z-index:180;display:inline-flex;align-items:center;gap:10px;
+  min-height:54px;max-width:calc(100vw - 24px);padding:9px 16px 9px 13px;
+  border-radius:999px;background:#087b41;color:#fff!important;
+  border:1px solid #076d38;text-decoration:none!important;
+  box-shadow:0 8px 25px rgba(9,60,35,.23);
+  font-family:inherit;line-height:1.15;cursor:pointer;
+  transition:background-color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.sp-team-whatsapp-float:hover{
+  background:#066b38;color:#fff!important;box-shadow:0 10px 27px rgba(9,60,35,.29);transform:translateY(-2px);
+}
+.sp-team-whatsapp-float:focus-visible{outline:3px solid #194fb1;outline-offset:4px}
+.sp-team-whatsapp-mark{width:26px;height:26px;flex:none}
+.sp-team-whatsapp-copy{display:flex;flex-direction:column;gap:3px;text-align:left}
+.sp-team-whatsapp-copy strong{font-size:13px;font-weight:750;letter-spacing:0;white-space:nowrap}
+.sp-team-whatsapp-copy small{font-size:11px;font-weight:550;color:rgba(255,255,255,.95);white-space:nowrap;letter-spacing:.02em}
+@media(max-width:480px){
+  .sp-team-whatsapp-float{
+    right:12px;bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+    min-height:48px;gap:7px;padding:8px 12px;
+  }
+  .sp-team-whatsapp-mark{width:22px;height:22px}
+  .sp-team-whatsapp-copy strong{font-size:12px}
+  .sp-team-whatsapp-copy small{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .sp-team-whatsapp-float{transition:none}
+  .sp-team-whatsapp-float:hover{transform:none}
+}
+@media print{.sp-team-whatsapp-float{display:none!important}}

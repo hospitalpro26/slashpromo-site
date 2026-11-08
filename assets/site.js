@@ -143,3 +143,29 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
   script.async=true;
   document.head.appendChild(script);
 })();
+
+
+/* SlashPromo shared support WhatsApp: public contact number from /contact/.
+   Load on public pages using the shared site.js; do not display in admin tools.
+   No visitor information is collected, sent or prefilled automatically. */
+(function(){
+  "use strict";
+  if(/^\/(?:qa-admin|admin|api)(?:\/|$)/i.test(location.pathname))return;
+  const init=()=>{
+    if(!document.body||document.getElementById("sp-team-whatsapp-float"))return;
+    const contact="923352648572";
+    const text="Hello, I have a question about a doctor, hospital or OPD information listed on Slashpromo.com.";
+    const link=document.createElement("a");
+    link.id="sp-team-whatsapp-float";
+    link.className="sp-team-whatsapp-float";
+    link.href="https://wa.me/"+contact+"?text="+encodeURIComponent(text);
+    link.target="_blank";
+    link.rel="noopener noreferrer";
+    link.title="Chat with the SlashPromo team on WhatsApp: +92 335 2648572";
+    link.setAttribute("aria-label","Chat with the SlashPromo team on WhatsApp at +92 335 2648572");
+    link.innerHTML='<svg class="sp-team-whatsapp-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 11.6a8.4 8.4 0 0 1-12.6 7.2L3 20.1l1.2-4.4a8.4 8.4 0 1 1 16-4.1Z"/><path d="M8.7 8.3c.4 3.2 2.4 5.3 5.5 6.1l1.4-1.6"/></svg><span class="sp-team-whatsapp-copy"><strong>WhatsApp our team</strong><small>+92 335 2648572</small></span>';
+    document.body.appendChild(link);
+  };
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
+  else init();
+})();
