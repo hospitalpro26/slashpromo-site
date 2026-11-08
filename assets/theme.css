@@ -314,3 +314,18 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
   .sp-wa-query-panel{right:12px;bottom:calc(74px + env(safe-area-inset-bottom,0px));width:calc(100vw - 24px);max-height:calc(100dvh - 92px)}
 }
 @media print{.sp-wa-query-panel{display:none!important}}
+
+
+/* Consented WhatsApp enquiry saving and link handoff. */
+.sp-wa-consent{display:flex!important;align-items:flex-start;gap:9px;font-size:12px!important;line-height:1.55!important;font-weight:500!important;padding:9px 8px;border:1px solid #d7e4db;border-radius:9px;background:#f2faf5}
+.sp-wa-consent input[type="checkbox"]{flex:none;width:17px!important;height:17px!important;min-height:17px!important;margin:2px 0 0!important;padding:0!important;accent-color:#087b41}
+.sp-wa-consent span{display:block}.sp-wa-consent a{color:#0a5a3b!important;text-decoration:underline!important;font-weight:700}
+.sp-wa-turnstile{margin:3px 0;min-height:0;overflow:visible}
+.sp-wa-feedback{font-size:12px!important;line-height:1.5!important;padding:7px 0;margin:1px 0!important;color:#39556c!important}
+.sp-wa-feedback[data-kind="success"]{padding:9px;background:#e9f8ef;border:1px solid #b3dec3;border-radius:8px;color:#125432!important}
+.sp-wa-feedback[data-kind="error"]{padding:9px;background:#fff2ef;border:1px solid #f2c5b9;border-radius:8px;color:#9b352a!important}
+.sp-wa-query-form button:disabled{opacity:.55;cursor:not-allowed}
+.sp-wa-handoff[hidden]{display:none!important}
+.sp-wa-handoff{display:block;margin:5px 0}
+.sp-wa-open{display:block;text-align:center;text-decoration:none!important;padding:12px!important;min-height:44px;box-sizing:border-box;color:#fff!important;line-height:1.4}
+.sp-wa-open:focus-visible{outline:3px solid #1d63bf;outline-offset:2px}

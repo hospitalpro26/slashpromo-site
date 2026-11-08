@@ -138,3 +138,12 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - Events: page_view (page loads, not unique people); slashcure_click (outbound clicks, not appointments); whatsapp_open and whatsapp_continue (form opens / opens WhatsApp, not sent messages); qa_submitted (successful form acknowledgement, not question contents).
 - No historical analytics are backfilled. The source-page attribution in WhatsApp is included only in the message the visitor decides to send.
 - Shared scripts site.js and city-questions.js post first-party event counters. The cache-refresh workflow rewrites versioned references on published HTML pages.
+
+
+## Private Enquiry Management Inbox (8 November 2026)
+- Private dashboard: https://slashpromo.com/enquiries/ (noindex; admin-only data supplied by authenticated API). It uses the existing QA_ADMIN_KEY and QA_DB Cloudflare D1 binding; no additional secrets or database are needed.
+- Public consent-based form: the floating WhatsApp panel collects name, city/area, optional WhatsApp contact and an enquiry (maximum 700 characters). It clearly requires opt-in consent before storing any record, and verifies a Turnstile token using existing QA_TURNSTILE_SITE_KEY and QA_TURNSTILE_SECRET.
+- Public POST /api/enquiries saves a new enquiry with its canonical source path/title/city and produces a short reference. The client then offers a separately clickable WhatsApp link. This does NOT establish that the WhatsApp message was sent or delivered. The form offers direct WhatsApp access without saving.
+- Private GET/POST /api/enquiries-admin uses the server-side QA_ADMIN_KEY to list/filter records, and update New/Contacted/Resolved/Closed statuses and private follow-up notes. It cannot publicly disclose enquiries without the private key. No visitor content is inserted as HTML in the dashboard.
+- Data retention: closed enquiries are deleted 180 days after their close date during database maintenance on supported API requests. Anonymous HMAC spam-rate records are purged after two days. Retained personal data is excluded from the aggregate analytics tables.
+- Link to the inbox from the private Analytics, Q&A moderation and campaign administration pages. All private records and contact numbers must remain restricted to authorised operators.

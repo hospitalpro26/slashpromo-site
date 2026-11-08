@@ -30,7 +30,7 @@ jobs:
               if ".git" in page.parts:
                   continue
               old = page.read_text(encoding="utf-8")
-              new, n = pattern.subn(lambda m: m.group(1) + m.group(2) + "?v=20261108-qahistory5" + m.group(3), old)
+              new, n = pattern.subn(lambda m: m.group(1) + m.group(2) + "?v=20261108-enquiries6" + m.group(3), old)
               if n and new != old:
                   page.write_text(new, encoding="utf-8")
                   count += 1
@@ -39,12 +39,14 @@ jobs:
           assert count >= 75, "Expected a site-wide cache refresh."
           for target in ["index.html","sukkur/index.html","karachi/index.html","khairpur/index.html","shikarpur/index.html","contact/index.html"]:
               page = Path(target).read_text(encoding="utf-8")
-              assert '/assets/site.js?v=20261108-qahistory5' in page, target
-              assert '/assets/theme.css?v=20261108-qahistory5' in page, target
+              assert '/assets/site.js?v=20261108-enquiries6' in page, target
+              assert '/assets/theme.css?v=20261108-enquiries6' in page, target
           js = Path("assets/site.js").read_text(encoding="utf-8")
           css = Path("assets/theme.css").read_text(encoding="utf-8")
           assert "sp-team-whatsapp-float" in js and "sp-team-whatsapp-float" in css
           assert "sp-wa-query-form" in js and "From page URL:" in js and "sp-wa-query-panel" in css
+          assert "sp-wa-consent" in js and "/api/enquiries" in js
+          assert "sp-wa-handoff" in css
           assert "window.slashpromoTrack" in js and "/api/analytics" in js
           assert "qa_submitted" in Path("assets/city-questions.js").read_text(encoding="utf-8")
           assert "data.reference" in Path("assets/city-questions.js").read_text(encoding="utf-8")
