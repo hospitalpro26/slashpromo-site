@@ -64,7 +64,7 @@ To prevent unsupported hospital listings reappearing, run `node scripts/audit-ho
 
 ## City questions and answers (8 November 2026)
 - Shared module: `assets/city-questions.js`, directly referenced on all six city pages; styles: `assets/city-questions.css`.
-- City landing pages: /sukkur/, /khairpur/, /shikarpur/, /ghotki/, /karachi/, /hyderabad/. These six city root pages receive city-wide Q&A. Sukkur doctor, hospital, specialty, and health-topic pages also receive their own separate Q&A section via the shared loader in `assets/site.js`. Add new supported cities to both `assets/city-questions.js` and `functions/_lib/qa.js`.
+- City landing pages: /sukkur/, /khairpur/, /shikarpur/, /ghotki/, /karachi/, /hyderabad/. These six city root pages receive city-wide Q&A. Doctor, hospital, specialty, clinic, laboratory, and health-topic pages in all six supported cities now receive their own moderated Q&A discussion via the shared loader in `assets/site.js`. Add new supported cities to both `assets/city-questions.js` and `functions/_lib/qa.js`.
 - Public API: `GET /api/questions?city=sukkur` displays approved answers on the city root, and `GET /api/questions?city=sukkur&pagePath=/doctors/sukkur/dr-bashir-ahmed-khoso/` scopes answers to a Sukkur page; `POST /api/questions` accepts identified, consented questions **pending moderation**, protected by Cloudflare Turnstile, rate limits, and content checks.
 - Private moderation: `/qa-admin/` (not indexed) calls `/api/qa-admin` with a private administrator key entered into the form. Never share or publish the key. The API checks the key on the server for every request. Admins can publish reviewed answers or reject questions; no question automatically becomes public.
 - The API automatically creates the D1 table/indexes on first request and adds private-field columns to existing `questions` tables with additive migrations. Older approved questions remain intact; older questions have no private visitor fields.
@@ -105,3 +105,19 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - The private `/qa-admin/` dashboard shows the source page for each question so moderators can respond appropriately. Page paths are never supplied by patients as contact details.
 - Do not expose private visitor city, WhatsApp or suggestions in the public API, editorial answers or search schema. Publish only manually reviewed answers. New Q&A threads are not automatically turned into FAQ schema or self-diagnosis guidance.
 - Updated `privacy/` language discloses per-page discussion scope. No new Cloudflare secrets are required if city Q&A was already operating. Verify a question submitted on a rheumatology page remains scoped to that page, appears pending in admin, and displays publicly only after approval.
+
+
+## Nationwide page-specific Q&A rollout (8 November 2026)
+- The six city homepages retain their own city-wide Q&A threads. All published subpages in Sukkur, Karachi, Khairpur, Shikarpur, Ghotki, and Hyderabad share one front-end component with independent per-URL threads.
+- The shared loader in assets/site.js detects supported city routes; assets/city-questions.js derives the correct city and normalized page URL. The server-side questionPage() validates that the submitted page belongs to that city; it rejects cross-city submissions.
+- This does not make the patient free-text content an SEO FAQ: no unmoderated or patient-identifying Q&A is added to JSON-LD. Only administrator-approved answers appear publicly, and WhatsApp / suggestions remain private.
+- The private /qa-admin/ interface supports city and page-type filtering, local search within loaded records, pending/approved/rejected queues, and loading older records 100 at a time. The admin key remains in the browser tab and is never embedded in static HTML or stored locally.
+- The Q&A service still requires the existing Cloudflare QA_DB D1 binding, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SECRET and QA_ADMIN_KEY. Pushing code does not provision these secrets or verify the live submission flow. Do not report production as functioning until a submission and moderation roundtrip succeeds.
+
+## IndexNow automatic publication notifications (8 November 2026)
+- Public key: 83dd41d8cf7d247ddf4579c34499dbc6, hosted at https://slashpromo.com/83dd41d8cf7d247ddf4579c34499dbc6.txt. This key is intentionally public and not a Cloudflare credential.
+- GitHub Actions workflow: .github/workflows/indexnow.yml, script: scripts/indexnow.mjs. On changes to HTML pages / sitemap, it checks the sitemap and Git diff, then submits published canonical pages only to https://api.indexnow.org/IndexNow.
+- First installation or manually dispatched workflow sends the published sitemap URLs plus homepage; subsequent pushes submit only published pages that were added or updated, or newly added to sitemap. /qa-admin/, /api/ and unpublished routes are deliberately omitted.
+- The workflow verifies that the public key file is actually reachable and matches before sending notifications. It waits for Cloudflare Pages to finish publishing; failures are visible in GitHub Actions and should be resolved there rather than assumed successful.
+- It uses an unauthenticated POST to IndexNow; no GitHub secret is required. IndexNow acknowledgment means notification was accepted, not that a page is indexed.
+- Review Bing Webmaster Tools > IndexNow to monitor receipts. Keep XML sitemap canonical URLs and lastmod metadata current for meaningful content edits. Do not submit private admin or unapproved patient content for indexing.
