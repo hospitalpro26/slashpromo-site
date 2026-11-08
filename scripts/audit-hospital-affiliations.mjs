@@ -14,6 +14,8 @@ const doctors=new Map(db.doctors.map(d=>[d.id,d]));
 const errors=[];
 const urlPath=u=>u.replace(/^\/+/,"")+"index.html";
 const normalize=s=>String(s||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+// Specialty/category landing pages are not claims that individual doctors work at a facility.
+const isIndividualDoctorUrl=url=>/^\/doctors\/[^/]+\/(?:dr-|prof-dr-)[^/]+\/$/.test(url);
 const aliases={
   "sukkur-ghulam-muhammad-mahar-medical-teaching-hospital":/gmc teaching hospital|ghulam muhammad mahar medical teaching/i,
   "sukkur-sicvd-hospital-sukkur":/\bsicvd\b/i,
@@ -67,7 +69,7 @@ for(const facility of db.hospitals){
     if(!html.includes("Doctor roster verification:")||!html.includes("Individual doctors are not yet independently linked"))
       errors.push(facility.name+": missing public notice that doctors are not independently linked");
     const doctorLinks=[...html.matchAll(/href="(\/doctors\/[^"#?]+\/)"/g)].map(match=>match[1]);
-    for(const doctorLink of doctorLinks)if(doctorLink!=="/doctors/")
+    for(const doctorLink of doctorLinks)if(isIndividualDoctorUrl(doctorLink))
       errors.push(facility.name+": unverified doctor profile linked: "+doctorLink);
     if(!sitemap.includes("<loc>https://slashpromo.com"+facility.url+"</loc>"))
       errors.push("Hospital omitted from sitemap: "+facility.url);
@@ -90,7 +92,7 @@ for(const facility of db.hospitals){
   const allowedDoctorUrls=new Set(ids.map(id=>doctors.get(id)?.url).filter(Boolean));
   const linkedDoctorUrls=new Set([...html.matchAll(/href="(\/doctors\/[^"#?]+\/)"/g)].map(match=>match[1]));
   for(const doctorUrl of linkedDoctorUrls){
-    if(!allowedDoctorUrls.has(doctorUrl)){
+    if(isIndividualDoctorUrl(doctorUrl)&&!allowedDoctorUrls.has(doctorUrl)){
       errors.push(facility.name+": unrelated doctor linked on hospital page: "+doctorUrl);
     }
   }
