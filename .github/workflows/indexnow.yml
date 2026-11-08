@@ -1,0 +1,38 @@
+name: Notify Bing and other IndexNow search engines
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - '**/index.html'
+      - sitemap.xml
+      - scripts/indexnow.mjs
+      - .github/workflows/indexnow.yml
+      - 83dd41d8cf7d247ddf4579c34499dbc6.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: slashpromo-indexnow-production
+  cancel-in-progress: false
+
+jobs:
+  indexnow:
+    if: github.repository == 'hospitalpro26/slashpromo-site'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Notify IndexNow after Cloudflare publishes the key
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+          FULL_INDEX: ${{ github.event_name == 'workflow_dispatch' }}
+        run: node scripts/indexnow.mjs
