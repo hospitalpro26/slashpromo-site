@@ -127,4 +127,16 @@ import("/assets/cross-profile-links.js?v=20261106-doctor-darkwordmark").catch(()
   else init();
 })();
 
-/* City Q&A is directly loaded on each city page to avoid duplicate cached scripts. */
+/* City root pages include their own Q&A script. On Sukkur subpages, load the
+   same moderated component with a page-specific thread (no duplicate forms). */
+(function(){
+  "use strict";
+  const parts=location.pathname.toLowerCase().split("/").filter(Boolean);
+  const isSukkurSubpage=(parts[0]==="sukkur"&&parts.length>1)
+    ||(["doctors","hospitals","clinics","laboratories"].includes(parts[0])&&parts[1]==="sukkur"&&parts.length>2);
+  if(!isSukkurSubpage||document.querySelector('script[src*="/assets/city-questions.js"]'))return;
+  const script=document.createElement("script");
+  script.src="/assets/city-questions.js?v=20261108-scoped-qa6";
+  script.async=true;
+  document.head.appendChild(script);
+})();
