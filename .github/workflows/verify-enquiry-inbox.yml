@@ -1,0 +1,67 @@
+name: Verify live private Enquiry Inbox
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-enquiry-inbox.yml'
+      - 'functions/_lib/enquiries.js'
+      - 'functions/api/enquiries.js'
+      - 'functions/api/enquiries-admin.js'
+      - 'enquiries/index.html'
+      - 'assets/site.js'
+      - 'assets/theme.css'
+      - '_routes.json'
+      - 'privacy/index.html'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-enquiries:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate server and browser scripts and privacy controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in functions/_lib/enquiries.js functions/api/enquiries.js functions/api/enquiries-admin.js assets/site.js; do
+            node --check "$file"
+          done
+          grep -q 'sp-wa-consent' assets/site.js
+          grep -q 'Save private enquiry' assets/site.js
+          grep -q 'From page URL:' assets/site.js
+          grep -q 'turnstile.render' assets/site.js
+          grep -q 'verifyTurnstile' functions/api/enquiries.js
+          grep -q 'constantTimeEqual' functions/api/enquiries-admin.js
+          grep -q 'whatsapp_sent_confirmed' functions/_lib/enquiries.js
+          grep -q 'noindex,nofollow' enquiries/index.html
+          grep -q 'enquiries-admin' _routes.json
+          grep -q '/api/enquiries' _routes.json
+      - name: Verify production deploy and protected endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            inbox=$(curl -sSL --max-time 18 -o /tmp/enquiry-inbox.html -w '%{http_code}' "https://slashpromo.com/enquiries/?verify=$GITHUB_SHA" || true)
+            public=$(curl -sSL --max-time 18 -o /tmp/enquiry-config.json -w '%{http_code}' "https://slashpromo.com/api/enquiries?verify=$GITHUB_SHA" || true)
+            admin=$(curl -sSL --max-time 18 -o /tmp/enquiry-private.json -w '%{http_code}' "https://slashpromo.com/api/enquiries-admin?status=all" || true)
+            bad=$(curl -sSL --max-time 18 -o /tmp/enquiry-rejected.json -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"consent":false}' "https://slashpromo.com/api/enquiries" || true)
+            health=$(curl -sSL --max-time 18 -o /tmp/enquiry-d1.json -w '%{http_code}' "https://slashpromo.com/api/analytics?health=1" || true)
+            js=$(curl -sSL --max-time 18 -o /tmp/enquiry-site.js -w '%{http_code}' 'https://slashpromo.com/assets/site.js?v=20261108-enquiries6' || true)
+            if [ "$inbox" = 200 ] && [ "$public" = 200 ] && [ "$admin" = 401 ] && \
+               [ "$bad" = 400 ] && [ "$health" = 200 ] && [ "$js" = 200 ] && \
+               grep -q 'Private Enquiry Inbox' /tmp/enquiry-inbox.html && \
+               grep -q '"enabled":true' /tmp/enquiry-config.json && \
+               grep -q 'Unauthorized' /tmp/enquiry-private.json && \
+               grep -q 'Please agree before saving' /tmp/enquiry-rejected.json && \
+               grep -q '"enabled":true' /tmp/enquiry-d1.json && \
+               grep -q 'Save private enquiry' /tmp/enquiry-site.js; then
+              echo 'PASS: Private Enquiry Inbox live; D1 bound; opt-in required; Turnstile configured; dashboard locked; site-wide form deployed.'
+              exit 0
+            fi
+            echo "Attempt $attempt inbox=$inbox config=$public unauthorized=$admin consent-rejected=$bad DB=$health script=$js"
+            sleep 12
+          done
+          echo 'Live private Enquiry Inbox validation failed. Check deployment, QA_DB or Turnstile bindings.' >&2
+          exit 1
