@@ -72,10 +72,11 @@ export async function onRequestPost({request,env}){
     const since=new Date(Date.now()-86400000).toISOString();
     const count=await env.QA_DB.prepare("SELECT count(*) AS n FROM questions WHERE ip_hash=? AND created_at>=?").bind(digest,since).first();
     if((count?.n||0)>=4)return reply({error:"Daily question limit reached. Please try again tomorrow."},429);
+    const questionId=crypto.randomUUID();
     await env.QA_DB.prepare(
       "INSERT INTO questions(id,city,page_path,category,question,status,created_at,ip_hash,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent) VALUES(?,?,?,?,?,'pending',?,?,?,?,?,?,?,?)"
-    ).bind(crypto.randomUUID(),city,pagePath,category,question,new Date().toISOString(),digest,
+    ).bind(questionId,city,pagePath,category,question,new Date().toISOString(),digest,
       visitorName,visitorCity,visitorWhatsApp||null,visitorSuggestion||null,visitorWhatsApp&&contactConsent?1:0,1).run();
-    return reply({ok:true,pending:true,message:"Your question has been received for review. Only approved questions are published."},201);
+    return reply({ok:true,saved:true,pending:true,reference:questionId.slice(0,8).toUpperCase(),message:"Your question was saved in the private moderation dashboard and is awaiting review."},201);
   }catch{return reply({error:"We couldn't save your question. Please try again later."},503);}
 }

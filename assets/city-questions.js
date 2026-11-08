@@ -177,7 +177,7 @@
       window.slashpromoTrack?.("qa_submitted");
       form.reset();
       form.elements.visitorCity.value=label;
-      notice("Thank you! Your question is awaiting review. If approved, your name, question and the team’s answer will appear publicly; your other details stay private.","success");
+      notice("Your question has been saved in the moderation dashboard (Reference: "+(data.reference||"received")+"). It is awaiting review. Only approved questions and consented names appear publicly; your contact details stay private.","success");
     }catch(error){notice(error.message||"Could not submit your question.","error");}
     finally{
       turnstileToken="";
