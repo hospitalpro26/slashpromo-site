@@ -56,9 +56,11 @@ export async function onRequestPost({request,env}){
       if(!uuid.test(replyId))return respond({error:"Choose a saved prepared reply."},400);
       const matching=await env.QA_DB.prepare("SELECT id FROM enquiry_replies WHERE id=? AND enquiry_id=? AND status='prepared'").bind(replyId,enquiryId).first();
       if(!matching)return respond({error:"Reply was not found or has already been marked as sent."},409);
-      const updated=await env.QA_DB.prepare("UPDATE enquiry_replies SET status='sent_confirmed',updated_at=?,sent_confirmed_at=? WHERE id=? AND enquiry_id=? AND status='prepared'").bind(now,now,replyId,enquiryId).run();
-      if(!updated.meta?.changes)return respond({error:"Reply has already been updated. Refresh history."},409);
-      await env.QA_DB.prepare("UPDATE enquiries SET status=CASE WHEN status='new' THEN 'contacted' ELSE status END,updated_at=? WHERE id=?").bind(now,enquiryId).run();
+      const updates=await env.QA_DB.batch([
+        env.QA_DB.prepare("UPDATE enquiry_replies SET status='sent_confirmed',updated_at=?,sent_confirmed_at=? WHERE id=? AND enquiry_id=? AND status='prepared'").bind(now,now,replyId,enquiryId),
+        env.QA_DB.prepare("UPDATE enquiries SET status=CASE WHEN status='new' THEN 'contacted' ELSE status END,updated_at=? WHERE id=?").bind(now,enquiryId)
+      ]);
+      if(!updates[0]?.meta?.changes)return respond({error:"Reply has already been updated. Refresh history."},409);
       return respond({ok:true,saved:true,replyId,status:"sent_confirmed",enquiryStatus:enquiry.status==="new"?"contacted":enquiry.status,
         note:"Marked sent by a staff member. WhatsApp delivery remains unverified."});
     }
