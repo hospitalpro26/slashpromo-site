@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<meta http-equiv="Cache-Control" content="no-store"><title>SlashPromo Private Control Center</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f4f7fc;color:#152b49;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;min-height:100vh}
+main{max-width:1190px;margin:auto;padding:26px 18px 70px}
+a{color:#145ba1;text-underline-offset:3px}a:hover{color:#0d407b}
+h1{font-size:clamp(27px,4vw,38px);letter-spacing:-.035em;margin:7px 0 9px}h2{font-size:18px;margin:0 0 11px}h3{font-size:15px;margin:0}
+p{line-height:1.58;color:#566a80;margin:7px 0 12px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+header .subtitle{font-size:14px;margin:0}
+.links{display:flex;gap:15px;flex-wrap:wrap;font-size:13px}
+.eyebrow{font-size:11px;letter-spacing:.09em;text-transform:uppercase;font-weight:850;color:#165aa0}
+.banner{border:1px solid #c9dcf1;border-radius:12px;background:#ecf5ff;padding:12px 15px;font-size:13px;color:#254b75;margin:19px 0}
+.toolbar{background:#fff;border:1px solid #dae5f0;border-radius:13px;padding:17px;display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin:16px 0}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:690;color:#223e5c}
+input,select,textarea{font:inherit;color:#173554;background:#fff;border:1px solid #b8cadd;border-radius:9px;padding:10px;min-height:42px}
+input[type=password]{width:min(320px,80vw)}
+textarea{width:100%;resize:vertical;min-height:130px;line-height:1.6}
+button,.button{border:0;border-radius:9px;background:#155ca6;color:#fff!important;padding:11px 16px;cursor:pointer;font-weight:750;font:inherit;text-decoration:none;min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+button:hover,.button:hover{background:#0d467f}
+button:disabled{opacity:.6;cursor:wait}.secondary{background:#fff!important;color:#17538e!important;border:1px solid #b7d1e8}.secondary:hover{background:#edf6ff!important}
+:focus-visible{outline:3px solid #287ce0;outline-offset:3px}
+#status{font-size:13px;font-weight:750;color:#1e558a;min-height:20px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.metric,.panel{background:#fff;border:1px solid #dde7f0;border-radius:13px;box-shadow:0 6px 19px #14345608}
+.metric{padding:16px}.metric span{display:block;color:#5e758c;font-size:12px;font-weight:650}
+.metric strong{font-size:31px;display:block;margin:6px 0 3px;color:#173d69;font-variant-numeric:tabular-nums}
+.metric a{font-size:11px}
+.dashboard{display:grid;grid-template-columns:1.15fr .85fr;gap:15px;margin-top:15px;align-items:start}
+.panel{padding:17px;min-width:0}.panel.wide{grid-column:1/-1}
+.panel-head{display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:10px}
+.panel-head p{margin:5px 0}
+.notification-list,.task-list{display:grid;gap:10px;margin-top:11px}
+.notification{padding:12px;border-radius:10px;border:1px solid #dce6f2;background:#f5f9ff;display:flex;gap:11px;align-items:start}
+.notification.warn{background:#fff7ec;border-color:#f0d5a8}
+.notification strong{display:block;font-size:14px}.notification p{margin:3px 0 0;font-size:12px}
+.dot{height:10px;width:10px;background:#1e67bb;border-radius:50%;flex:none;margin-top:6px}
+.warn .dot{background:#d18213}.notice-empty{padding:18px;color:#61788d;background:#f8fbfd;border-radius:10px;font-size:13px}
+.task{display:flex;justify-content:space-between;align-items:center;gap:11px;border-bottom:1px solid #e8edf3;padding:10px 0}
+.task:last-child{border:0}.task strong{display:block;font-size:13px;font-weight:760;overflow-wrap:anywhere}
+.task small{display:block;font-size:11px;color:#637b90;margin-top:4px;overflow-wrap:anywhere}
+.tag{display:inline-block;border-radius:99px;background:#f7e8cc;color:#895b17;padding:3px 8px;font-size:10px;font-weight:800}
+.tag.overdue{background:#ffebe3;color:#9f3f2c}
+.task a{white-space:nowrap;font-size:12px}
+.traffic{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:11px 0}
+.traffic-item{padding:11px;background:#f3f8ff;border:1px solid #e2ecf7;border-radius:10px}
+.traffic-item span{display:block;color:#58718e;font-size:11px}
+.traffic-item strong{font-size:24px;color:#173f72;font-variant-numeric:tabular-nums}
+.city-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;border-bottom:1px solid #e8edf3;font-size:12px}
+.city-row:last-child{border:0}.city-row strong{font-variant-numeric:tabular-nums}
+.inline-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.template-grid{display:grid;grid-template-columns:250px minmax(0,1fr);gap:13px}
+.template-grid select{width:100%}.template-grid label{margin:0}
+.footnote{font-size:11px;color:#6c7d8d;margin-top:13px}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard{grid-template-columns:1fr}.panel.wide{grid-column:auto}}
+@media(max-width:630px){main{padding:18px 12px 45px}.toolbar{padding:13px}.cards{gap:9px}.metric{padding:12px}.metric strong{font-size:25px}.template-grid{grid-template-columns:1fr}.task{align-items:start}}
+@media print{.toolbar,.links,.inline-actions button{display:none}}
+</style>
+<script src="/assets/admin-reply-templates.js" defer></script></head>
+<body><main>
+<header><div><span class="eyebrow">SlashPromo · Operations</span><h1>Private Control Center</h1><p class="subtitle">One place to review enquiries, unanswered Q&amp;A, traffic and follow-up alerts.</p></div>
+<nav class="links" aria-label="Admin dashboards"><a href="/enquiries/">Enquiry Inbox</a><a href="/qa-admin/">Q&amp;A Moderation</a><a href="/analytics/">Detailed Analytics</a><a href="/admin/">Campaign Studio</a></nav></header>
+<div class="banner"><strong>Private access:</strong> use your existing <strong>QA_ADMIN_KEY</strong>. This page has no public visitor data until you authenticate. The key stays in this browser tab; it is not included in URLs or stored locally. <strong>Notifications are in-dashboard queue alerts, not SMS, email or push notifications.</strong> Personal visitor details stay in the separate authenticated inbox and moderation views.</div>
+<form id="refresh-form" class="toolbar"><label>Private admin key<input type="password" id="admin-key" required autocomplete="off" placeholder="Enter QA_ADMIN_KEY"></label><button type="submit" id="refresh">Load Control Center</button><span class="footnote">Refresh whenever you want the latest figures.</span></form>
+<p role="status" aria-live="polite" id="status">Enter your private admin key to load current website activity.</p>
+<section class="cards" aria-label="Current operational metrics">
+<div class="metric"><span>New enquiries</span><strong id="new-enquiries">—</strong><a href="/enquiries/">Manage enquiries ↗</a></div>
+<div class="metric"><span>Pending questions</span><strong id="pending-questions">—</strong><a href="/qa-admin/">Moderate Q&amp;A ↗</a></div>
+<div class="metric"><span>Overdue follow-ups</span><strong id="overdue-enquiries">—</strong><span class="footnote">New enquiries older than 24 hours</span></div>
+<div class="metric"><span>Website page views</span><strong id="page-views">—</strong><span class="footnote">Last 7 days; not unique visitors</span></div>
+</section>
+<div class="dashboard">
+<section class="panel">
+<div class="panel-head"><div><h2>Notifications &amp; priorities</h2><p>Based on saved, authenticated D1 records.</p></div><span class="tag" id="notification-label">Not loaded</span></div>
+<div class="notification-list" id="notifications"><div class="notice-empty">Load the dashboard to see action items.</div></div>
+<div class="inline-actions" style="margin-top:14px"><a href="/enquiries/" class="button">Review enquiries</a><a href="/qa-admin/" class="button secondary">Review questions</a></div>
+</section>
+<section class="panel">
+<h2>Traffic &amp; activity</h2><p>Aggregated events from the last seven UTC days.</p>
+<div class="traffic">
+<div class="traffic-item"><span>Clicks to Slashcure</span><strong id="slashcure-clicks">—</strong></div>
+<div class="traffic-item"><span>WhatsApp form opens</span><strong id="whatsapp-opens">—</strong></div>
+<div class="traffic-item"><span>WhatsApp handoffs</span><strong id="whatsapp-continues">—</strong></div>
+<div class="traffic-item"><span>Q&amp;A submissions</span><strong id="questions-submitted">—</strong></div>
+</div>
+<h3>Most visited cities</h3><div id="top-cities"><p class="notice-empty">No data loaded.</p></div>
+<p class="footnote">WhatsApp handoffs do not prove messages were sent. Staff-marked sends are not delivery receipts.</p>
+</section>
+<section class="panel">
+<div class="panel-head"><div><h2>Enquiries needing attention</h2><p>Oldest open records first, highlighting those over 24 hours.</p></div><a href="/enquiries/">Open Inbox ↗</a></div>
+<div class="task-list" id="enquiry-tasks"><p class="notice-empty">Load to view private source metadata.</p></div>
+</section>
+<section class="panel">
+<div class="panel-head"><div><h2>Unanswered community questions</h2><p>Oldest pending questions first. Verify information before publishing.</p></div><a href="/qa-admin/">Open moderation ↗</a></div>
+<div class="task-list" id="question-tasks"><p class="notice-empty">Load to view private source metadata.</p></div>
+</section>
+<section class="panel wide">
+<div class="panel-head"><div><h2>Quick Reply Templates</h2><p>Safe starting points for public OPD, clinic contact, appointment and correction enquiries. Edit each response before sending.</p></div><a href="/enquiries/">Open reply composer ↗</a></div>
+<div class="template-grid">
+<label>Choose a reply type<select id="template-select"><option value="">Choose a template</option></select></label>
+<label>Edit the message<textarea id="template-text" maxlength="1200" placeholder="Select a template, then customize it with verified information before sharing."></textarea></label>
+</div>
+<div class="inline-actions" style="margin-top:13px"><button type="button" id="copy-template" class="secondary">Copy edited reply</button><a class="button" href="/enquiries/">Use in Enquiry Inbox</a><span id="template-feedback" class="footnote" role="status"></span></div>
+<p class="footnote">Templates never fill in unverified schedules or contact numbers. Copying text doesn't send a message or store visitor details. Select the same template from an enquiry's private reply composer to prepare a draft.</p>
+</section>
+</div>
+<p class="footnote">Overdue means a still-new enquiry or pending Q&amp;A older than 24 hours. Notifications are recalculated when you load this page. All operational records are private, and this report contains no phone numbers, home addresses, visitor names or message bodies.</p>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id),fmt=new Intl.NumberFormat("en-PK");
+const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=String(text);return e;};
+function count(id,value){$(id).textContent=fmt.format(Number(value)||0)}
+function pretty(s){return String(s||"Other").replace(/^\w/,x=>x.toUpperCase())}
+function relative(iso){
+ const age=Date.now()-Date.parse(iso||"");if(!Number.isFinite(age))return "Unknown time";
+ const hours=Math.max(0,Math.floor(age/3600000));return hours<1?"Within the last hour":hours<24?hours+"h ago":Math.floor(hours/24)+"d ago";
+}
+function renderNotifications(s){
+ const q=s.questions||{},e=s.enquiries||{},replies=s.replies||{},root=$("notifications");root.replaceChildren();
+ const items=[
+   {n:e.overdue||0,title:"Overdue enquiries",detail:"New enquiries waiting over 24 hours.",href:"/enquiries/",warn:true},
+   {n:q.overdue||0,title:"Overdue Q&A reviews",detail:"Pending questions waiting over 24 hours.",href:"/qa-admin/",warn:true},
+   {n:e.new||0,title:"New enquiries",detail:"Saved submissions awaiting first contact.",href:"/enquiries/",warn:false},
+   {n:q.pending||0,title:"Questions awaiting moderation",detail:"Review before any answer appears publicly.",href:"/qa-admin/",warn:false},
+   {n:replies.prepared||0,title:"Prepared WhatsApp replies",detail:"These are not confirmed sent. Check reply history.",href:"/enquiries/",warn:false}
+ ].filter(x=>x.n>0);
+ $("notification-label").textContent=items.length?items.length+" active alert types":"All queues clear";
+ if(!items.length){root.append(node("p","notice-empty","No queued enquiries or pending questions need action based on the current saved statuses."));return}
+ for(const item of items){
+  const a=node("a","notification"+(item.warn?" warn":""));a.href=item.href;a.style.textDecoration="none";a.style.color="inherit";
+  a.append(node("span","dot"));const body=node("div");body.append(node("strong","",fmt.format(item.n)+" "+item.title),node("p","",item.detail));a.append(body);root.append(a);
+ }
+}
+function renderTasks(id,records,type,generatedAt){
+ const root=$(id);root.replaceChildren();
+ if(!records.length){root.append(node("p","notice-empty",type==="question"?"No pending questions in this queue.":"No new or contacted enquiries in this queue."));return}
+ const cutoff=Date.parse(generatedAt)-24*3600000;
+ for(const r of records){
+   const item=node("div","task"),left=node("div");
+   let name=type==="question"?(pretty(r.city)+" · "+r.category):((r.source_title||"Enquiry")+" · "+pretty(r.source_city));
+   left.append(node("strong","",name));
+   left.append(node("small","",relative(r.created_at)+" · "+(type==="question"?r.page_path:r.source_path)));
+   if((type==="question"||r.status==="new")&&Date.parse(r.created_at)<cutoff){
+     left.append(node("span","tag overdue","Over 24h"));
+   }else if(type==="enquiry")left.append(node("span","tag",pretty(r.status)));
+   const action=node("a","",type==="question"?"Review ↗":"Open Inbox ↗");
+   action.href=type==="question"?"/qa-admin/":"/enquiries/";
+   item.append(left,action);root.append(item);
+ }
+ root.append(node("p","footnote","Showing up to 12 oldest items. Open the related dashboard for the full list."));
+}
+function renderCity(rows){
+ const root=$("top-cities");root.replaceChildren();
+ if(!rows.length){root.append(node("p","notice-empty","No page views recorded yet."));return}
+ for(const city of rows){
+  const row=node("div","city-row");row.append(node("span","",pretty(city.city)),node("strong","",fmt.format(city.views||0)));root.append(row);
+ }
+}
+function render(data){
+ const s=data.summary||{},e=s.enquiries||{},q=s.questions||{},traffic=s.traffic||{};
+ count("new-enquiries",e.new);count("pending-questions",q.pending);count("overdue-enquiries",e.overdue);count("page-views",traffic.page_view);
+ count("slashcure-clicks",traffic.slashcure_click);count("whatsapp-opens",traffic.whatsapp_open);
+ count("whatsapp-continues",traffic.whatsapp_continue);count("questions-submitted",traffic.qa_submitted);
+ renderNotifications(s);renderTasks("enquiry-tasks",data.tasks?.openEnquiries||[],"enquiry",data.generatedAt);
+ renderTasks("question-tasks",data.tasks?.pendingQuestions||[],"question",data.generatedAt);renderCity(data.cities||[]);
+}
+$("refresh-form").addEventListener("submit",async ev=>{
+ ev.preventDefault();const key=$("admin-key").value.trim();if(!key)return;
+ $("refresh").disabled=true;$("status").textContent="Loading live private data…";
+ try{
+  const response=await fetch("/api/control-center",{method:"GET",cache:"no-store",headers:{"X-QA-Admin-Key":key,"Accept":"application/json"}});
+  const body=await response.json();if(!response.ok)throw Error(body.error||"Control Center unavailable.");
+  render(body);
+  $("status").textContent="Data refreshed at "+new Date(body.generatedAt).toLocaleString("en-PK",{timeZone:"Asia/Karachi",dateStyle:"medium",timeStyle:"short"})+" (Pakistan time).";
+ }catch(err){$("status").textContent=err.message||"Unable to load the Control Center."}
+ finally{$("refresh").disabled=false}
+});
+function initTemplates(){
+ const all=Array.isArray(window.SlashpromoReplyTemplates)?window.SlashpromoReplyTemplates:[];
+ const picker=$("template-select");
+ for(const t of all){const op=node("option","",t.label);op.value=t.id;picker.append(op)}
+ picker.addEventListener("change",()=>{const t=all.find(x=>x.id===picker.value);$("template-text").value=t?.text||"";$("template-feedback").textContent=t?"Edit placeholders before using.":""});
+ $("copy-template").addEventListener("click",async()=>{
+  const text=$("template-text").value.trim();
+  if(!text){$("template-feedback").textContent="Choose a template or write your reply first.";return}
+  try{await navigator.clipboard.writeText(text);$("template-feedback").textContent="Edited reply copied. No message was sent.";}
+  catch{$("template-text").focus();$("template-text").select();$("template-feedback").textContent="Select the text and copy it manually (Ctrl+C).";}
+ });
+}
+initTemplates();
+</script></body></html>
