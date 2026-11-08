@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer">
+<title>Private Enquiry Management | SlashPromo</title>
+<style>
+:root{color-scheme:light;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#172c4a;background:#f3f7fc}
+*{box-sizing:border-box}body{margin:0}main{max-width:1160px;margin:auto;padding:27px 18px 60px}
+a{color:#1b5b9b}header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-size:clamp(26px,4vw,38px);letter-spacing:-.035em;margin:10px 0 7px}h2{font-size:18px;margin:0}h3{font-size:16px;margin:0}
+p{color:#576b82;line-height:1.6}.muted{color:#6a7990;font-size:12px}
+.link-row{display:flex;gap:13px;flex-wrap:wrap;align-items:center}.nav{font-size:13px}
+.notice{background:#edf5ff;border:1px solid #cbdbed;padding:13px 15px;border-radius:12px;font-size:13px}
+.filters{display:flex;flex-wrap:wrap;gap:12px;background:#fff;border:1px solid #dce5ef;padding:17px;border-radius:14px;margin:20px 0;align-items:end}
+label{display:grid;gap:6px;font-weight:650;font-size:13px;color:#243d59}
+input,select,textarea{font:inherit;background:#fff;color:#163453;border:1px solid #a9bed2;border-radius:9px;padding:10px;min-height:43px}
+#key{width:min(320px,82vw)}#search{width:230px}
+button{background:#185ea9;color:#fff;border:0;border-radius:9px;padding:10px 15px;min-height:43px;font-weight:750;font:inherit;cursor:pointer}
+button:hover{background:#104b87}button:disabled{opacity:.55;cursor:wait}.muted-btn{background:#56738e}
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}
+.metric{background:#fff;border:1px solid #dbe6f0;border-radius:13px;padding:14px 16px}
+.metric span{display:block;color:#5c7187;font-size:12px}.metric strong{display:block;font-size:28px;margin-top:3px;color:#163f70}
+#status{min-height:26px;font-size:13px;font-weight:700;color:#2d5c90}
+.list{display:grid;gap:13px;margin-top:12px}
+.entry{background:#fff;border:1px solid #d9e4ee;border-radius:14px;padding:17px;box-shadow:0 7px 20px #0e2c4e08}
+.entry-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.entry-top small{color:#637790;font-size:11px;letter-spacing:.015em}
+.tag{display:inline-block;background:#e8f1fc;color:#1d5794;border-radius:99px;padding:4px 9px;font-size:12px;font-weight:800;text-transform:capitalize}
+.tag.new{background:#fff3df;color:#8a590d}.tag.contacted{background:#e9efff;color:#2855a6}
+.tag.resolved{background:#e0f7ec;color:#196341}.tag.closed{background:#eceef1;color:#44546b}
+.entry h3{font-size:18px;margin:10px 0 4px;color:#152f50}
+.entry .question{white-space:pre-wrap;overflow-wrap:anywhere;color:#263b52;padding:11px 13px;background:#f6f9fc;border-left:3px solid #b5d1ed;border-radius:4px;margin:9px 0 12px}
+.private{padding:11px 13px;background:#f0f7ff;border:1px solid #dae8fa;border-radius:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:start}
+.private span{display:block;font-size:12px;color:#3a5879}.private strong{display:block;font-size:14px;color:#153e71}
+.source{font-size:12px;overflow-wrap:anywhere;padding:8px 0;color:#49637e}
+.entry-footer{border-top:1px solid #e3eaf2;padding-top:12px;display:grid;grid-template-columns:minmax(150px,180px) minmax(200px,1fr) auto;gap:10px;align-items:end}
+.entry-footer textarea{width:100%;min-height:78px;resize:vertical;font-size:13px}
+.entry-footer select{width:100%}.action{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.entry .footnote{font-size:11px;color:#667891;margin:10px 0 0}
+.empty{padding:24px;border:1px dashed #b5c9db;border-radius:12px;background:#fff}
+#more{display:none;margin-top:15px}
+@media(max-width:920px){.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.entry-footer{grid-template-columns:1fr 1fr}.entry-footer .action{grid-column:1/-1}}
+@media(max-width:570px){main{padding:17px 12px 40px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{padding:12px}.entry{padding:13px}.entry-footer{grid-template-columns:1fr}.entry-footer .action{grid-column:auto}#search{width:min(280px,82vw)}}
+</style></head>
+<body><main>
+<header><div><a href="/" class="nav">← SlashPromo home</a><h1>Private Enquiry Inbox</h1><p>Manage saved visitor enquiries and follow-up statuses, organised by source page.</p></div>
+<div class="link-row nav"><a href="/qa-admin/">Q&amp;A dashboard ↗</a><a href="/analytics/">Analytics ↗</a></div></header>
+<p class="notice"><strong>Admin-only records:</strong> enter your existing <strong>QA_ADMIN_KEY</strong>. The key remains in this browser tab and is not stored by this page. Enquiries are saved only after visitors explicitly consent and pass security verification. <strong>A saved enquiry or WhatsApp handoff does not prove a WhatsApp message was sent.</strong> Do not copy visitors' private information into public replies. Closed records are automatically deleted after 180 days.</p>
+<form class="filters" id="filters">
+<label>Private admin key<input id="key" type="password" autocomplete="off" required placeholder="Enter QA_ADMIN_KEY"></label>
+<label>Status<select id="filter"><option value="all">All saved</option><option value="new">New</option><option value="contacted">Contacted</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></label>
+<label>Page city<select id="city"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option><option value="ghotki">Ghotki</option><option value="lahore">Lahore</option><option value="other">Other</option></select></label>
+<label>Search loaded enquiries<input id="search" type="search" autocomplete="off" placeholder="Name, query, page or city"></label>
+<button type="submit" id="load">Load enquiries</button>
+</form>
+<p id="status" aria-live="polite" role="status">Enter your admin key and select Load enquiries.</p>
+<section class="metrics" aria-label="Enquiry status overview">
+<div class="metric"><span>Total saved</span><strong id="count-total">—</strong></div>
+<div class="metric"><span>New</span><strong id="count-new">—</strong></div>
+<div class="metric"><span>Contacted</span><strong id="count-contacted">—</strong></div>
+<div class="metric"><span>Resolved</span><strong id="count-resolved">—</strong></div>
+<div class="metric"><span>Closed</span><strong id="count-closed">—</strong></div>
+</section>
+<div class="list" id="items"><p class="empty">No private records are loaded yet.</p></div>
+<button type="button" id="more" class="muted-btn">Load older enquiries</button>
+<p class="muted">Administrative follow-up is recorded only when your team updates the status. WhatsApp delivery and message sending cannot be verified automatically by the website. To request removal or correction, visitors can email info@slashcure.com.</p>
+</main>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);let entries=[],offset=0,hasMore=false;
+function make(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=String(text);return el;}
+function say(m){$("#status").textContent=m}
+function readableDate(v){try{return new Date(v).toLocaleString("en-PK",{dateStyle:"medium",timeStyle:"short",timeZone:"Asia/Karachi"})}catch{return v||""}}
+function render(){
+  const needle=$("#search").value.trim().toLowerCase();
+  const visible=entries.filter(e=>!needle||[e.visitor_name,e.visitor_area,e.enquiry_text,e.source_path,e.source_title,e.status].some(v=>String(v||"").toLowerCase().includes(needle)));
+  const root=$("#items");root.replaceChildren();$("#more").style.display=hasMore?"inline-block":"none";
+  if(!visible.length){root.append(make("p","empty",entries.length?"Nothing matches the search.":"No saved enquiries found in this selection."));return}
+  for(const item of visible){
+    const card=make("article","entry");
+    const top=make("div","entry-top");
+    top.append(make("small","",readableDate(item.created_at)+" · "+item.source_city.toUpperCase()+" · Ref "+item.id.slice(0,8).toUpperCase()));
+    top.append(make("span","tag "+item.status,item.status));
+    const heading=make("h3","",item.visitor_name);
+    const question=make("div","question",item.enquiry_text);
+    const privacy=make("div","private");
+    const place=make("div");place.append(make("span","","City / Area"),make("strong","",item.visitor_area));privacy.append(place);
+    const phone=make("div");phone.append(make("span","","Optional private WhatsApp"));
+    if(item.visitor_phone){
+      const clean=item.visitor_phone.replace(/\D/g,""),digits=clean.startsWith("0")&&clean.length===11?"92"+clean.slice(1):clean;
+      const a=make("a","",item.visitor_phone+" ↗");a.href="https://wa.me/"+digits;a.target="_blank";a.rel="noopener noreferrer";
+      phone.append(a);
+    }else phone.append(make("strong","","Not provided"));
+    privacy.append(phone);
+    const source=make("p","source","Source: "+item.source_title+" · ");
+    const sourceLink=make("a","","Open source page ↗");
+    sourceLink.href=item.source_path;sourceLink.target="_blank";sourceLink.rel="noopener noreferrer";
+    source.append(sourceLink);
+    const footer=make("div","entry-footer");
+    const sLabel=make("label","","Follow-up status");
+    const status=make("select");for(const name of ["new","contacted","resolved","closed"]){const o=make("option","",name[0].toUpperCase()+name.slice(1));o.value=name;status.append(o)}
+    status.value=item.status;sLabel.append(status);
+    const noteLabel=make("label","","Private internal note (do not enter patient records)");
+    const note=make("textarea");note.maxLength=1000;note.value=item.admin_note||"";note.placeholder="e.g. Replied to visitor or verified clinic contact";noteLabel.append(note);
+    const actions=make("div","action"),save=make("button","","Save update");
+    save.type="button";
+    save.addEventListener("click",async()=>{
+      save.disabled=true;say("Saving follow-up status…");
+      try{
+        const result=await request("/api/enquiries-admin",{method:"POST",body:JSON.stringify({id:item.id,status:status.value,note:note.value})});
+        if(!result.saved)throw Error("Not saved");
+        item.status=status.value;item.admin_note=note.value;
+        await load(false);
+        say("Enquiry status and private note saved.");
+      }catch(error){say("Could not save: "+error.message)}finally{save.disabled=false}
+    });
+    actions.append(save);footer.append(sLabel,noteLabel,actions);
+    card.append(top,heading,question,privacy,source,footer);
+    card.append(make("p","footnote","Stored with visitor consent. Source and message contents are private. WhatsApp message sent: Not verified."));
+    root.append(card);
+  }
+}
+async function request(url,opts={}){
+  const response=await fetch(url,{method:opts.method||"GET",cache:"no-store",
+    headers:{"X-QA-Admin-Key":$("#key").value.trim(),"Accept":"application/json",...(opts.method==="POST"?{"Content-Type":"application/json"}:{})},
+    ...(opts.body?{body:opts.body}:{})});
+  const data=await response.json();if(!response.ok)throw Error(data.error||"Request failed");return data;
+}
+async function load(append=false){
+  if(!$("#key").value.trim()){say("Enter your private admin key first.");return}
+  const loadButton=$("#load");loadButton.disabled=true;say("Loading private enquiries…");
+  try{
+    const start=append?offset:0;
+    const q=new URLSearchParams({status:$("#filter").value,offset:String(start)});
+    if($("#city").value)q.set("city",$("#city").value);
+    const data=await request("/api/enquiries-admin?"+q.toString());
+    entries=append?entries.concat(data.enquiries||[]):(data.enquiries||[]);
+    for(const name of ["total","new","contacted","resolved","closed"])$("#count-"+name).textContent=String(data.summary?.[name]||0);
+    hasMore=Boolean(data.hasMore);offset=data.nextOffset||0;
+    render();
+    say("Loaded "+entries.length+" of "+data.filteredTotal+" saved enquiries. Filters and private notes are up to date.");
+  }catch(error){say(error.message||"Could not load enquiries")}finally{loadButton.disabled=false}
+}
+$("#filters").addEventListener("submit",event=>{event.preventDefault();load(false)});
+$("#more").addEventListener("click",()=>load(true));
+$("#filter").addEventListener("change",()=>{entries=[];hasMore=false;render();say("Click Load enquiries to apply this filter.")});
+$("#city").addEventListener("change",()=>{entries=[];hasMore=false;render();say("Click Load enquiries to apply this filter.")});
+$("#search").addEventListener("input",render);
+$("#more").style.display="none";
+</script></body></html>
