@@ -54,7 +54,7 @@ import("/assets/sponsored.js").catch(()=>{});
 import("/assets/slashcure-strip.js?v=20261106-darkbrand3").catch(()=>{});
 
 /* Present verified SlashPromo and Slashcure profile destinations together. */
-import("/assets/cross-profile-links.js?v=20261106-doctor-darkwordmark").catch(()=>{});
+import("/assets/cross-profile-links.js?v=20261108-national-contact-qa1").catch(()=>{});
 
 
 /* Enhance the text "Slashcure" everywhere, including dynamically generated
