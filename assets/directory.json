@@ -1237,9 +1237,9 @@
       "cities": [
         "Sukkur"
       ],
-      "specialty": "Pulmonology",
-      "hospital": "",
-      "qualifications": "MBBS, FCPS · 20+ years of experience",
+      "specialty": "Consultant Pulmonologist & Chest Specialist",
+      "hospital": "Hira Medical Centre, Sukkur",
+      "qualifications": "MBBS, FCPS",
       "url": "/doctors/sukkur/dr-riaz-hussain-hakro/",
       "externalProfile": "https://slashcure.com/pulmonologists/sukkur/dr-riaz-hussain-hakro",
       "hospitalpro": "https://hospitalpro.online/dr-riaz-hussain-hakro.html",
@@ -1530,7 +1530,7 @@
       "name": "Hira Medical Centre",
       "city": "Sukkur",
       "category": "Medical centre",
-      "description": "Listed associated doctors include gastroenterology and hepatology, cardiology, orthopedics and dentistry specialties.",
+      "description": "Hira Medical Centre in Sukkur lists associated specialists in cardiology, pulmonology, orthopedics, gastroenterology, hepatology and dental prosthodontics. Confirm OPD timings with each clinician.",
       "url": "/hospitals/sukkur/hira-medical-centre/",
       "hospitalpro": "https://hospitalpro.online/hospitals/hira-medical-centre-sukkur/",
       "externalProfile": "",
@@ -1539,7 +1539,8 @@
         "sukkur-dr-ahmed-raza-laghari",
         "sukkur-dr-aneel-ahmed-ghanghro",
         "sukkur-dr-deepak-kumar",
-        "sukkur-prof-dr-kirpal-das-makheja"
+        "sukkur-prof-dr-kirpal-das-makheja",
+        "sukkur-dr-riaz-hussain-hakro"
       ]
     },
     {
