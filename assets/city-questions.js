@@ -2,14 +2,16 @@
 (() => {
   "use strict";
   const cityMap={sukkur:"Sukkur",khairpur:"Khairpur",shikarpur:"Shikarpur",ghotki:"Ghotki",karachi:"Karachi",hyderabad:"Hyderabad"};
-  // City roots keep their original city-wide thread. All published Sukkur
-  // doctor, hospital, specialty and topic pages have separate threads.
+  // City landing pages retain their city-wide discussion. Provider, specialty
+  // and health-topic pages use a separate question thread for their own URL.
   const pagePath=location.pathname.toLowerCase().replace(/\/+$/,"")+"/";
   const parts=pagePath.split("/").filter(Boolean);
   const rootCity=parts.length===1&&cityMap[parts[0]]?parts[0]:null;
-  const subSukkur=(parts[0]==="sukkur"&&parts.length>1)
-    ||(["doctors","hospitals","clinics","laboratories"].includes(parts[0])&&parts[1]==="sukkur"&&parts.length>2);
-  const city=rootCity||(subSukkur?"sukkur":null);
+  const localSubpage=parts.length>1&&Object.hasOwn(cityMap,parts[0])?parts[0]:null;
+  const providerSubpage=parts.length>2
+    &&["doctors","hospitals","clinics","laboratories"].includes(parts[0])
+    &&Object.hasOwn(cityMap,parts[1])?parts[1]:null;
+  const city=rootCity||localSubpage||providerSubpage;
   if(!city)return;
   const label=cityMap[city],isCityRoot=Boolean(rootCity);
   const h1=(document.querySelector("main h1")?.textContent||"").trim().replace(/\s+/g," ");
@@ -21,7 +23,7 @@
   const main=document.querySelector("main");
   if(!main||document.querySelector("#community-questions"))return;
   const stylesheet=document.createElement("link");
-  stylesheet.rel="stylesheet";stylesheet.href="/assets/city-questions.css?v=20261108-scoped-qa6";document.head.appendChild(stylesheet);
+  stylesheet.rel="stylesheet";stylesheet.href="/assets/city-questions.css?v=20261108-nationwide-qa7";document.head.appendChild(stylesheet);
   const section=document.createElement("section");
   section.id="community-questions";section.className="sp-qa-section";
   section.setAttribute("aria-labelledby","sp-qa-title");
