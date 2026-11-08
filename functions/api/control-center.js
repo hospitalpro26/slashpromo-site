@@ -1,12 +1,15 @@
+import {requireOptionalAccess} from "../_lib/optional-access.js";
 /* Private consolidated operational overview: no personal enquiry fields exposed here.
    All data comes from existing D1 tables and is accessible only with QA_ADMIN_KEY. */
 import {respond,constantTimeEqual,ensureEnquiryDb,cleanupEnquiries} from "../_lib/enquiries.js";
 import {ensureDb} from "../_lib/qa.js";
 import {ensureAnalytics} from "../_lib/analytics.js";
 
-export async function onRequestGet({request,env}){
+export async function onRequestGet(ctx){
+  const {request,env}=ctx;
   if(!env.QA_ADMIN_KEY||!constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY))
     return respond({error:"Unauthorized."},401);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!env.QA_DB)return respond({error:"Connect the existing production QA_DB database."},503);
   const url=new URL(request.url);
   if(url.searchParams.size>0)return respond({error:"This report does not accept parameters."},400);

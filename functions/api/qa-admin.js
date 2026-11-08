@@ -1,9 +1,12 @@
+import {requireOptionalAccess} from "../_lib/optional-access.js";
 import {CITIES,reply,ensureDb,constantTimeEqual} from "../_lib/qa.js";
 function authorized(request,env){
   return Boolean(env.QA_ADMIN_KEY && constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY));
 }
-export async function onRequestGet({request,env}){
+export async function onRequestGet(ctx){
+  const {request,env}=ctx;
   if(!authorized(request,env))return reply({error:"Unauthorized."},401);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!env.QA_DB)return reply({error:"QA_DB is missing. Connect the production Cloudflare D1 binding."},503);
   try{
     await ensureDb(env);
@@ -38,8 +41,10 @@ export async function onRequestGet({request,env}){
   }
 }
 
-export async function onRequestPost({request,env}){
+export async function onRequestPost(ctx){
+  const {request,env}=ctx;
   if(!authorized(request,env))return reply({error:"Unauthorized."},401);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!env.QA_DB)return reply({error:"QA_DB is missing. Connect the production Cloudflare D1 binding."},503);
   if(!(request.headers.get("Content-Type")||"").includes("application/json"))return reply({error:"JSON required."},415);
   if(Number(request.headers.get("Content-Length")||0)>5000)return reply({error:"Too large."},413);

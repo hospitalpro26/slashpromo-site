@@ -1,11 +1,14 @@
+import {requireOptionalAccess} from "../_lib/optional-access.js";
 import {constantTimeEqual} from "../_lib/qa.js";
 import {json,ensureAnalytics,CITY_NAMES} from "../_lib/analytics.js";
 import {ensureDb} from "../_lib/qa.js";
 /* The same private QA_ADMIN_KEY protects analytics. Never expose private Q&A fields. */
-export async function onRequestGet({request,env}){
+export async function onRequestGet(ctx){
+  const {request,env}=ctx;
   const provided=request.headers.get("X-QA-Admin-Key")||"";
   if(!env.QA_ADMIN_KEY||!constantTimeEqual(provided,env.QA_ADMIN_KEY))return json({error:"Unauthorized."},401);
   if(!env.QA_DB)return json({error:"Configure the existing QA_DB Cloudflare binding first."},503);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   const params=new URL(request.url).searchParams;
   const days=Number(params.get("days")||7);
   if(![7,30,90].includes(days))return json({error:"Choose 7, 30 or 90 days."},400);

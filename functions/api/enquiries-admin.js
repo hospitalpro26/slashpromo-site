@@ -1,9 +1,12 @@
+import {requireOptionalAccess} from "../_lib/optional-access.js";
 import {respond,ensureEnquiryDb,cleanupEnquiries,STATUSES,constantTimeEqual,sameOrigin} from "../_lib/enquiries.js";
 function authorized(request,env){
   return Boolean(env.QA_ADMIN_KEY && constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY));
 }
-export async function onRequestGet({request,env}){
+export async function onRequestGet(ctx){
+  const {request,env}=ctx;
   if(!authorized(request,env))return respond({error:"Unauthorized."},401);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!env.QA_DB)return respond({error:"Production QA_DB is not connected."},503);
   const params=new URL(request.url).searchParams;
   const status=params.get("status")||"all",city=params.get("city")||"";
@@ -29,8 +32,10 @@ export async function onRequestGet({request,env}){
       note:"A saved enquiry is not proof that a WhatsApp message was sent; whatsapp_sent_confirmed remains false unless independently verified."});
   }catch{return respond({error:"Could not load enquiries from the database."},503)}
 }
-export async function onRequestPost({request,env}){
+export async function onRequestPost(ctx){
+  const {request,env}=ctx;
   if(!authorized(request,env))return respond({error:"Unauthorized."},401);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!sameOrigin(request))return respond({error:"Invalid request origin."},403);
   if(!env.QA_DB)return respond({error:"Production QA_DB is not connected."},503);
   if(!(request.headers.get("Content-Type")||"").includes("application/json"))return respond({error:"JSON required."},415);

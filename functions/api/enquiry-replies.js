@@ -1,3 +1,4 @@
+import {requireOptionalAccess} from "../_lib/optional-access.js";
 /* Private WhatsApp replies. Never expose this route without QA_ADMIN_KEY. */
 import {respond,ensureEnquiryDb,cleanupEnquiries,constantTimeEqual,sameOrigin,whatsappDigits} from "../_lib/enquiries.js";
 
@@ -19,8 +20,10 @@ function whatsappLink(enquiry,enquiryId,text){
 function authorized(request,env){
   return Boolean(env.QA_ADMIN_KEY&&constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY));
 }
-export async function onRequestGet({request,env}){
+export async function onRequestGet(ctx){
+  const {request,env}=ctx;
   if(!authorized(request,env))return respond({error:"Unauthorized."},401);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!env.QA_DB)return respond({error:"Production QA_DB is not connected."},503);
   const enquiryId=new URL(request.url).searchParams.get("enquiryId")||"";
   if(!uuid.test(enquiryId))return respond({error:"Invalid enquiry reference."},400);
@@ -34,8 +37,10 @@ export async function onRequestGet({request,env}){
       note:"Prepared replies are not sent. Sent confirmation is a manual staff record, not a WhatsApp delivery receipt."});
   }catch{return respond({error:"Could not load private reply history."},503)}
 }
-export async function onRequestPost({request,env}){
+export async function onRequestPost(ctx){
+  const {request,env}=ctx;
   if(!authorized(request,env))return respond({error:"Unauthorized."},401);
+  const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!sameOrigin(request))return respond({error:"Invalid request origin."},403);
   if(!env.QA_DB)return respond({error:"Production QA_DB is not connected."},503);
   if(!(request.headers.get("Content-Type")||"").toLowerCase().includes("application/json"))return respond({error:"JSON required."},415);
