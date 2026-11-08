@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Fail CI if a SlashPromo hospital page lacks named associated doctors.
+/* Fail CI when a SlashPromo facility has unsupported doctor affiliations or lacks required source disclosures.
  * Checks the site's local directory claims; it does not independently certify
  * provider employment, clinic hours or medical credentials.
  */
@@ -62,7 +62,7 @@ for(const facility of db.hospitals){
   // This is NOT a verified doctor/affiliation relationship.
   if(institutionalOnly){
     const expected="https://slashcure.com"+facility.url;
-    if(facility.externalProfile!==expected)
+    if(String(facility.externalProfile||"").replace(/\/+$/,"")!==expected.replace(/\/+$/,""))
       errors.push(facility.name+": institutional-only listing requires matching Slashcure facility profile");
     if(!html.includes("Doctor roster verification:")||!html.includes("Individual doctors are not yet independently linked"))
       errors.push(facility.name+": missing public notice that doctors are not independently linked");
