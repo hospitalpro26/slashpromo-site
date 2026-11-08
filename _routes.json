@@ -10,7 +10,8 @@
     "/api/analytics",
     "/api/analytics-report",
     "/api/enquiries",
-    "/api/enquiries-admin"
+    "/api/enquiries-admin",
+    "/api/enquiry-replies"
   ],
   "exclude": []
 }

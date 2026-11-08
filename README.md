@@ -147,3 +147,12 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - Private GET/POST /api/enquiries-admin uses the server-side QA_ADMIN_KEY to list/filter records, and update New/Contacted/Resolved/Closed statuses and private follow-up notes. It cannot publicly disclose enquiries without the private key. No visitor content is inserted as HTML in the dashboard.
 - Data retention: closed enquiries are deleted 180 days after their close date during database maintenance on supported API requests. Anonymous HMAC spam-rate records are purged after two days. Retained personal data is excluded from the aggregate analytics tables.
 - Link to the inbox from the private Analytics, Q&A moderation and campaign administration pages. All private records and contact numbers must remain restricted to authorised operators.
+
+
+### Private Reply on WhatsApp and reply history (8 November 2026)
+- `/enquiries/` now includes a private reply composer per saved enquiry, **Save private draft**, **Reply on WhatsApp**, and **View reply history**.
+- Private Cloudflare Function `/api/enquiry-replies` accepts authorised GET for a saved enquiry history and authorised POST actions: `save_draft`, `prepare`, and `confirm_sent`. Every request checks `QA_ADMIN_KEY` in a request header; POST also enforces same-origin and validates the request.
+- Reply text is saved only to D1 `enquiry_replies`, linked by `enquiry_id` to the original private record. Retain saved replies until their parent enquiry is closed and reaches the 180-day deletion threshold; the cleanup removes child records explicitly before deletion.
+- `prepare` requires a phone number already consented to and saved on the enquiry. It stores a prepared reply and returns a WhatsApp deeplink based on that saved phone, the enquiry reference and the reply. The visitor's WhatsApp number cannot be changed from the reply composer.
+- Opening WhatsApp **does not** mark a reply as sent; `confirm_sent` requires a separate human action after actually pressing Send in WhatsApp. It records a *staff assertion*, **not** a WhatsApp delivery/read receipt, and changes New enquiries to Contacted. Resolved/Closed statuses are not automatically downgraded.
+- No patient records or sensitive medical information should be placed in private replies. Private replies are not shared with public Q&A, analytics or external visitors unless an admin intentionally sends them through WhatsApp.

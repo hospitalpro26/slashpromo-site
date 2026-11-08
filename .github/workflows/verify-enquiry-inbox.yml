@@ -7,6 +7,7 @@ on:
       - 'functions/_lib/enquiries.js'
       - 'functions/api/enquiries.js'
       - 'functions/api/enquiries-admin.js'
+      - 'functions/api/enquiry-replies.js'
       - 'enquiries/index.html'
       - 'assets/site.js'
       - 'assets/theme.css'
@@ -25,7 +26,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in functions/_lib/enquiries.js functions/api/enquiries.js functions/api/enquiries-admin.js assets/site.js; do
+          for file in functions/_lib/enquiries.js functions/api/enquiries.js functions/api/enquiries-admin.js functions/api/enquiry-replies.js assets/site.js; do
             node --check "$file"
           done
           grep -q 'sp-wa-consent' assets/site.js
@@ -37,6 +38,10 @@ jobs:
           grep -q 'whatsapp_sent_confirmed' functions/_lib/enquiries.js
           grep -q 'noindex,nofollow' enquiries/index.html
           grep -q 'enquiries-admin' _routes.json
+          grep -q 'enquiry-replies' _routes.json
+          grep -q 'View reply history' enquiries/index.html
+          grep -q 'I sent this reply' enquiries/index.html
+          grep -q 'sent_confirmed' functions/api/enquiry-replies.js
           grep -q '/api/enquiries' _routes.json
       - name: Verify production deploy and protected endpoints
         shell: bash
@@ -49,18 +54,23 @@ jobs:
             bad=$(curl -sSL --max-time 18 -o /tmp/enquiry-rejected.json -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"consent":false}' "https://slashpromo.com/api/enquiries" || true)
             health=$(curl -sSL --max-time 18 -o /tmp/enquiry-d1.json -w '%{http_code}' "https://slashpromo.com/api/analytics?health=1" || true)
             js=$(curl -sSL --max-time 18 -o /tmp/enquiry-site.js -w '%{http_code}' 'https://slashpromo.com/assets/site.js?v=20261108-enquiries6' || true)
+            replies=$(curl -sSL --max-time 18 -o /tmp/enquiry-replies.json -w '%{http_code}' 'https://slashpromo.com/api/enquiry-replies?enquiryId=00000000-0000-4000-8000-000000000000' || true)
+            replypost=$(curl -sSL --max-time 18 -o /tmp/enquiry-replypost.json -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{"action":"save_draft","enquiryId":"00000000-0000-4000-8000-000000000000","text":"test"}' 'https://slashpromo.com/api/enquiry-replies' || true)
             if [ "$inbox" = 200 ] && [ "$public" = 200 ] && [ "$admin" = 401 ] && \
-               [ "$bad" = 400 ] && [ "$health" = 200 ] && [ "$js" = 200 ] && \
+               [ "$bad" = 400 ] && [ "$health" = 200 ] && [ "$js" = 200 ] && [ "$replies" = 401 ] && [ "$replypost" = 401 ] && \
                grep -q 'Private Enquiry Inbox' /tmp/enquiry-inbox.html && \
                grep -q '"enabled":true' /tmp/enquiry-config.json && \
                grep -q 'Unauthorized' /tmp/enquiry-private.json && \
                grep -q 'Please agree before saving' /tmp/enquiry-rejected.json && \
                grep -q '"enabled":true' /tmp/enquiry-d1.json && \
-               grep -q 'Save private enquiry' /tmp/enquiry-site.js; then
-              echo 'PASS: Private Enquiry Inbox live; D1 bound; opt-in required; Turnstile configured; dashboard locked; site-wide form deployed.'
+               grep -q 'Save private enquiry' /tmp/enquiry-site.js && \
+               grep -q 'Unauthorized' /tmp/enquiry-replies.json && \
+               grep -q 'Unauthorized' /tmp/enquiry-replypost.json && \
+               grep -q 'View reply history' /tmp/enquiry-inbox.html; then
+              echo 'PASS: Enquiry Inbox live; D1 bound; opt-in required; private replies API locked; composer/history published; no anonymous reply read/write.'
               exit 0
             fi
-            echo "Attempt $attempt inbox=$inbox config=$public unauthorized=$admin consent-rejected=$bad DB=$health script=$js"
+            echo "Attempt $attempt inbox=$inbox config=$public unauthorized=$admin consent-rejected=$bad DB=$health script=$js replies=$replies replypost=$replypost"
             sleep 12
           done
           echo 'Live private Enquiry Inbox validation failed. Check deployment, QA_DB or Turnstile bindings.' >&2
