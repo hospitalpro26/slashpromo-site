@@ -1,15 +1,17 @@
-import {CITIES,CATEGORIES,reply,enabled,ensureDb,sameOrigin,hasPrivateInfo,ipDigest} from "../_lib/qa.js";
+import {CITIES,CATEGORIES,questionPage,reply,enabled,ensureDb,sameOrigin,hasPrivateInfo,ipDigest} from "../_lib/qa.js";
 
 export async function onRequestGet({request,env}){
   const city=new URL(request.url).searchParams.get("city")||"";
   if(!CITIES.includes(city)) return reply({error:"Choose a supported city."},400);
+  const pagePath=questionPage(city,new URL(request.url).searchParams.get("pagePath"));
+  if(!pagePath) return reply({error:"Choose a supported page."},400);
   const available=enabled(env);
   if(!env.QA_DB) return reply({questions:[],enabled:false,siteKey:null});
   try{
     await ensureDb(env);
     const result=await env.QA_DB.prepare(
-      "SELECT id,category,question,answer,answered_at,CASE WHEN public_name_consent=1 THEN visitor_name ELSE NULL END AS author_name FROM questions WHERE city=? AND status='approved' AND length(trim(COALESCE(answer,'')))>0 ORDER BY answered_at DESC LIMIT 30"
-    ).bind(city).all();
+      "SELECT id,category,question,answer,answered_at,CASE WHEN public_name_consent=1 THEN visitor_name ELSE NULL END AS author_name FROM questions WHERE city=? AND (page_path=? OR (page_path IS NULL AND ?=('/' || city || '/'))) AND status='approved' AND length(trim(COALESCE(answer,'')))>0 ORDER BY answered_at DESC LIMIT 30"
+    ).bind(city,pagePath,pagePath).all();
     return reply({questions:result.results||[],enabled:available,siteKey:available?env.QA_TURNSTILE_SITE_KEY:null});
   }catch(_){
     return reply({questions:[],enabled:false,siteKey:null,error:"The Q&A service is temporarily unavailable."},503);
@@ -26,6 +28,8 @@ export async function onRequestPost({request,env}){
   catch{return reply({error:"Invalid question."},400);}
   if(data.website) return reply({ok:true,pending:true});
   const city=String(data.city||"").toLowerCase().trim();
+  const pagePath=questionPage(city,data.pagePath);
+  if(!pagePath) return reply({error:"Choose a supported page."},400);
   const category=String(data.category||"").trim();
   const question=String(data.question||"").trim().replace(/\s+/g," ");
   // Personal details are stored separately and never included in public API responses.
@@ -69,8 +73,8 @@ export async function onRequestPost({request,env}){
     const count=await env.QA_DB.prepare("SELECT count(*) AS n FROM questions WHERE ip_hash=? AND created_at>=?").bind(digest,since).first();
     if((count?.n||0)>=4)return reply({error:"Daily question limit reached. Please try again tomorrow."},429);
     await env.QA_DB.prepare(
-      "INSERT INTO questions(id,city,category,question,status,created_at,ip_hash,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent) VALUES(?,?,?,?,'pending',?,?,?,?,?,?,?,?)"
-    ).bind(crypto.randomUUID(),city,category,question,new Date().toISOString(),digest,
+      "INSERT INTO questions(id,city,page_path,category,question,status,created_at,ip_hash,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent) VALUES(?,?,?,?,?,'pending',?,?,?,?,?,?,?,?)"
+    ).bind(crypto.randomUUID(),city,pagePath,category,question,new Date().toISOString(),digest,
       visitorName,visitorCity,visitorWhatsApp||null,visitorSuggestion||null,visitorWhatsApp&&contactConsent?1:0,1).run();
     return reply({ok:true,pending:true,message:"Your question has been received for review. Only approved questions are published."},201);
   }catch{return reply({error:"We couldn't save your question. Please try again later."},503);}
