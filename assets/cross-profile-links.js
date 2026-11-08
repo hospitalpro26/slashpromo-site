@@ -63,6 +63,13 @@
     }
     const target=destination(record,kind);
     container.append(link(target.url,"sp-cross-link "+(target.direct?"sp-cross-link-external":"sp-cross-link-fallback"),target.label));
+    // Some doctor records currently link to a clinic or hospital rather than to
+    // the doctor's personal Slashcure page. Preserve that useful destination,
+    // but clearly identify it as a facility rather than a verified doctor link.
+    const facility=kind==="doctor"?parse(record.externalProfile):null;
+    if(facility?.kind==="hospital"){
+      container.append(link(facility.url,"sp-cross-link sp-cross-link-facility","View associated facility on Slashcure ↗"));
+    }
     const city=currentPath.split("/").filter(Boolean)[1];
     if(isProfile&&["sukkur","karachi","khairpur","shikarpur","ghotki","hyderabad"].includes(city)){
       container.append(link("#community-questions","sp-cross-link sp-cross-link-question","Ask about OPD timings or clinic details ↓"));
@@ -111,7 +118,8 @@
       else sidebar.append(link(target.url,"",target.label));
       if(kind==="doctor" && direct && direct.kind==="hospital"){
         const facility=[...sidebar.querySelectorAll('a[href]')].find(a=>a.href===direct.url);
-        if(facility)facility.textContent="View associated hospital on Slashcure ↗";
+        if(facility)facility.textContent="View associated facility on Slashcure ↗";
+        else sidebar.append(link(direct.url,"","View associated facility on Slashcure ↗"));
       }
     }
   }).catch(()=>{/* Keep native SlashPromo navigation intact if the directory cannot load. */});
