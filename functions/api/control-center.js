@@ -20,11 +20,11 @@ export async function onRequestGet({request,env}){
     const db=env.QA_DB;
     const requests=[
       db.prepare("SELECT status,COUNT(*) AS n, SUM(CASE WHEN status='pending' AND created_at<? THEN 1 ELSE 0 END) AS overdue FROM questions GROUP BY status").bind(overdueAt),
-      db.prepare("SELECT status,COUNT(*) AS n,SUM(CASE WHEN status='new' AND created_at<? THEN 1 ELSE 0 END) AS overdue FROM enquiries GROUP BY status").bind(overdueAt),
+      db.prepare("SELECT status,COUNT(*) AS n,SUM(CASE WHEN (status='new' AND created_at<?) OR (status='contacted' AND updated_at<?) THEN 1 ELSE 0 END) AS overdue FROM enquiries GROUP BY status").bind(overdueAt,overdueAt),
       db.prepare("SELECT event,SUM(n) AS n FROM site_analytics_daily WHERE day>=? GROUP BY event").bind(sevenDays),
       db.prepare("SELECT city,SUM(n) AS views FROM site_analytics_daily WHERE day>=? AND event='page_view' GROUP BY city ORDER BY views DESC LIMIT 8").bind(sevenDays),
       db.prepare("SELECT id,city,category,COALESCE(NULLIF(page_path,''),'/'||city||'/') AS page_path,created_at FROM questions WHERE status='pending' ORDER BY created_at ASC,id ASC LIMIT 12"),
-      db.prepare("SELECT id,source_city,source_path,source_title,created_at,status,CASE WHEN visitor_phone IS NOT NULL AND trim(visitor_phone)!='' THEN 1 ELSE 0 END AS has_phone FROM enquiries WHERE status IN ('new','contacted') ORDER BY CASE WHEN status='new' THEN 0 ELSE 1 END,created_at ASC,id ASC LIMIT 12"),
+      db.prepare("SELECT id,source_city,source_path,source_title,created_at,updated_at,status,CASE WHEN visitor_phone IS NOT NULL AND trim(visitor_phone)!='' THEN 1 ELSE 0 END AS has_phone FROM enquiries WHERE status IN ('new','contacted') ORDER BY CASE WHEN status='new' THEN created_at ELSE updated_at END ASC,id ASC LIMIT 12"),
       db.prepare("SELECT status,COUNT(*) AS n FROM enquiry_replies GROUP BY status")
     ];
     const [qCounts,eCounts,traffic,cities,questions,enquiries,replies]=await db.batch(requests);
@@ -38,7 +38,7 @@ export async function onRequestGet({request,env}){
     }
     for(const row of eCounts.results||[]){
       const n=Number(row.n)||0;if(Object.hasOwn(e,row.status)){e[row.status]=n;e.total+=n}
-      if(row.status==="new")e.overdue=Number(row.overdue)||0;
+      if(row.status==="new"||row.status==="contacted")e.overdue+=Number(row.overdue)||0;
     }
     for(const row of traffic.results||[])if(Object.hasOwn(trafficTotals,row.event))trafficTotals[row.event]=Number(row.n)||0;
     for(const row of replies.results||[])if(Object.hasOwn(replyTotals,row.status))replyTotals[row.status]=Number(row.n)||0;

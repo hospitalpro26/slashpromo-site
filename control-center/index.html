@@ -70,7 +70,7 @@ button:disabled{opacity:.6;cursor:wait}.secondary{background:#fff!important;colo
 <section class="cards" aria-label="Current operational metrics">
 <div class="metric"><span>New enquiries</span><strong id="new-enquiries">—</strong><a href="/enquiries/">Manage enquiries ↗</a></div>
 <div class="metric"><span>Pending questions</span><strong id="pending-questions">—</strong><a href="/qa-admin/">Moderate Q&amp;A ↗</a></div>
-<div class="metric"><span>Overdue follow-ups</span><strong id="overdue-enquiries">—</strong><span class="footnote">New enquiries older than 24 hours</span></div>
+<div class="metric"><span>Overdue follow-ups</span><strong id="overdue-enquiries">—</strong><span class="footnote">New or contacted; no update for 24 hours</span></div>
 <div class="metric"><span>Website page views</span><strong id="page-views">—</strong><span class="footnote">Last 7 days; not unique visitors</span></div>
 </section>
 <div class="dashboard">
@@ -91,7 +91,7 @@ button:disabled{opacity:.6;cursor:wait}.secondary{background:#fff!important;colo
 <p class="footnote">WhatsApp handoffs do not prove messages were sent. Staff-marked sends are not delivery receipts.</p>
 </section>
 <section class="panel">
-<div class="panel-head"><div><h2>Enquiries needing attention</h2><p>Oldest open records first, highlighting those over 24 hours.</p></div><a href="/enquiries/">Open Inbox ↗</a></div>
+<div class="panel-head"><div><h2>Enquiries needing attention</h2><p>Oldest unattended records first, highlighting those with no update for 24 hours.</p></div><a href="/enquiries/">Open Inbox ↗</a></div>
 <div class="task-list" id="enquiry-tasks"><p class="notice-empty">Load to view private source metadata.</p></div>
 </section>
 <section class="panel">
@@ -108,7 +108,7 @@ button:disabled{opacity:.6;cursor:wait}.secondary{background:#fff!important;colo
 <p class="footnote">Templates never fill in unverified schedules or contact numbers. Copying text doesn't send a message or store visitor details. Select the same template from an enquiry's private reply composer to prepare a draft.</p>
 </section>
 </div>
-<p class="footnote">Overdue means a still-new enquiry or pending Q&amp;A older than 24 hours. Notifications are recalculated when you load this page. All operational records are private, and this report contains no phone numbers, home addresses, visitor names or message bodies.</p>
+<p class="footnote">Overdue means a still-new enquiry or pending Q&amp;A older than 24 hours, or an unresolved Contacted enquiry not updated in the last 24 hours. Notifications are recalculated when you load this page. All operational records are private, and this report contains no phone numbers, home addresses, visitor names or message bodies.</p>
 </main>
 <script>
 "use strict";
@@ -123,7 +123,7 @@ function relative(iso){
 function renderNotifications(s){
  const q=s.questions||{},e=s.enquiries||{},replies=s.replies||{},root=$("notifications");root.replaceChildren();
  const items=[
-   {n:e.overdue||0,title:"Overdue enquiries",detail:"New enquiries waiting over 24 hours.",href:"/enquiries/",warn:true},
+   {n:e.overdue||0,title:"Overdue enquiries",detail:"New or contacted enquiries with no update for over 24 hours.",href:"/enquiries/",warn:true},
    {n:q.overdue||0,title:"Overdue Q&A reviews",detail:"Pending questions waiting over 24 hours.",href:"/qa-admin/",warn:true},
    {n:e.new||0,title:"New enquiries",detail:"Saved submissions awaiting first contact.",href:"/enquiries/",warn:false},
    {n:q.pending||0,title:"Questions awaiting moderation",detail:"Review before any answer appears publicly.",href:"/qa-admin/",warn:false},
@@ -145,7 +145,8 @@ function renderTasks(id,records,type,generatedAt){
    let name=type==="question"?(pretty(r.city)+" · "+r.category):((r.source_title||"Enquiry")+" · "+pretty(r.source_city));
    left.append(node("strong","",name));
    left.append(node("small","",relative(r.created_at)+" · "+(type==="question"?r.page_path:r.source_path)));
-   if((type==="question"||r.status==="new")&&Date.parse(r.created_at)<cutoff){
+   const lastAction=type==="question"||r.status==="new"?r.created_at:(r.updated_at||r.created_at);
+   if(Date.parse(lastAction)<cutoff){
      left.append(node("span","tag overdue","Over 24h"));
    }else if(type==="enquiry")left.append(node("span","tag",pretty(r.status)));
    const action=node("a","",type==="question"?"Review ↗":"Open Inbox ↗");
