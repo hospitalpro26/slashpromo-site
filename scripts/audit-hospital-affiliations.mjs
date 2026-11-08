@@ -90,7 +90,10 @@ for(const facility of db.hospitals){
   // A hospital page must not list doctors beyond its declared associations.
   // Reciprocal links are separately checked above, so both directions agree.
   const allowedDoctorUrls=new Set(ids.map(id=>doctors.get(id)?.url).filter(Boolean));
-  const linkedDoctorUrls=new Set([...html.matchAll(/href="(\/doctors\/[^"#?]+\/)"/g)].map(match=>match[1]));
+  const linkedDoctorUrls=new Set([...html.matchAll(/href="(\/doctors\/[^"#?]+\/)"/g)]
+    .map(match=>match[1])
+    // Specialty category navigation is not a doctor roster or affiliation.
+    .filter(url=>/^\/doctors\/[a-z0-9-]+\/(?:dr-|prof-dr-)[a-z0-9-]+\/$/.test(url)));
   for(const doctorUrl of linkedDoctorUrls){
     if(isIndividualDoctorUrl(doctorUrl)&&!allowedDoctorUrls.has(doctorUrl)){
       errors.push(facility.name+": unrelated doctor linked on hospital page: "+doctorUrl);
