@@ -171,18 +171,18 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
 })();
 
 
-/* Page-aware, opt-in WhatsApp enquiry form. The public contact button opens
-   this form; only the visitor's explicit WhatsApp Send action shares data. */
+/* Page-aware, consent-based WhatsApp enquiry: private D1 save before handoff.
+   Opening WhatsApp never means the message was sent. */
 (function(){
   "use strict";
-  if(/^\/(?:qa-admin|admin|api)(?:\/|$)/i.test(location.pathname))return;
+  if(/^\/(?:qa-admin|admin|analytics|enquiries|api)(?:\/|$)/i.test(location.pathname))return;
   function setup(){
     const old=document.getElementById("sp-team-whatsapp-float");
     if(!old||document.getElementById("sp-wa-query-panel"))return;
     const toggle=document.createElement("button");
     toggle.type="button";toggle.id=old.id;toggle.className=old.className;
     toggle.innerHTML=old.innerHTML;toggle.title="Ask SlashPromo a question on WhatsApp";
-    toggle.setAttribute("aria-label","Open WhatsApp enquiry form");
+    toggle.setAttribute("aria-label","Open enquiry form");
     toggle.setAttribute("aria-controls","sp-wa-query-panel");
     toggle.setAttribute("aria-expanded","false");
     old.replaceWith(toggle);
@@ -195,26 +195,34 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
       '<div class="sp-wa-query-head"><div><h2 id="sp-wa-query-title">WhatsApp enquiry</h2><p>Ask about doctors, hospitals or OPD</p></div><button type="button" class="sp-wa-query-close" aria-label="Close form">×</button></div>',
       '<form id="sp-wa-query-form" class="sp-wa-query-form">',
       '<label for="sp-wa-name">Your name *</label><input id="sp-wa-name" name="visitorName" type="text" maxlength="100" autocomplete="name" placeholder="Enter your name" required>',
-      '<label for="sp-wa-address">Address / City *</label><input id="sp-wa-address" name="visitorAddress" type="text" maxlength="150" autocomplete="address-level2" placeholder="Your area, town or city" required>',
-      '<label for="sp-wa-question">Your question or enquiry *</label><textarea id="sp-wa-question" name="query" rows="3" minlength="5" maxlength="1500" placeholder="What would you like to know?" required></textarea>',
-      '<div class="sp-wa-source"><strong>Automatically included page:</strong><span id="sp-wa-source-label"></span></div>',
-      '<p class="sp-wa-privacy">Your details are prepared in WhatsApp. Nothing is submitted to SlashPromo by this form. Review the message and tap <strong>Send</strong> in WhatsApp to share it. For emergencies, contact local emergency services.</p>',
-      '<button type="submit" class="sp-wa-submit">Continue to WhatsApp ↗</button>',
+      '<label for="sp-wa-address">City / Area *</label><input id="sp-wa-address" name="visitorAddress" type="text" maxlength="120" autocomplete="address-level2" placeholder="City or area (not full home address)" required>',
+      '<label for="sp-wa-phone">WhatsApp contact (optional)</label><input id="sp-wa-phone" name="visitorPhone" type="tel" maxlength="24" autocomplete="tel" placeholder="+92 300 1234567">',
+      '<label for="sp-wa-question">Your enquiry *</label><textarea id="sp-wa-question" name="query" rows="3" minlength="5" maxlength="700" placeholder="Ask about a doctor, clinic, hospital or published OPD time. Do not include medical records." required></textarea>',
+      '<div class="sp-wa-source"><strong>Source page (automatically attached)</strong><span id="sp-wa-source-label"></span></div>',
+      '<label class="sp-wa-consent"><input id="sp-wa-consent" name="consent" type="checkbox" required><span>I agree to SlashPromo privately saving my name, city/area, enquiry and optional phone number, so its team can respond. I can request deletion. <a href="/privacy/" target="_blank" rel="noopener noreferrer">Privacy policy</a>.</span></label>',
+      '<div class="sp-wa-turnstile" id="sp-wa-turnstile" aria-label="Spam protection"></div>',
+      '<p class="sp-wa-privacy">Please do not include patient records, medical reports or other sensitive health information. This is not an emergency service. Saving the enquiry does <strong>not</strong> send a WhatsApp message.</p>',
+      '<p id="sp-wa-feedback" class="sp-wa-feedback" role="status" aria-live="polite"></p>',
+      '<button id="sp-wa-save" type="submit" class="sp-wa-submit" disabled>Save private enquiry</button>',
+      '<div id="sp-wa-handoff" class="sp-wa-handoff" hidden></div>',
+      '<p class="sp-wa-privacy">Prefer not to save? <a href="https://wa.me/923352648572" target="_blank" rel="noopener noreferrer">Contact WhatsApp directly</a>.</p>',
       '</form>'
     ].join("");
     document.body.appendChild(panel);
-    const form=panel.querySelector("form");
+    const form=panel.querySelector("form"),saveButton=panel.querySelector("#sp-wa-save");
+    const feedback=panel.querySelector("#sp-wa-feedback"),handoff=panel.querySelector("#sp-wa-handoff");
+    const security=panel.querySelector("#sp-wa-turnstile");
     const parts=location.pathname.toLowerCase().split("/").filter(Boolean);
-    const places=new Set(["sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad","lahore"]);
+    const cities=new Set(["sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad","lahore"]);
     let category="Other SlashPromo page";
     if(parts.length===0)category="Homepage";
-    else if(parts.length===1&&places.has(parts[0]))category=parts[0].charAt(0).toUpperCase()+parts[0].slice(1)+" landing page";
+    else if(parts.length===1&&cities.has(parts[0]))category=parts[0].charAt(0).toUpperCase()+parts[0].slice(1)+" landing page";
     else if(parts[0]==="doctors"&&parts.length===3)category="Doctor profile";
     else if(parts[0]==="hospitals"&&parts.length===3)category="Hospital profile";
     else if(parts[0]==="doctors"&&parts.length===2)category="Specialty / city doctor directory";
     else if(parts[0]==="hospitals")category="Hospital directory";
     else if(parts[0]==="doctors")category="Doctors directory";
-    else if(places.has(parts[0]))category="City information page";
+    else if(cities.has(parts[0]))category="City information page";
     const title=(document.querySelector("main h1")?.textContent||document.title||"SlashPromo").replace(/\s+/g," ").trim().slice(0,130);
     let url="https://slashpromo.com"+location.pathname;
     try{
@@ -225,13 +233,55 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
       }
     }catch{}
     panel.querySelector("#sp-wa-source-label").textContent=category+" — "+title;
+    let token="",turnstileId=null,ready=false,loading=false;
+    function message(text,kind="info"){
+      feedback.textContent=text;feedback.dataset.kind=kind;
+    }
+    function enableTurnstile(siteKey){
+      if(turnstileId!==null)return;
+      const render=()=>{
+        if(!window.turnstile||turnstileId!==null)return;
+        try{
+          turnstileId=window.turnstile.render(security,{
+            sitekey:siteKey,
+            callback:value=>{token=value;saveButton.disabled=false},
+            "expired-callback":()=>{token="";saveButton.disabled=true;message("Security check expired. Please complete it again.","error")},
+            "error-callback":()=>{token="";saveButton.disabled=true;message("Security check is unavailable. Try again.","error")}
+          });
+        }catch{message("Security check is unavailable. You may contact WhatsApp directly.","error")}
+      };
+      if(window.turnstile){render();return}
+      const script=document.createElement("script");
+      script.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async=true;script.onload=render;
+      script.onerror=()=>message("Security check did not load. Try again or contact WhatsApp directly.","error");
+      document.head.appendChild(script);
+    }
+    async function loadConfig(){
+      if(ready||loading)return;
+      loading=true;message("Checking secure enquiry submission…");
+      try{
+        const response=await fetch("/api/enquiries",{headers:{"Accept":"application/json"},cache:"no-store"});
+        const data=await response.json();
+        if(!response.ok||!data.enabled||!data.siteKey)throw Error("Enquiry storage is temporarily unavailable.");
+        ready=true;message("Complete the security check, then save your enquiry.");enableTurnstile(data.siteKey);
+      }catch(error){message(error.message||"Cannot enable secure enquiry storage. Please use direct WhatsApp.","error")}
+      finally{loading=false}
+    }
     function open(next){
       panel.hidden=!next;
       toggle.setAttribute("aria-expanded",next?"true":"false");
-      if(next)form.elements.namedItem("visitorName").focus();
-      else toggle.focus();
+      if(next){
+        if(form.dataset.saved==="yes"){
+          form.reset();form.dataset.saved="no";handoff.replaceChildren();handoff.hidden=true;
+          token="";saveButton.disabled=true;
+          if(window.turnstile&&turnstileId!==null)try{window.turnstile.reset(turnstileId)}catch{}
+          feedback.textContent="";
+        }
+        loadConfig();form.elements.namedItem("visitorName").focus();
+      }else toggle.focus();
     }
-    toggle.addEventListener("click",()=>{const opening=panel.hidden;open(opening);if(opening)window.slashpromoTrack?.("whatsapp_open");});
+    toggle.addEventListener("click",()=>{const next=panel.hidden;open(next);if(next)window.slashpromoTrack?.("whatsapp_open")});
     panel.querySelector(".sp-wa-query-close").addEventListener("click",()=>open(false));
     document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!panel.hidden)open(false)});
     document.addEventListener("pointerdown",event=>{
@@ -239,29 +289,51 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
         panel.hidden=true;toggle.setAttribute("aria-expanded","false");
       }
     });
-    form.addEventListener("submit",event=>{
+    form.addEventListener("submit",async event=>{
       event.preventDefault();
+      if(!ready||!token){message("Complete the security check to save your enquiry.","error");return}
       if(!form.reportValidity())return;
       const name=form.elements.namedItem("visitorName").value.trim();
-      const address=form.elements.namedItem("visitorAddress").value.trim();
+      const area=form.elements.namedItem("visitorAddress").value.trim();
+      const phone=form.elements.namedItem("visitorPhone").value.trim();
       const question=form.elements.namedItem("query").value.trim();
-      if(!name||!address||question.length<5)return;
-      const message=[
-        "Hello SlashPromo Team, I have an enquiry.",
-        "Name: "+name,
-        "Address / City: "+address,
-        "Query: "+question,
-        "",
-        "From page type: "+category,
-        "From page title: "+title,
-        "From page URL: "+url
-      ].join("\n");
-      const outbound=document.createElement("a");
-      outbound.href="https://wa.me/923352648572?text="+encodeURIComponent(message);
-      outbound.target="_blank";outbound.rel="noopener noreferrer";
-      outbound.hidden=true;document.body.appendChild(outbound);
-      window.slashpromoTrack?.("whatsapp_continue");
-      outbound.click();outbound.remove();
+      if(!name||!area||question.length<5)return;
+      saveButton.disabled=true;message("Saving your enquiry privately…");
+      try{
+        const response=await fetch("/api/enquiries",{
+          method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
+          body:JSON.stringify({name,area,phone,query:question,sourcePath:new URL(url).pathname,
+            sourceTitle:title,consent:form.elements.namedItem("consent").checked,turnstileToken:token})
+        });
+        const data=await response.json();
+        if(!response.ok||!data.saved)throw Error(data.error||"Could not save the enquiry.");
+        form.dataset.saved="yes";
+        message("Saved privately. Reference "+data.reference+". Your WhatsApp message has NOT been sent.","success");
+        const outgoing=[
+          "Hello SlashPromo Team, I have an enquiry.",
+          "Reference: "+data.reference,
+          "Name: "+name,
+          "Address / City: "+area,
+          ...(phone?["My contact: "+phone]:[]),
+          "Query: "+question,
+          "",
+          "From page type: "+category,
+          "From page title: "+title,
+          "From page URL: "+url
+        ].join("\n");
+        const link=document.createElement("a");
+        link.href="https://wa.me/923352648572?text="+encodeURIComponent(outgoing);
+        link.target="_blank";link.rel="noopener noreferrer";link.className="sp-wa-submit sp-wa-open";
+        link.textContent="Open WhatsApp with this enquiry ↗";
+        link.addEventListener("click",()=>window.slashpromoTrack?.("whatsapp_continue"));
+        handoff.replaceChildren(link);
+        handoff.hidden=false;
+        saveButton.textContent="Enquiry saved";saveButton.disabled=true;
+      }catch(error){
+        message(error.message||"Your enquiry was not saved.","error");
+        token="";
+        if(window.turnstile&&turnstileId!==null)try{window.turnstile.reset(turnstileId)}catch{}
+      }
     });
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",setup,{once:true});
