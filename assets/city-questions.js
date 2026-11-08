@@ -2,13 +2,26 @@
 (() => {
   "use strict";
   const cityMap={sukkur:"Sukkur",khairpur:"Khairpur",shikarpur:"Shikarpur",ghotki:"Ghotki",karachi:"Karachi",hyderabad:"Hyderabad"};
-  const parts=location.pathname.toLowerCase().split("/").filter(Boolean);
-  if(parts.length!==1||!cityMap[parts[0]])return;
-  const city=parts[0],label=cityMap[city];
+  // City roots keep their original city-wide thread. All published Sukkur
+  // doctor, hospital, specialty and topic pages have separate threads.
+  const pagePath=location.pathname.toLowerCase().replace(/\/+$/,"")+"/";
+  const parts=pagePath.split("/").filter(Boolean);
+  const rootCity=parts.length===1&&cityMap[parts[0]]?parts[0]:null;
+  const subSukkur=(parts[0]==="sukkur"&&parts.length>1)
+    ||(["doctors","hospitals","clinics","laboratories"].includes(parts[0])&&parts[1]==="sukkur"&&parts.length>2);
+  const city=rootCity||(subSukkur?"sukkur":null);
+  if(!city)return;
+  const label=cityMap[city],isCityRoot=Boolean(rootCity);
+  const h1=(document.querySelector("main h1")?.textContent||"").trim().replace(/\s+/g," ");
+  const topic=isCityRoot?"healthcare in "+label:(h1.replace(/^Find\s+(?:the\s+)?best\s+/i,"").replace(/^Find\s+/i,"").trim()||"healthcare in "+label);
+  const htmlSafe=text=>String(text).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  const questionHint=pagePath.includes("dr-bashir-ahmed-khoso")||pagePath.includes("rheumatologist")
+    ?"For example: Where can I check Dr. Bashir Ahmed Khoso's current OPD timings in Sukkur?"
+    :"For example: What are the published OPD timings or clinic contact details for a doctor on this page?";
   const main=document.querySelector("main");
   if(!main||document.querySelector("#community-questions"))return;
   const stylesheet=document.createElement("link");
-  stylesheet.rel="stylesheet";stylesheet.href="/assets/city-questions.css?v=20261108-public-author5";document.head.appendChild(stylesheet);
+  stylesheet.rel="stylesheet";stylesheet.href="/assets/city-questions.css?v=20261108-scoped-qa6";document.head.appendChild(stylesheet);
   const section=document.createElement("section");
   section.id="community-questions";section.className="sp-qa-section";
   section.setAttribute("aria-labelledby","sp-qa-title");
@@ -16,8 +29,8 @@
     <div class="wrap sp-qa-shell">
       <div class="sp-qa-heading">
         <span class="sp-qa-eyebrow">Community health questions · ${label}</span>
-        <h2 id="sp-qa-title">Questions &amp; Answers about healthcare in ${label}</h2>
-        <p>Ask about doctors, clinic contact numbers, OPD timings, appointments, hospitals, or general health information in ${label}. Our team reviews questions before publishing answers.</p>
+        <h2 id="sp-qa-title">Questions &amp; Answers about ${htmlSafe(topic)}</h2>
+        <p>Ask about the specialists, doctors, clinic contact numbers, published OPD timings and healthcare information on this page. Our team reviews each question before a public answer appears.</p>
       </div>
       <div class="sp-qa-grid">
         <div class="sp-qa-card">
@@ -34,7 +47,7 @@
               </select>
             </label>
             <label>Your question
-              <textarea name="question" required minlength="12" maxlength="700" rows="4" placeholder="For example: Where can I find a pulmonologist in ${label}, and what are the published OPD timings?"></textarea>
+              <textarea name="question" required minlength="12" maxlength="700" rows="4" placeholder="${htmlSafe(questionHint)}"></textarea>
             </label>
             <fieldset class="sp-qa-personal">
               <legend>Your details <span>(name shown publicly after approval; other details private)</span></legend>
@@ -65,7 +78,7 @@
           </form>
         </div>
         <div class="sp-qa-card">
-          <h3>Answered questions in ${label}</h3>
+          <h3>Approved answers about ${htmlSafe(topic)}</h3>
           <div id="sp-qa-questions" class="sp-qa-questions" aria-live="polite"><p class="sp-qa-note">Loading approved questions…</p></div>
           <div class="sp-qa-privacy"><strong>For information, not diagnosis.</strong> General health answers cannot replace examination by a qualified clinician. For emergencies, seek urgent medical care. OPD schedules and contact numbers must be confirmed with the provider before travel.</div>
         </div>
@@ -124,7 +137,7 @@
   }
   async function load(){
     try{
-      const response=await fetch("/api/questions?city="+encodeURIComponent(city),{headers:{"Accept":"application/json"}});
+      const response=await fetch("/api/questions?city="+encodeURIComponent(city)+"&pagePath="+encodeURIComponent(pagePath),{headers:{"Accept":"application/json"}});
       if(!response.ok)throw Error("Service unavailable");
       const data=await response.json();
       renderQuestions(Array.isArray(data.questions)?data.questions:[]);
@@ -141,6 +154,7 @@
     button.disabled=true;
     const payload={
       city,
+      pagePath,
       category:form.elements.category.value,
       question:form.elements.question.value,
       visitorName:form.elements.visitorName.value,
