@@ -8,6 +8,9 @@ on:
       - 'functions/api/analytics-report.js'
       - 'functions/_lib/analytics.js'
       - 'analytics/index.html'
+      - 'control-center/index.html'
+      - 'functions/api/control-center.js'
+      - 'scripts/test-visitor-geography.mjs'
       - 'assets/site.js'
       - 'assets/city-questions.js'
       - '_routes.json'
@@ -25,6 +28,13 @@ jobs:
         run: |
           set -euo pipefail
           node --check assets/site.js
+          node --check functions/_lib/analytics.js
+          node --check functions/api/analytics.js
+          node --check functions/api/analytics-report.js
+          node --check functions/api/control-center.js
+          node scripts/test-visitor-geography.mjs
+          grep -q 'Visitor geography' control-center/index.html
+          grep -q 'Visitor geography' analytics/index.html
           node --check assets/city-questions.js
           grep -q 'window.slashpromoTrack' assets/site.js
           grep -q 'sp-wa-query-form' assets/site.js
