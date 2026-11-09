@@ -1,0 +1,32 @@
+name: Verify Dr Rizwana Qureshi and Shahid Mirani hospital
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'doctors/sukkur/dr-rizwana-qureshi/index.html'
+      - 'assets/directory.json'
+      - 'doctors/sukkur/pediatricians/index.html'
+      - 'hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/index.html'
+      - 'sukkur/health-topics/childhood-fever-and-illness/index.html'
+      - 'sukkur/index.html'
+      - 'sitemap.xml'
+      - 'scripts/test-rizwana-profile.mjs'
+      - '.github/workflows/verify-rizwana-profile.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify doctor, hospital links, structured data and contact details
+        run: |
+          node --check scripts/test-rizwana-profile.mjs
+          node scripts/test-rizwana-profile.mjs
+      - name: Verify published Cloudflare pages and new doctor sitemap entry
+        run: node scripts/test-rizwana-profile.mjs --live
