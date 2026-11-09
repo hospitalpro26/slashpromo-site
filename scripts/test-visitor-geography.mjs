@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import {geoFromCf,pathCity,cleanPath} from "../functions/_lib/analytics.js";
+assert.deepEqual(geoFromCf({country:"pk",city:"Sukkur"}),{country:"PK",city:"Sukkur"});
+assert.deepEqual(geoFromCf({country:"US",city:"New York"}),{country:"US",city:"New York"});
+assert.deepEqual(geoFromCf({country:"PK",city:"  Karachi  "}),{country:"PK",city:"Karachi"});
+assert.deepEqual(geoFromCf(undefined),{country:"ZZ",city:"Unknown"});
+assert.deepEqual(geoFromCf({country:"XX",city:"Sukkur"}),{country:"ZZ",city:"Unknown"});
+assert.deepEqual(geoFromCf({country:"PK",city:"<script>alert(1)</script>"}),{country:"PK",city:"Unknown"});
+assert.deepEqual(geoFromCf({country:"PK",city:"A".repeat(200)}),{country:"PK",city:"Unknown"});
+assert.equal(pathCity("/doctors/sukkur/dr-test/"),"sukkur");
+assert.equal(pathCity("/"),"other");
+assert.equal(cleanPath("/doctors/sukkur/dr-test/"),"/doctors/sukkur/dr-test/");
+console.log("PASS: visitor geography normalisation, missing location, invalid data and page-city classification.");
