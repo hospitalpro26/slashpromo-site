@@ -73,12 +73,13 @@ function browser(options={}){
 }
 
 const accepted=browser();
+accepted.local.setItem("slashpromo_location_prompt_v2",JSON.stringify({until:Date.now()+30*86400000})); // Old prompt suppression must not hide v3
 assert.equal(accepted.visit("/"),null,"First page must not interrupt");
 assert.equal(accepted.visit("/"),null,"Refresh of same page must not count");
-assert.equal(accepted.visit("/doctors/"),null,"Second page must not interrupt");
-const prompt=accepted.visit("/sukkur/");
-assert(prompt,"Third visited public page should show invitation");
+const prompt=accepted.visit("/doctors/");
+assert(prompt,"Second different public page should show invitation");
 assert.equal(accepted.getGpsCalls(),0,"No automatic permission request is allowed");
+assert.equal(JSON.parse(accepted.local.getItem("slashpromo_seen_pages_v3")).count,2,"Second-page threshold should be saved across tabs.");
 prompt.querySelector(".sp-location-allow").click();
 assert.equal(accepted.getGpsCalls(),1,"Browser geolocation must require explicit click");
 const city=JSON.parse(accepted.local.getItem("slashpromo_preferred_city_v1"));
@@ -90,35 +91,34 @@ assert(!JSON.stringify(accepted.local.dump()).includes("27.71"));
 assert(!JSON.stringify(accepted.local.dump()).includes("68.86"));
 assert.equal(accepted.visit("/khairpur/"),null,"Accepted users should not be reprompted.");
 
-/* Count across new browser tabs. */
+/* Cross-tab navigation must count because tab-scoped session storage resets. */
 const crossTab=browser();
 assert.equal(crossTab.visit("/"),null);
 crossTab.session.clear();
-assert.equal(crossTab.visit("/doctors/"),null);
-crossTab.session.clear();
-assert(crossTab.visit("/sukkur/"),"Third public page in a new tab must show invitation.");
-assert.equal(crossTab.getGpsCalls(),0,"GPS must not run automatically.");
-const reminder=JSON.parse(crossTab.local.getItem("slashpromo_location_prompt_v2"));
+assert(crossTab.visit("/doctors/"),"Second different page in a new browser tab should show the invitation.");
+assert.equal(crossTab.getGpsCalls(),0,"GPS must never run before opt-in.");
+const reminder=JSON.parse(crossTab.local.getItem("slashpromo_location_prompt_v3"));
 assert(reminder.until>Date.now()&&reminder.until<=Date.now()+86400000,
-  "Ignored invitation cooldown must be one day, not 30 days.");
+  "An unanswered invitation should be snoozed for only 24 hours.");
 
 const declined=browser();
-declined.visit("/");declined.visit("/doctors/");
+declined.visit("/");
 const declinePrompt=declined.visit("/karachi/");
 declinePrompt.querySelector(".sp-location-later").click();
 assert.equal(declined.getGpsCalls(),0);
 assert.equal(declined.visit("/sukkur/"),null,"Dismissed consent should not be repeatedly prompted.");
 
 const denied=browser({denied:true});
-denied.visit("/");denied.visit("/doctors/");
+denied.visit("/");
 const deniedPrompt=denied.visit("/karachi/");
 deniedPrompt.querySelector(".sp-location-allow").click();
 assert.equal(denied.getGpsCalls(),1);
 assert.equal(denied.local.getItem("slashpromo_preferred_city_v1"),null,"Denied location should not save a preference.");
 
 const privatePages=browser();
-privatePages.visit("/");privatePages.visit("/doctors/");
+privatePages.visit("/");
 assert.equal(privatePages.visit("/control-center/"),null,"Admin/private pages must never show the prompt.");
 assert.equal(privatePages.visit("/privacy/"),null,"Privacy policy must not trigger prompt.");
+assert.equal(privatePages.visit("/doctors/")!==null,true,"Private page navigation must not count toward public-page threshold.");
 
 console.log("PASS: opt-in after public page browsing, no automatic geolocation, consent, dismissal, denial, privacy, and location opt-out.");
