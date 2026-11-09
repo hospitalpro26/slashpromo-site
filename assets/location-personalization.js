@@ -9,9 +9,11 @@
   if(/^\/(?:admin|qa-admin|control-center|analytics|enquiries|secure-backups|api|privacy|cookie-policy|terms|contact|advertise|editorial-policy|advertising-policy|accessibility)(?:\/|$)/.test(path))return;
   if(!document.querySelector(".site-header"))return;
   const CITY_KEY="slashpromo_preferred_city_v1";
-  const PROMPT_KEY="slashpromo_location_prompt_v2";
-  const SEEN_KEY="slashpromo_seen_pages_v2";
-  const MONTH=30*24*60*60*1000;
+  const PROMPT_KEY="slashpromo_location_prompt_v3";
+  const SEEN_KEY="slashpromo_seen_pages_v3";
+  const DAY=24*60*60*1000;
+  const WEEK=7*DAY;
+  const MONTH=30*DAY;
   const now=Date.now();
   /* These are approximate directory-city centres, not visitor location records.
      Unknown/distant areas are never silently assigned to a city. */
@@ -83,14 +85,14 @@
     const actions=box.querySelector(".sp-location-actions");
     const manual=box.querySelector(".sp-location-manual");
     const dismiss=()=>{
-      put(localStorage,PROMPT_KEY,{until:Date.now()+MONTH});
+      put(localStorage,PROMPT_KEY,{until:Date.now()+WEEK});
       box.remove();
     };
     later.addEventListener("click",dismiss);
     close.addEventListener("click",dismiss);
     /* Displayed-but-unanswered prompts are snoozed for one day, not 30 days.
-       Explicit dismissal still pauses the invitation for 30 days. */
-    put(localStorage,PROMPT_KEY,{until:Date.now()+24*60*60*1000});
+       Explicit dismissal still pauses the invitation for seven days. */
+    put(localStorage,PROMPT_KEY,{until:Date.now()+DAY});
     allow.addEventListener("click",()=>{
       allow.disabled=true;
       later.disabled=true;
