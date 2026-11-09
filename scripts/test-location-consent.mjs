@@ -19,6 +19,7 @@ function storage(){
     getItem:key=>values.has(key)?values.get(key):null,
     setItem:(key,value)=>values.set(key,String(value)),
     removeItem:key=>values.delete(key),
+    clear:()=>values.clear(),
     dump:()=>Object.fromEntries(values)
   };
 }
@@ -89,6 +90,16 @@ assert.equal(accepted.events[0].detail.city,"Sukkur");
 assert(!JSON.stringify(accepted.local.dump()).includes("27.71"));
 assert(!JSON.stringify(accepted.local.dump()).includes("68.86"));
 assert.equal(accepted.visit("/khairpur/"),null,"Accepted users should not be reprompted.");
+
+/* Cross-tab navigation must count because tab-scoped session storage resets. */
+const crossTab=browser();
+assert.equal(crossTab.visit("/"),null);
+crossTab.session.clear();
+assert(crossTab.visit("/doctors/"),"Second different page in a new browser tab should show the invitation.");
+assert.equal(crossTab.getGpsCalls(),0,"GPS must never run before opt-in.");
+const reminder=JSON.parse(crossTab.local.getItem("slashpromo_location_prompt_v3"));
+assert(reminder.until>Date.now()&&reminder.until<=Date.now()+86400000,
+  "An unanswered invitation should be snoozed for only 24 hours.");
 
 const declined=browser();
 declined.visit("/");
