@@ -50,6 +50,7 @@ Status as of 2026-11-09. User requested gradual rollout of the approved premium 
 - Updated local SEO with geo.region `PK-PB`, canonical, OG/Twitter, CollectionPage/Breadcrumb/ItemList and FAQPage structured data.
 - Single-page rollback: branch from **current** main, copy only `lahore/index.html` from backup branch and merge a reviewed PR. Shared assets become unused if restored; do not reset entire repo or revert other doctors.
 - Test Staging and production for all 19 results, specialty tabs, hero search, 4 clinic associations, advertisement, footer, city Q&A, social links, mobile layout and canonical.
+- **Deferred, visible debt:** the 19 pre-existing Lahore *individual doctor profile pages* do not yet contain scoped Q&A placeholders. `scripts/audit-site.mjs` holds an explicit fixed allowlist of these 19 paths and produces one warning per page, while continuing to fail on any new Lahore doctor page without Q&A or any regression in other cities. This exception should be removed after the separate profile page rollout. The Lahore **city-root** page has the live moderated Q&A form now.
 
 ## Planned next independent batches (NOT yet deployed)
 1. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
