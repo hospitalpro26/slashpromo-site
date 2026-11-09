@@ -72,13 +72,13 @@ function browser(options={}){
 }
 
 const accepted=browser();
-accepted.local.setItem("slashpromo_location_prompt_v1",JSON.stringify({until:Date.now()+30*86400000})); // Old prompt suppression must not hide v2
+accepted.local.setItem("slashpromo_location_prompt_v2",JSON.stringify({until:Date.now()+30*86400000})); // Old prompt suppression must not hide v3
 assert.equal(accepted.visit("/"),null,"First page must not interrupt");
 assert.equal(accepted.visit("/"),null,"Refresh of same page must not count");
 const prompt=accepted.visit("/doctors/");
 assert(prompt,"Second different public page should show invitation");
 assert.equal(accepted.getGpsCalls(),0,"No automatic permission request is allowed");
-assert.equal(JSON.parse(accepted.local.getItem("slashpromo_seen_pages_v2")).count,2,"Second-page threshold should be saved across tabs.");
+assert.equal(JSON.parse(accepted.local.getItem("slashpromo_seen_pages_v3")).count,2,"Second-page threshold should be saved across tabs.");
 prompt.querySelector(".sp-location-allow").click();
 assert.equal(accepted.getGpsCalls(),1,"Browser geolocation must require explicit click");
 const city=JSON.parse(accepted.local.getItem("slashpromo_preferred_city_v1"));
