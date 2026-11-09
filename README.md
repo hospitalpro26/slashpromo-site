@@ -29,6 +29,13 @@ Framework-free static HTML, CSS and JavaScript:
 
 Contact for advertising and corrections: info@slashcure.com
 
+## Approximate visitor geography (9 November 2026)
+- Public page-view events already posted to `/api/analytics` now also increment `site_visitor_geo_daily` in the existing `QA_DB` Cloudflare D1 binding. The new aggregate D1 table and index are created automatically when first needed; **do not** run the separate ads `schema.sql` against `QA_DB`.
+- Daily rollups retain only `day`, the **city of the viewed page** (`page_city`), the **estimated visitor country** (`country`), the **estimated visitor city** (`visitor_city`), and a page-view count. Estimated city/country come from Cloudflare `request.cf` on the first-party event request, **not** from GPS, client-submitted fields, or raw IP storage. Missing or invalid estimates are labeled Unknown.
+- `/control-center/` shows the last 7 UTC days, while `/analytics/` shows 7/30/90-day country/city breakdowns that respect the existing **page-city** filter. Dashboards require `QA_ADMIN_KEY` and optional Cloudflare Access as before. Previously recorded page views cannot be retroactively assigned to visitor cities.
+- The existing `cities` / "traffic by city" widgets describe **pages about** Sukkur, Karachi etc., not visitors' locations. The new "visitor geography" widgets specifically describe estimates of where browsing requests came from. These are **page views, not unique visitors**; proxies, VPNs and mobile carrier egress can produce incorrect locations.
+- No phone number, SIM number, raw IP, GPS coordinate, individual identifier, search query or medical message is stored in visitor-geo metrics. The current four-table encrypted QA_DB logical backup remains unchanged and does **not** include the new visitor-geo aggregate table; keep Cloudflare D1 recovery enabled or arrange a separate full D1 export if preserving geographic history is required. No additional secrets or bindings are needed.
+
 ## Nationwide doctor finder
 - The homepage's `#find-doctors` section has searchable name/keyword, city/area suggestions (open to any city), and an exact specialty select.
 - `assets/native-directory.js` performs native in-browser filtering of `assets/directory.json`; it never redirects searches to Slashcure. Known city slugs use the `city` parameter; other city/area text uses `loc`. The keyword is forwarded as `q` and specialties as `specialty`.
