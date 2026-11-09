@@ -1,4 +1,4 @@
-name: Verify live private Enquiry Inbox
+name: Verify WhatsApp contact and protected legacy Enquiry Inbox
 on:
   push:
     branches: [main]
@@ -29,10 +29,11 @@ jobs:
           for file in functions/_lib/enquiries.js functions/api/enquiries.js functions/api/enquiries-admin.js functions/api/enquiry-replies.js assets/site.js; do
             node --check "$file"
           done
-          grep -q 'sp-wa-consent' assets/site.js
-          grep -q 'Save private enquiry' assets/site.js
-          grep -q 'From page URL:' assets/site.js
-          grep -q 'turnstile.render' assets/site.js
+          grep -q 'action="https://wa.me/' assets/site.js
+          grep -q 'id="sp-wa-email" type="email"' assets/site.js
+          grep -q 'name="text"' assets/site.js
+          grep -q 'Message us on WhatsApp' assets/site.js
+          ! grep -q 'fetch("/api/enquiries"' assets/site.js
           grep -q 'verifyTurnstile' functions/api/enquiries.js
           grep -q 'constantTimeEqual' functions/api/enquiries-admin.js
           grep -q 'whatsapp_sent_confirmed' functions/_lib/enquiries.js
@@ -63,15 +64,15 @@ jobs:
                grep -q 'Unauthorized' /tmp/enquiry-private.json && \
                grep -q 'Please agree before saving' /tmp/enquiry-rejected.json && \
                grep -q '"enabled":true' /tmp/enquiry-d1.json && \
-               grep -q 'Save private enquiry' /tmp/enquiry-site.js && \
+               grep -q 'Message us on WhatsApp' /tmp/enquiry-site.js && \
                grep -q 'Unauthorized' /tmp/enquiry-replies.json && \
                grep -q 'Unauthorized' /tmp/enquiry-replypost.json && \
                grep -q 'View reply history' /tmp/enquiry-inbox.html; then
-              echo 'PASS: Enquiry Inbox live; D1 bound; opt-in required; private replies API locked; composer/history published; no anonymous reply read/write.'
+              echo 'PASS: WhatsApp-first form is live; historical Enquiry Inbox and private replies API protected; anonymous access denied.'
               exit 0
             fi
             echo "Attempt $attempt inbox=$inbox config=$public unauthorized=$admin consent-rejected=$bad DB=$health script=$js replies=$replies replypost=$replypost"
             sleep 12
           done
-          echo 'Live private Enquiry Inbox validation failed. Check deployment, QA_DB or Turnstile bindings.' >&2
+          echo 'Live WhatsApp or protected legacy Enquiry Inbox verification failed. Check deployed JavaScript and private API controls.' >&2
           exit 1
