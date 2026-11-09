@@ -33,3 +33,23 @@ a.sp-cross-link-external .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!
 /* Direct visitors to the moderated page-specific question form. */
 .sp-cross-link-question{background:#eaf8f5!important;color:#145749!important;border-color:#a2dacb!important}
 .sp-cross-link-question:hover{background:#dcf2ed!important}
+
+/* Patient-facing, directory-backed clinic and OPD guidance (no guessed availability). */
+.sp-patient-guide{background:#f7fbff;color:#182d4b;border-top:1px solid #d7e5f3;border-bottom:1px solid #d7e5f3}
+.sp-patient-guide-wrap{max-width:1120px;margin:0 auto;padding:19px 22px 21px}
+.sp-patient-guide h2{font:800 clamp(18px,2.2vw,24px)/1.25 system-ui,-apple-system,Segoe UI,sans-serif;margin:0 0 6px;color:#173d71}
+.sp-patient-guide-intro{font-size:14px;line-height:1.6;margin:0 0 12px;color:#385775}
+.sp-patient-facts{display:flex;flex-wrap:wrap;gap:7px 20px;margin:11px 0}
+.sp-patient-fact{font-size:13px;line-height:1.55;color:#234468;margin:0;overflow-wrap:anywhere}
+.sp-patient-fact strong{color:#133d70}
+.sp-patient-guide-actions{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.sp-patient-guide-link{display:inline-flex;align-items:center;justify-content:center;text-align:center;padding:10px 13px;min-height:43px;border-radius:10px;border:1px solid #aac8e3;text-decoration:none!important;font-size:13px;font-weight:750;line-height:1.4}
+.sp-patient-guide-link:focus-visible{outline:3px solid #3985c7;outline-offset:2px}
+.sp-patient-primary{background:#155ca5;color:white!important;border-color:#155ca5}
+.sp-patient-primary:hover{background:#0f467f;color:white!important}
+.sp-patient-secondary{background:white;color:#15518b!important}
+.sp-patient-guide-note{color:#596f86;font-size:12px;line-height:1.5;margin:7px 0 0}
+.sp-card-patient-detail{font-size:12px;line-height:1.55;color:#4b617c;margin:5px 0;overflow-wrap:anywhere}
+.sp-card-patient-detail strong{color:#23476c}
+.sp-patient-card-action{background:#eff7ff;color:#15518b!important;border-color:#bfdaed}
+@media(max-width:620px){.sp-patient-guide-wrap{padding:16px}.sp-patient-guide-actions{flex-direction:column}.sp-patient-guide-link{width:100%}.sp-patient-facts{display:block}.sp-patient-fact{margin-bottom:6px}}

@@ -71,13 +71,13 @@
         if(r.kind!=="hospital" && (/^\/dr-[a-z0-9-]+\/$/i.test(path) || /^\/[a-z0-9-]+\/[a-z0-9-]+\/dr-[a-z0-9-]+\/$/i.test(path))) external=parsed.href;
       }
     }catch(_){}
-    if(external)return {url:external,label:r.kind==="hospital"?"View hospital on Slashcure ↗":"View doctor on Slashcure ↗",direct:true};
+    if(external)return {url:external,label:r.kind==="hospital"?"Hospital OPD & contact on Slashcure ↗":"Check OPD & contact on Slashcure ↗",direct:true};
     if(r.kind==="hospital")return {url:"https://slashcure.com/hospitals",label:"Browse hospitals on Slashcure ↗",direct:false};
     const search = new URL("https://slashcure.com/doctors");
     search.searchParams.set("type","all");
     if(r.city)search.searchParams.set("loc",r.city);
     if(r.name)search.searchParams.set("q",r.name);
-    return {url:search.href,label:"Find doctor on Slashcure ↗",direct:false};
+    return {url:search.href,label:"Search doctor & OPD on Slashcure ↗",direct:false};
   };
   const card = (r, sukDoctorIcons=false) => {
     const type=sukDoctorIcons ? specialtyIconType(r) : "";
@@ -91,9 +91,15 @@
         '<h3><a href="'+esc(r.url)+'">'+esc(r.name)+'</a></h3>'+
         '<p class="sp-card-specialty">'+esc(title(r))+'</p>'+
         (r.hospital?'<p class="sp-card-clinic">⌖ '+esc(r.hospital)+'</p>':"")+
+        (r.area?'<p class="sp-card-patient-detail"><strong>Listed area:</strong> '+esc(r.area)+'</p>':"")+
+        (r.kind==="hospital"&&r.address?'<p class="sp-card-patient-detail"><strong>Address:</strong> '+esc(r.address)+'</p>':"")+
         '<div class="sp-cross-profile-actions" aria-label="SlashPromo and Slashcure navigation">'+
           '<a class="sp-cross-link sp-cross-link-local" href="'+esc(r.url)+'">View SlashPromo Profile ↗</a>'+
           '<a class="sp-cross-link '+(external.direct?'sp-cross-link-external':'sp-cross-link-fallback')+'" href="'+esc(external.url)+'" target="_blank" rel="noopener noreferrer">'+esc(external.label)+'</a>'+
+          (r.kind==="hospital"&&typeof r.phone==="string"&&/^[+0-9\\s().-]{7,25}$/.test(r.phone.trim())?
+            '<a class="sp-cross-link sp-patient-card-action" href="tel:'+esc(r.phone.replace(/[^+\\d]/g,""))+'">Call published number</a>':"")+
+          (r.kind==="hospital"&&typeof r.address==="string"&&r.address.trim().length>8?
+            '<a class="sp-cross-link sp-patient-card-action" href="https://www.google.com/maps/search/?api=1&amp;query='+encodeURIComponent(r.address.trim())+'" target="_blank" rel="noopener noreferrer">Search address on map ↗</a>':"")+
         '</div>'+
       '</div></article>';
   };

@@ -6,7 +6,7 @@
   "use strict";
   const pathOf = path => String(path || "/").replace(/\/+/g, "/").replace(/\/?$/, "/");
   const currentPath = pathOf(location.pathname);
-  const css = "/assets/cross-profile-links.css?v=20261106-doctor-darkwordmark";
+  const css = "/assets/cross-profile-links.css?v=20261109-patient3";
   if(!document.querySelector('link[href="'+css+'"]')){
     const stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet"; stylesheet.href = css;
@@ -50,6 +50,80 @@
     a.href=url;
     if(/^https:\/\//.test(url)){a.target="_blank";a.rel="noopener noreferrer";}
     return a;
+  };
+  const phoneHref=value=>{
+    const raw=String(value||"").trim();
+    return /^[+0-9\s().-]{7,25}$/.test(raw) ? "tel:"+raw.replace(/[^+\d]/g,"") : "";
+  };
+  const mapUrl=address=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(address);
+  /* Display only published directory details. Do not invent OPD timings,
+     guarantee appointments or expose personal patient information. */
+  const profileGuide=(record,kind)=>{
+    const hero=document.querySelector("main .sp-profile-hero,main .zia-page-hero");
+    if(!hero||document.getElementById("sp-patient-profile-guide"))return;
+    const section=el("section","sp-patient-guide sp-patient-profile");
+    section.id="sp-patient-profile-guide";
+    section.setAttribute("aria-label","Patient information and next steps");
+    const wrap=el("div","sp-patient-guide-wrap");
+    wrap.append(el("h2","","Planning a visit?"));
+    const intro=el("p","sp-patient-guide-intro","Check the latest published OPD details and confirm with the healthcare provider before travelling.");
+    wrap.append(intro);
+    const facts=el("div","sp-patient-facts");
+    const addFact=(label,value)=>{
+      if(typeof value!=="string"||!value.trim())return;
+      const row=el("p","sp-patient-fact");
+      row.append(el("strong","",label+" "),document.createTextNode(value.trim()));
+      facts.append(row);
+    };
+    if(kind==="doctor"){
+      addFact("Clinic / hospital:",record.hospital);
+      addFact("Listed area:",record.area);
+      addFact("City:",record.city);
+    }else{
+      addFact("Facility:",record.name);
+      addFact("Address:",record.address);
+      addFact("City:",record.city);
+    }
+    if(facts.children.length)wrap.append(facts);
+    const actions=el("div","sp-patient-guide-actions");
+    const target=destination(record,kind);
+    const primary=link(target.url,"sp-patient-guide-link sp-patient-primary",
+      target.direct?"Check published OPD and contact details on Slashcure ↗":"Search Slashcure for published contact and OPD information ↗");
+    actions.append(primary);
+    if(kind==="hospital"){
+      const phone=phoneHref(record.phone);
+      if(phone)actions.append(link(phone,"sp-patient-guide-link sp-patient-secondary","Call published hospital number"));
+      if(typeof record.address==="string"&&record.address.trim().length>8){
+        actions.append(link(mapUrl(record.address.trim()),"sp-patient-guide-link sp-patient-secondary","Search address on Google Maps ↗"));
+      }
+    }
+    wrap.append(actions);
+    wrap.append(el("p","sp-patient-guide-note","Clinic schedules, contact information and facility associations can change. SlashPromo does not confirm live opening hours or guarantee an appointment."));
+    section.append(wrap);
+    hero.insertAdjacentElement("afterend",section);
+  };
+  const cityGuide=()=>{
+    const links={
+      "/sukkur/":["Sukkur","#listed-doctors","#listed-hospitals"],
+      "/karachi/":["Karachi","#listed-doctors","#karachi-healthcare"],
+      "/khairpur/":["Khairpur","#khairpur-doctors","#khairpur-facilities"],
+      "/shikarpur/":["Shikarpur","#shikarpur-doctors","#shikarpur-hospitals"]
+    };
+    const config=links[currentPath];
+    if(!config||document.getElementById("sp-patient-city-guide"))return;
+    const hero=document.querySelector("main .page-hero");
+    if(!hero)return;
+    const section=el("section","sp-patient-guide sp-patient-city");
+    section.id="sp-patient-city-guide";section.setAttribute("aria-label","Find healthcare in "+config[0]);
+    const wrap=el("div","sp-patient-guide-wrap");
+    wrap.append(el("h2","","Find care in "+config[0]));
+    wrap.append(el("p","sp-patient-guide-intro","Browse local doctors and healthcare facilities, then use their linked profiles to check published OPD hours and contact options."));
+    const actions=el("div","sp-patient-guide-actions");
+    if(document.getElementById(config[1].slice(1)))actions.append(link(config[1],"sp-patient-guide-link sp-patient-primary","Find local doctors ↓"));
+    if(document.getElementById(config[2].slice(1)))actions.append(link(config[2],"sp-patient-guide-link sp-patient-secondary","Explore hospitals & clinics ↓"));
+    wrap.append(actions);
+    wrap.append(el("p","sp-patient-guide-note","Published schedules may change. Always confirm clinic hours and appointments directly with the provider."));
+    section.append(wrap);hero.insertAdjacentElement("afterend",section);
   };
   const pair = (record,kind,isProfile) => {
     const container=el("div","sp-cross-profile-actions"+(isProfile?" sp-cross-profile-hero":""));
@@ -96,6 +170,7 @@
     };
     const patchCards=root=>(root||document).querySelectorAll(".sp-directory-card").forEach(patchCard);
     patchCards();
+    cityGuide();
     document.querySelectorAll(".sp-directory-grid[data-native-results]").forEach(root=>{
       if(root.dataset.spCrossObserved)return;
       root.dataset.spCrossObserved="true";
@@ -104,6 +179,7 @@
     const record=doctorMap.get(currentPath)||hospitalMap.get(currentPath);
     if(!record)return;
     const kind=doctorMap.has(currentPath)?"doctor":"hospital";
+    profileGuide(record,kind);
     const hero=document.querySelector(".sp-profile-hero .wrap, .zia-page-hero .wrap");
     if(hero&&!hero.querySelector(".sp-cross-profile-actions")){
       const anchor=hero.querySelector(".sp-profile-tags, .zia-hero-badges, h1");
