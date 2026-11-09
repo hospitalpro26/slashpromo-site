@@ -1654,6 +1654,21 @@
       "linkedDoctorIds": [
         "sukkur-dr-israr-ahmed-shaikh"
       ]
+    },
+    {
+      "id": "hyderabad-tabba-heart-institute",
+      "name": "Tabba Heart Institute – Hyderabad Outreach Center",
+      "city": "Hyderabad",
+      "category": "Cardiac hospital outreach center",
+      "description": "Tabba Heart Institute outreach medical center in Doctors' Lane, Saddar Cantt, Hyderabad. Its public hospital profile lists 13 cardiology, cardiac surgery, electrophysiology, neurology, general medicine and paediatric specialists; consult the original hospital profile for current information.",
+      "address": "Tabba Heart Outreach Center, Doctors' Lane, Saddar Cantt, Hyderabad, Sindh, Pakistan",
+      "phone": "0222784990",
+      "url": "/hospitals/hyderabad/tabba-heart-institute/",
+      "externalProfile": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "listingScope": "institutional-only",
+      "linkedDoctorIds": []
     }
   ]
 }
