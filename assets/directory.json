@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-08",
+  "updatedAt": "2026-11-09",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
@@ -722,6 +722,22 @@
       "externalProfile": "",
       "hospitalpro": "",
       "kind": "doctor"
+    },
+    {
+      "id": "pano-aqil-dr-saba-ali-raza-mahesar",
+      "name": "Dr. Saba Ali Raza Mahesar",
+      "city": "Pano Aqil",
+      "cities": [
+        "Pano Aqil"
+      ],
+      "specialty": "Consultant Gynecologist & Obstetrician",
+      "qualifications": "MD (Cuba), MCPS (Gynecology & Obstetrics)",
+      "hospital": "AJWA Clinic and Maternity Home",
+      "url": "/doctors/pano-aqil/dr-saba-ali-raza-mahesar/",
+      "externalProfile": "https://slashcure.com/gynecologists-obstetricians/panoaqil/dr-saba-ali-raza-mahesar",
+      "hospitalpro": "",
+      "kind": "doctor",
+      "area": "Near Mustafa Chowk, Cantt Road"
     },
     {
       "id": "peshawar-dr-rehmat-khan",

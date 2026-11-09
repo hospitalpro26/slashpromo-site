@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {parseDoctorUrl,extractDoctorLinks,extractDoctorName,escapeHtml,slug,doctorIdentity,isAlreadyListedByIdentity} from './sync-slashcure-doctors.mjs';
+import {parseDoctorUrl,extractDoctorLinks,extractDoctorName,escapeHtml,slug,normalizedCitySlug,doctorIdentity,isAlreadyListedByIdentity} from './sync-slashcure-doctors.mjs';
 assert.equal(parseDoctorUrl('https://slashcure.com/paediatricians/sukkur/dr-rizwana-qureshi')?.city,'sukkur');
 assert.equal(parseDoctorUrl('https://slashcure.com/hospitals/sukkur/dr-rizwana-qureshi'),null);
 assert.equal(parseDoctorUrl('https://example.com/paediatricians/sukkur/dr-rizwana-qureshi'),null);
@@ -19,3 +19,8 @@ assert.equal(isAlreadyListedByIdentity({city:'sukkur',doctorSlug:'dr-komal-kandh
 assert.equal(isAlreadyListedByIdentity({city:'sukkur',doctorSlug:'dr-another-doctor'},komalExisting),false);
 assert.equal(isAlreadyListedByIdentity({city:'karachi',doctorSlug:'dr-komal-kandhir-pt'},komalExisting),false);
 console.log('PASS: Duplicate doctor identity matched across physiotherapy specialty URLs and PT suffixes');
+assert.equal(normalizedCitySlug('panoaqil'),'pano-aqil');
+assert.equal(normalizedCitySlug('Pano Aqil'),'pano-aqil');
+assert.equal(parseDoctorUrl('https://slashcure.com/gynecologists-obstetricians/panoaqil/dr-saba-ali-raza-mahesar')?.city,'panoaqil');
+assert.equal(isAlreadyListedByIdentity({city:'panoaqil',doctorSlug:'dr-saba-ali-raza-mahesar'},[{name:'Dr. Saba Ali Raza Mahesar',city:'Pano Aqil',url:'/doctors/pano-aqil/dr-saba-ali-raza-mahesar/'}]),true);
+console.log('PASS: Pano Aqil URL spellings normalize and newly listed doctors do not duplicate');

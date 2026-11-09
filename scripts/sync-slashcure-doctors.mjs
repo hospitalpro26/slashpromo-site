@@ -14,6 +14,7 @@ const specialties={
   'orthopedic-surgeons':['Orthopedic Surgeon','orthopedic-surgeons'],
   'general-physicians':['General Physician','general-physicians'],
   'consultant-physicians':['Consultant Physician','consultant-physicians'],
+  'consultant-physiotherapists':['Physiotherapist','physiotherapists'],
   physiotherapists:['Physiotherapist','physiotherapists'],dentists:['Dentist','dentists'],
   'general-surgeons-laproscopic-surgeons':['General & Laparoscopic Surgeon','general-surgeons'],
   'general-surgeons':['General Surgeon','general-surgeons'],
@@ -27,13 +28,15 @@ const escapeHtml=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 const slug=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 // A doctor's name is the identity, not the exact profile URL or job suffix.
 // Example: /dr-komal-kandhir-pt and Dr. Komal Kandhir both resolve to komal-kandhir.
+const cityAliases={'panoaqil':'pano-aqil','pano-akil':'pano-aqil'};
+function normalizedCitySlug(value){const key=slug(value);return cityAliases[key]||key;}
 function doctorIdentity(value){
   return slug(value).replace(/^dr-/,'').replace(/-(?:pt|dpt|physiotherapist)$/,'');
 }
 function isAlreadyListedByIdentity(candidate,existingDoctors){
-  const key=candidate.city+':'+doctorIdentity(candidate.doctorSlug);
-  return existingDoctors.some(d=>slug(d.city)+':'+doctorIdentity(d.name)===key ||
-    slug(d.city)+':'+doctorIdentity(d.url?.split('/').filter(Boolean).at(-1))===key);
+  const key=normalizedCitySlug(candidate.city)+':'+doctorIdentity(candidate.doctorSlug);
+  return existingDoctors.some(d=>normalizedCitySlug(d.city)+':'+doctorIdentity(d.name)===key ||
+    normalizedCitySlug(d.city)+':'+doctorIdentity(d.url?.split('/').filter(Boolean).at(-1))===key);
 }
 
 function parseDoctorUrl(value){
@@ -116,9 +119,12 @@ function report(data){
 async function main(){
   const apply=process.argv.includes('--apply');
   const db=JSON.parse(fs.readFileSync('assets/directory.json','utf8'));
-  const cities=[...new Set(db.doctors.map(x=>slug(x.city)))].sort();
+  const cities=[...new Set(db.doctors.map(x=>normalizedCitySlug(x.city)))].sort();
   const sources=[],links=new Map();
-  const urls=[HOST+'/doctors/', ...cities.map(x=>HOST+'/doctors/'+x), HOST+'/sitemap.xml'];
+  // The national Slashcure directory is paginated. Inspect all early pages so
+  // a doctor outside page one (or a newly represented city) is not overlooked.
+  const urls=[...Array.from({length:8},(_,i)=>HOST+'/doctors/?page='+(i+1)),
+    ...cities.map(x=>HOST+'/doctors/'+x), HOST+'/sitemap.xml'];
   for(let i=0;i<urls.length;i+=4){
     const results=await Promise.all(urls.slice(i,i+4).map(async url=>{
       try {const text=await fetchPublic(url);return {url,result:'OK',links:extractDoctorLinks(text)};}
@@ -133,23 +139,24 @@ async function main(){
   const drafts=[],deferred=[];
   for(const item of newLinks.sort((a,b)=>a.source.localeCompare(b.source))){
     if(drafts.length>=3){deferred.push('Candidate remains queued: '+item.source);continue;}
-    const cityPage=item.city+'/index.html';
+    const citySlug=normalizedCitySlug(item.city);
+    const cityPage=citySlug+'/index.html';
     if(!fs.existsSync(cityPage)){deferred.push('City directory missing; review manually: '+item.source);continue;}
     let html;
     try {html=await fetchPublic(item.source);}catch(e){deferred.push('Could not inspect '+item.source+': '+e.message);continue;}
     const name=extractDoctorName(html,item.doctorSlug);
     if(!name){deferred.push('Doctor name requires manual verification: '+item.source);continue;}
-    const city=item.city.split('-').map(x=>x[0].toUpperCase()+x.slice(1)).join(' ');
+    const city=citySlug.split('-').map(x=>x[0].toUpperCase()+x.slice(1)).join(' ');
     if(byNameCity.has(slug(city)+':'+doctorIdentity(name))){deferred.push('Potential duplicate name/city: '+item.source);continue;}
-    const local='/doctors/'+item.city+'/'+item.doctorSlug+'/';
+    const local='/doctors/'+citySlug+'/'+item.doctorSlug+'/';
     if(fs.existsSync(local.slice(1)+'index.html'))continue;
     const info=specialties[item.specialtySlug];
-    const doctor={id:item.city+'-'+item.doctorSlug,name,city,cities:[city],specialty:info[0],hospital:'',qualifications:'',url:local,externalProfile:item.source,hospitalpro:'',kind:'doctor'};
+    const doctor={id:citySlug+'-'+item.doctorSlug,name,city,cities:[city],specialty:info[0],hospital:'',qualifications:'',url:local,externalProfile:item.source,hospitalpro:'',kind:'doctor'};
     drafts.push(doctor);
     if(apply){
       const file=local.slice(1)+'index.html';fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,doctorPage(doctor));
       addReviewLink(cityPage,doctor);
-      const spec='doctors/'+item.city+'/'+info[1]+'/index.html';
+      const spec='doctors/'+citySlug+'/'+info[1]+'/index.html';
       if(!addReviewLink(spec,doctor))deferred.push('Specialty page requires review: '+spec);
       db.doctors.push(doctor);byNameCity.add(slug(city)+':'+doctorIdentity(name));
     }
@@ -169,4 +176,4 @@ async function main(){
   if(!apply)console.log('Dry run: no files changed.');
 }
 if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1]))main().catch(e=>{console.error(e);process.exitCode=1;});
-export {parseDoctorUrl,extractDoctorLinks,extractDoctorName,escapeHtml,slug,doctorIdentity,isAlreadyListedByIdentity};
+export {parseDoctorUrl,extractDoctorLinks,extractDoctorName,escapeHtml,slug,normalizedCitySlug,doctorIdentity,isAlreadyListedByIdentity};
