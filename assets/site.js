@@ -378,3 +378,15 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
     }
   });
 })();
+
+/* Visitors browsing three public pages may optionally share browser location
+   to prioritize the nearest listed city. Permission is never requested automatically. */
+(function(){
+  "use strict";
+  if(/^\/(?:admin|qa-admin|control-center|analytics|enquiries|secure-backups|api)(?:\/|$)/i.test(location.pathname))return;
+  const link=document.createElement("link");
+  link.rel="stylesheet";
+  link.href="/assets/location-personalization.css?v=20261109-consent1";
+  document.head.appendChild(link);
+  import("/assets/location-personalization.js?v=20261109-consent1").catch(()=>{});
+})();
