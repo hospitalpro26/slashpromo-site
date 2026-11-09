@@ -1,0 +1,77 @@
+name: Daily review-first Slashcure doctor onboarding
+on:
+  schedule:
+    # 03:00 UTC is 08:00 Pakistan Standard Time (UTC+5).
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/sync-slashcure-doctors.mjs'
+      - 'scripts/test-sync-slashcure-doctors.mjs'
+      - '.github/workflows/draft-slashcure-doctors.yml'
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: review-first-slashcure-onboarding
+  cancel-in-progress: false
+jobs:
+  scan:
+    if: github.repository == 'hospitalpro26/slashpromo-site'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Test secure doctor URL discovery and escaping
+        run: node scripts/test-sync-slashcure-doctors.mjs
+      - name: Avoid duplicate pending doctor onboarding PRs
+        id: pending
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          count=$(gh pr list --state open --json headRefName --jq '[.[] | select(.headRefName | startswith("automation/slashcure-onboarding-"))] | length')
+          if [ "$count" != '0' ]; then
+            echo 'skip=true' >> "$GITHUB_OUTPUT"
+            echo 'An existing draft onboarding PR is pending review. No duplicate PR created.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'skip=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Scan Slashcure and prepare reviewable doctor drafts
+        if: steps.pending.outputs.skip != 'true'
+        run: node scripts/sync-slashcure-doctors.mjs --apply
+      - name: Store public discovery report
+        if: steps.pending.outputs.skip != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: slashcure-daily-discovery
+          path: .doctor-sync/
+          retention-days: 14
+      - name: Open GitHub draft pull request for approval
+        if: steps.pending.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git add -A -- assets/directory.json sitemap.xml doctors/
+          git add -u
+          if git diff --cached --quiet; then
+            echo 'No new verified doctor draft candidates; no PR needed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          branch="automation/slashcure-onboarding-${GITHUB_RUN_ID}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "$branch"
+          git commit -m 'Draft new Slashcure doctor profiles for human review'
+          git push -u origin "$branch"
+          if ! gh pr create --base main --head "$branch" --draft --title 'Review: new public Slashcure doctor profiles' --body-file .doctor-sync/review.md; then
+            echo "::error::Pull request creation failed. The review branch exists: $branch. Check Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests."
+            exit 1
+          fi
+          echo 'Draft doctor onboarding PR created; no production deployment until approved and merged.' >> "$GITHUB_STEP_SUMMARY"

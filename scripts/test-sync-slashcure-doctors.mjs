@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {parseDoctorUrl,extractDoctorLinks,extractDoctorName,escapeHtml,slug} from './sync-slashcure-doctors.mjs';
+assert.equal(parseDoctorUrl('https://slashcure.com/paediatricians/sukkur/dr-rizwana-qureshi')?.city,'sukkur');
+assert.equal(parseDoctorUrl('https://slashcure.com/hospitals/sukkur/dr-rizwana-qureshi'),null);
+assert.equal(parseDoctorUrl('https://example.com/paediatricians/sukkur/dr-rizwana-qureshi'),null);
+assert.equal(parseDoctorUrl('https://slashcure.com/paediatricians/sukkur/dr-rizwana-qureshi?token=x'),null);
+assert.equal(extractDoctorLinks('<a href="/paediatricians/sukkur/dr-rizwana-qureshi">Doctor</a><a href="/hospitals/sukkur/x">Hospital</a>').length,1);
+assert.equal(extractDoctorLinks('<loc>https://slashcure.com/paediatricians/sukkur/dr-rizwana-qureshi</loc>').length,1);
+assert.equal(extractDoctorName('<h1>Dr. Rizwana Qureshi</h1>','dr-rizwana-qureshi'),'Dr. Rizwana Qureshi');
+assert.equal(extractDoctorName('<h1>Welcome to Slashcure</h1>','dr-rizwana-qureshi'),null);
+assert.equal(extractDoctorName('<h1>Dr. Another Doctor</h1>','dr-rizwana-qureshi'),null);
+assert.equal(escapeHtml('<script>x</script>'),'&lt;script&gt;x&lt;/script&gt;');
+assert.equal(slug('Pano Aqil'),'pano-aqil');
+console.log('PASS: secure URL allowlist, source parsing, name verification, and HTML escaping');
