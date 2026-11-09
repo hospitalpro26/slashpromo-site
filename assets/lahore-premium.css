@@ -1,0 +1,130 @@
+/* Lahore premium design, scoped to the Lahore landing page only.
+   Keeps all profiles, source links, WhatsApp, advertising, and moderated Q&A. */
+.sp-lahore-premium .sp-quicknav{background:#10274f!important;color:#e2edfd;border-bottom:1px solid #294974}
+.sp-lahore-premium .sp-quicknav .wrap{padding:12px 0}
+.sp-lahore-premium .sp-quicknav-inner{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sp-lahore-premium .sp-quicknav-inner a{color:#d1e2fb;font-size:12px;font-weight:720;text-decoration:none}
+.sp-lahore-premium .sp-quicknav-inner a[aria-current="page"]{color:#8dbaff}
+.sp-lahore-premium .sp-quicknav-inner a:hover{text-decoration:underline}
+.sp-lahore-premium .sp-quicknav-sep{color:#6489c1}
+.sp-lahore-premium .sp-quicknav-message{color:#c6d9f7;font-size:11px;margin:8px 0 0;line-height:1.6}
+.sp-lahore-premium #lahore-doctors{background:#f4f8fd;padding:56px 0}
+.sp-lahore-premium #lahore-doctors h2{color:#17365f;font-size:clamp(27px,3.5vw,39px);letter-spacing:-1px;line-height:1.23}
+.sp-lahore-premium #lahore-doctors .lead{font-size:14px;color:#67809d;line-height:1.8}
+.sp-lahore-premium #lahore-doctors .sp-search-panel{
+  padding:20px;background:#fff;border:1px solid #e0e9f5;border-radius:15px;
+  box-shadow:0 11px 34px #173a6c0f;margin:22px 0
+}
+.sp-lahore-premium #lahore-doctors .sp-search-controls{gap:10px}
+.sp-lahore-premium #lahore-doctors .sp-search-field{background:#fff;border:1px solid #dfe8f5;border-radius:9px}
+.sp-lahore-premium #lahore-doctors .sp-search-field span{color:#6b83a1;font-size:11px}
+.sp-lahore-premium #lahore-doctors .sp-search-button{background:#e84d63;color:white;border:0;border-radius:9px;font-weight:820}
+.sp-lahore-premium #lahore-doctors .sp-results-heading{margin-top:24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sp-lahore-premium #lahore-doctors .sp-results-heading h3{color:#183960;font-size:18px}
+.sp-lahore-premium #lahore-doctors .sp-result-count{
+  background:#e5efff;color:#1d58c1;border-radius:9px;padding:7px 11px;
+  font-weight:820;font-size:11px
+}
+.sp-lahore-premium #lahore-doctors .sp-city-facets{
+  display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:21px 0 25px
+}
+.sp-lahore-premium #lahore-doctors .sp-specialty-pill{
+  appearance:none;border:1px solid #dce6f5;background:white;color:#536f90;
+  border-radius:9px;padding:10px 13px;font-weight:780;font-size:12px;
+  line-height:1.4;cursor:pointer;min-height:40px
+}
+.sp-lahore-premium #lahore-doctors .sp-specialty-pill:hover{border-color:#a5c2ed;color:#2057bd;background:#eaf3ff}
+.sp-lahore-premium #lahore-doctors .sp-specialty-pill.active,
+.sp-lahore-premium #lahore-doctors .sp-specialty-pill[aria-pressed="true"]{
+  border-color:#225ccd;background:#225ccd;color:white
+}
+.sp-lahore-premium #lahore-doctors .sp-specialty-pill:focus-visible{
+  outline:3px solid #8bb9fd;outline-offset:3px
+}
+.sp-lahore-premium #lahore-doctors [data-native-results]{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:0
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-directory-card{
+  min-width:0;background:#fff;border:1px solid #e0e9f4;border-radius:15px;
+  box-shadow:0 7px 25px #1837660c;padding:20px;display:flex;flex-direction:column
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-directory-card .sp-directory-body{padding:0;display:flex;flex-direction:column;flex:1}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-directory-icon{
+  color:#2259ba;background:#ebf3ff;border-radius:11px
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] h3{
+  color:#16365e;font-size:17px;line-height:1.34;letter-spacing:-.4px
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] h3 a{color:#18385e}
+.sp-lahore-premium #lahore-doctors [data-native-results] h3 a:hover{color:#225ac6}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-card-type{
+  color:#d34c66;font-size:10px;font-weight:850;letter-spacing:.65px
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-card-specialty{
+  color:#456b94;font-size:12px;font-weight:780;line-height:1.5
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-card-clinic{
+  font-size:12px;color:#768ba5;line-height:1.6
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-cross-profile-actions{
+  border-top:1px solid #edf1f6;padding-top:12px;margin-top:auto;
+  display:flex;flex-wrap:wrap;align-items:center;gap:7px
+}
+.sp-lahore-premium #lahore-doctors [data-native-results] .sp-cross-profile-actions a{
+  font-size:11px;font-weight:790;line-height:1.5
+}
+.sp-lahore-premium #lahore-doctors [data-native-more]{
+  display:block;background:#fff;color:#235abb;border:1px solid #bdd0ef;
+  border-radius:10px;padding:12px 20px;font-size:13px;font-weight:830;
+  margin:27px auto 0;min-width:214px
+}
+.sp-lahore-premium #lahore-doctors [data-native-more]:hover{background:#edf5ff}
+.sp-lahore-premium #lahore-doctors [data-native-more][hidden]{display:none!important}
+.sp-lahore-premium #lahore-opd{background:#fff;padding:50px 0}
+.sp-lahore-premium #lahore-opd h2{font-size:clamp(27px,3.2vw,36px);color:#17355e}
+.sp-lahore-premium #lahore-opd .lead{color:#687f9b}
+.sp-lahore-premium #lahore-opd .btn{border-radius:10px}
+.sp-lahore-premium .sp-lahore-clinics{background:#f6f9fd;padding:55px 0}
+.sp-lahore-premium .sp-lahore-clinics h2{color:#173762;font-size:clamp(27px,3.3vw,38px);letter-spacing:-1px}
+.sp-lahore-premium .sp-lahore-clinics .lead{color:#657c99;font-size:14px;line-height:1.8}
+.sp-lahore-premium .sp-lahore-clinics .sp-area-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:25px
+}
+.sp-lahore-premium .sp-lahore-clinics .sp-area-card{
+  border-radius:15px;background:#fff;border:1px solid #e0e9f5;padding:22px;
+  box-shadow:0 7px 22px #1735670c;display:flex;flex-direction:column;min-width:0
+}
+.sp-lahore-premium .sp-lahore-clinics .sp-area-card h3{
+  font-size:18px;line-height:1.4;color:#173760;margin-top:0
+}
+.sp-lahore-premium .sp-lahore-clinics .sp-area-card p{
+  font-size:13px;line-height:1.75;color:#637b99
+}
+.sp-lahore-premium .sp-lahore-clinics .sp-area-card a{
+  font-size:12px;font-weight:780;color:#235bc6
+}
+.sp-lahore-premium .sp-lahore-ad{background:#fff}
+.sp-lahore-premium #sp-qa-fallback{background:#f4f8fd}
+.sp-lahore-premium .sp-lahore-faq{background:#fff;padding:48px 0}
+.sp-lahore-premium .sp-lahore-faq h2{font-size:clamp(27px,3.3vw,38px)}
+.sp-lahore-premium .sp-lahore-faq details{
+  background:#f7faff;border:1px solid #e0e9f5;border-radius:12px;
+  padding:17px 21px;margin-top:12px
+}
+.sp-lahore-premium .sp-lahore-faq summary{font-weight:800;color:#1a3a67;cursor:pointer}
+.sp-lahore-premium .sp-lahore-faq p{font-size:13px;color:#637b99;line-height:1.8}
+@media(max-width:980px){
+ .sp-lahore-premium #lahore-doctors [data-native-results]{
+  grid-template-columns:repeat(2,minmax(0,1fr))
+ }
+}
+@media(max-width:650px){
+ .sp-lahore-premium #lahore-doctors [data-native-results],
+ .sp-lahore-premium .sp-lahore-clinics .sp-area-grid{grid-template-columns:1fr}
+ .sp-lahore-premium #lahore-doctors .sp-search-panel{padding:15px}
+ .sp-lahore-premium .sp-quicknav-inner{gap:8px 10px}
+ .sp-lahore-premium .sp-quicknav-inner a{font-size:11px}
+ .sp-lahore-premium .sp-quicknav-message{font-size:10px}
+ .sp-lahore-premium #lahore-doctors .sp-city-facets{gap:7px}
+ .sp-lahore-premium #lahore-doctors .sp-specialty-pill{font-size:11px;padding:9px 12px}
+}

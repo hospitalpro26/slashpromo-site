@@ -39,12 +39,24 @@ Status as of 2026-11-09. User requested gradual rollout of the approved premium 
 - Safe rollback restores only `karachi/index.html` from backup onto a fresh rollback branch based on current main. Avoid resetting all commits or touching doctor, hospital, Q&A or other city files.
 - All changes require preview validation before merge, then live QA on the canonical URL.
 
+## Phase 4 — Lahore (this PR)
+- Redesigned **only** `/lahore/` with the existing opt-in premium blue/red city template; all doctor/hospital/profile records and other city pages are preserved.
+- Original exact HTML protected in backup branch `backup/lahore-before-premium-20261109` at https://github.com/hospitalpro26/slashpromo-site/blob/backup/lahore-before-premium-20261109/lahore/index.html
+- Preserved all 19 individual Lahore doctor URLs and original individual-doctor-vs-hospital Slashcure link labelling. 19 doctor results initially show six cards on desktop with Show more revealing another six.
+- Specialty pills based on live doctor data; enhanced opt-in shared facets for Family Medicine, Endocrinologists and Neurosurgeons, alongside existing gynecology, physiotherapy, surgery, paediatrics and dentistry.
+- Added public provider associations (NEO Medical Center, Iqra Medical Complex, Rehab Expert Physiotherapy and Hamayon Hospital) from previously published doctor records; no unsupported operating hours or independent clinical rankings.
+- Retained established contact/WhatsApp and social-media integrations; added read-only Slashcure promotion, privacy/footer, Lahore FAQ and moderated Lahore city questions.
+- Allowed Lahore via `assets/city-questions.js` and `functions/_lib/qa.js` so its existing secure Q&A workflow can operate; this does not circumvent moderation, Turnstile, consent or validation.
+- Updated local SEO with geo.region `PK-PB`, canonical, OG/Twitter, CollectionPage/Breadcrumb/ItemList and FAQPage structured data.
+- Single-page rollback: branch from **current** main, copy only `lahore/index.html` from backup branch and merge a reviewed PR. Shared assets become unused if restored; do not reset entire repo or revert other doctors.
+- Test Staging and production for all 19 results, specialty tabs, hero search, 4 clinic associations, advertisement, footer, city Q&A, social links, mobile layout and canonical.
+- **Deferred, visible debt:** the 19 pre-existing Lahore *individual doctor profile pages* do not yet contain scoped Q&A placeholders. `scripts/audit-site.mjs` holds an explicit fixed allowlist of these 19 paths and produces one warning per page, while continuing to fail on any new Lahore doctor page without Q&A or any regression in other cities. This exception should be removed after the separate profile page rollout. The Lahore **city-root** page has the live moderated Q&A form now.
+
 ## Planned next independent batches (NOT yet deployed)
-1. Lahore `/lahore/`, including NEO Medical Center and local doctor links.
-2. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
-3. City specialty subpages and hospital directory/clinic pages.
-4. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
-5. Remaining public information pages; maintain high contrast and text readability.
+1. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
+2. City specialty subpages and hospital directory/clinic pages.
+3. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
+4. Remaining public information pages; maintain high contrast and text readability.
 
 ## Safe rollback for Khairpur
 1. From **current** main, open a fresh rollback branch.

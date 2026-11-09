@@ -13,7 +13,7 @@
   const title = record => record.specialty || record.category || "Healthcare professional";
   /* Optional local specialty pills. Other city pages do not activate this UI. */
   const sukDoctorFacetDefinitions = [
-    ["physician","Consultant Physicians"],["neuro","Neurologists"],["gastro","Gastroenterologists"],
+    ["physician","Consultant Physicians"],["family","Family Medicine"],["endocrine","Endocrinologists"],["neuro","Neurologists"],["neurosurgeon","Neurosurgeons"],["gastro","Gastroenterologists"],
     ["cardio","Cardiologists"],["paeds","Paediatricians"],
     ["gynae","Gynecologists"],["surgeon","Surgeons"],
     ["orthopedic","Orthopedic Surgeons"],["physio","Physiotherapists"],
@@ -24,7 +24,10 @@
   ];
   const sukDoctorFacet = record => {
     const s=normal(title(record));
+    if(/neurosurg|brain and spine surgeon/.test(s))return "neurosurgeon";
     if(/neurolog|neurophysician/.test(s))return "neuro";
+    if(/endocrinolog|diabetolog/.test(s))return "endocrine";
+    if(/family medicine|family physician|general practitioner/.test(s))return "family";
     if(/gastroenterol|hepatolog|liver specialist/.test(s))return "gastro";
     if(/cardiolog|cardiac/.test(s))return "cardio";
     if(/gynecol|obstetric/.test(s))return "gynae";
