@@ -33,11 +33,13 @@
   if(selected)remove(localStorage,CITY_KEY);
   const lastPrompt=get(localStorage,PROMPT_KEY);
   if(lastPrompt && Number(lastPrompt.until)>now)return;
-  let seen=get(sessionStorage,SEEN_KEY);
-  if(!Array.isArray(seen))seen=[];
+  /* Track a page count and only the most recent path, not browsing history. */
+  const previous=get(sessionStorage,SEEN_KEY);
   const normalized=path.endsWith("/")?path:path+"/";
-  seen=[...new Set([...seen.filter(p=>typeof p==="string"&&p.length<190),normalized])].slice(-20);
-  if(!put(sessionStorage,SEEN_KEY,seen)||seen.length<3)return;
+  const seen=(previous&&typeof previous.last==="string"&&Number.isInteger(previous.count))
+    ? {last:normalized,count:Math.min(3,previous.count+(previous.last===normalized?0:1))}
+    : {last:normalized,count:1};
+  if(!put(sessionStorage,SEEN_KEY,seen)||seen.count<3)return;
 
   function distanceKm(lat1,lon1,lat2,lon2){
     const rad=Math.PI/180;
