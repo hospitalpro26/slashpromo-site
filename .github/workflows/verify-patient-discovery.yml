@@ -1,0 +1,52 @@
+name: Verify patient discovery and contact guidance
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/cross-profile-links.js'
+      - 'assets/cross-profile-links.css'
+      - 'assets/native-directory.js'
+      - 'assets/site.js'
+      - 'assets/directory.json'
+      - 'sukkur/index.html'
+      - 'khairpur/index.html'
+      - 'karachi/index.html'
+      - 'shikarpur/index.html'
+      - 'scripts/test-patient-discovery.mjs'
+      - '.github/workflows/verify-patient-discovery.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-patient-discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax and grounded patient navigation
+        run: |
+          set -euo pipefail
+          node --check assets/site.js
+          node --check assets/native-directory.js
+          node --check assets/cross-profile-links.js
+          node --check scripts/test-patient-discovery.mjs
+          node scripts/test-patient-discovery.mjs
+      - name: Confirm public deployment contains patient assets
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            site=$(curl -sSL --max-time 15 -o /tmp/patient-city.html -w '%{http_code}' "https://slashpromo.com/sukkur/?verify=$GITHUB_SHA" || true)
+            js=$(curl -sSL --max-time 15 -o /tmp/patient-guide.js -w '%{http_code}' 'https://slashpromo.com/assets/cross-profile-links.js?v=20261109-patient3' || true)
+            native=$(curl -sSL --max-time 15 -o /tmp/patient-directory.js -w '%{http_code}' 'https://slashpromo.com/assets/native-directory.js?v=20261109-patient3' || true)
+            if [ "$site" = 200 ] && [ "$js" = 200 ] && [ "$native" = 200 ] && \
+               grep -q 'site.js?v=20261109-patient3' /tmp/patient-city.html && \
+               grep -q 'Planning a visit?' /tmp/patient-guide.js && \
+               grep -q 'Check OPD' /tmp/patient-directory.js; then
+              echo 'PASS: Sukkur uses fresh patient guidance; directory and profile assets deployed.'
+              exit 0
+            fi
+            echo "Attempt $attempt: city=$site guide=$js directory=$native"
+            sleep 10
+          done
+          echo 'Live deployment verification pending or failed; inspect Cloudflare Pages.' >&2
+          exit 1
