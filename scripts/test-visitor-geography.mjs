@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
-import {geoFromCf,pathCity,cleanPath,countVisitorGeo} from "../functions/_lib/analytics.js";
+import {readFileSync} from "node:fs";
+const lib=readFileSync(new URL("../functions/_lib/analytics.js",import.meta.url),"utf8");
+const {geoFromCf,pathCity,cleanPath,countVisitorGeo}=await import("data:text/javascript,"+encodeURIComponent(lib));
 assert.deepEqual(geoFromCf({country:"pk",city:"Sukkur"}),{country:"PK",city:"Sukkur"});
 assert.deepEqual(geoFromCf({country:"US",city:"New York"}),{country:"US",city:"New York"});
 assert.deepEqual(geoFromCf({country:"PK",city:"  Karachi  "}),{country:"PK",city:"Karachi"});
