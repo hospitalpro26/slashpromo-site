@@ -1,0 +1,86 @@
+{
+  "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute",
+  "city": "Hyderabad",
+  "hospital": "Tabba Heart Institute – Hyderabad Outreach Center",
+  "provenance": "Read from Tabba Heart Institute's Hyderabad public Slashcure hospital profile, 2026-11-09. No schedules, availability states or consultation times are copied.",
+  "doctors": [
+    {
+      "name": "Dr. Aftab Ahmed Shaikh",
+      "specialty": "Consultant Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Chander Raja",
+      "specialty": "General Physician",
+      "group": "medicine",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Saeed Ahmed",
+      "specialty": "Paediatrician",
+      "group": "paediatrics",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Shahbaz Khan",
+      "specialty": "Consultant Neurophysician",
+      "group": "neurology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Adeel Ur Rehman",
+      "specialty": "Consultant Cardiologist · Cardiac Imaging",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Fariha Sadiq Ali",
+      "specialty": "Consultant Electrophysiologist · Pacemaker & ICD Specialist",
+      "group": "electrophysiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Irfan Illahi Chandna",
+      "specialty": "Consultant Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Khurshed Hassan",
+      "specialty": "Consultant Interventional Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Muhammad Ali",
+      "specialty": "Consultant Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Shakir Lakhani",
+      "specialty": "Consultant Interventional Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Siham Qureshi",
+      "specialty": "Cardiac Surgeon",
+      "group": "cardiac_surgery",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Sohail Abrar Khan",
+      "specialty": "Consultant Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    },
+    {
+      "name": "Dr. Vinod Kumar",
+      "specialty": "Consultant Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/hyderabad/tabba-heart-institute"
+    }
+  ]
+}
