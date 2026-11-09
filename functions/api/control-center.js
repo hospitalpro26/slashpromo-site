@@ -26,11 +26,14 @@ export async function onRequestGet(ctx){
       db.prepare("SELECT status,COUNT(*) AS n,SUM(CASE WHEN (status='new' AND created_at<?) OR (status='contacted' AND updated_at<?) THEN 1 ELSE 0 END) AS overdue FROM enquiries GROUP BY status").bind(overdueAt,overdueAt),
       db.prepare("SELECT event,SUM(n) AS n FROM site_analytics_daily WHERE day>=? GROUP BY event").bind(sevenDays),
       db.prepare("SELECT city,SUM(n) AS views FROM site_analytics_daily WHERE day>=? AND event='page_view' GROUP BY city ORDER BY views DESC LIMIT 8").bind(sevenDays),
+      db.prepare("SELECT country,SUM(n) AS views FROM site_visitor_geo_daily WHERE day>=? GROUP BY country ORDER BY views DESC,country ASC LIMIT 12").bind(sevenDays),
+      db.prepare("SELECT country,visitor_city,SUM(n) AS views FROM site_visitor_geo_daily WHERE day>=? GROUP BY country,visitor_city ORDER BY views DESC,visitor_city ASC LIMIT 15").bind(sevenDays),
+      db.prepare("SELECT COALESCE(SUM(n),0) AS recorded,COALESCE(SUM(CASE WHEN country='ZZ' THEN n ELSE 0 END),0) AS unknown_country FROM site_visitor_geo_daily WHERE day>=?").bind(sevenDays),
       db.prepare("SELECT id,city,category,COALESCE(NULLIF(page_path,''),'/'||city||'/') AS page_path,created_at FROM questions WHERE status='pending' ORDER BY created_at ASC,id ASC LIMIT 12"),
       db.prepare("SELECT id,source_city,source_path,source_title,created_at,updated_at,status,CASE WHEN visitor_phone IS NOT NULL AND trim(visitor_phone)!='' THEN 1 ELSE 0 END AS has_phone FROM enquiries WHERE status IN ('new','contacted') ORDER BY CASE WHEN status='new' THEN created_at ELSE updated_at END ASC,id ASC LIMIT 12"),
       db.prepare("SELECT status,COUNT(*) AS n FROM enquiry_replies GROUP BY status")
     ];
-    const [qCounts,eCounts,traffic,cities,questions,enquiries,replies]=await db.batch(requests);
+    const [qCounts,eCounts,traffic,cities,geoCountries,geoCities,geoTotals,questions,enquiries,replies]=await db.batch(requests);
     const q={total:0,pending:0,approved:0,rejected:0,overdue:0};
     const e={total:0,new:0,contacted:0,resolved:0,closed:0,overdue:0};
     const trafficTotals={page_view:0,slashcure_click:0,whatsapp_open:0,whatsapp_continue:0,qa_submitted:0};
@@ -49,6 +52,14 @@ export async function onRequestGet(ctx){
       generatedAt:now.toISOString(),overdueHours:24,trafficWindowDays:7,
       summary:{questions:q,enquiries:e,traffic:trafficTotals,replies:replyTotals},
       cities:(cities.results||[]).map(row=>({city:row.city,views:Number(row.views)||0})),
+      visitorGeography:{
+        source:"Cloudflare approximate IP geolocation; page views only, not unique people",
+        days:7,
+        recordedPageViews:Number(geoTotals.results?.[0]?.recorded)||0,
+        unknownCountryPageViews:Number(geoTotals.results?.[0]?.unknown_country)||0,
+        countries:(geoCountries.results||[]).map(row=>({country:row.country,views:Number(row.views)||0})),
+        cities:(geoCities.results||[]).map(row=>({country:row.country,city:row.visitor_city,views:Number(row.views)||0}))
+      },
       tasks:{
         pendingQuestions:questions.results||[],
         openEnquiries:enquiries.results||[]
