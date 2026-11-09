@@ -58,6 +58,28 @@ async function verifyKeyIsLive(){
   }
   throw Error("IndexNow key file is not live; notification skipped to prevent unverified submission.");
 }
+/* A successful IndexNow request is only a notification, not proof of indexing.
+   Verify that at least one current canonical page is reachable from the
+   public hostname before sending notifications after a deployment. */
+async function verifyPublishedPage(url){
+  for(let attempt=1;attempt<=12;attempt++){
+    try{
+      const response=await fetch(url,{
+        method:"GET",
+        redirect:"follow",
+        headers:{"Cache-Control":"no-cache"},
+        signal:AbortSignal.timeout(15000)
+      });
+      if(response.ok){
+        console.log("Live canonical page is reachable: "+url);
+        return;
+      }
+      console.log("Published page not ready: HTTP "+response.status+" ("+attempt+"/12)");
+    }catch(error){console.log("Checking live page: "+error.message)}
+    if(attempt<12)await sleep(10000);
+  }
+  throw Error("Public canonical page could not be fetched; IndexNow notification postponed.");
+}
 async function submitBatch(urls){
   const response=await fetch("https://api.indexnow.org/IndexNow",{
     method:"POST",
@@ -93,6 +115,9 @@ async function main(){
     if(files.includes("sitemap.xml")){
       const old=previousSitemap(base);
       for(const url of sitemap)if(!old.has(url))urls.add(url);
+      /* Notify IndexNow about removed or redirected canonical URLs as well.
+         These must no longer be in the current sitemap. */
+      for(const url of old)if(!sitemap.has(url))urls.add(url);
     }
   }
   if(!urls.size){
@@ -101,9 +126,10 @@ async function main(){
   }
   console.log("Preparing "+urls.size+" canonical URL(s) from the current sitemap.");
   await verifyKeyIsLive();
-  // Allow the Git-integrated Cloudflare Pages deployment to complete after the
-  // GitHub push, then verify the first URL is reachable before submission.
+  // Allow Cloudflare Pages to publish, then verify a current canonical page.
   if(process.env.FULL_INDEX!=="true")await sleep(60000);
+  const currentPublished=[...urls].find(url=>sitemap.has(url))||ORIGIN+"/";
+  await verifyPublishedPage(currentPublished);
   const ordered=[...urls].sort();
   for(let index=0;index<ordered.length;index+=500){
     await submitBatch(ordered.slice(index,index+500));
