@@ -52,11 +52,20 @@ Status as of 2026-11-09. User requested gradual rollout of the approved premium 
 - Test Staging and production for all 19 results, specialty tabs, hero search, 4 clinic associations, advertisement, footer, city Q&A, social links, mobile layout and canonical.
 - **Deferred, visible debt:** the 19 pre-existing Lahore *individual doctor profile pages* do not yet contain scoped Q&A placeholders. `scripts/audit-site.mjs` holds an explicit fixed allowlist of these 19 paths and produces one warning per page, while continuing to fail on any new Lahore doctor page without Q&A or any regression in other cities. This exception should be removed after the separate profile page rollout. The Lahore **city-root** page has the live moderated Q&A form now.
 
+## Phase 5 — Hyderabad (this PR)
+- Only `/hyderabad/` upgraded with the same opt-in premium dark-blue/red city design. The 2 already published Hyderabad doctor records remain unchanged, along with their original internal and external Slashcure profile links.
+- Preserve original HTML in GitHub branch `backup/hyderabad-before-premium-20261109`: https://github.com/hospitalpro26/slashpromo-site/blob/backup/hyderabad-before-premium-20261109/hyderabad/index.html
+- Native city-scoped doctor search and only present specialties: Neurosurgeons and Dentists. Both doctors are initially visible (no unnecessary Show more button).
+- SEO/GEO canonical `https://slashpromo.com/hyderabad/`, PK-SD, Open Graph/Twitter metadata, original CollectionPage/ItemList/Breadcrumb schema and added FAQPage structured data.
+- Association card for Jeejal Maa Hospital/Qasimabad is derived from Dr. Ali Haseeb Qazi's published provider record; no independent hospital listing is asserted. The second card links to Dr. Rehana Asghar's public dental profile without guessing a clinic.
+- Keeps moderated Hyderabad Q&A, WhatsApp contact, social links, analytics, full policy/contact footer and city-relevant Slashcure partner strip.
+- Safe rollback: from **current main** create a rollback branch; restore only `hyderabad/index.html` from backup, test and merge, not a repository-wide reset. New unused scoped stylesheet may remain.
+- Staging and live QA: 2 doctors, Neurosurgeons/Dentists specialty pills, hero search, provider links, location card, Q&A, advertising, legal links and mobile layout.
+
 ## Planned next independent batches (NOT yet deployed)
-1. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
-2. City specialty subpages and hospital directory/clinic pages.
-3. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
-4. Remaining public information pages; maintain high contrast and text readability.
+1. City specialty subpages and hospital directory/clinic pages.
+2. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
+3. Remaining public information pages; maintain high contrast and text readability.
 
 ## Safe rollback for Khairpur
 1. From **current** main, open a fresh rollback branch.
