@@ -13,7 +13,7 @@
   const title = record => record.specialty || record.category || "Healthcare professional";
   /* Optional local specialty pills. Other city pages do not activate this UI. */
   const sukDoctorFacetDefinitions = [
-    ["physician","Consultant Physicians"],["gastro","Gastroenterologists"],
+    ["physician","Consultant Physicians"],["neuro","Neurologists"],["gastro","Gastroenterologists"],
     ["cardio","Cardiologists"],["paeds","Paediatricians"],
     ["gynae","Gynecologists"],["surgeon","Surgeons"],
     ["orthopedic","Orthopedic Surgeons"],["physio","Physiotherapists"],
@@ -24,6 +24,7 @@
   ];
   const sukDoctorFacet = record => {
     const s=normal(title(record));
+    if(/neurolog|neurophysician/.test(s))return "neuro";
     if(/gastroenterol|hepatolog|liver specialist/.test(s))return "gastro";
     if(/cardiolog|cardiac/.test(s))return "cardio";
     if(/gynecol|obstetric/.test(s))return "gynae";
@@ -160,7 +161,7 @@
     const label = root.querySelector("[data-native-count]");
     const load = root.querySelector("[data-native-more]");
     const reset = root.querySelector("[data-native-reset]");
-    const previewLimit = type==="doctor" && scope==="sukkur" && root.hasAttribute("data-native-preview-limit") ? Math.max(1,Math.min(18,Number(root.dataset.nativePreviewLimit)||6)) : 0;
+    const previewLimit = type==="doctor" && root.hasAttribute("data-native-preview-limit") ? Math.max(1,Math.min(18,Number(root.dataset.nativePreviewLimit)||6)) : 0;
     const facetTabs = previewLimit ? root.querySelector("[data-native-facets]") : null;
     let activeFacet="";
     if(!output)return;
@@ -213,7 +214,7 @@
         btn.className="sp-specialty-pill";
         btn.dataset.nativeFacet=key;
         btn.textContent=label;
-        if(key)btn.title=String(counts.get(key))+" Sukkur doctor profile(s)";
+        if(key)btn.title=String(counts.get(key))+" "+(initialCity||"local")+" doctor profile(s)";
         facetTabs.appendChild(btn);
       });
       setFacetState();
