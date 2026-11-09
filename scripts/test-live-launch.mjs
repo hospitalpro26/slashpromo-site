@@ -80,7 +80,7 @@ async function main(){
     "<loc>https://slashpromo.com/sukkur/</loc>",
     "<loc>https://slashpromo.com/karachi/</loc>"
   ]);
-  const urls=[...sitemap.text.matchAll(/<loc>(https:\/\/slashpromo\.com\/[^<]+)<\/loc>/g)];
+  const urls=[...sitemap.text.matchAll(/<loc>(https:\/\/slashpromo\.com\/[^<]*)<\/loc>/g)];
   assert(urls.length>=161,"Sitemap should contain at least 161 canonical URLs");
   await checked("/robots.txt",["Sitemap: https://slashpromo.com/sitemap.xml"]);
   await checked("/assets/site.js",[
