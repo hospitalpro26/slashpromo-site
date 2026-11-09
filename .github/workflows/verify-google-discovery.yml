@@ -1,0 +1,55 @@
+name: Verify Pano Aqil Google crawl readiness
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sitemap.xml'
+      - 'pano-aqil/**'
+      - 'doctors/pano-aqil/**'
+      - 'robots.txt'
+      - 'index.html'
+      - 'cities/index.html'
+      - 'scripts/test-google-discovery.mjs'
+      - '.github/workflows/verify-google-discovery.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check sitemap, meta robots, canonicals, and internal links
+        run: node scripts/test-google-discovery.mjs
+      - name: Check live Googlebot-accessible pages and sitemap
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            sm=$(curl -LsS --max-time 18 -o /tmp/pano-google-sitemap -w '%{http_code}' "https://slashpromo.com/sitemap.xml?check=$GITHUB_SHA" || true)
+            rb=$(curl -LsS --max-time 18 -o /tmp/pano-google-robots -w '%{http_code}' "https://slashpromo.com/robots.txt?check=$GITHUB_SHA" || true)
+            if [ "$sm" != "200" ] || [ "$rb" != "200" ]; then sleep 10;continue;fi
+            if ! grep -q 'Sitemap: https://slashpromo.com/sitemap.xml' /tmp/pano-google-robots; then echo 'Sitemap not discoverable in robots.txt'; exit 1;fi
+            ok=1
+            for path in /pano-aqil/ /doctors/pano-aqil/dr-saba-ali-raza-mahesar/ /doctors/pano-aqil/dr-farooq-illahi/ /doctors/pano-aqil/dr-parvez-ahmed/; do
+              url="https://slashpromo.com$path"
+              code=$(curl -LsS --max-time 18 -o /tmp/pano-google-page -w '%{http_code}' "$url?check=$GITHUB_SHA" || true)
+              if [ "$code" != "200" ] || ! grep -Fq "href=\"$url\"" /tmp/pano-google-page ||
+                 ! grep -q 'name="robots" content="index,follow' /tmp/pano-google-page ||
+                 ! grep -Fq "<loc>$url</loc><lastmod>2026-11-09</lastmod>" /tmp/pano-google-sitemap; then
+                echo "Page/sitemap not ready: $url HTTP $code";ok=0;break
+              fi
+            done
+            if [ "$ok" = "1" ]; then
+              echo 'PASS: All 4 pages return 200, show indexable canonicals, and appear in live Google-readable sitemap.'
+              echo 'This is crawl readiness, NOT confirmation of Google Search Console submission or Google indexing.'
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'Failed live Pano Aqil crawl readiness check' >&2
+          exit 1

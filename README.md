@@ -195,3 +195,9 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - GitHub Actions sometimes cannot create PRs because the repository restricts Actions-created pull requests. If draft PR creation is rejected, the workflow keeps the review branch and creates a fallback GitHub issue with a comparison link for a human to create a PR. If the issue also fails, the review branch and discovery report still remain available.
 - While an onboarding review branch or PR exists, new draft branches are paused to prevent duplicate queue entries. The previously failed duplicate-only Komal branch is cleaned up only if it matches its known contents and the correct profile is already live.
 - Automated test: node scripts/test-sync-slashcure-doctors.mjs; site SEO and profile checks also run on merged changes.
+
+## Google Search Console Pano Aqil indexing
+- Pano Aqil and all three doctor pages are in `https://slashpromo.com/sitemap.xml`, with accurate 2026-11-09 `<lastmod>` values. `robots.txt` exposes the sitemap; canonical URLs and index/follow meta tags are set.
+- `scripts/test-google-discovery.mjs` and GitHub Actions `verify-google-discovery.yml` check the live public crawl readiness for these pages. This does **not** establish indexing in Google.
+- Submit the sitemap using verified `sc-domain:slashpromo.com` property in Google Search Console > Sitemaps. For individual pages use URL Inspection > Request Indexing. The Windsor Search Console integration is read-only and cannot request indexing itself.
+- Google Indexing API does not accept regular doctor directory pages; IndexNow notifies Bing and other participating search engines, not Google.
