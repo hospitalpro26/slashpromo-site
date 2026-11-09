@@ -1,0 +1,62 @@
+/* Ali Medical Center & Khairpur doctor discovery.
+ * Scoped to body.sp-khairpur-premium; does not affect other city pages.
+ */
+.sp-khairpur-premium .khp-section{padding:56px 0;background:#f4f8fd}
+.sp-khairpur-premium .khp-section.white{background:#fff}
+.sp-khairpur-premium .khp-wrap{width:min(1160px,calc(100% - 56px));margin-inline:auto}
+.sp-khairpur-premium .khp-kicker{display:inline-block;color:#d54b63;text-transform:uppercase;letter-spacing:1.4px;font-size:11px;font-weight:850}
+.sp-khairpur-premium .khp-section h2{font-size:clamp(27px,3.3vw,39px);line-height:1.22;letter-spacing:-1px;color:#163861;margin:10px 0 13px}
+.sp-khairpur-premium .khp-intro{color:#617b98;font-size:14px;line-height:1.8;max-width:940px}
+.sp-khairpur-premium .khp-directory{margin-top:23px}
+.sp-khairpur-premium .khp-search{background:#fff;padding:18px;border:1px solid #dfe8f5;border-radius:16px;box-shadow:0 9px 32px #16386d0b}
+.sp-khairpur-premium .khp-search-form{display:grid;grid-template-columns:1.4fr 1fr auto;gap:10px;align-items:stretch}
+.sp-khairpur-premium .khp-search-form label{display:block;background:#fff;border:1px solid #e1eaf6;border-radius:9px;padding:8px 13px}
+.sp-khairpur-premium .khp-search-form label span{display:block;color:#7286a0;text-transform:uppercase;letter-spacing:.65px;font-size:10px;font-weight:820;margin-bottom:5px}
+.sp-khairpur-premium .khp-search-form input,.sp-khairpur-premium .khp-search-form select{border:0;background:#fff;outline:0;padding:5px 0;width:100%;font-size:13px;color:#24436c}
+.sp-khairpur-premium .khp-search-form :is(input,select):focus-visible{outline:2px solid #9fc1f4;outline-offset:4px}
+.sp-khairpur-premium .khp-search-form button{background:#e84d63;color:#fff;border:0;border-radius:10px;padding:13px 20px;font-size:12px;font-weight:820;cursor:pointer}
+.sp-khairpur-premium .khp-tools{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:9px;margin-top:11px}
+.sp-khairpur-premium .khp-tools p{font-size:11px;color:#70849f;margin:0;line-height:1.6}
+.sp-khairpur-premium .khp-tools button{border:0;background:transparent;color:#205bbf;font-size:12px;font-weight:820;cursor:pointer;padding:8px 2px}
+.sp-khairpur-premium .khp-results{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 10px}
+.sp-khairpur-premium .khp-results h3{font-size:18px;color:#163963;font-weight:850;margin:0}
+.sp-khairpur-premium .khp-count{display:inline-block;background:#e8f0ff;color:#215bbc;border-radius:8px;font-size:11px;font-weight:820;padding:8px 11px}
+.sp-khairpur-premium .khp-facets{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:16px 0 23px}
+.sp-khairpur-premium .khp-facets button{border:1px solid #dce6f4;border-radius:9px;background:#fff;color:#496a90;padding:10px 13px;font-size:12px;font-weight:770;line-height:1.4;cursor:pointer}
+.sp-khairpur-premium .khp-facets button:hover:not([aria-pressed=true]){background:#eef5ff;color:#2359c5;border-color:#b7cff5}
+.sp-khairpur-premium .khp-facets button[aria-pressed=true]{background:#235ccd;border-color:#235ccd;color:#fff}
+.sp-khairpur-premium .khp-facets button:focus-visible,.sp-khairpur-premium .khp-more:focus-visible{outline:3px solid #95bdfd;outline-offset:3px}
+.sp-khairpur-premium .khp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.sp-khairpur-premium .khp-card{display:flex;flex-direction:column;min-width:0;padding:20px;background:#fff;border:1px solid #e2eaf5;box-shadow:0 8px 23px #183a700b;border-radius:15px}
+.sp-khairpur-premium .khp-card[hidden]{display:none!important}
+.sp-khairpur-premium .khp-card-top{display:flex;align-items:center;gap:12px;min-width:0}
+.sp-khairpur-premium .khp-avatar{display:grid;place-items:center;flex:0 0 48px;width:48px;height:48px;background:#e8f1ff;color:#285dbf;border-radius:12px;font-size:17px;font-weight:850}
+.sp-khairpur-premium .khp-card:nth-child(3n+2) .khp-avatar{color:#dd526c;background:#fff0f2}
+.sp-khairpur-premium .khp-card h3{font-size:16px;line-height:1.35;color:#163863;letter-spacing:-.3px;margin:0}
+.sp-khairpur-premium .khp-card h3 a{color:#19467b;text-decoration:none}
+.sp-khairpur-premium .khp-card h3 a:hover{text-decoration:underline;color:#205ac4}
+.sp-khairpur-premium .khp-specialty{color:#456e9b;font-size:12px;font-weight:760;line-height:1.55;margin:12px 0 8px}
+.sp-khairpur-premium .khp-clinic{color:#70869f;font-size:11px;line-height:1.6;margin:0 0 12px}
+.sp-khairpur-premium .khp-tag{display:inline-flex;align-self:flex-start;border:1px solid #dae7f9;background:#eef5ff;border-radius:7px;color:#2159aa;padding:6px 9px;font-size:10px;font-weight:820;margin:0 0 14px}
+.sp-khairpur-premium .khp-cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:auto;padding-top:13px;border-top:1px solid #edf1f7}
+.sp-khairpur-premium .khp-cta a{font-size:11px;font-weight:810;color:#215abb;line-height:1.55;text-decoration:none}
+.sp-khairpur-premium .khp-cta a:hover{text-decoration:underline}
+.sp-khairpur-premium .khp-cta a.secondary{color:#687e99}
+.sp-khairpur-premium .khp-more{display:block;margin:27px auto 8px;background:#fff;border:1px solid #c6d7f2;border-radius:10px;padding:12px 20px;font-size:12px;font-weight:850;color:#2059b8;cursor:pointer;min-width:220px}
+.sp-khairpur-premium .khp-more:hover{background:#eaf3ff}
+.sp-khairpur-premium .khp-more[hidden],.sp-khairpur-premium .khp-empty[hidden]{display:none!important}
+.sp-khairpur-premium .khp-empty{padding:16px 21px;background:#fff;border:1px solid #e1eaf5;border-radius:10px;color:#6d819d}
+.sp-khairpur-premium .khp-notice{font-size:12px;color:#6b829d;line-height:1.75;margin:22px 0 0}
+.sp-khairpur-premium .khp-notice a{color:#225bbe;font-weight:770}
+.sp-khairpur-premium .khp-actions{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}
+.sp-khairpur-premium .khp-actions a{display:inline-block;background:#205acd;color:white;border-radius:10px;padding:12px 17px;font-size:12px;font-weight:820;text-decoration:none;text-align:center}
+.sp-khairpur-premium .khp-actions a.alt{background:#e9f2ff;color:#2057b6;border:1px solid #c9daf2}
+.sp-khairpur-premium .khp-facility-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:24px 0}
+.sp-khairpur-premium .khp-facility-grid article{border:1px solid #e1e9f5;border-radius:15px;padding:21px;background:#fff}
+.sp-khairpur-premium .khp-facility-grid h3{color:#163963;font-size:16px;margin:0 0 8px}
+.sp-khairpur-premium .khp-facility-grid p{font-size:12px;color:#677d99;line-height:1.7;margin:0}
+.sp-khairpur-premium .khp-facility-grid a{color:#205ac6;text-decoration:none;font-weight:770}
+.sp-khairpur-premium .khp-facility-grid a:hover{text-decoration:underline}
+@media(max-width:950px){.sp-khairpur-premium .khp-grid,.sp-khairpur-premium .khp-facility-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.sp-khairpur-premium .khp-wrap{width:calc(100% - 34px)}.sp-khairpur-premium .khp-section{padding:42px 0}.sp-khairpur-premium .khp-grid,.sp-khairpur-premium .khp-facility-grid,.sp-khairpur-premium .khp-search-form{grid-template-columns:1fr}.sp-khairpur-premium .khp-search{padding:12px}.sp-khairpur-premium .khp-search-form button{width:100%}.sp-khairpur-premium .khp-facets{gap:7px}.sp-khairpur-premium .khp-facets button{font-size:11px;padding:9px 11px}.sp-khairpur-premium .khp-actions a{width:100%}}
+@media(prefers-reduced-motion:reduce){.sp-khairpur-premium .khp-card{scroll-behavior:auto}}
