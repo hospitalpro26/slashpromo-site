@@ -6,6 +6,7 @@ on:
       - '.github/workflows/verify-khairpur-publication.yml'
       - 'khairpur/index.html'
       - 'hospitals/khairpur/**'
+      - 'doctors/khairpur/**'
   workflow_dispatch:
 permissions:
   contents: read
@@ -33,6 +34,22 @@ jobs:
           done
           for url in 'https://slashpromo.com/hospitals/khairpur/ali-medical-center-khairpur/' 'https://slashpromo.com/hospitals/khairpur/health-care-clinic-khairpur/'; do
             curl -fLsS --retry 3 --max-time 20 "$url" -o /tmp/provider.html
-            grep -q '<h1>' /tmp/provider.html
+            # Match semantic H1 with optional id/class/ARIA attributes.
+            grep -Eq '<h1([[:space:]>])' /tmp/provider.html
             echo "Verified $url"
+          # Verify the new Khairpur doctor directory after Cloudflare deploys.
+          for attempt in 1 2 3 4 5 6; do
+            url="https://slashpromo.com/doctors/khairpur/?khairpur-check=${GITHUB_SHA}"
+            if curl -fLsS --retry 2 --max-time 20 -H 'Cache-Control: no-cache' "$url" -o /tmp/khairpur-doctors.html; then
+              if grep -Eq '<h1([[:space:]>])' /tmp/khairpur-doctors.html && grep -q 'data-khp-directory' /tmp/khairpur-doctors.html && grep -q 'https://slashpromo.com/doctors/khairpur/' /tmp/khairpur-doctors.html; then
+                echo 'Verified Khairpur doctors directory and canonical link.'
+                break
+              fi
+            fi
+            if [ "$attempt" = '6' ]; then
+              echo 'Khairpur doctors directory not confirmed on public site' >&2
+              exit 1
+            fi
+            sleep 15
+          done
           done
