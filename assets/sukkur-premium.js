@@ -48,6 +48,12 @@
     }
   });
   if(ready)fillSpecialties();else observer.observe(root,{attributes:true,attributeFilter:["data-ready"]});
+  /* Keep the hero inputs in sync when visitors switch the new specialty tabs. */
+  root.addEventListener("slashpromo:doctor-facet-selected",function(){
+    if(heroQuery)heroQuery.value="";
+    if(heroSpecialty)heroSpecialty.value="";
+    status.textContent="Sukkur doctor directory filtered by selected medical specialty.";
+  });
   heroForm.addEventListener("submit",function(ev){
     ev.preventDefault();
     if(!filterAndScroll()){
