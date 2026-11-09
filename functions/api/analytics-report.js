@@ -18,15 +18,19 @@ export async function onRequestGet(ctx){
   const since=d.toISOString().slice(0,10);
   const where="WHERE day>=?"+(city?" AND city=?":"");
   const binds=city?[since,city]:[since];
+  const whereGeo="WHERE day>=?"+(city?" AND page_city=?":"");
   try{
     await ensureAnalytics(env.QA_DB);
     const statements=[
       env.QA_DB.prepare("SELECT event,SUM(n) AS total FROM site_analytics_daily "+where+" GROUP BY event").bind(...binds),
       env.QA_DB.prepare("SELECT day,event,SUM(n) AS total FROM site_analytics_daily "+where+" GROUP BY day,event ORDER BY day ASC").bind(...binds),
       env.QA_DB.prepare("SELECT page_path,city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_open' THEN n ELSE 0 END) AS whatsapp_opens,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues,SUM(CASE WHEN event='qa_submitted' THEN n ELSE 0 END) AS questions FROM site_analytics_daily "+where+" GROUP BY page_path,city ORDER BY views DESC,referrals DESC LIMIT 50").bind(...binds),
-      env.QA_DB.prepare("SELECT city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues FROM site_analytics_daily "+where+" GROUP BY city ORDER BY views DESC LIMIT 30").bind(...binds)
+      env.QA_DB.prepare("SELECT city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues FROM site_analytics_daily "+where+" GROUP BY city ORDER BY views DESC LIMIT 30").bind(...binds),
+      env.QA_DB.prepare("SELECT country,SUM(n) AS views FROM site_visitor_geo_daily "+whereGeo+" GROUP BY country ORDER BY views DESC,country ASC LIMIT 20").bind(...binds),
+      env.QA_DB.prepare("SELECT country,visitor_city,SUM(n) AS views FROM site_visitor_geo_daily "+whereGeo+" GROUP BY country,visitor_city ORDER BY views DESC,visitor_city ASC LIMIT 30").bind(...binds),
+      env.QA_DB.prepare("SELECT COALESCE(SUM(n),0) AS recorded,COALESCE(SUM(CASE WHEN country='ZZ' THEN n ELSE 0 END),0) AS unknown_country FROM site_visitor_geo_daily "+whereGeo).bind(...binds)
     ];
-    const [totals,daily,pages,cities]=await env.QA_DB.batch(statements);
+    const [totals,daily,pages,cities,geoCountries,geoCities,geoTotals]=await env.QA_DB.batch(statements);
     await ensureDb(env);
     const qaCity=city&&city!=="other"?city:"";
     const qaArgs=qaCity?[qaCity]:[];
@@ -38,6 +42,14 @@ export async function onRequestGet(ctx){
       if(Object.hasOwn(qaSummary,record.status)){qaSummary[record.status]=n;qaSummary.total+=n;}
     }
     const qaRecent=await env.QA_DB.prepare("SELECT id,city,COALESCE(NULLIF(page_path,''),'/'||city||'/') AS page_path,category,question,answer,status,created_at,answered_at FROM questions"+qaFilter+" ORDER BY created_at DESC LIMIT 20").bind(...qaArgs).all();
-    return json({since,days,city:city||"all",generatedAt:new Date().toISOString(),totals:totals.results||[],daily:daily.results||[],pages:pages.results||[],cities:cities.results||[],qaSummary,qaRecent:qaRecent.results||[],note:"Aggregate events, not unique people. WhatsApp continues do not confirm that a message was sent. Saved Q&A records are not limited to the analytics date filter."});
+    return json({since,days,city:city||"all",generatedAt:new Date().toISOString(),totals:totals.results||[],daily:daily.results||[],pages:pages.results||[],cities:cities.results||[],
+      visitorGeography:{
+        source:"Cloudflare approximate IP geolocation; page views only, not unique people",
+        days,
+        recordedPageViews:Number(geoTotals.results?.[0]?.recorded)||0,
+        unknownCountryPageViews:Number(geoTotals.results?.[0]?.unknown_country)||0,
+        countries:(geoCountries.results||[]).map(row=>({country:row.country,views:Number(row.views)||0})),
+        cities:(geoCities.results||[]).map(row=>({country:row.country,city:row.visitor_city,views:Number(row.views)||0}))
+      },qaSummary,qaRecent:qaRecent.results||[],note:"Aggregate events, not unique people. WhatsApp continues do not confirm that a message was sent. Saved Q&A records are not limited to the analytics date filter."});
   }catch{return json({error:"Could not load analytics. Confirm QA_DB is connected."},503)}
 }
