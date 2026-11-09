@@ -1,5 +1,5 @@
 // SlashPromo public Q&A: only approved, non-sensitive content is public.
-export const CITIES = ["sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad"];
+export const CITIES = ["sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad","pano-aqil"];
 export const CATEGORIES = ["Health questions","OPD timings","Doctor contact","Doctors & hospitals","Appointments","Other"];
 // Keep public threads attached to their actual pages. Old rows without page_path
 // remain visible only on the city root where they were originally submitted.

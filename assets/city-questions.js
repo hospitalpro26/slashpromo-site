@@ -1,7 +1,7 @@
 /* Public city Q&A. Questions remain private until reviewed by SlashPromo. */
 (() => {
   "use strict";
-  const cityMap={sukkur:"Sukkur",khairpur:"Khairpur",shikarpur:"Shikarpur",ghotki:"Ghotki",karachi:"Karachi",hyderabad:"Hyderabad"};
+  const cityMap={sukkur:"Sukkur",khairpur:"Khairpur",shikarpur:"Shikarpur",ghotki:"Ghotki",karachi:"Karachi",hyderabad:"Hyderabad","pano-aqil":"Pano Aqil"};
   // City landing pages retain their city-wide discussion. Provider, specialty
   // and health-topic pages use a separate question thread for their own URL.
   const pagePath=location.pathname.toLowerCase().replace(/\/+$/,"")+"/";

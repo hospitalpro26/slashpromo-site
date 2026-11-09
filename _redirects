@@ -9,3 +9,8 @@
 /hospitals/sukkur/halar-memon-hospital-sukkur/ /sukkur/ 301
 /hospitals/sukkur/siut-hospital-sukkur/ /sukkur/ 301
 /hospitals/sukkur/sukkur-blood-bank-hospital/ /sukkur/ 301
+
+# Common spelling of Pano Aqil: one canonical city URL.
+/panoaqil /pano-aqil/ 301
+/panoaqil/ /pano-aqil/ 301
+/pano-akil/ /pano-aqil/ 301
