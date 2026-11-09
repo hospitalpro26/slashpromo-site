@@ -1156,6 +1156,21 @@
       "kind": "doctor"
     },
     {
+      "id": "sukkur-dr-komal-kandhir-pt",
+      "name": "Dr. Komal Kandhir PT",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Physiotherapist",
+      "hospital": "",
+      "qualifications": "",
+      "url": "/doctors/sukkur/dr-komal-kandhir-pt/",
+      "externalProfile": "https://slashcure.com/physiotherapists/sukkur/dr-komal-kandhir-pt",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
       "id": "sukkur-dr-muhammad-nasir-soomro",
       "name": "Dr. Muhammad Nasir Soomro",
       "city": "Sukkur",
