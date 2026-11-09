@@ -54,6 +54,13 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <div class="panels">
 <section class="panel"><h2>Daily page views</h2><div class="chart" id="chart" role="img" aria-label="Daily page views bar chart"></div><div class="chart-caption"><span id="from-label"></span><span id="to-label"></span></div></section>
 <section class="panel"><h2>Traffic by city</h2><div class="scroll"><table><thead><tr><th>City</th><th class="num">Views</th><th class="num">Slashcure</th><th class="num">WhatsApp</th></tr></thead><tbody id="cities"><tr><td colspan="4" class="placeholder">Load a report to see data.</td></tr></tbody></table></div></section>
+<section class="panel wide" aria-label="Visitor geography"><h2>Visitor geography (approximate)</h2>
+<p class="muted">Country and city are estimates from Cloudflare's IP geolocation, grouped by page views. Not GPS, not unique visitors, and not the cities described by doctor-directory pages. Use the date range and page-city filter above.</p>
+<div class="metrics"><div class="metric"><span>Geo-recorded page views</span><strong id="geo-recorded">—</strong></div><div class="metric"><span>Unknown country page views</span><strong id="geo-unknown">—</strong></div></div>
+<div class="panels">
+<section class="panel"><h2>Countries of incoming visits</h2><div class="scroll"><table><thead><tr><th>Country</th><th class="num">Views</th></tr></thead><tbody id="geo-countries"><tr><td colspan="2" class="placeholder">Load analytics to see country estimates.</td></tr></tbody></table></div></section>
+<section class="panel"><h2>Cities of incoming visits</h2><div class="scroll"><table><thead><tr><th>City, country</th><th class="num">Views</th></tr></thead><tbody id="geo-cities"><tr><td colspan="2" class="placeholder">Load analytics to see city estimates.</td></tr></tbody></table></div></section>
+</div><p class="muted">Location reporting starts after this feature is deployed; it cannot retroactively reconstruct earlier visits. VPNs and mobile networks may cause inaccurate city estimates. No raw visitor IP, GPS coordinate or mobile number is recorded in this report.</p></section>
 <section class="panel wide"><h2>Saved Questions &amp; Answers</h2><p class="muted">These are permanently stored Q&amp;A records from the database, including pending and answered questions. Only approved answers are shown on public pages. Open Q&amp;A moderation to review, save drafts or publish verified answers.</p><div class="qa-status-strip" id="qa-status-strip"><span>All saved: <strong id="qa-all">—</strong></span><span>Pending: <strong id="qa-pending">—</strong></span><span>Published: <strong id="qa-approved">—</strong></span><span>Rejected: <strong id="qa-rejected">—</strong></span></div><p><a href="/qa-admin/" rel="nofollow">Open private Q&amp;A moderation dashboard ↗</a></p><div class="scroll"><table><thead><tr><th>Submitted / Status</th><th>Saved Question</th><th>Saved Answer</th><th>Source</th></tr></thead><tbody id="qa-records"><tr><td colspan="4" class="placeholder">Load analytics to see the latest saved Q&amp;A records.</td></tr></tbody></table></div><p class="muted">Showing the latest 20 saved submissions. This table does not display private phone numbers, addresses or visitor names. Q&amp;A history is not restricted to the analytics date filter.</p></section>
 <section class="panel wide"><h2>Top pages and what visitors do</h2><div class="scroll"><table><thead><tr><th>Page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">WhatsApp starts</th><th class="num">Q&amp;A</th></tr></thead><tbody id="pages"><tr><td colspan="5" class="placeholder">Load a report to see data.</td></tr></tbody></table></div></section>
 </div>
@@ -93,8 +100,25 @@ function renderSavedQA(data){
     parent.append(tr);
   }
 }
+function geoCountry(code){
+ if(!code||code==="ZZ")return "Unknown country";
+ try{return new Intl.DisplayNames(["en"],{type:"region"}).of(code)||code}catch{return code}
+}
+function drawGeography(data){
+ const geo=data.visitorGeography||{};
+ $("#geo-recorded").textContent=nf.format(geo.recordedPageViews||0);
+ $("#geo-unknown").textContent=nf.format(geo.unknownCountryPageViews||0);
+ function fill(target,rows,makeName){
+  const root=$(target);root.replaceChildren();
+  if(!rows.length){const tr=document.createElement("tr");const td=cell(tr,"No geography data recorded in this selection yet.","placeholder");td.colSpan=2;root.append(tr);return}
+  for(const row of rows){const tr=document.createElement("tr");cell(tr,makeName(row));cell(tr,nf.format(row.views||0),"num");root.append(tr)}
+ }
+ fill("#geo-countries",geo.countries||[],r=>geoCountry(r.country));
+ fill("#geo-cities",geo.cities||[],r=>(r.city||"Unknown city")+", "+geoCountry(r.country));
+}
 function draw(data){
   renderSavedQA(data);
+  drawGeography(data);
   const totals=Object.fromEntries(data.totals.map(x=>[x.event,Number(x.total)||0]));
   ["page_view","slashcure_click","whatsapp_open","whatsapp_continue","qa_submitted"].forEach(id=>{$("#"+id).textContent=nf.format(totals[id]||0)});
   renderRows("#pages",data.pages||[],"No tracked page events yet.",(tr,r)=>{
