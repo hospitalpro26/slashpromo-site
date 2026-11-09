@@ -52,6 +52,13 @@ button:disabled{opacity:.6;cursor:wait}.secondary{background:#fff!important;colo
 .traffic-item strong{font-size:24px;color:#173f72;font-variant-numeric:tabular-nums}
 .city-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:7px 0;border-bottom:1px solid #e8edf3;font-size:12px}
 .city-row:last-child{border:0}.city-row strong{font-variant-numeric:tabular-nums}
+.geo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:13px}
+.geo-grid h3{margin:0 0 9px}.geo-total{background:#f3f8ff;border:1px solid #e2ecf7;border-radius:10px;padding:11px 13px;font-size:12px}
+.geo-total strong{font-size:23px;display:inline-block;margin-right:7px;color:#173f72}
+.geo-name{min-width:0;overflow-wrap:anywhere}
+.geo-bar{width:100%;height:6px;border-radius:99px;background:#e3ebf5;margin-top:5px;overflow:hidden}
+.geo-bar span{display:block;height:100%;background:#2262aa;border-radius:99px}
+@media(max-width:630px){.geo-grid{grid-template-columns:1fr;gap:15px}}
 .inline-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .template-grid{display:grid;grid-template-columns:250px minmax(0,1fr);gap:13px}
 .template-grid select{width:100%}.template-grid label{margin:0}
@@ -87,8 +94,17 @@ button:disabled{opacity:.6;cursor:wait}.secondary{background:#fff!important;colo
 <div class="traffic-item"><span>WhatsApp handoffs</span><strong id="whatsapp-continues">—</strong></div>
 <div class="traffic-item"><span>Q&amp;A submissions</span><strong id="questions-submitted">—</strong></div>
 </div>
-<h3>Most visited cities</h3><div id="top-cities"><p class="notice-empty">No data loaded.</p></div>
+<h3>Most viewed page cities</h3><div id="top-cities"><p class="notice-empty">No data loaded.</p></div>
 <p class="footnote">WhatsApp handoffs do not prove messages were sent. Staff-marked sends are not delivery receipts.</p>
+</section>
+<section class="panel wide" aria-label="Visitor geography">
+<div class="panel-head"><div><h2>Visitor geography</h2><p>Approximate country and city for incoming page views, based on Cloudflare's IP geolocation. This is not a live GPS map or a list of individual visitors.</p></div><a href="/analytics/">Detailed 7 / 30 / 90-day report ↗</a></div>
+<div class="geo-total"><strong id="geo-total">—</strong>page views with geography counters in the last 7 UTC days. <span id="geo-unknown"></span></div>
+<div class="geo-grid">
+<div><h3>Countries visitors connect from</h3><div id="geo-countries"><p class="notice-empty">Load the dashboard to see country estimates.</p></div></div>
+<div><h3>Cities visitors connect from</h3><div id="geo-cities"><p class="notice-empty">Load the dashboard to see city estimates.</p></div></div>
+</div>
+<p class="footnote">Counts are page views, not unique people. A VPN or mobile network can make locations inaccurate. No raw IP addresses, mobile numbers or GPS coordinates are recorded in these counters. Collection begins after deployment; earlier views have no geographic breakdown.</p>
 </section>
 <section class="panel">
 <div class="panel-head"><div><h2>Enquiries needing attention</h2><p>Oldest unattended records first, highlighting those with no update for 24 hours.</p></div><a href="/enquiries/">Open Inbox ↗</a></div>
@@ -162,13 +178,40 @@ function renderCity(rows){
   const row=node("div","city-row");row.append(node("span","",pretty(city.city)),node("strong","",fmt.format(city.views||0)));root.append(row);
  }
 }
+function countryLabel(code){
+ if(!code||code==="ZZ")return "Unknown country";
+ try{return new Intl.DisplayNames(["en"],{type:"region"}).of(code)||code}catch{return code}
+}
+function renderGeoList(id,rows,total,cityMode){
+ const root=$(id);root.replaceChildren();
+ if(!rows.length){root.append(node("p","notice-empty","No geography data yet. New page views will appear after deployment."));return}
+ for(const r of rows){
+  const name=cityMode?(r.city==="Unknown"?"Unknown city":r.city)+", "+countryLabel(r.country):countryLabel(r.country);
+  const row=node("div","city-row");
+  const left=node("div","geo-name");
+  left.append(node("span","",name));
+  const bar=node("div","geo-bar"),fill=node("span");
+  fill.style.width=Math.min(100,Math.max(0,total?Number(r.views||0)*100/total:0)).toFixed(1)+"%";
+  bar.append(fill);left.append(bar);
+  row.append(left,node("strong","",fmt.format(r.views||0)));
+  root.append(row);
+ }
+}
+function renderGeography(data){
+ const geo=data||{},total=Number(geo.recordedPageViews)||0;
+ count("geo-total",total);
+ const unknown=Number(geo.unknownCountryPageViews)||0;
+ $("geo-unknown").textContent=unknown?fmt.format(unknown)+" view(s) had unknown country.":"";
+ renderGeoList("geo-countries",geo.countries||[],total,false);
+ renderGeoList("geo-cities",geo.cities||[],total,true);
+}
 function render(data){
  const s=data.summary||{},e=s.enquiries||{},q=s.questions||{},traffic=s.traffic||{};
  count("new-enquiries",e.new);count("pending-questions",q.pending);count("overdue-enquiries",e.overdue);count("page-views",traffic.page_view);
  count("slashcure-clicks",traffic.slashcure_click);count("whatsapp-opens",traffic.whatsapp_open);
  count("whatsapp-continues",traffic.whatsapp_continue);count("questions-submitted",traffic.qa_submitted);
  renderNotifications(s);renderTasks("enquiry-tasks",data.tasks?.openEnquiries||[],"enquiry",data.generatedAt);
- renderTasks("question-tasks",data.tasks?.pendingQuestions||[],"question",data.generatedAt);renderCity(data.cities||[]);
+ renderTasks("question-tasks",data.tasks?.pendingQuestions||[],"question",data.generatedAt);renderCity(data.cities||[]);renderGeography(data.visitorGeography);
 }
 $("refresh-form").addEventListener("submit",async ev=>{
  ev.preventDefault();const key=$("admin-key").value.trim();if(!key)return;
