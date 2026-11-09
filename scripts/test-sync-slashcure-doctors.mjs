@@ -30,3 +30,30 @@ assert.equal(normalizedCitySlug('lakhi-ghulam-shah-shikarpur-sindh'),'lakhi-ghul
 assert.equal(normalizedCitySlug('dina-jhelum'),'jhelum');
 assert.equal(isAlreadyListedByIdentity({city:'panoaqi',doctorSlug:'dr-parvez-ahmed'},[{name:'Dr. Parvez Ahmed',city:'Pano Aqil',url:'/doctors/pano-aqil/dr-parvez-ahmed/'}]),true);
 console.log('PASS: Alias city paths do not re-onboard existing doctors');
+
+/* Regression coverage for professional prefixes, PT suffixes and location aliases. */
+assert.equal(doctorIdentity('Prof. Dr. Kirpal Das Makheja'),doctorIdentity('dr-kirpal-das-makheja'));
+assert.equal(doctorIdentity('Assistant Professor Dr. Amna'),doctorIdentity('dr-amna'));
+assert.equal(doctorIdentity('Dr. Komal Kandhir (PT)'),doctorIdentity('dr-komal-kandhir-pt'));
+assert.equal(doctorIdentity('Dr. Komal Kandhir DPT'),doctorIdentity('dr-komal-kandhir'));
+assert.equal(isAlreadyListedByIdentity({city:'sukkur',doctorSlug:'dr-kirpal-das-makheja'},[
+  {name:'Prof. Dr. Kirpal Das Makheja',city:'Sukkur',url:'/doctors/sukkur/prof-dr-kirpal-das-makheja/'}
+]),true);
+assert.equal(isAlreadyListedByIdentity({city:'pano-aqil-sindh',doctorSlug:'dr-farooq-illahi'},[
+  {name:'Dr. Farooq Illahi',city:'Pano Aqil',url:'/doctors/pano-aqil/dr-farooq-illahi/'}
+]),true);
+console.log('PASS: Professor/assistant prefixes, PT suffixes and location aliases deduplicate');
+
+const fs = await import('node:fs');
+const data=JSON.parse(fs.readFileSync('assets/directory.json','utf8'));
+let checked=0;
+for(const entry of data.doctors){
+  if(!entry.externalProfile)continue;
+  const parsed=parseDoctorUrl(entry.externalProfile);
+  if(!parsed)continue;
+  assert.equal(isAlreadyListedByIdentity(parsed,data.doctors),true,
+    'Existing doctor cannot be a new candidate: '+entry.name);
+  checked++;
+}
+assert(checked>=15,'Expected at least 15 existing linked doctor tests');
+console.log('PASS: '+checked+' existing public Slashcure profiles all deduplicate safely');

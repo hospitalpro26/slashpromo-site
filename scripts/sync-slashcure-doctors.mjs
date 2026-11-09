@@ -31,7 +31,10 @@ const slug=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u0
 const cityAliases={'panoaqil':'pano-aqil','panoaqi':'pano-aqil','pano-akil':'pano-aqil','pano-aqil-sindh':'pano-aqil','lakhi-ghulam-shah-shikarpur-sindh':'lakhi-ghulam-shah','dina-jhelum':'jhelum','mianchannu':'mian-channu'};
 function normalizedCitySlug(value){const key=slug(value);return cityAliases[key]||key;}
 function doctorIdentity(value){
-  return slug(value).replace(/^dr-/,'').replace(/-(?:pt|dpt|physiotherapist)$/,'');
+  // Remove honorifics and PT suffixes before testing name+city identity.
+  return slug(value)
+    .replace(/^(?:(?:prof|professor|associate|assistant|asst|dr|doctor)-)+/,'')
+    .replace(/-(?:(?:pt|dpt|physiotherapist)-?)+$/,'');
 }
 function isAlreadyListedByIdentity(candidate,existingDoctors){
   const key=normalizedCitySlug(candidate.city)+':'+doctorIdentity(candidate.doctorSlug);
@@ -134,7 +137,8 @@ async function main(){
   }
   if(!links.size)throw new Error('No public doctor links detected: stop safely and investigate source availability');
   const existing=new Set(db.doctors.map(x=>parseDoctorUrl(x.externalProfile)?.source).filter(Boolean));
-  const byNameCity=new Set(db.doctors.map(x=>slug(x.city)+':'+doctorIdentity(x.name)));
+  const byNameCity=new Set(db.doctors.map(x=>normalizedCitySlug(x.city)+':'+doctorIdentity(x.name)));
+  const alreadyDrafted=new Set();
   const newLinks=[...links.values()].filter(x=>!existing.has(x.source)&&!isAlreadyListedByIdentity(x,db.doctors));
   const drafts=[],deferred=[];
   for(const item of newLinks.sort((a,b)=>a.source.localeCompare(b.source))){
@@ -147,18 +151,20 @@ async function main(){
     const name=extractDoctorName(html,item.doctorSlug);
     if(!name){deferred.push('Doctor name requires manual verification: '+item.source);continue;}
     const city=citySlug.split('-').map(x=>x[0].toUpperCase()+x.slice(1)).join(' ');
-    if(byNameCity.has(slug(city)+':'+doctorIdentity(name))){deferred.push('Potential duplicate name/city: '+item.source);continue;}
+    const identity=normalizedCitySlug(city)+':'+doctorIdentity(name);
+    if(byNameCity.has(identity)||alreadyDrafted.has(identity)){deferred.push('Potential duplicate name/city: '+item.source);continue;}
     const local='/doctors/'+citySlug+'/'+item.doctorSlug+'/';
     if(fs.existsSync(local.slice(1)+'index.html'))continue;
     const info=specialties[item.specialtySlug];
     const doctor={id:citySlug+'-'+item.doctorSlug,name,city,cities:[city],specialty:info[0],hospital:'',qualifications:'',url:local,externalProfile:item.source,hospitalpro:'',kind:'doctor'};
     drafts.push(doctor);
+    alreadyDrafted.add(identity);
     if(apply){
       const file=local.slice(1)+'index.html';fs.mkdirSync(path.dirname(file),{recursive:true});fs.writeFileSync(file,doctorPage(doctor));
       addReviewLink(cityPage,doctor);
       const spec='doctors/'+citySlug+'/'+info[1]+'/index.html';
       if(!addReviewLink(spec,doctor))deferred.push('Specialty page requires review: '+spec);
-      db.doctors.push(doctor);byNameCity.add(slug(city)+':'+doctorIdentity(name));
+      db.doctors.push(doctor);byNameCity.add(identity);
     }
   }
   if(apply&&drafts.length){
