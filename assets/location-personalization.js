@@ -67,7 +67,7 @@
       '<div class="sp-location-heading"><span class="sp-location-pin" aria-hidden="true">⌖</span>',
       '<strong>Find healthcare near you</strong>',
       '<button class="sp-location-close" type="button" aria-label="Dismiss location request">×</button></div>',
-      '<p class="sp-location-message" aria-live="polite">Would you like to use your location to show doctors and hospitals in a nearby listed city first?</p>',
+      '<p class="sp-location-message" aria-live="polite">Improve your search experience: use your location to see doctors and hospitals in a nearby listed city first.</p>',
       '<p class="sp-location-privacy">Optional. Your browser asks permission only if you choose. Exact coordinates are not saved or sent to SlashPromo.</p>',
       '<div class="sp-location-actions"><button type="button" class="sp-location-allow">Use my location</button>',
       '<button type="button" class="sp-location-later">Not now</button></div>',
