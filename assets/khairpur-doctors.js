@@ -4,7 +4,7 @@
  */
 (function(){
 "use strict";
-const labels={medicine:"Consultant Physicians",neurology:"Neurologists",diabetology:"Diabetologists",cardiology:"Cardiologists",general_surgery:"General Surgeons",pediatric_surgery:"Paediatric Surgeons",paediatrics:"Paediatricians",gynecology:"Gynecologists",dermatology:"Dermatologists",orthopedics:"Orthopedic Surgeons",urology:"Urologists",dentistry:"Dentists"};
+const labels={medicine:"Consultant Physicians",neurology:"Neurologists",diabetology:"Diabetologists",sonography:"Sonologists & Ultrasound Specialists",gastroenterology:"Gastroenterologists",cardiology:"Cardiologists",general_surgery:"General Surgeons",pediatric_surgery:"Paediatric Surgeons",paediatrics:"Paediatricians",gynecology:"Gynecologists",dermatology:"Dermatologists",orthopedics:"Orthopedic Surgeons",urology:"Urologists",dentistry:"Dentists"};
 const clean=value=>String(value??"").normalize("NFKD").toLowerCase().replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").trim();
 document.querySelectorAll("[data-khp-directory]").forEach(root=>{
   const cards=Array.from(root.querySelectorAll("[data-khp-card]"));

@@ -1,0 +1,25 @@
+# SlashPromo AI Discovery Guide
+
+Site: https://slashpromo.com/
+Description: Public doctor, hospital, diagnostic laboratory and clinic discovery across Pakistan.
+Canonical XML sitemap: https://slashpromo.com/sitemap.xml
+Human- and AI-readable directory: https://slashpromo.com/llms.txt
+Complete canonical URL inventory: https://slashpromo.com/llms-full.txt
+
+## Updated Khairpur pages
+Best doctors in Khairpur: https://slashpromo.com/doctors/khairpur/
+Khairpur healthcare overview: https://slashpromo.com/khairpur/
+Hussain Diagnostic Center page: https://slashpromo.com/hospitals/khairpur/hussain-diagnostic-center/
+Ali Medical Center: https://slashpromo.com/hospitals/khairpur/ali-medical-center-khairpur/
+Health Care Clinic: https://slashpromo.com/hospitals/khairpur/health-care-clinic-khairpur/
+Laboratory category: https://slashpromo.com/laboratories/
+
+## Hussain Diagnostic Center
+Address: Opposite Civil Hospital, Khairpur Mir's, Sindh, Pakistan.
+Public doctors: Dr. Muhammad Hussain Abro (Ultrasound Specialist / Sonologist) and Dr. Safdar Ali Tunio (Gastroenterologist / Consultant Physician).
+Public services: diagnostic ultrasound, laboratory testing, endoscopy and specialist consultations.
+Doctor attribution and source: https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center
+Public individual doctor schedules and availability are not reproduced on SlashPromo.
+
+## Accuracy
+SlashPromo does not independently rank doctors, certify medical qualifications or provide clinical advice. Use original Slashcure facility and doctor sources for current OPD details. This guide supports discovery but does not guarantee indexing by search engines or AI systems.

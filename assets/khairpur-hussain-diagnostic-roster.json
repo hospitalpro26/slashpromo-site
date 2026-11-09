@@ -1,0 +1,21 @@
+{
+  "source": "https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center",
+  "facility": "Hussain Diagnostic Center",
+  "city": "Khairpur",
+  "address": "Opposite Civil Hospital, Khairpur Mir's, Sindh, Pakistan",
+  "description": "Facility source lists ultrasound and diagnostic imaging, laboratory testing, endoscopy, digestive and liver care, and medical consultations. No doctor schedule or current availability copied.",
+  "doctors": [
+    {
+      "name": "Dr. Muhammad Hussain Abro",
+      "specialty": "Ultrasound Specialist / Sonologist",
+      "group": "sonography",
+      "source": "https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center"
+    },
+    {
+      "name": "Dr. Safdar Ali Tunio",
+      "specialty": "Gastroenterologist & Consultant Physician",
+      "group": "gastroenterology",
+      "source": "https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center"
+    }
+  ]
+}

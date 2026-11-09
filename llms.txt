@@ -1,0 +1,72 @@
+# SlashPromo — Healthcare Directory in Pakistan
+
+> SlashPromo.com is a public healthcare-discovery and promotional directory for doctors, hospitals, diagnostic centers, laboratories and clinics across Pakistan. It links to published source profiles, including Slashcure.com. Listings are not medical advice or objective clinical quality rankings.
+
+## Primary Pages
+- [Homepage](https://slashpromo.com/)
+- [City directory](https://slashpromo.com/cities/)
+- [Doctor directory](https://slashpromo.com/doctors/)
+- [Hospital directory](https://slashpromo.com/hospitals/)
+- [Laboratories](https://slashpromo.com/laboratories/)
+- [Clinics](https://slashpromo.com/clinics/)
+
+## City pages
+- [sukkur](https://slashpromo.com/sukkur/)
+- [khairpur](https://slashpromo.com/khairpur/)
+- [shikarpur](https://slashpromo.com/shikarpur/)
+- [karachi](https://slashpromo.com/karachi/)
+- [lahore](https://slashpromo.com/lahore/)
+- [hyderabad](https://slashpromo.com/hyderabad/)
+- [pano aqil](https://slashpromo.com/pano-aqil/)
+- [ghotki](https://slashpromo.com/ghotki/)
+
+## Khairpur — Doctors and Healthcare Facilities
+- [Find Best Doctors in Khairpur](https://slashpromo.com/doctors/khairpur/) — 18 unique doctor names across Ali Medical Center, Health Care Clinic and Hussain Diagnostic Center; cross-listed clinicians counted once
+- [Khairpur city overview](https://slashpromo.com/khairpur/)
+- [Ali Medical Center Khairpur Mir's](https://slashpromo.com/hospitals/khairpur/ali-medical-center-khairpur/) — public facility-linked listing; source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- [Health Care Clinic Khairpur](https://slashpromo.com/hospitals/khairpur/health-care-clinic-khairpur/) — public facility-linked listing; source: https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur
+- [Hussain Diagnostic Center](https://slashpromo.com/hospitals/khairpur/hussain-diagnostic-center/) — public facility-linked listing; source: https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center
+
+### Hussain Diagnostic Center, Khairpur
+Address: Opposite Civil Hospital, Khairpur Mir's, Sindh, Pakistan.
+Published services: ultrasound/sonography, laboratory testing, endoscopy, gastroenterology and general medical consultations.
+Original provider source: https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center
+- Dr. Muhammad Hussain Abro — Ultrasound Specialist / Sonologist; listed at Hussain Diagnostic Center. Source: https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center. No separate SlashPromo doctor profile asserted.
+- Dr. Safdar Ali Tunio — Gastroenterologist & Consultant Physician; listed at Hussain Diagnostic Center. Source: https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center. No separate SlashPromo doctor profile asserted.
+
+### Khairpur doctor names and published affiliations
+- Dr. Abubakar Phulpoto — General Surgeon; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Ashfaque Ali Baloch — Consultant Physician · General Medicine; individual profile: https://slashpromo.com/doctors/khairpur/dr-ashfaque-ali-baloch/; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Habibullah Maitlo — Paediatric Surgeon; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Muhammad Sanam Kanhar — Cardiologist; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Mumtaz Ali Phulpoto — Paediatrician; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Paras — Consultant Dermatologist; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Sadaf Sagar Chandio — General Surgeon; facility sources: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur ; https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur
+- Dr. Sajida Parveen Ujjan — Gynecologist & Obstetrician; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Syed Talib Hussain Shah — Dentist; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Uzma Salman Shaikh — Gynecologist & Obstetrician; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Prof. Dr. Syed Nazar Hussain Shah — Orthopedic Surgeon; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Muhammad Ibrahim Shaikh — Urologist; facility source: https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur
+- Dr. Abida Chandio — Gynecologist & Obstetrician; facility source: https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur
+- Dr. Kanwal Aijaz — Consultant Neurophysician; individual profile: https://slashpromo.com/doctors/khairpur/dr-kanwal-aijaz/; facility source: https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur
+- Dr. Saeeda Chandio — Paediatrician; facility source: https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur
+- Dr. Sardar Ali Chandio — Diabetologist; facility source: https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur
+- Dr. Muhammad Hussain Abro — Ultrasound Specialist / Sonologist; facility source: https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center
+- Dr. Safdar Ali Tunio — Gastroenterologist & Consultant Physician; facility source: https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center
+
+## AI discovery and crawlable URLs
+- [Machine-readable full canonical URL list](https://slashpromo.com/llms-full.txt)
+- [XML sitemap: all published canonical routes](https://slashpromo.com/sitemap.xml)
+- [Short AI discovery summary](https://slashpromo.com/ai.txt)
+
+## Trust and privacy
+- [Editorial standards](https://slashpromo.com/editorial-policy/)
+- [Privacy](https://slashpromo.com/privacy/)
+- [Terms](https://slashpromo.com/terms/)
+- [Contact](https://slashpromo.com/contact/)
+
+## Interpretation notes
+- The phrase 'best doctors' is for discovery and local search; it does not establish an independently verified ranking.
+- Facility-linked specialists are not separate individual SlashPromo doctor profiles unless explicitly stated above.
+- Doctor consultation schedules, current availability, fees, testing inventory and emergency services may change. Refer to the original provider profile for current published information.
+- This plain-text index helps readers discover sources. Search-engine or AI-assistant inclusion is not guaranteed.
