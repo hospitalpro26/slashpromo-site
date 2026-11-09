@@ -1671,6 +1671,21 @@
       "kind": "hospital",
       "listingScope": "institutional-only",
       "linkedDoctorIds": []
+    },
+    {
+      "id": "khairpur-hussain-diagnostic-center",
+      "name": "Hussain Diagnostic Center",
+      "city": "Khairpur",
+      "category": "Diagnostic center",
+      "description": "Hussain Diagnostic Center opposite Civil Hospital, Khairpur Mir's, Sindh. Published services include ultrasound and sonology, laboratory tests, endoscopy, and gastroenterology and medical consultations; its source hospital page lists 2 specialists.",
+      "address": "Opposite Civil Hospital, Khairpur Mir's, Sindh, Pakistan",
+      "phone": "03083657787",
+      "url": "/hospitals/khairpur/hussain-diagnostic-center/",
+      "externalProfile": "https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center",
+      "kind": "hospital",
+      "hospitalpro": "",
+      "listingScope": "institutional-only",
+      "linkedDoctorIds": []
     }
   ]
 }
