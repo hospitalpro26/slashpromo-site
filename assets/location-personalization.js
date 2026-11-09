@@ -5,12 +5,12 @@
 (() => {
   "use strict";
   const path=location.pathname.toLowerCase();
-  if(!window.isSecureContext || !navigator.geolocation || navigator.webdriver === true) return;
+  // Never invoke geolocation until the visitor presses the consent button.
   if(/^\/(?:admin|qa-admin|control-center|analytics|enquiries|secure-backups|api|privacy|cookie-policy|terms|contact|advertise|editorial-policy|advertising-policy|accessibility)(?:\/|$)/.test(path))return;
   if(!document.querySelector(".site-header"))return;
   const CITY_KEY="slashpromo_preferred_city_v1";
-  const PROMPT_KEY="slashpromo_location_prompt_v1";
-  const SEEN_KEY="slashpromo_seen_pages_v1";
+  const PROMPT_KEY="slashpromo_location_prompt_v2";
+  const SEEN_KEY="slashpromo_seen_pages_v2";
   const MONTH=30*24*60*60*1000;
   const now=Date.now();
   /* These are approximate directory-city centres, not visitor location records.
@@ -33,13 +33,15 @@
   if(selected)remove(localStorage,CITY_KEY);
   const lastPrompt=get(localStorage,PROMPT_KEY);
   if(lastPrompt && Number(lastPrompt.until)>now)return;
-  /* Track a page count and only the most recent path, not browsing history. */
-  const previous=get(sessionStorage,SEEN_KEY);
+  /* Track two different public-page visits across tabs during a one-hour window.
+     Store only the previous path, a count and an expiry; no browsing history. */
+  const previous=get(localStorage,SEEN_KEY);
   const normalized=path.endsWith("/")?path:path+"/";
-  const seen=(previous&&typeof previous.last==="string"&&Number.isInteger(previous.count))
-    ? {last:normalized,count:Math.min(3,previous.count+(previous.last===normalized?0:1))}
-    : {last:normalized,count:1};
-  if(!put(sessionStorage,SEEN_KEY,seen)||seen.count<3)return;
+  const active=previous&&Number(previous.until)>now&&typeof previous.last==="string"&&Number.isInteger(previous.count);
+  const seen=active
+    ? {last:normalized,count:Math.min(2,previous.count+(previous.last===normalized?0:1)),until:now+3600000}
+    : {last:normalized,count:1,until:now+3600000};
+  if(!put(localStorage,SEEN_KEY,seen)||seen.count<2)return;
 
   function distanceKm(lat1,lon1,lat2,lon2){
     const rad=Math.PI/180;
@@ -86,12 +88,19 @@
     };
     later.addEventListener("click",dismiss);
     close.addEventListener("click",dismiss);
-    /* A displayed but ignored request should not interrupt every subsequent page. */
-    put(localStorage,PROMPT_KEY,{until:Date.now()+MONTH});
+    /* Displayed-but-unanswered prompts are snoozed for one day, not 30 days.
+       Explicit dismissal still pauses the invitation for 30 days. */
+    put(localStorage,PROMPT_KEY,{until:Date.now()+24*60*60*1000});
     allow.addEventListener("click",()=>{
       allow.disabled=true;
       later.disabled=true;
       msg.textContent="Checking for a nearby listed city…";
+      if(!window.isSecureContext||!navigator.geolocation||typeof navigator.geolocation.getCurrentPosition!=="function"){
+        msg.textContent="Location is unavailable in this browser. You can still choose your city manually.";
+        desc.textContent="No location information was collected or saved.";
+        allow.hidden=true;later.disabled=false;later.textContent="Close";
+        return;
+      }
       navigator.geolocation.getCurrentPosition(
         result=>{
           /* Calculate in the browser only; neither coordinates nor precision are retained. */
