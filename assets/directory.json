@@ -679,6 +679,22 @@
       "kind": "doctor"
     },
     {
+      "id": "pakistan-dr-muhammad-unis",
+      "name": "Dr. Muhammad Unis",
+      "city": "Pakistan",
+      "cities": [
+        "Pakistan"
+      ],
+      "specialty": "General Physician — Online Consultation",
+      "qualifications": "MBBS",
+      "hospital": "",
+      "url": "/doctors/pakistan/dr-muhammad-unis/",
+      "externalProfile": "https://slashcure.com/general-physicians/pakistan/dr-muhammad-unis",
+      "hospitalpro": "",
+      "kind": "doctor",
+      "area": "Online consultation only"
+    },
+    {
       "id": "pakpattan-dr-kashif-ali",
       "name": "Dr. Kashif Ali",
       "city": "Pakpattan",
