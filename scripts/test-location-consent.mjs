@@ -72,12 +72,13 @@ function browser(options={}){
 }
 
 const accepted=browser();
+accepted.local.setItem("slashpromo_location_prompt_v1",JSON.stringify({until:Date.now()+30*86400000})); // Old prompt suppression must not hide v2
 assert.equal(accepted.visit("/"),null,"First page must not interrupt");
 assert.equal(accepted.visit("/"),null,"Refresh of same page must not count");
-assert.equal(accepted.visit("/doctors/"),null,"Second page must not interrupt");
-const prompt=accepted.visit("/sukkur/");
-assert(prompt,"Third visited public page should show invitation");
+const prompt=accepted.visit("/doctors/");
+assert(prompt,"Second different public page should show invitation");
 assert.equal(accepted.getGpsCalls(),0,"No automatic permission request is allowed");
+assert.equal(JSON.parse(accepted.local.getItem("slashpromo_seen_pages_v2")).count,2,"Second-page threshold should be saved across tabs.");
 prompt.querySelector(".sp-location-allow").click();
 assert.equal(accepted.getGpsCalls(),1,"Browser geolocation must require explicit click");
 const city=JSON.parse(accepted.local.getItem("slashpromo_preferred_city_v1"));
@@ -90,22 +91,23 @@ assert(!JSON.stringify(accepted.local.dump()).includes("68.86"));
 assert.equal(accepted.visit("/khairpur/"),null,"Accepted users should not be reprompted.");
 
 const declined=browser();
-declined.visit("/");declined.visit("/doctors/");
+declined.visit("/");
 const declinePrompt=declined.visit("/karachi/");
 declinePrompt.querySelector(".sp-location-later").click();
 assert.equal(declined.getGpsCalls(),0);
 assert.equal(declined.visit("/sukkur/"),null,"Dismissed consent should not be repeatedly prompted.");
 
 const denied=browser({denied:true});
-denied.visit("/");denied.visit("/doctors/");
+denied.visit("/");
 const deniedPrompt=denied.visit("/karachi/");
 deniedPrompt.querySelector(".sp-location-allow").click();
 assert.equal(denied.getGpsCalls(),1);
 assert.equal(denied.local.getItem("slashpromo_preferred_city_v1"),null,"Denied location should not save a preference.");
 
 const privatePages=browser();
-privatePages.visit("/");privatePages.visit("/doctors/");
+privatePages.visit("/");
 assert.equal(privatePages.visit("/control-center/"),null,"Admin/private pages must never show the prompt.");
 assert.equal(privatePages.visit("/privacy/"),null,"Privacy policy must not trigger prompt.");
+assert.equal(privatePages.visit("/doctors/")!==null,true,"Private page navigation must not count toward public-page threshold.");
 
 console.log("PASS: opt-in after public page browsing, no automatic geolocation, consent, dismissal, denial, privacy, and location opt-out.");
