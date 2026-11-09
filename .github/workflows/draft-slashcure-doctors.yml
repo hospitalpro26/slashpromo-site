@@ -9,6 +9,8 @@ on:
     paths:
       - 'scripts/sync-slashcure-doctors.mjs'
       - 'scripts/test-sync-slashcure-doctors.mjs'
+      - 'scripts/sync-airtable-doctor-reviews.mjs'
+      - 'scripts/test-sync-airtable-doctor-reviews.mjs'
       - '.github/workflows/draft-slashcure-doctors.yml'
 permissions:
   contents: write
@@ -31,6 +33,8 @@ jobs:
           node-version: '22'
       - name: Test secure doctor URL discovery and escaping
         run: node scripts/test-sync-slashcure-doctors.mjs
+      - name: Test Airtable sync without network access
+        run: node scripts/test-sync-airtable-doctor-reviews.mjs
       - name: Retire old duplicate-only review branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,6 +96,7 @@ jobs:
           retention-days: 14
           include-hidden-files: true
       - name: Open a draft PR or preserve review branch and issue
+        id: review
         if: steps.pending.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -110,7 +115,8 @@ jobs:
           git commit -m 'Doctor profiles require human review before publication'
           git push -u origin "$branch"
           compare="https://github.com/$GITHUB_REPOSITORY/compare/main...$branch?expand=1"
-          if gh pr create --base main --head "$branch" --draft --title 'Review public Slashcure doctor profiles before publication' --body-file .doctor-sync/review.md; then
+          if review_url=$(gh pr create --base main --head "$branch" --draft --title 'Review public Slashcure doctor profiles before publication' --body-file .doctor-sync/review.md); then
+            echo "review_url=$review_url" >> "$GITHUB_OUTPUT"
             echo 'Draft pull request created. Nothing was automatically merged or deployed.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -132,5 +138,13 @@ jobs:
             echo '::warning::Could not create an issue. The review branch and discovery artifact remain saved.'
           fi
           echo "Review branch: $branch" >> "$GITHUB_STEP_SUMMARY"
+          echo "review_url=$compare" >> "$GITHUB_OUTPUT"
           echo "[Open comparison and create manual PR]($compare)" >> "$GITHUB_STEP_SUMMARY"
           echo 'To let Actions create draft PRs, the repository administrator may enable Settings > Actions > General > Allow GitHub Actions to create and approve pull requests.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Sync review-only doctor candidates to Airtable
+        if: steps.pending.outputs.skip != 'true'
+        continue-on-error: true
+        env:
+          SLASHPROMO_AIRTABLE_PAT: ${{ secrets.SLASHPROMO_AIRTABLE_PAT }}
+          DOCTOR_REVIEW_URL: ${{ steps.review.outputs.review_url }}
+        run: node scripts/sync-airtable-doctor-reviews.mjs .doctor-sync/report.json
