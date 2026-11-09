@@ -1234,6 +1234,22 @@
       "area": "Barrage Colony, Sukkur"
     },
     {
+      "id": "sukkur-dr-rizwana-qureshi",
+      "name": "Dr. Rizwana Qureshi",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Paediatrician & Child Specialist",
+      "hospital": "Dr. Shahid Mirani Hospital, Teer Chowk, Sukkur",
+      "qualifications": "MBBS, FCPS (Paediatrics)",
+      "url": "/doctors/sukkur/dr-rizwana-qureshi/",
+      "externalProfile": "https://slashcure.com/paediatricians/sukkur/dr-rizwana-qureshi",
+      "hospitalpro": "",
+      "kind": "doctor",
+      "area": "Teer Chowk"
+    },
+    {
       "id": "sukkur-dr-saima-shaikh",
       "name": "Dr. Saima Shaikh",
       "city": "Sukkur",
@@ -1473,14 +1489,15 @@
       "name": "Dr. Shahid Mirani Hospital Sukkur",
       "city": "Sukkur",
       "category": "Hospital",
-      "description": "A healthcare facility named in Sukkur's existing healthcare directory materials. Check the facility directly for current services.",
+      "description": "Dr. Shahid Mirani Hospital at Teer Chowk, Sukkur. Selected linked doctor profiles include paediatrician Dr. Rizwana Qureshi, physiotherapist Dr. Ammara Bhatti and chest specialist Dr. Muhammad Nasir Soomro. Confirm current consultation arrangements.",
       "url": "/hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/",
       "hospitalpro": "",
       "externalProfile": "",
       "kind": "hospital",
       "linkedDoctorIds": [
         "sukkur-dr-ammara-bhatti",
-        "sukkur-dr-muhammad-nasir-soomro"
+        "sukkur-dr-muhammad-nasir-soomro",
+        "sukkur-dr-rizwana-qureshi"
       ]
     },
     {
