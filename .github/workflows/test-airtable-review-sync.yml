@@ -1,0 +1,25 @@
+name: Check Airtable doctor review sync
+on:
+  pull_request:
+    paths:
+      - 'scripts/sync-airtable-doctor-reviews.mjs'
+      - 'scripts/test-sync-airtable-doctor-reviews.mjs'
+      - 'scripts/sync-slashcure-doctors.mjs'
+      - '.github/workflows/draft-slashcure-doctors.yml'
+      - '.github/workflows/test-airtable-review-sync.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Verify existing doctor discovery deduplication
+        run: node scripts/test-sync-slashcure-doctors.mjs
+      - name: Verify private Airtable review sync using HTTP mocks
+        run: node scripts/test-sync-airtable-doctor-reviews.mjs
