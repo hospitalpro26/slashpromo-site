@@ -52,6 +52,7 @@ jobs:
           name: slashcure-daily-discovery
           path: .doctor-sync/
           retention-days: 14
+          include-hidden-files: true
       - name: Open GitHub draft pull request for approval
         if: steps.pending.outputs.skip != 'true'
         env:
