@@ -187,3 +187,11 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - scripts/verify-slashpromo-archive.mjs authenticates AES-GCM, SHA-256 manifest counts, checks relationships and optionally generates staging-only SQL. scripts/test-secure-backup.mjs uses only synthetic data for automated round-trip verification.
 - Cloudflare D1 Time Travel is the primary point-in-time recovery mechanism (plan-limited). Independent full Wrangler SQL exports should be stored encrypted and tested separately, using the runbook. NO production restore API, automated offsite export or Access policy provisioning is performed by this repository.
 - Backup files are excluded from Git and should NEVER be shared with public services, chats or repository assets.
+
+## Review-first automatic doctor onboarding (November 2026)
+- A GitHub Actions scan runs daily at 08:00 Pakistan time, on manual dispatch or when the scanner changes. It reads public Slashcure profiles and generates at most three *draft* doctor pages, with human-review checklists.
+- It checks exact Slashcure URLs, normalized doctor names, city aliases (including Pano Aqil), Professor/Dr. honorifics and physiotherapy suffixes, preventing duplicates such as Dr. Komal Kandhir.
+- New doctor files are committed to a separate review branch, never automatically merged into main or deployed to Cloudflare. A human must verify name, credentials, clinic, OPD, claims and city links before approving publication.
+- GitHub Actions sometimes cannot create PRs because the repository restricts Actions-created pull requests. If draft PR creation is rejected, the workflow keeps the review branch and creates a fallback GitHub issue with a comparison link for a human to create a PR. If the issue also fails, the review branch and discovery report still remain available.
+- While an onboarding review branch or PR exists, new draft branches are paused to prevent duplicate queue entries. The previously failed duplicate-only Komal branch is cleaned up only if it matches its known contents and the correct profile is already live.
+- Automated test: node scripts/test-sync-slashcure-doctors.mjs; site SEO and profile checks also run on merged changes.

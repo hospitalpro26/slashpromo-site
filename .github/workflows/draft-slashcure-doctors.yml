@@ -13,6 +13,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 concurrency:
   group: review-first-slashcure-onboarding
   cancel-in-progress: false
@@ -30,15 +31,52 @@ jobs:
           node-version: '22'
       - name: Test secure doctor URL discovery and escaping
         run: node scripts/test-sync-slashcure-doctors.mjs
-      - name: Avoid duplicate pending doctor onboarding PRs
+      - name: Retire old duplicate-only review branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          stale="automation/slashcure-onboarding-42630643912"
+          if ! git ls-remote --exit-code --heads origin "$stale" >/dev/null 2>&1; then
+            echo 'No obsolete onboarding branch remains.'
+            exit 0
+          fi
+          if [ "$(gh pr list --state open --head "$stale" --json number --jq length)" != 0 ]; then
+            echo 'Old branch has an open PR; leaving it untouched.'
+            exit 0
+          fi
+          if node --input-type=module -e '
+            import fs from "node:fs"; import {execFileSync} from "node:child_process";
+            const now=JSON.parse(fs.readFileSync("assets/directory.json","utf8"));
+            const old=JSON.parse(execFileSync("git",["show","refs/remotes/origin/automation/slashcure-onboarding-42630643912:assets/directory.json"],{encoding:"utf8"}));
+            const extra=old.doctors.filter(d=>!now.doctors.some(x=>x.url===d.url));
+            if(extra.length!==1 || extra[0].name!=="Dr. Komal Kandhir PT" ||
+               !now.doctors.some(d=>d.city==="Sukkur"&&d.name==="Dr. Komal Kandhir"))process.exit(1);
+          '; then
+            git push origin --delete "$stale"
+            echo 'Removed old automation-only draft that duplicated Dr. Komal Kandhir.'
+          else
+            echo '::warning::Stale review branch did not match known duplicate; left untouched.'
+          fi
+      - name: Detect pending human review before drafting
         id: pending
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          count=$(gh pr list --state open --json headRefName --jq '[.[] | select(.headRefName | startswith("automation/slashcure-onboarding-"))] | length')
-          if [ "$count" != '0' ]; then
+          set -euo pipefail
+          open_pr=$(gh pr list --state open --limit 100 --json headRefName --jq '[.[] | select(.headRefName | startswith("automation/slashcure-onboarding-"))] | length')
+          branches=$(gh api --paginate "repos/$GITHUB_REPOSITORY/branches?per_page=100" --jq '.[].name' | grep '^automation/slashcure-onboarding-' || true)
+          if [ "$open_pr" != 0 ] || [ -n "$branches" ]; then
             echo 'skip=true' >> "$GITHUB_OUTPUT"
-            echo 'An existing draft onboarding PR is pending review. No duplicate PR created.' >> "$GITHUB_STEP_SUMMARY"
+            {
+              echo '## Existing doctor onboarding review queue'
+              echo "Pending onboarding PRs: $open_pr"
+              if [ -n "$branches" ]; then
+                echo 'Pending review branch(es):'
+                echo "$branches"
+              fi
+              echo 'To avoid duplicating a review, new drafts remain paused until existing review work is resolved. Nothing was auto-published.'
+            } >> "$GITHUB_STEP_SUMMARY"
           else
             echo 'skip=false' >> "$GITHUB_OUTPUT"
           fi
@@ -53,7 +91,7 @@ jobs:
           path: .doctor-sync/
           retention-days: 14
           include-hidden-files: true
-      - name: Open GitHub draft pull request for approval
+      - name: Open a draft PR or preserve review branch and issue
         if: steps.pending.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,17 +100,37 @@ jobs:
           git add -A -- assets/directory.json sitemap.xml doctors/
           git add -u
           if git diff --cached --quiet; then
-            echo 'No new verified doctor draft candidates; no PR needed.' >> "$GITHUB_STEP_SUMMARY"
+            echo 'No new verified doctor draft candidates; discovery report is available as an artifact. Nothing published.' >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          branch="automation/slashcure-onboarding-${GITHUB_RUN_ID}"
+          branch="automation/slashcure-onboarding-$GITHUB_RUN_ID"
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git checkout -b "$branch"
-          git commit -m 'Draft new Slashcure doctor profiles for human review'
+          git commit -m 'Doctor profiles require human review before publication'
           git push -u origin "$branch"
-          if ! gh pr create --base main --head "$branch" --draft --title 'Review: new public Slashcure doctor profiles' --body-file .doctor-sync/review.md; then
-            echo "::error::Pull request creation failed. The review branch exists: $branch. Check Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests."
-            exit 1
+          compare="https://github.com/$GITHUB_REPOSITORY/compare/main...$branch?expand=1"
+          if gh pr create --base main --head "$branch" --draft --title 'Review public Slashcure doctor profiles before publication' --body-file .doctor-sync/review.md; then
+            echo 'Draft pull request created. Nothing was automatically merged or deployed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
           fi
-          echo 'Draft doctor onboarding PR created; no production deployment until approved and merged.' >> "$GITHUB_STEP_SUMMARY"
+          echo '::warning::GitHub blocked the Actions token from creating a draft PR. The review branch is preserved and main remains untouched.'
+          {
+            echo '# Manual doctor onboarding review required'
+            echo
+            echo 'GitHub Actions could not create a draft pull request. New doctors remain only on the review branch, never on the public site.'
+            echo
+            echo "[Compare review branch and create a manual pull request]($compare)"
+            echo
+            echo "Review branch: $branch"
+            echo
+            cat .doctor-sync/review.md
+          } > /tmp/onboarding-review-issue.md
+          if gh issue create --title "Review new Slashcure doctors ($GITHUB_RUN_ID)" --body-file /tmp/onboarding-review-issue.md; then
+            echo 'Created fallback review issue with PR comparison link.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo '::warning::Could not create an issue. The review branch and discovery artifact remain saved.'
+          fi
+          echo "Review branch: $branch" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Open comparison and create manual PR]($compare)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'To let Actions create draft PRs, the repository administrator may enable Settings > Actions > General > Allow GitHub Actions to create and approve pull requests.' >> "$GITHUB_STEP_SUMMARY"
