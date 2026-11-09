@@ -1,0 +1,41 @@
+{
+  "source": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur",
+  "city": "Khairpur",
+  "hospital": "Health Care Clinic Khairpur",
+  "address": "Chandia More, Civil Hospital Road, Khairpur, Sindh, Pakistan",
+  "provenance": "Five names and specialties verified against the public Slashcure Health Care Clinic Khairpur page on 2026-11-09/10. Includes two existing Khairpur directory entries, Dr Kanwal Aijaz and Dr Sadaf Sagar Chandio. No dates, OPD schedules, status or availability copied.",
+  "doctors": [
+    {
+      "name": "Dr. Abida Chandio",
+      "specialty": "Gynecologist & Obstetrician",
+      "group": "gynecology",
+      "source": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur"
+    },
+    {
+      "name": "Dr. Kanwal Aijaz",
+      "specialty": "Consultant Neurophysician",
+      "group": "neurology",
+      "existingProfile": "/doctors/khairpur/dr-kanwal-aijaz/",
+      "source": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur"
+    },
+    {
+      "name": "Dr. Sadaf Sagar Chandio",
+      "specialty": "General Surgeon",
+      "group": "general_surgery",
+      "alsoListedAt": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur",
+      "source": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur"
+    },
+    {
+      "name": "Dr. Saeeda Chandio",
+      "specialty": "Paediatrician",
+      "group": "paediatrics",
+      "source": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur"
+    },
+    {
+      "name": "Dr. Sardar Ali Chandio",
+      "specialty": "Diabetologist",
+      "group": "diabetology",
+      "source": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur"
+    }
+  ]
+}

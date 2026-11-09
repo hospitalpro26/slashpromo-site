@@ -1446,14 +1446,16 @@
       "name": "Health Care Clinic Khairpur",
       "city": "Khairpur",
       "category": "Clinic",
-      "description": "Khairpur clinic associated with Dr. Kanwal Aijaz, Consultant Neurophysician, with linked clinic information on Slashcure.",
+      "description": "Multispecialty clinic on Chandia More, Civil Hospital Road, Khairpur, with 5 publicly listed doctors in gynecology, neurology, general surgery, paediatrics and diabetology. Doctor profiles and source links on SlashPromo and Slashcure.",
       "url": "/hospitals/khairpur/health-care-clinic-khairpur/",
       "hospitalpro": "",
       "externalProfile": "https://slashcure.com/hospitals/khairpur/health-care-clinic-khairpur",
       "kind": "hospital",
       "linkedDoctorIds": [
         "khairpur-dr-kanwal-aijaz"
-      ]
+      ],
+      "address": "Chandia More, Civil Hospital Road, Khairpur, Sindh, Pakistan",
+      "phone": "03003265127"
     },
     {
       "id": "shikarpur-alkhidmat-medical-center",
