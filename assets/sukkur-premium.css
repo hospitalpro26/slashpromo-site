@@ -235,3 +235,68 @@ body.sp-sukkur-premium{
  .sp-sukkur-premium .band-cta{padding:25px}
 }
 @media(prefers-reduced-motion:reduce){.sp-sukkur-premium .sp-premium-shortcuts{scroll-behavior:auto}}
+
+
+/* Compact Sukkur doctor directory: two desktop rows (3 cards × 2).
+   Specialty tabs match the premium homepage's city-filter treatment. */
+.sp-sukkur-premium #listed-doctors .sp-sukkur-specialty-pills{
+  display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:21px 0 25px;
+}
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill{
+  appearance:none;border:1px solid #dbe5f5;background:#fff;color:#506b8d;
+  border-radius:10px;padding:10px 14px;line-height:1.35;font-size:12px;
+  font-weight:780;letter-spacing:0;white-space:normal;min-height:42px;
+  box-shadow:0 1px 2px #132b5307;cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill:hover{
+  border-color:#9ebef1;background:#eff5ff;color:#1d53ae;
+}
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill.active,
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill[aria-pressed="true"]{
+  background:#245bcf;color:#fff;border-color:#245bcf;
+  box-shadow:0 5px 13px #2256c421;
+}
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill:focus-visible{
+  outline:3px solid #91bbff;outline-offset:3px;
+}
+.sp-sukkur-premium #listed-doctors [data-native-more]{
+  display:block;margin:28px auto 12px;
+  background:#fff;color:#2055bc;border:1px solid #c4d8f7;
+  border-radius:11px;padding:12px 20px;min-width:208px;
+  font-size:13px;font-weight:850;line-height:1.45;
+  box-shadow:0 4px 14px #20467810;
+}
+.sp-sukkur-premium #listed-doctors [data-native-more]:hover{
+  background:#edf4ff;border-color:#94b8f0;
+}
+.sp-sukkur-premium #listed-doctors [data-native-more][hidden]{
+  display:none!important;
+}
+.sp-sukkur-premium #listed-doctors [data-native-results]{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.sp-sukkur-premium #listed-doctors [data-native-results]>.sp-directory-card{
+  min-width:0;max-width:100%;
+}
+@media(max-width:820px){
+  .sp-sukkur-premium #listed-doctors [data-native-results]{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:560px){
+  .sp-sukkur-premium #listed-doctors [data-native-results]{
+    grid-template-columns:minmax(0,1fr);
+  }
+  .sp-sukkur-premium #listed-doctors .sp-sukkur-specialty-pills{
+    gap:7px;margin:18px 0 22px;
+  }
+  .sp-sukkur-premium #listed-doctors .sp-specialty-pill{
+    padding:9px 12px;font-size:11px;min-height:38px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .sp-sukkur-premium #listed-doctors .sp-specialty-pill{
+    transition:none;
+  }
+}
