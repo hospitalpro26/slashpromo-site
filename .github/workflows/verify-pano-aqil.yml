@@ -1,0 +1,67 @@
+name: Verify live Pano Aqil city and three doctors
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pano-aqil/**'
+      - 'doctors/pano-aqil/**'
+      - 'cities/index.html'
+      - 'doctors/index.html'
+      - '_redirects'
+      - 'assets/site.js'
+      - 'assets/directory.json'
+      - 'assets/city-questions.js'
+      - 'functions/_lib/qa.js'
+      - '.github/workflows/verify-pano-aqil.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-pano-aqil:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Validate Pano Aqil content, doctors, FAQ and city Q&A
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check assets/site.js
+          node --check assets/city-questions.js
+          node --check functions/_lib/qa.js
+          node scripts/audit-site.mjs
+          grep -q 'Find Best Doctors in Pano Aqil' pano-aqil/index.html
+          grep -q 'FAQPage' pano-aqil/index.html
+          grep -q 'sp-qa-fallback' pano-aqil/index.html
+          grep -q '/assets/city-questions.js' pano-aqil/index.html
+          grep -q '/pano-aqil/' index.html
+          grep -q '/pano-aqil/' cities/index.html
+          grep -q '/pano-aqil/' doctors/index.html
+          grep -q '^/panoaqil/ /pano-aqil/ 301$' _redirects
+          for name in dr-saba-ali-raza-mahesar dr-farooq-illahi dr-parvez-ahmed; do
+            grep -q "${name}" pano-aqil/index.html
+            test -f "doctors/pano-aqil/${name}/index.html"
+            grep -q 'slashcure.com' "doctors/pano-aqil/${name}/index.html"
+          done
+      - name: Verify Cloudflare live city, alias, doctors and crosslinks
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 12); do
+            city=$(curl -LsS --max-time 15 -o /tmp/pano-aqil-city.html -w '%{http_code}' "https://slashpromo.com/pano-aqil/?verify=${GITHUB_SHA}" || true)
+            alias=$(curl -sS --max-time 15 -o /dev/null -w '%{http_code}' 'https://slashpromo.com/panoaqil/' || true)
+            saba=$(curl -LsS --max-time 15 -o /tmp/pa-saba.html -w '%{http_code}' 'https://slashpromo.com/doctors/pano-aqil/dr-saba-ali-raza-mahesar/' || true)
+            farooq=$(curl -LsS --max-time 15 -o /tmp/pa-farooq.html -w '%{http_code}' 'https://slashpromo.com/doctors/pano-aqil/dr-farooq-illahi/' || true)
+            parvez=$(curl -LsS --max-time 15 -o /tmp/pa-parvez.html -w '%{http_code}' 'https://slashpromo.com/doctors/pano-aqil/dr-parvez-ahmed/' || true)
+            if [ "$city" = 200 ] && [[ "$alias" =~ ^(301|302|307|308)$ ]] && [ "$saba" = 200 ] && [ "$farooq" = 200 ] && [ "$parvez" = 200 ] &&                grep -q 'Find Best Doctors in Pano Aqil' /tmp/pano-aqil-city.html &&                grep -q 'Dr. Saba Ali Raza Mahesar' /tmp/pano-aqil-city.html &&                grep -q 'Dr. Farooq Illahi' /tmp/pano-aqil-city.html &&                grep -q 'Dr. Parvez Ahmed' /tmp/pano-aqil-city.html &&                grep -q 'slashcure.com' /tmp/pa-saba.html &&                grep -q 'slashcure.com' /tmp/pa-farooq.html &&                grep -q 'slashcure.com' /tmp/pa-parvez.html; then
+              echo "PASS: Pano Aqil page live; alias redirects; all 3 doctor profiles and Slashcure links available."
+              exit 0
+            fi
+            echo "Attempt $attempt: city=$city alias=$alias saba=$saba farooq=$farooq parvez=$parvez"
+            sleep 12
+          done
+          echo 'Pano Aqil production validation failed. Inspect Cloudflare deployment and redirect rules.' >&2
+          exit 1
