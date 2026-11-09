@@ -1,0 +1,141 @@
+/* Karachi-only premium page additions. Shared city-premium.css owns hero,
+   search and brand styling. Retain links, Q&A, social and Slashcure ads. */
+.sp-karachi-premium .sp-quicknav{background:#0c234d!important;border-color:#263e6a!important}
+.sp-karachi-premium .sp-quicknav .sp-quicknav-message{color:#d5e4fb!important;font-size:12px}
+.sp-karachi-premium .sp-karachi-intro{background:#fff;padding:55px 0}
+.sp-karachi-premium .sp-karachi-intro h2{color:#173863;letter-spacing:-1.1px;font-size:clamp(27px,3.4vw,38px)}
+.sp-karachi-premium .sp-karachi-intro .lead{color:#647d99;line-height:1.8;font-size:14px}
+.sp-karachi-premium .sp-discovery-chips{gap:9px;display:flex;flex-wrap:wrap;margin-top:22px}
+.sp-karachi-premium .sp-discovery-chip{
+  color:#255bb9;background:#eff5ff;border:1px solid #dae7f8;border-radius:9px;
+  padding:11px 14px;font-size:12px;font-weight:780;text-decoration:none
+}
+.sp-karachi-premium .sp-discovery-chip:hover{background:#e1edff;border-color:#a5c2f0}
+.sp-karachi-premium .sp-karachi-intro .detail-aside{
+  background:#f5f9ff;border:1px solid #dfeaf7;border-radius:15px;padding:22px
+}
+.sp-karachi-premium .sp-karachi-intro .detail-aside h3{color:#173c69}
+.sp-karachi-premium .sp-karachi-intro .detail-aside p{font-size:13px;color:#65809c}
+.sp-karachi-premium .sp-karachi-intro .detail-aside .btn{
+  border:0;background:#245bca;color:#fff;border-radius:9px;font-size:12px
+}
+.sp-karachi-premium #listed-doctors{background:#f4f8fd;padding:57px 0}
+.sp-karachi-premium #listed-doctors h2{
+  color:#15355f;font-size:clamp(27px,3.3vw,38px);line-height:1.23;letter-spacing:-1.1px
+}
+.sp-karachi-premium #listed-doctors .lead{font-size:14px;color:#637e9c;line-height:1.8}
+.sp-karachi-premium #listed-doctors .sp-karachi-direct-links{
+  border-radius:14px;margin:22px 0 23px
+}
+.sp-karachi-premium #listed-doctors .sp-karachi-direct-links .sp-sukkur-direct-details{
+  border:1px solid #d7e6f9;background:#edf5ff;border-radius:13px;padding:15px 19px
+}
+.sp-karachi-premium #listed-doctors .sp-karachi-direct-links summary{color:#2456b6;font-weight:790}
+.sp-karachi-premium #listed-doctors .sp-karachi-direct-links .sp-sukkur-direct-grid a{
+  border:1px solid #d9e7f7;border-radius:8px;color:#2455a1;font-size:12px;
+}
+.sp-karachi-premium #listed-doctors .sp-search-panel{
+  background:#fff;border:1px solid #e0eaf6;border-radius:15px;
+  box-shadow:0 12px 36px #1637660d;padding:20px
+}
+.sp-karachi-premium #listed-doctors .sp-search-field{
+  background:#fff;border:1px solid #e4ebf5;border-radius:9px
+}
+.sp-karachi-premium #listed-doctors .sp-search-field span{color:#7085a0;font-size:11px}
+.sp-karachi-premium #listed-doctors .sp-search-button{
+  background:#e84d63;color:#fff;border:0;border-radius:9px;font-weight:820
+}
+.sp-karachi-premium #listed-doctors .sp-results-heading{margin-top:26px}
+.sp-karachi-premium #listed-doctors .sp-results-heading h3{color:#19385f}
+.sp-karachi-premium #listed-doctors .sp-result-count{
+  background:#e7f0ff;color:#245cbd;border-radius:8px;font-size:11px;font-weight:850;
+  padding:7px 11px
+}
+.sp-karachi-premium #listed-doctors .sp-city-facets{
+  display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:18px 0 24px
+}
+.sp-karachi-premium #listed-doctors .sp-specialty-pill{
+  appearance:none;border:1px solid #dce6f4;background:white;color:#536e8e;
+  border-radius:9px;padding:10px 14px;font-size:12px;font-weight:790;
+  cursor:pointer;line-height:1.35
+}
+.sp-karachi-premium #listed-doctors .sp-specialty-pill:hover{background:#edf5ff;color:#2458bd;border-color:#aac6ef}
+.sp-karachi-premium #listed-doctors .sp-specialty-pill.active,
+.sp-karachi-premium #listed-doctors .sp-specialty-pill[aria-pressed="true"]{
+  background:#225bcf;color:#fff;border-color:#225bcf
+}
+.sp-karachi-premium #listed-doctors .sp-specialty-pill:focus-visible{outline:3px solid #94bbff;outline-offset:3px}
+.sp-karachi-premium #listed-doctors [data-native-results]{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:0
+}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-directory-card{
+  min-width:0;background:#fff;border:1px solid #e0e9f5;border-radius:15px;
+  box-shadow:0 7px 25px #1837660b;padding:20px;display:flex;flex-direction:column
+}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-directory-card .sp-directory-body{padding:0}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-directory-icon{
+  background:#eaf2ff;color:#205cc5;border-radius:12px
+}
+.sp-karachi-premium #listed-doctors [data-native-results] h3{
+  font-size:17px;color:#173860;line-height:1.35;letter-spacing:-.4px
+}
+.sp-karachi-premium #listed-doctors [data-native-results] h3 a{color:#19385f}
+.sp-karachi-premium #listed-doctors [data-native-results] h3 a:hover{color:#2059c7}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-card-specialty{
+  font-size:12px;color:#4b7296;font-weight:780
+}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-card-clinic{font-size:12px;color:#7889a1}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-card-type{
+  color:#d34d68;font-size:10px;letter-spacing:.6px;font-weight:850
+}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-cross-profile-actions{
+  margin-top:auto;padding-top:12px;border-top:1px solid #edf1f7;display:flex;flex-wrap:wrap;gap:8px
+}
+.sp-karachi-premium #listed-doctors [data-native-results] .sp-cross-profile-actions a{
+  font-size:11px;font-weight:790;line-height:1.5
+}
+.sp-karachi-premium #listed-doctors [data-native-more]{
+  display:block;margin:26px auto 13px;border:1px solid #bdd3f4;color:#2459bd;
+  background:#fff;border-radius:11px;padding:12px 21px;font-size:13px;font-weight:830;
+}
+.sp-karachi-premium #listed-doctors [data-native-more][hidden]{display:none!important}
+.sp-karachi-premium #listed-doctors [data-native-more]:hover{background:#eaf3ff}
+.sp-karachi-premium .sp-karachi-ad{background:#fff}
+.sp-karachi-premium .sp-karachi-clinics{background:#fff;padding:54px 0}
+.sp-karachi-premium .sp-karachi-clinics h2{
+  font-size:clamp(27px,3.3vw,38px);color:#173861;letter-spacing:-1px
+}
+.sp-karachi-premium .sp-karachi-clinics .lead{color:#627b99}
+.sp-karachi-premium .sp-karachi-clinics .sp-area-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:24px
+}
+.sp-karachi-premium .sp-karachi-clinics .sp-area-card{
+  border:1px solid #e0e9f5;border-radius:15px;background:#fff;padding:22px;
+  box-shadow:0 7px 22px #1b39670b;display:flex;flex-direction:column
+}
+.sp-karachi-premium .sp-karachi-clinics .sp-area-card h3{font-size:17px;color:#17365d}
+.sp-karachi-premium .sp-karachi-clinics .sp-area-card h3 a{color:#2057b8}
+.sp-karachi-premium .sp-karachi-clinics .sp-area-card p{color:#647c99;font-size:13px;line-height:1.75}
+.sp-karachi-premium .sp-karachi-clinics .sp-area-card a{font-size:12px;color:#235cc8;font-weight:760}
+.sp-karachi-premium .sp-karachi-faq{background:#f5f8fd}
+.sp-karachi-premium .sp-karachi-faq .sp-discovery-faq{
+  background:#fff;border:1px solid #e2eaf5;border-radius:12px;padding:17px 20px;margin-top:11px
+}
+.sp-karachi-premium .sp-karachi-faq summary{font-weight:820;color:#1b3963}
+.sp-karachi-premium .sp-specialty-help .sp-related-links a{color:#245ac9;font-weight:830}
+.sp-karachi-premium .band-cta{
+  border-radius:18px;background:linear-gradient(110deg,#17408a,#0b224e);
+  padding:36px 40px
+}
+.sp-karachi-premium .band-cta :is(h2,p,.kicker){color:white}
+.sp-karachi-premium .band-cta .btn{border:0;border-radius:9px;background:#e84d63;color:#fff}
+.sp-karachi-premium #sp-qa-fallback{background:#f4f8fd}
+@media(max-width:900px){
+  .sp-karachi-premium #listed-doctors [data-native-results]{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .sp-karachi-premium #listed-doctors [data-native-results],
+  .sp-karachi-premium .sp-karachi-clinics .sp-area-grid{grid-template-columns:1fr}
+  .sp-karachi-premium .band-cta{padding:25px}
+  .sp-karachi-premium #listed-doctors .sp-search-panel{padding:15px}
+}
