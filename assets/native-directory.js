@@ -97,6 +97,14 @@
         '</div>'+
       '</div></article>';
   };
+  const preferredKey="slashpromo_preferred_city_v1";
+  function readPreferred(){
+    try{
+      const saved=JSON.parse(localStorage.getItem(preferredKey)||"null");
+      return saved && typeof saved.city==="string" && saved.expires>Date.now()
+        && saved.city.length<=80 ? saved.city : "";
+    }catch{return ""}
+  }
   const setup = (root,db) => {
     const type = root.dataset.kind || "doctor";
     const scope = root.dataset.scope || "all";
@@ -118,6 +126,20 @@
     const load = root.querySelector("[data-native-more]");
     const reset = root.querySelector("[data-native-reset]");
     if(!output)return;
+    let preferredCity=readPreferred();
+    const preferenceNote=document.createElement("div");
+    preferenceNote.className="sp-preferred-city-note";
+    preferenceNote.hidden=true;
+    const preferenceText=document.createElement("span");
+    const clearPreference=document.createElement("button");
+    clearPreference.type="button";
+    clearPreference.textContent="Remove location preference";
+    clearPreference.addEventListener("click",()=>{
+      try{localStorage.removeItem(preferredKey)}catch{}
+      window.dispatchEvent(new CustomEvent("slashpromo:city-preference",{detail:{city:""}}));
+    });
+    preferenceNote.append(preferenceText,clearPreference);
+    output.before(preferenceNote);
     const cities = [...new Set(items.flatMap(r=>r.cities||[r.city]))].sort();
     const specs=[...new Set(items.map(r=>title(r)))].sort();
     if(datalist)datalist.innerHTML=cities.map(v=>`<option value="${esc(v)}"></option>`).join("");
@@ -140,12 +162,23 @@
       const hv=normal(hospital?.value);
       const matches=items.filter(r=>(!q||searchable(r).includes(q)) &&
         (!cv||(r.cities||[r.city]).some(c=>normal(c).includes(cv))) &&
-        (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av) && (!hv||hospitalKey(r.hospital)===hv)).sort((a,b)=>a.name.localeCompare(b.name));
+        (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av) && (!hv||hospitalKey(r.hospital)===hv)).sort((a,b)=>{
+        if(!cv&&!initialCity&&preferredCity){
+          const local=normal(preferredCity);
+          const aLocal=(a.cities||[a.city]).some(c=>normal(c)===local)?1:0;
+          const bLocal=(b.cities||[b.city]).some(c=>normal(c)===local)?1:0;
+          if(aLocal!==bLocal)return bLocal-aLocal;
+        }
+        return a.name.localeCompare(b.name);
+      });
       const current=matches.slice(0,showing);
       const sukDoctorIcons=(scope === "sukkur" || scope === "karachi") && type === "doctor";
       output.innerHTML=current.map(r=>card(r,sukDoctorIcons)).join("");
       const state=matches.length===0?"No matching profiles yet. Try a different name, city or specialty.":`${matches.length} ${type === "hospital"?"healthcare facilities":"doctor profiles"} found`;
       if(label)label.textContent=state;
+      const hasPreferred=!initialCity&&Boolean(preferredCity)&&items.some(r=>(r.cities||[r.city]).some(c=>normal(c)===normal(preferredCity)));
+      preferenceNote.hidden=!hasPreferred;
+      if(hasPreferred)preferenceText.textContent="Based on the city you chose to share: "+preferredCity+" listings appear first when no city filter is applied.";
       if(load){load.hidden=showing>=matches.length;load.textContent=`Show more (${matches.length-current.length} remaining)`;}
       const empty=root.querySelector("[data-native-empty]");
       if(empty)empty.hidden=matches.length!==0;
@@ -155,6 +188,10 @@
     [query,city,specialties,area,hospital].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{showing=scope==="home"?6:1000;render();}));
     reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";if(hospital)hospital.value="";showing=scope==="home"?6:scope==="all"?18:40;render();});
     load?.addEventListener("click",()=>{showing+=18;render();});
+    window.addEventListener("slashpromo:city-preference",ev=>{
+      preferredCity=typeof ev.detail?.city==="string"?ev.detail.city:"";
+      render();
+    });
     const params=new URLSearchParams(window.location.search);
     if(scope==="all" && !initialCity){
       if(query&&params.has("q"))query.value=params.get("q").slice(0,100);
