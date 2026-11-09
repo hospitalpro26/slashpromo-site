@@ -161,8 +161,8 @@ footer{border-top:1px solid var(--line);padding:25px 0}.footin{display:flex;just
 <header class="sitehead">
  <div class="container headinner">
   <a class="logo" href="/" aria-label="SlashPromo homepage">Slash<span class="promo">Promo</span><span class="com">.com</span></a>
-  <button type="button" class="menu" id="menuBtn" aria-controls="navigation" aria-expanded="false">☰ Menu</button>
-  <nav class="nav" id="navigation" aria-label="Main navigation">
+  <button type="button" class="menu" id="menuBtn" data-menu-toggle aria-controls="navigation" aria-expanded="false">☰ Menu</button>
+  <nav class="nav" id="navigation" data-nav aria-label="Main navigation">
    <a href="#find-doctors">Find doctors</a>
    <a href="/cities/">Explore cities</a>
    <a href="/hospitals/">Hospitals</a>
@@ -296,12 +296,8 @@ var term=document.getElementById("searchTerm");
 var city=document.getElementById("searchCity");
 var specialty=document.getElementById("searchSpecialty");
 var buttons=[].slice.call(document.querySelectorAll("[data-filter]"));
-var menuBtn=document.getElementById("menuBtn");
-menuBtn.addEventListener("click",function(){
- var nav=document.getElementById("navigation");
- var open=nav.classList.toggle("open");
- menuBtn.setAttribute("aria-expanded",String(open));
-});
+/* Menu state is managed by /assets/site.js through data-menu-toggle/data-nav
+   to keep keyboard, Escape, and existing launch checks consistent. */
 function el(tag,cls,text){var node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node}
 function safePath(s){return typeof s==="string"&&/^\/doctors\/[a-z0-9-]+\/[a-z0-9-]+\/$/.test(s)}
 function initials(name){return (name||"").replace(/^(prof\.?\s*)?(dr\.?\s*)/i,"").split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x[0]}).join("").toUpperCase()||"DR"}
