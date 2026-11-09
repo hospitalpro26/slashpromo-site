@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {parseDoctorUrl,extractDoctorLinks,extractDoctorName,escapeHtml,slug} from './sync-slashcure-doctors.mjs';
+import {parseDoctorUrl,extractDoctorLinks,extractDoctorName,escapeHtml,slug,doctorIdentity,isAlreadyListedByIdentity} from './sync-slashcure-doctors.mjs';
 assert.equal(parseDoctorUrl('https://slashcure.com/paediatricians/sukkur/dr-rizwana-qureshi')?.city,'sukkur');
 assert.equal(parseDoctorUrl('https://slashcure.com/hospitals/sukkur/dr-rizwana-qureshi'),null);
 assert.equal(parseDoctorUrl('https://example.com/paediatricians/sukkur/dr-rizwana-qureshi'),null);
@@ -12,3 +12,10 @@ assert.equal(extractDoctorName('<h1>Dr. Another Doctor</h1>','dr-rizwana-qureshi
 assert.equal(escapeHtml('<script>x</script>'),'&lt;script&gt;x&lt;/script&gt;');
 assert.equal(slug('Pano Aqil'),'pano-aqil');
 console.log('PASS: secure URL allowlist, source parsing, name verification, and HTML escaping');
+const komalExisting=[{name:'Dr. Komal Kandhir',city:'Sukkur',url:'/doctors/sukkur/dr-komal-kandhir/',externalProfile:'https://slashcure.com/consultant-physiotherapists/sukkur/dr-komal-kandhir-pt'}];
+assert.equal(doctorIdentity('Dr. Komal Kandhir PT'),doctorIdentity('Dr. Komal Kandhir'));
+assert.equal(doctorIdentity('dr-komal-kandhir-pt'),doctorIdentity('Dr. Komal Kandhir'));
+assert.equal(isAlreadyListedByIdentity({city:'sukkur',doctorSlug:'dr-komal-kandhir-pt'},komalExisting),true);
+assert.equal(isAlreadyListedByIdentity({city:'sukkur',doctorSlug:'dr-another-doctor'},komalExisting),false);
+assert.equal(isAlreadyListedByIdentity({city:'karachi',doctorSlug:'dr-komal-kandhir-pt'},komalExisting),false);
+console.log('PASS: Duplicate doctor identity matched across physiotherapy specialty URLs and PT suffixes');

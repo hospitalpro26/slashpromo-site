@@ -13,3 +13,6 @@ The checker intentionally skips unknown cities, unsupported specialty URL patter
 If GitHub Action fails when creating a PR, check **Repository Settings → Actions → General → Workflow permissions → Allow GitHub Actions to create and approve pull requests**. The run will leave a draft branch for review, and show its name in the job log. A manually approved PR must still be merged by an authorized repository maintainer.
 
 For development, use `node scripts/test-sync-slashcure-doctors.mjs` and `node scripts/sync-slashcure-doctors.mjs` (no `--apply` means dry-run). The Action uses `--apply` only to prepare an unmerged GitHub branch. The report is stored as a workflow artifact for 14 days.
+## Duplicate doctor protection (Nov 9, 2026)
+
+The scanner now normalizes public doctor slugs and display names before drafting: e.g. `dr-komal-kandhir-pt` is the same Sukkur doctor as `Dr. Komal Kandhir`. Specialty and profile URL changes must not create duplicate records. Existing doctors are skipped rather than inserted again. The previously proposed Dr. Komal Kandhir duplicate was closed without merging.
