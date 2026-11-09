@@ -56,6 +56,8 @@ jobs:
             health=$(curl -sSL --max-time 18 -o /tmp/health.json -w '%{http_code}' 'https://slashpromo.com/api/analytics?health=1' || true)
             if [ "$dashboard" = 200 ] && [ "$source" = 200 ] && [ "$auth" = 401 ] && [ "$method" = 405 ] && [ "$health" = 200 ] && \
                grep -q 'Private Analytics Dashboard' /tmp/analytics.html && \
+               grep -q 'Traffic by Slashpromo page city' /tmp/analytics.html && \
+               grep -q 'Page interest vs visitor origin' /tmp/analytics.html && \
                grep -q 'window.slashpromoTrack' /tmp/site-js.html && \
                grep -q 'Unauthorized' /tmp/report.json && grep -q '"enabled":true' /tmp/health.json; then
               echo 'PASS: dashboard loads; tracker deployed; D1 DB connected; unauthorized reporting rejected; GET ingestion blocked.'
