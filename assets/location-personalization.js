@@ -10,7 +10,7 @@
   if(!document.querySelector(".site-header"))return;
   const CITY_KEY="slashpromo_preferred_city_v1";
   const PROMPT_KEY="slashpromo_location_prompt_v2";
-  const SEEN_KEY="slashpromo_seen_pages_v1";
+  const SEEN_KEY="slashpromo_seen_pages_v2";
   const DAY=24*60*60*1000;
   const WEEK=7*DAY;
   const MONTH=30*DAY;
@@ -35,13 +35,16 @@
   if(selected)remove(localStorage,CITY_KEY);
   const lastPrompt=get(localStorage,PROMPT_KEY);
   if(lastPrompt && Number(lastPrompt.until)>now)return;
-  /* Track a page count and only the most recent path, not browsing history. */
-  const previous=get(sessionStorage,SEEN_KEY);
+  /* Count public pages across tabs for 24 hours, retaining only the last path
+     and a small counter, never a browsing history. */
+  const previous=get(localStorage,SEEN_KEY);
   const normalized=path.endsWith("/")?path:path+"/";
-  const seen=(previous&&typeof previous.last==="string"&&Number.isInteger(previous.count))
-    ? {last:normalized,count:Math.min(3,previous.count+(previous.last===normalized?0:1))}
-    : {last:normalized,count:1};
-  if(!put(sessionStorage,SEEN_KEY,seen)||seen.count<3)return;
+  const valid=previous&&typeof previous.last==="string"&&
+    Number.isInteger(previous.count)&&previous.count>=1&&Number(previous.until)>now;
+  const seen=valid
+    ? {last:normalized,count:Math.min(3,previous.count+(previous.last===normalized?0:1)),until:now+DAY}
+    : {last:normalized,count:1,until:now+DAY};
+  if(!put(localStorage,SEEN_KEY,seen)||seen.count<3)return;
 
   function distanceKm(lat1,lon1,lat2,lon2){
     const rad=Math.PI/180;

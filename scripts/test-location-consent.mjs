@@ -19,6 +19,7 @@ function storage(){
     getItem:key=>values.has(key)?values.get(key):null,
     setItem:(key,value)=>values.set(key,String(value)),
     removeItem:key=>values.delete(key),
+    clear:()=>values.clear(),
     dump:()=>Object.fromEntries(values)
   };
 }
@@ -88,6 +89,18 @@ assert.equal(accepted.events[0].detail.city,"Sukkur");
 assert(!JSON.stringify(accepted.local.dump()).includes("27.71"));
 assert(!JSON.stringify(accepted.local.dump()).includes("68.86"));
 assert.equal(accepted.visit("/khairpur/"),null,"Accepted users should not be reprompted.");
+
+/* Count across new browser tabs. */
+const crossTab=browser();
+assert.equal(crossTab.visit("/"),null);
+crossTab.session.clear();
+assert.equal(crossTab.visit("/doctors/"),null);
+crossTab.session.clear();
+assert(crossTab.visit("/sukkur/"),"Third public page in a new tab must show invitation.");
+assert.equal(crossTab.getGpsCalls(),0,"GPS must not run automatically.");
+const reminder=JSON.parse(crossTab.local.getItem("slashpromo_location_prompt_v2"));
+assert(reminder.until>Date.now()&&reminder.until<=Date.now()+86400000,
+  "Ignored invitation cooldown must be one day, not 30 days.");
 
 const declined=browser();
 declined.visit("/");declined.visit("/doctors/");
