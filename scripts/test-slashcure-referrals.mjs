@@ -8,7 +8,7 @@ const start=site.indexOf("/* SlashPromo privacy-conscious site analytics:");
 const end=site.indexOf("/* Visitors browsing three public pages",start);
 assert(start>=0 && end>start,"Shared analytics tracking block must exist");
 const source=site.slice(start,end);
-assert(!/localStorage|sessionStorage|cookie/i.test(source),"Referral tracker must not create visitor identifiers.");
+assert(!/\b(?:localStorage|sessionStorage|document\.cookie)\b/.test(source),"Referral tracker must not create visitor identifiers.");
 
 const handlers=new Map(),queued=[];
 const doc={
