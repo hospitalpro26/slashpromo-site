@@ -11,6 +11,8 @@ export function questionPage(city,path){
   if(path==="/"+city+"/")return path;
   // Dedicated Hyderabad doctors directory is a reviewed city-scoped landing route.
   if(city==="hyderabad"&&path==="/doctors/hyderabad/")return path;
+  // Reviewed Khairpur specialty guide shares the existing moderated city Q&A system.
+  if(city==="khairpur"&&path==="/doctors/khairpur/")return path;
   // A scoped question must belong to the city it claims. This stops users
   // posting Karachi questions into Sukkur and blocks arbitrary URL paths.
   if(path.startsWith("/"+city+"/"))return /^\/[a-z0-9-]+\/(?:[a-z0-9-]+\/){1,5}$/.test(path)?path:null;

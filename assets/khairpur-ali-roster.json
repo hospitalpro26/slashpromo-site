@@ -1,0 +1,83 @@
+{
+  "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur",
+  "city": "Khairpur",
+  "hospital": "Ali Medical Center Khairpur Mir's",
+  "address": "Chandia Mor, opposite Chandia Petrol Pump, Khairpur Mir's, Sindh, Pakistan",
+  "provenance": "12 names and specialties transcribed from the public Ali Medical Center Khairpur hospital page on Slashcure. No OPD schedules, statuses, days, times or availability copied.",
+  "doctors": [
+    {
+      "name": "Dr. Abubakar Phulpoto",
+      "specialty": "General Surgeon",
+      "group": "general_surgery",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Ashfaque Ali Baloch",
+      "specialty": "Consultant Physician · General Medicine",
+      "group": "medicine",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur",
+      "sourceName": "Dr. Ashfaque Ali balouch",
+      "existingProfile": "/doctors/khairpur/dr-ashfaque-ali-baloch/"
+    },
+    {
+      "name": "Dr. Habibullah Maitlo",
+      "specialty": "Paediatric Surgeon",
+      "group": "pediatric_surgery",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Muhammad Sanam Kanhar",
+      "specialty": "Cardiologist",
+      "group": "cardiology",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Mumtaz Ali Phulpoto",
+      "specialty": "Paediatrician",
+      "group": "paediatrics",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Paras",
+      "specialty": "Consultant Dermatologist",
+      "group": "dermatology",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Sadaf Sagar Chandio",
+      "specialty": "General Surgeon",
+      "group": "general_surgery",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Sajida Parveen Ujjan",
+      "specialty": "Gynecologist & Obstetrician",
+      "group": "gynecology",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Syed Talib Hussain Shah",
+      "specialty": "Dentist",
+      "group": "dentistry",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Uzma Salman Shaikh",
+      "specialty": "Gynecologist & Obstetrician",
+      "group": "gynecology",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Prof. Dr. Syed Nazar Hussain Shah",
+      "specialty": "Orthopedic Surgeon",
+      "group": "orthopedics",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    },
+    {
+      "name": "Dr. Muhammad Ibrahim Shaikh",
+      "specialty": "Urologist",
+      "group": "urology",
+      "source": "https://slashcure.com/hospitals/khairpur/ali-medical-center-khairpur"
+    }
+  ]
+}
