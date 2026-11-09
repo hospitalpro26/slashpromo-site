@@ -1,0 +1,47 @@
+
+/* Hyderabad / Tabba Heart Institute SEO directory components. Opt-in only. */
+.sp-hyderabad-premium .tb-wrap{width:min(1160px,calc(100% - 56px));margin-inline:auto}
+.sp-hyderabad-premium .tb-eyebrow{font-size:11px;font-weight:850;letter-spacing:1.4px;text-transform:uppercase;color:#d84c64}
+.sp-hyderabad-premium .tb-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:22px 0 0}
+.sp-hyderabad-premium .tb-card{display:flex;flex-direction:column;min-width:0;background:#fff;border:1px solid #e2eaf5;border-radius:15px;padding:20px;box-shadow:0 7px 22px #193e7310}
+.sp-hyderabad-premium .tb-card-top{display:flex;gap:12px;align-items:center}
+.sp-hyderabad-premium .tb-avatar{display:grid;place-items:center;flex:0 0 49px;width:49px;height:49px;border-radius:12px;color:#2059bb;background:#e8f1ff;font-size:17px;font-weight:850}
+.sp-hyderabad-premium .tb-card:nth-child(3n+2) .tb-avatar{color:#d64b64;background:#fff0f3}
+.sp-hyderabad-premium .tb-card h3{font-size:16px;font-weight:830;line-height:1.35;color:#15345c;letter-spacing:-.35px;margin:0}
+.sp-hyderabad-premium .tb-card h3 a{color:#194578;text-decoration:none}
+.sp-hyderabad-premium .tb-card h3 a:hover{color:#205aca;text-decoration:underline}
+.sp-hyderabad-premium .tb-card .tb-spec{color:#426b9b;font-size:12px;font-weight:760;line-height:1.55;margin:10px 0 0}
+.sp-hyderabad-premium .tb-card .tb-hospital{color:#7789a2;font-size:11px;line-height:1.65;margin:9px 0 12px}
+.sp-hyderabad-premium .tb-card-footer{display:flex;align-items:center;flex-wrap:wrap;gap:10px;border-top:1px solid #edf1f7;padding-top:14px;margin-top:auto}
+.sp-hyderabad-premium .tb-card-footer a{color:#205ec7;font-size:12px;font-weight:830;text-decoration:none}
+.sp-hyderabad-premium .tb-card-footer a:hover{text-decoration:underline}
+.sp-hyderabad-premium .tb-card-footer a.tb-alt{color:#6e819c;font-size:11px}
+.sp-hyderabad-premium .tb-card[hidden]{display:none!important}
+.sp-hyderabad-premium .tb-filter-pills{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0 9px}
+.sp-hyderabad-premium .tb-filter-pills button{appearance:none;border:1px solid #dce6f5;border-radius:9px;background:#fff;color:#46688c;cursor:pointer;padding:10px 14px;font-size:12px;font-weight:780;min-height:40px}
+.sp-hyderabad-premium .tb-filter-pills button[aria-pressed=true]{background:#225ccf;color:white;border-color:#225ccf}
+.sp-hyderabad-premium .tb-filter-pills button:hover:not([aria-pressed=true]){background:#eef5ff;color:#215bbc}
+.sp-hyderabad-premium .tb-filter-pills button:focus-visible,.sp-hyderabad-premium .tb-load:focus-visible{outline:3px solid #96bbfc;outline-offset:3px}
+.sp-hyderabad-premium .tb-count{display:block;color:#667f9e;font-size:12px;margin:12px 0 7px}
+.sp-hyderabad-premium .tb-load{display:block;margin:27px auto 7px;background:#fff;border:1px solid #c2d3f2;border-radius:10px;color:#245cbe;padding:12px 20px;min-width:225px;font-size:12px;font-weight:820;cursor:pointer}
+.sp-hyderabad-premium .tb-load:hover{background:#ebf3ff}
+.sp-hyderabad-premium .tb-load[hidden]{display:none!important}
+.sp-hyderabad-premium .tb-section{padding:58px 0;background:#f4f8fd}
+.sp-hyderabad-premium .tb-section.is-white{background:#fff}
+.sp-hyderabad-premium .tb-section h2{color:#16355e;font-size:clamp(27px,3.3vw,39px);letter-spacing:-1.1px;line-height:1.22;margin:10px 0 13px}
+.sp-hyderabad-premium .tb-section p.tb-lead{color:#617c99;font-size:14px;line-height:1.8;max-width:930px}
+.sp-hyderabad-premium .tb-inline-actions{display:flex;flex-wrap:wrap;gap:11px;align-items:center;margin-top:20px}
+.sp-hyderabad-premium .tb-inline-actions a{display:inline-block;text-align:center;border-radius:10px;padding:12px 17px;font-size:12px;font-weight:840;text-decoration:none;background:#205bcc;color:#fff}
+.sp-hyderabad-premium .tb-inline-actions a.secondary{color:#245abd;background:#eaf2ff;border:1px solid #cfe0f6}
+.sp-hyderabad-premium .tb-facility-info{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:21px}
+.sp-hyderabad-premium .tb-facility-info article{border:1px solid #e1eaf5;background:#fff;border-radius:14px;padding:21px}
+.sp-hyderabad-premium .tb-facility-info h3{font-size:16px;color:#183c6b;margin:0 0 10px}
+.sp-hyderabad-premium .tb-facility-info p{font-size:12px;line-height:1.7;color:#68809c;margin:0}
+.sp-hyderabad-premium .tb-note{font-size:12px!important;color:#7588a1!important;line-height:1.75!important;margin-top:23px!important}
+.sp-hyderabad-premium #hyderabad-doctors [data-hyd-doctor-directory]{}.sp-hyderabad-premium #hyderabad-doctors .tb-card{padding:20px}
+.sp-hyderabad-premium #hyderabad-doctors .sp-search-panel{margin-bottom:21px}
+.sp-hyderabad-premium #hyderabad-doctors .tb-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sp-hyderabad-premium [data-hyd-doctor-directory] .sp-search-field select{width:100%}
+.sp-hyderabad-premium .tb-badge{display:inline-flex;background:#eaf2ff;color:#245dbd;border-radius:7px;padding:6px 9px;font-size:10px;font-weight:820;margin:9px 0 0;align-self:flex-start}
+@media(max-width:900px){.sp-hyderabad-premium .tb-grid,.sp-hyderabad-premium #hyderabad-doctors .tb-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sp-hyderabad-premium .tb-facility-info{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.sp-hyderabad-premium .tb-wrap{width:calc(100% - 34px)}.sp-hyderabad-premium .tb-grid,.sp-hyderabad-premium #hyderabad-doctors .tb-grid,.sp-hyderabad-premium .tb-facility-info{grid-template-columns:minmax(0,1fr)}.sp-hyderabad-premium .tb-section{padding:42px 0}.sp-hyderabad-premium .tb-filter-pills{gap:7px}.sp-hyderabad-premium .tb-filter-pills button{font-size:11px;padding:9px 12px}.sp-hyderabad-premium .tb-inline-actions a{width:100%}}
