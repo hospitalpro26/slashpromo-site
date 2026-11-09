@@ -1,0 +1,37 @@
+name: Monitor Google Bing crawl readiness (not indexing status)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/test-search-crawl.mjs'
+      - '.github/workflows/check-search-crawl.yml'
+      - 'robots.txt'
+      - 'sitemap.xml'
+      - '_redirects'
+      - 'index.html'
+      - 'lahore/index.html'
+      - 'sukkur/index.html'
+      - 'karachi/index.html'
+      - 'khairpur/index.html'
+      - 'shikarpur/index.html'
+  schedule:
+    - cron: '17 3 * * 1,4'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: slashpromo-search-crawl
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check syntax and compare live crawlability
+        run: |
+          node --check scripts/test-search-crawl.mjs
+          node scripts/test-search-crawl.mjs
