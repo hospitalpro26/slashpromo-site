@@ -367,16 +367,21 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
   const view=()=>window.slashpromoTrack("page_view");
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",view,{once:true});
   else view();
-  document.addEventListener("click",event=>{
+  /* The same delegated listener covers static links and dynamically added
+     doctor/hospital buttons. Middle-click navigation is also counted once. */
+  const recordSlashcureClick=event=>{
+    if(event.defaultPrevented || (event.type==="auxclick" && event.button!==1))return;
     const anchor=event.target.closest?.("a[href]");
-    if(anchor){
-      try{
-        const dest=new URL(anchor.href,location.href);
-        if(dest.hostname==="slashcure.com"||dest.hostname==="www.slashcure.com")
-          window.slashpromoTrack("slashcure_click");
-      }catch{}
-    }
-  });
+    if(!anchor)return;
+    try{
+      const dest=new URL(anchor.href,location.href);
+      if(dest.protocol==="https:" &&
+         (dest.hostname==="slashcure.com"||dest.hostname==="www.slashcure.com"))
+        window.slashpromoTrack("slashcure_click");
+    }catch{}
+  };
+  document.addEventListener("click",recordSlashcureClick);
+  document.addEventListener("auxclick",recordSlashcureClick);
 })();
 
 /* Visitors browsing three public pages may optionally share browser location
