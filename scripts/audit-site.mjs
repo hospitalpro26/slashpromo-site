@@ -112,7 +112,12 @@ for(const file of staticPages){
         if(root["@context"]!=="https://schema.org")warnings.push("JSON-LD missing schema.org context: "+file);
         const entities=Array.isArray(root["@graph"])?root["@graph"]:[root];
         for(const entity of entities){
-          if(typeof entity.url==="string"&&entity.url.startsWith(BASE)&&entity.url!==expected)
+          /* Only page-shaped entities must use this page's canonical URL.
+             Doctors and hospitals linked from a directory correctly have
+             their own profile URLs, so they are not canonical conflicts. */
+          const types=Array.isArray(entity["@type"])?entity["@type"]:[entity["@type"]];
+          const isPage=types.some(type=>["WebPage","CollectionPage","ProfilePage","AboutPage","ContactPage","SearchResultsPage"].includes(type));
+          if(isPage&&typeof entity.url==="string"&&entity.url.startsWith(BASE)&&entity.url!==expected)
             warnings.push("Structured data page URL differs from canonical: "+file+" => "+entity.url);
         }
       }catch(error){errors.push("Invalid JSON-LD: "+file+": "+error.message)}

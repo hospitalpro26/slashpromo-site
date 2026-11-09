@@ -1,0 +1,42 @@
+name: Verify live SlashPromo website launch
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'cities/index.html'
+      - 'lahore/index.html'
+      - 'sukkur/index.html'
+      - 'karachi/index.html'
+      - 'khairpur/index.html'
+      - 'shikarpur/index.html'
+      - 'assets/site.js'
+      - 'assets/native-directory.js'
+      - 'assets/cross-profile-links.js'
+      - 'assets/cross-profile-links.css'
+      - 'assets/location-personalization.js'
+      - 'assets/city-questions.js'
+      - 'sitemap.xml'
+      - '_redirects'
+      - 'scripts/test-live-launch.mjs'
+      - '.github/workflows/verify-live-launch.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-launch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate static checks before live probe
+        run: |
+          node --check scripts/test-live-launch.mjs
+          node --check assets/site.js
+          node --check assets/native-directory.js
+          node --check assets/cross-profile-links.js
+      - name: Verify production pages and public services (read-only)
+        run: node scripts/test-live-launch.mjs
