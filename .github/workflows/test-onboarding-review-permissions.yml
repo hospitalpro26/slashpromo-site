@@ -1,0 +1,57 @@
+name: Smoke test doctor onboarding review permissions
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/test-onboarding-review-permissions.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+jobs:
+  smoke:
+    if: github.repository == 'hospitalpro26/slashpromo-site'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Safely test temporary review PR and fallback issue, then clean up
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          branch="automation/review-smoke-$GITHUB_RUN_ID"
+          git switch -c "$branch"
+          printf '# Temporary doctor onboarding permission test\nThis branch contains no doctor records and must never merge.\n' > .doctor-review-smoke-test.md
+          git add .doctor-review-smoke-test.md
+          git commit -m 'Temporary doctor onboarding permission test only'
+          git push -u origin "$branch"
+          cleanup(){
+            git push origin --delete "$branch" >/dev/null 2>&1 || true
+          }
+          trap cleanup EXIT
+          echo '## One-time doctor review permission smoke test' >> "$GITHUB_STEP_SUMMARY"
+          if gh pr create --base main --head "$branch" --draft --title "TEMPORARY: test onboarding draft PR permission; do not merge" --body "Permission smoke test only. No doctor data. This draft PR will be immediately closed without merging."; then
+            echo 'PASS: Actions token can create draft pull requests.' >> "$GITHUB_STEP_SUMMARY"
+            if gh pr close "$branch" --comment 'Temporary permission test completed. Closing without merging.'; then
+              echo 'PASS: Temporary PR closed; no site publication.' >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo '::error::Temporary PR could not be closed; review it manually.'
+              exit 1
+            fi
+          else
+            echo 'BLOCKED: GitHub Actions is not permitted to create draft PRs. Testing fallback review issue instead.' >> "$GITHUB_STEP_SUMMARY"
+            issue_url=$(gh issue create --title "TEMPORARY: onboarding issue fallback permission test" --body "This is a temporary permissions test; no doctor content, publication or action is needed. It will be closed automatically.") || {
+              echo '::error::Both draft PR creation and fallback review issue creation are unavailable.'
+              exit 1
+            }
+            gh issue close "$issue_url" --comment 'Fallback review issue test successful; closing automatically.'
+            echo 'PASS: Fallback issue can be created and closed; future real doctor reviews can be queued safely.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo 'The temporary test branch is deleted by an exit trap. Main was never modified by this test.' >> "$GITHUB_STEP_SUMMARY"
