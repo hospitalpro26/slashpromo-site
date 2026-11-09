@@ -28,7 +28,7 @@ const escapeHtml=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 const slug=s=>String(s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 // A doctor's name is the identity, not the exact profile URL or job suffix.
 // Example: /dr-komal-kandhir-pt and Dr. Komal Kandhir both resolve to komal-kandhir.
-const cityAliases={'panoaqil':'pano-aqil','pano-akil':'pano-aqil'};
+const cityAliases={'panoaqil':'pano-aqil','panoaqi':'pano-aqil','pano-akil':'pano-aqil','pano-aqil-sindh':'pano-aqil','lakhi-ghulam-shah-shikarpur-sindh':'lakhi-ghulam-shah','dina-jhelum':'jhelum','mianchannu':'mian-channu'};
 function normalizedCitySlug(value){const key=slug(value);return cityAliases[key]||key;}
 function doctorIdentity(value){
   return slug(value).replace(/^dr-/,'').replace(/-(?:pt|dpt|physiotherapist)$/,'');
