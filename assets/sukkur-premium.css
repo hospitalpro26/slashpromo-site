@@ -1,0 +1,237 @@
+/* Sukkur premium redesign, 2026-11-09.
+   Scoped to the Sukkur landing page to preserve other cities and profile styles.
+   Preserves native doctor/hospital search, Q&A, WhatsApp, partner advertising,
+   social media, SEO, and public provider information. */
+body.sp-sukkur-premium{
+  --spn:#0b2353;--spb:#205bd2;--spr:#e84d64;--spi:#16345d;--spm:#687d99;
+  --spl:#e2eaf5;--spbg:#f5f8fd;
+  background:#fff;color:var(--spi);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased
+}
+.sp-sukkur-premium .wrap{width:min(1160px,calc(100% - 56px));margin-left:auto;margin-right:auto}
+.sp-sukkur-premium .site-header{background:#fff;color:#1b355f;border-bottom:1px solid #e6eef8;box-shadow:none}
+.sp-sukkur-premium .site-header .topbar{background:#0a1c40;color:#dae7fb;border:0;padding:0}
+.sp-sukkur-premium .site-header .topbar p,.sp-sukkur-premium .site-header .topbar a{color:#d1dffa;font-size:11px}
+.sp-sukkur-premium .site-header .nav{padding-top:11px;padding-bottom:11px;min-height:73px;gap:20px}
+.sp-sukkur-premium .site-header .wordmark{font-size:28px;letter-spacing:-1.2px;font-weight:900;color:#1b58c5}
+.sp-sukkur-premium .site-header .wordmark .promo{color:#e84d64}
+.sp-sukkur-premium .site-header .wordmark .dotcom{color:#314e7a;font-size:14px}
+.sp-sukkur-premium .site-header .navlinks a{color:#4a617e;font-size:13px;font-weight:720}
+.sp-sukkur-premium .site-header .navlinks a:hover{color:#205bd2}
+.sp-sukkur-premium .site-header .navlinks .btn{background:var(--spb);border-color:var(--spb);color:white;font-size:12px;border-radius:10px;padding:12px 17px}
+.sp-sukkur-premium .site-header .menu-toggle{border-radius:10px;border:1px solid #d5e1f1;color:#204778}
+.sp-sukkur-premium .sp-quicknav{background:#0c2048!important;border-color:#29466d!important}
+.sp-sukkur-premium .sp-quicknav>.wrap{padding-top:11px!important;padding-bottom:11px!important}
+.sp-sukkur-premium .sp-quicknav-message{color:#cddcf1!important;font-size:12px!important}
+.sp-sukkur-premium .sp-quicknav a[aria-current="page"]{color:#92cbff!important}
+.sp-sukkur-premium .sp-premium-sukkur-hero{
+  position:relative;isolation:isolate;overflow:hidden;color:white;
+  background:radial-gradient(ellipse at 88% 34%,#2b57a4 0%,#112e69 34%,#071a3c 78%);
+}
+.sp-sukkur-premium .sp-premium-sukkur-hero:before{
+  content:"";position:absolute;right:-180px;top:-215px;width:760px;height:760px;border:1px solid #ffffff13;
+  border-radius:50%;box-shadow:0 0 0 95px #ffffff05,0 0 0 190px #ffffff04;pointer-events:none;z-index:-1;
+}
+.sp-sukkur-premium .sp-premium-sukkur-grid{
+  display:grid;grid-template-columns:1.17fr .83fr;gap:24px;align-items:center;
+  padding:70px 0 104px;min-height:415px
+}
+.sp-sukkur-premium .sp-premium-breadcrumb{
+  display:flex;flex-wrap:wrap;align-items:center;gap:10px;color:#b4c7e8;font-weight:650;font-size:12px;margin-bottom:25px;
+}
+.sp-sukkur-premium .sp-premium-breadcrumb a{color:#cfddf5;text-decoration:none}
+.sp-sukkur-premium .sp-premium-breadcrumb a:hover{text-decoration:underline}
+.sp-sukkur-premium .sp-premium-kicker{
+  display:inline-flex;align-items:center;gap:10px;color:#a9caff;
+  letter-spacing:1.9px;text-transform:uppercase;font-weight:850;font-size:11px;
+}
+.sp-sukkur-premium .sp-premium-kicker:before{content:"";width:22px;height:2px;background:#ff6b7e}
+.sp-sukkur-premium .sp-premium-sukkur-hero h1{
+  color:#fff;font-size:clamp(42px,5.4vw,67px);line-height:1.08;letter-spacing:-3px;
+  font-weight:870;margin:20px 0 20px;max-width:750px
+}
+.sp-sukkur-premium .sp-premium-sukkur-hero h1 em{color:#91bdff;font-style:normal}
+.sp-sukkur-premium .sp-premium-sukkur-hero h1 .period{color:#ef6177}
+.sp-sukkur-premium .sp-premium-sukkur-hero p{
+  color:#ceddf4;font-size:15px;line-height:1.86;margin:0 0 22px;max-width:625px
+}
+.sp-sukkur-premium .sp-premium-trust{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:12px;color:#d9e6fa;font-weight:650}
+.sp-sukkur-premium .sp-premium-trust span:before{content:"✓";color:#8be8cb;margin-right:7px;font-weight:900}
+.sp-sukkur-premium .sp-premium-art{min-height:315px;position:relative;display:grid;place-items:center}
+.sp-sukkur-premium .sp-premium-disc{
+  position:absolute;width:min(320px,90%);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 25% 15%,#95c6ff,#2965c5 70%,#164995);
+  box-shadow:0 14px 80px #142e76a3
+}
+.sp-sukkur-premium .sp-premium-disc:after{
+  content:"";position:absolute;inset:34px;border-radius:50%;border:1px dashed #ffffff70
+}
+.sp-sukkur-premium .sp-premium-hospital{
+  position:relative;width:min(295px,80%);filter:drop-shadow(0 18px 23px #071937b8)
+}
+.sp-sukkur-premium .sp-premium-float{
+  position:absolute;background:#fff;color:#19355c;border-radius:14px;box-shadow:0 18px 40px #07173988;
+  padding:11px 14px;display:flex;align-items:center;gap:10px;max-width:230px
+}
+.sp-sukkur-premium .sp-premium-float strong{display:block;font-size:12px;color:#19355c}
+.sp-sukkur-premium .sp-premium-float small{display:block;font-size:10px;color:#7c8da6;margin-top:3px}
+.sp-sukkur-premium .sp-premium-float b{background:#e8f0ff;color:#235fcc;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:18px}
+.sp-sukkur-premium .sp-premium-float.top{right:0;top:12%;transform:rotate(3deg)}
+.sp-sukkur-premium .sp-premium-float.bottom{left:-1%;bottom:3%;transform:rotate(-2deg)}
+.sp-sukkur-premium .sp-premium-float.bottom b{background:#fff0f2;color:#e35469}
+.sp-sukkur-premium .sp-premium-search{
+  display:grid;grid-template-columns:1.5fr 1fr auto;gap:10px;position:relative;z-index:4;
+  background:#fff;border:1px solid #e5ecf6;box-shadow:0 16px 54px #1b418423;
+  width:min(1090px,calc(100% - 56px));margin:-49px auto 0;padding:13px;border-radius:16px;
+}
+.sp-sukkur-premium .sp-premium-search label{
+  display:block;min-width:0;border-right:1px solid #e5ebf5;padding:5px 13px;
+}
+.sp-sukkur-premium .sp-premium-search label:nth-child(2){border:0}
+.sp-sukkur-premium .sp-premium-search label span{
+  display:block;text-transform:uppercase;letter-spacing:1.1px;color:#8392a8;font-size:10px;font-weight:850;margin-bottom:5px
+}
+.sp-sukkur-premium .sp-premium-search input,.sp-sukkur-premium .sp-premium-search select{
+  display:block;width:100%;padding:6px 0;border:0;background:#fff;outline:0;color:#274269;font-size:13px;line-height:1.5;
+}
+.sp-sukkur-premium .sp-premium-search input:focus-visible,.sp-sukkur-premium .sp-premium-search select:focus-visible{outline:2px solid #93bafa;outline-offset:3px}
+.sp-sukkur-premium .sp-premium-search button{
+  background:var(--spr);color:#fff;border:0;border-radius:10px;
+  padding:14px 23px;font-weight:800;font-size:12px;white-space:nowrap;
+}
+.sp-sukkur-premium .sp-premium-search button:hover{background:#d83f56}
+.sp-sukkur-premium .sp-premium-shortcuts{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:29px 0 12px}
+.sp-sukkur-premium .sp-premium-shortcuts strong{font-size:11px;color:#7d8ca3;margin-right:5px}
+.sp-sukkur-premium .sp-premium-shortcuts a{
+  border:1px solid #dce6f3;border-radius:8px;background:#f8faff;padding:9px 12px;
+  font-size:12px;color:#3d5a7d;text-decoration:none;font-weight:720;
+}
+.sp-sukkur-premium .sp-premium-shortcuts a:hover{background:#eaf2ff;color:#1d5cca}
+.sp-sukkur-premium :is(.section,.sp-index){padding-top:57px;padding-bottom:57px}
+.sp-sukkur-premium .section.white{background:white}
+.sp-sukkur-premium .section.soft{background:#f5f8fd}
+.sp-sukkur-premium :is(.section,.sp-index) h2{
+  color:#143159;font-size:clamp(26px,3.4vw,37px);font-weight:835;line-height:1.24;
+  letter-spacing:-1.05px;margin:8px 0 16px
+}
+.sp-sukkur-premium :is(.section,.sp-index) h3{color:#1a3b65}
+.sp-sukkur-premium .eyebrow{color:#d74962;text-transform:uppercase;letter-spacing:1.15px;font-size:11px;font-weight:840}
+.sp-sukkur-premium :is(.section,.sp-index) p{color:#61758e;line-height:1.78}
+.sp-sukkur-premium :is(.section,.sp-index) .lead{font-size:14px;color:#677c97;max-width:870px}
+.sp-sukkur-premium .section-head{margin-bottom:24px}
+.sp-sukkur-premium #sukkur-quick-start{background:#fff;padding-top:42px}
+.sp-sukkur-premium #sukkur-quick-start .category-links a{
+  background:#eff5ff;border:1px solid #dbe7f9;color:#2357b8;
+  border-radius:9px;padding:11px 15px;font-size:12px;font-weight:780
+}
+.sp-sukkur-premium #sukkur-popular-hospital-queries{background:#f5f8fd}
+.sp-sukkur-premium #sukkur-popular-hospital-queries .sp-directory-grid{margin-top:24px}
+.sp-sukkur-premium :is(.sp-directory-grid,.sp-hospital-guide-grid){gap:16px}
+.sp-sukkur-premium .sp-directory-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sp-sukkur-premium :is(.sp-directory-card,.sp-hospital-guide-card){
+  border-radius:16px;border:1px solid #e0e9f6;background:#fff;color:#1b3b62;
+  box-shadow:0 6px 22px #1539640b;
+}
+.sp-sukkur-premium .sp-directory-card{padding:18px;display:flex;flex-direction:column}
+.sp-sukkur-premium .sp-directory-card .sp-directory-body{padding:0}
+.sp-sukkur-premium .sp-directory-card h3{font-size:16px;font-weight:820;letter-spacing:-.4px;line-height:1.33}
+.sp-sukkur-premium .sp-directory-card h3 a{color:#17365f}
+.sp-sukkur-premium .sp-directory-card h3 a:hover{color:#1b59c8}
+.sp-sukkur-premium .sp-directory-card .sp-card-type{font-size:10px;letter-spacing:.7px;color:#d14c66;font-weight:840}
+.sp-sukkur-premium .sp-directory-card .sp-card-link{font-size:12px;color:#1e5bc9;font-weight:830}
+.sp-sukkur-premium .sp-directory-card .sp-card-specialty{font-size:12px;color:#6880a0}
+.sp-sukkur-premium .sp-directory-card .sp-directory-icon{border-radius:12px;background:#eaf1ff;color:#1e5bc8}
+.sp-sukkur-premium .sp-hospital-guide-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sp-sukkur-premium .sp-hospital-guide-card{padding:24px}
+.sp-sukkur-premium .sp-hospital-guide-card h3 a{color:#153968}
+.sp-sukkur-premium .sp-guide-pill{border-radius:8px;background:#eff4fd;color:#315f9e;border:0;font-size:10px}
+.sp-sukkur-premium .sp-guide-links a{color:#245fae;font-size:12px}
+.sp-sukkur-premium .sp-guide-footer{color:#1d5cca;font-weight:820;font-size:12px}
+.sp-sukkur-premium .sp-specialty-help .sp-discovery-chips{gap:10px}
+.sp-sukkur-premium .sp-specialty-help .sp-discovery-chip{
+  border:1px solid #dbe6f6;background:#f8fbff;color:#2458ad;
+  border-radius:10px;padding:11px 15px;font-weight:770;font-size:12px
+}
+.sp-sukkur-premium .sp-specialty-help .sp-discovery-chip:hover{background:#e8f1ff;border-color:#9dbef1}
+.sp-sukkur-premium .sp-sukkur-direct-details{border-radius:14px;border:1px solid #c9dcef;background:#f4f9ff}
+.sp-sukkur-premium :is(#listed-doctors,#listed-hospitals){background:#f5f8fd}
+.sp-sukkur-premium #listed-hospitals{background:#fff}
+.sp-sukkur-premium .sp-search-panel{
+  border-radius:15px;border:1px solid #dce6f6;background:white;
+  box-shadow:0 11px 35px #183b6610
+}
+.sp-sukkur-premium .sp-search-controls{gap:9px}
+.sp-sukkur-premium .sp-search-field{background:#fff;border:1px solid #e4eaf5;border-radius:9px}
+.sp-sukkur-premium .sp-search-field span{color:#6c819d;font-size:11px}
+.sp-sukkur-premium .sp-search-button{background:#e84d64;color:#fff;border-radius:9px;font-weight:790}
+.sp-sukkur-premium .sp-results-heading{color:#19375d}
+.sp-sukkur-premium .sp-result-count{background:#e9f2ff;color:#235bbe;border-radius:7px;font-size:11px;font-weight:800}
+.sp-sukkur-premium .sp-index .sp-directory-grid{margin-top:22px}
+.sp-sukkur-premium .sp-load-more{background:#fff;color:#2459be;border:1px solid #bdd0ef;border-radius:9px;font-weight:800}
+.sp-sukkur-premium :is(.sp-gastro-spotlight-grid,.sp-physio-spotlight-box,.sp-rheum-spotlight-box){border-radius:18px}
+.sp-sukkur-premium .sp-sukkur-faq details.faq{
+  border:1px solid #e0e8f5;background:#f8faff;border-radius:13px;margin:12px 0;padding:16px 20px;
+}
+.sp-sukkur-premium .sp-sukkur-faq summary{color:#1b3962;font-weight:800}
+.sp-sukkur-premium .sp-sukkur-faq details a{color:#205bd0}
+.sp-sukkur-premium .band-cta{
+  background:linear-gradient(105deg,#153d88,#0c224e);border-radius:20px;color:white;padding:35px 40px
+}
+.sp-sukkur-premium .band-cta :is(h2,p,.kicker){color:white}
+.sp-sukkur-premium .band-cta .btn{border-radius:10px;background:#e84d64;color:#fff;border-color:#e84d64}
+.sp-sukkur-premium #sp-qa-fallback{background:#f5f8fd}
+.sp-sukkur-premium .sp-qa-shell{background:transparent;color:#18345e}
+.sp-sukkur-premium .sp-qa-heading h2{color:#163961}
+.sp-sukkur-premium .sc-promo-strip{border-radius:20px;overflow:hidden}
+.sp-sukkur-premium .full-footer{background:#0b1d40;color:#d4e0f4;border-top:0;padding:50px 0 0}
+.sp-sukkur-premium .full-footer .sp-premium-footer-logo{display:block;font-size:25px;font-weight:900;letter-spacing:-1px;color:#7daeff;margin-bottom:14px}
+.sp-sukkur-premium .sp-premium-footer-logo span{color:#e94e64}
+.sp-sukkur-premium .sp-premium-footer-logo small{font-size:13px;color:#cadcf5}
+.sp-sukkur-premium .footgrid{display:grid;grid-template-columns:1.65fr repeat(3,1fr);gap:30px;padding-bottom:40px}
+.sp-sukkur-premium .footgrid h3{font-size:12px;font-weight:850;color:white;margin:0 0 17px;letter-spacing:.2px}
+.sp-sukkur-premium .footgrid a:not(.sp-premium-footer-logo){display:block;color:#b7cbe6;font-size:12px;margin:0 0 12px;line-height:1.4}
+.sp-sukkur-premium .footgrid a:hover,.sp-sukkur-premium .footbottom a:hover{color:#fff;text-decoration:underline}
+.sp-sukkur-premium .footgrid p{font-size:12px;color:#b7c8e2;line-height:1.78;margin:0 0 13px;max-width:380px}
+.sp-sukkur-premium .footgrid .disclaimer{color:#8da4c5;font-size:11px}
+.sp-sukkur-premium .footbottom{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  border-top:1px solid #ffffff25;padding:20px 0 25px;color:#9fb4d3;font-size:11px;
+}
+.sp-sukkur-premium .footbottom a{color:#d2e2f8}
+@media(max-width:1020px){
+ .sp-sukkur-premium .sp-premium-sukkur-grid{grid-template-columns:1.1fr .9fr}
+ .sp-sukkur-premium .sp-premium-sukkur-hero h1{font-size:49px}
+ .sp-sukkur-premium .sp-premium-float{padding:9px}
+}
+@media(max-width:820px){
+ .sp-sukkur-premium .sp-premium-sukkur-grid{grid-template-columns:1fr;gap:12px;padding:58px 0 102px}
+ .sp-sukkur-premium .sp-premium-sukkur-hero h1{font-size:clamp(38px,7vw,58px)}
+ .sp-sukkur-premium .sp-premium-art{display:none}
+ .sp-sukkur-premium .sp-premium-search{grid-template-columns:1.2fr 1fr}
+ .sp-sukkur-premium .sp-premium-search button{grid-column:1/-1}
+ .sp-sukkur-premium .sp-directory-grid,.sp-sukkur-premium .sp-hospital-guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sp-sukkur-premium .footgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+ .sp-sukkur-premium .wrap{width:calc(100% - 34px)}
+ .sp-sukkur-premium .sp-premium-sukkur-grid{padding:42px 0 93px}
+ .sp-sukkur-premium .sp-premium-breadcrumb{margin-bottom:20px}
+ .sp-sukkur-premium .sp-premium-sukkur-hero h1{font-size:38px;letter-spacing:-1.65px;line-height:1.13;margin:16px 0}
+ .sp-sukkur-premium .sp-premium-sukkur-hero p{font-size:13px;line-height:1.8}
+ .sp-sukkur-premium .sp-premium-trust{font-size:11px;gap:8px 13px}
+ .sp-sukkur-premium .sp-premium-search{display:block;width:calc(100% - 32px);padding:11px;margin-top:-45px}
+ .sp-sukkur-premium .sp-premium-search label{border-right:0;border-bottom:1px solid #e9eef6;padding:11px 9px}
+ .sp-sukkur-premium .sp-premium-search label:nth-child(2){border-bottom:0}
+ .sp-sukkur-premium .sp-premium-search button{width:100%;margin-top:5px}
+ .sp-sukkur-premium .sp-premium-shortcuts{padding-top:23px}
+ .sp-sukkur-premium :is(.section,.sp-index){padding:43px 0}
+ .sp-sukkur-premium :is(.section,.sp-index) h2{font-size:28px}
+ .sp-sukkur-premium .sp-directory-grid,.sp-sukkur-premium .sp-hospital-guide-grid{grid-template-columns:1fr}
+ .sp-sukkur-premium .sp-hospital-guide-card{padding:19px}
+ .sp-sukkur-premium .footgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 18px}
+ .sp-sukkur-premium .footgrid>div:first-child{grid-column:1/-1}
+ .sp-sukkur-premium .footbottom{display:block;text-align:center}
+ .sp-sukkur-premium .footbottom span{display:block;margin-top:6px}
+ .sp-sukkur-premium .band-cta{padding:25px}
+}
+@media(prefers-reduced-motion:reduce){.sp-sukkur-premium .sp-premium-shortcuts{scroll-behavior:auto}}
