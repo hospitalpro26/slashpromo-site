@@ -1,0 +1,18 @@
+/* Small, non-modal, opt-in location card. Never requests browser permission on its own. */
+.sp-location-request{position:fixed;left:16px;bottom:18px;z-index:9998;width:min(385px,calc(100vw - 32px));padding:17px 18px 16px;background:#fff;color:#142343;border:1px solid #b7c9e0;border-top:4px solid #1659ac;border-radius:16px;box-shadow:0 16px 45px rgba(11,30,67,.24);font-family:inherit;font-size:14px;line-height:1.55}
+.sp-location-request .sp-location-heading{display:flex;align-items:center;gap:8px;color:#122c59;margin-bottom:9px}
+.sp-location-request .sp-location-heading strong{font-size:15px;font-weight:800}
+.sp-location-request .sp-location-pin{color:#c43c48;font-size:23px;font-weight:800;line-height:1}
+.sp-location-request .sp-location-close{margin-left:auto;flex:none;border:0;background:transparent;color:#455b74;font-size:25px;line-height:1;padding:1px 7px;border-radius:8px;cursor:pointer;min-width:33px;min-height:34px}
+.sp-location-request .sp-location-message{margin:4px 0 8px;color:#203d61;font-weight:600;line-height:1.5}
+.sp-location-request .sp-location-privacy{margin:0 0 13px;font-size:12px;color:#526782;line-height:1.55}
+.sp-location-request .sp-location-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.sp-location-request .sp-location-allow,.sp-location-request .sp-location-browse{display:inline-block;background:#1757a3;color:white!important;border:1px solid #1757a3;border-radius:9px;padding:10px 13px;cursor:pointer;font:inherit;font-size:13px;font-weight:750;text-decoration:none;line-height:1.4}
+.sp-location-request .sp-location-later{background:#f5f8fc;color:#17365b;border:1px solid #c8d8e8;border-radius:9px;padding:10px 13px;cursor:pointer;font:inherit;font-size:13px;font-weight:700;line-height:1.4}
+.sp-location-request button:disabled{opacity:.5;cursor:wait}
+.sp-location-request .sp-location-manual{display:inline-block;margin-top:11px;font-size:12px;color:#155aa6;text-decoration:underline;text-underline-offset:2px}
+.sp-location-request :focus-visible{outline:3px solid #ef7b76;outline-offset:3px}
+.sp-preferred-city-note{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:12px 0 15px;padding:10px 12px;background:#edf5ff;border:1px solid #c6ddf1;color:#24476e;border-radius:10px;font-size:13px;line-height:1.5}
+.sp-preferred-city-note button{margin-left:auto;border:1px solid #acc9e6;border-radius:8px;background:white;color:#13559c;padding:6px 10px;cursor:pointer;font:inherit;font-size:12px;font-weight:750}
+@media(max-width:600px){.sp-location-request{left:10px;right:10px;bottom:12px;width:auto;padding:14px 15px}.sp-location-request .sp-location-allow,.sp-location-request .sp-location-later{min-height:42px}}
+@media(prefers-reduced-motion:reduce){.sp-location-request *{scroll-behavior:auto}}
