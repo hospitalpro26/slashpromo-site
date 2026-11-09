@@ -1,0 +1,99 @@
+/* Phase 2 — Shikarpur premium city landing styling.
+   Reuses city-premium.css; these rules scope doctor/hospital cards, filters and
+   local category links without changing other city or doctor-profile routes. */
+.sp-shikarpur-premium .sp-quicknav{background:#0c234d!important;border:0!important}
+.sp-shikarpur-premium .sp-quicknav .wrap{padding-top:10px;padding-bottom:9px}
+.sp-shikarpur-premium .sp-quicknav-message{color:#d4e3fb!important;font-size:12px!important}
+.sp-shikarpur-premium .sp-shk-local-shortcuts{background:#fff;padding:49px 0}
+.sp-shikarpur-premium .sp-shk-local-shortcuts h2{font-size:clamp(27px,3.5vw,38px);font-weight:840;letter-spacing:-1px;color:#17345d}
+.sp-shikarpur-premium .sp-shk-local-shortcuts p{font-size:14px;color:#647b96;line-height:1.8}
+.sp-shikarpur-premium .sp-shk-local-cats{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.sp-shikarpur-premium .sp-shk-local-cats a{
+ background:#f8fbff;border:1px solid #e1eaf6;color:#2758ad;border-radius:13px;
+ min-height:73px;padding:16px 17px;font-size:13px;font-weight:800;box-shadow:0 4px 15px #1945750b
+}
+.sp-shikarpur-premium .sp-shk-local-cats a:hover{background:#eaf2ff;border-color:#98baf1}
+.sp-shikarpur-premium #shikarpur-doctors{background:#f4f8fd;padding:55px 0}
+.sp-shikarpur-premium #shikarpur-doctors h2{font-size:clamp(27px,3.5vw,39px);letter-spacing:-1px;color:#12345d}
+.sp-shikarpur-premium #shikarpur-doctors .lead{color:#6d7f99;line-height:1.78;font-size:14px}
+.sp-shikarpur-premium #shikarpur-doctors .sp-search-panel{
+ background:#fff;border:1px solid #dde8f5;border-radius:15px;
+ box-shadow:0 12px 32px #15376a0d;margin:22px 0 21px
+}
+.sp-shikarpur-premium #shikarpur-doctors .sp-search-field{border:1px solid #e3ebf5;border-radius:9px;background:#fff}
+.sp-shikarpur-premium #shikarpur-doctors .sp-search-field span{font-size:11px;color:#6983a1}
+.sp-shikarpur-premium #shikarpur-doctors .sp-search-button{border:0;background:#e84d63;color:#fff;border-radius:9px;font-weight:810}
+.sp-shikarpur-premium #shikarpur-doctors .sp-result-count{background:#e6efff;color:#235ac0;border-radius:7px;font-size:11px;font-weight:800;padding:7px 11px}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results]{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:23px 0
+}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] .sp-directory-card{
+ min-width:0;background:#fff;border:1px solid #e0e9f5;border-radius:16px;
+ box-shadow:0 8px 24px #1737680c;padding:20px;display:flex;flex-direction:column
+}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] .sp-directory-card .sp-directory-body{padding:0}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] .sp-directory-icon{background:#e7f0ff;border-radius:12px;color:#1e5fc5}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] h3{font-size:17px;color:#173860;letter-spacing:-.5px}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] h3 a{color:#1b3960}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] h3 a:hover{color:#1e5ed3}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] :is(.sp-card-specialty,.sp-card-clinic){color:#647c99;font-size:12px}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-results] .sp-card-type{font-size:10px;font-weight:850;color:#d84b64}
+.sp-shikarpur-premium #shikarpur-doctors .sp-cross-profile-actions{
+ border-top:1px solid #e9eef5;margin-top:auto;padding-top:12px
+}
+.sp-shikarpur-premium #shikarpur-doctors .sp-cross-profile-actions a{font-size:11px;font-weight:780}
+.sp-shikarpur-premium #shikarpur-doctors .sp-city-facets{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0 21px}
+.sp-shikarpur-premium #shikarpur-doctors .sp-specialty-pill{
+ background:#fff;border:1px solid #dce6f5;color:#526d8d;
+ border-radius:9px;padding:10px 14px;font-size:12px;font-weight:780;cursor:pointer
+}
+.sp-shikarpur-premium #shikarpur-doctors .sp-specialty-pill:hover{background:#eaf3ff;border-color:#a7c3f0;color:#1b5bc4}
+.sp-shikarpur-premium #shikarpur-doctors .sp-specialty-pill.active,
+.sp-shikarpur-premium #shikarpur-doctors .sp-specialty-pill[aria-pressed=true]{background:#245bcf;color:#fff;border-color:#245bcf}
+.sp-shikarpur-premium #shikarpur-doctors .sp-specialty-pill:focus-visible{outline:3px solid #8cb8fa;outline-offset:3px}
+.sp-shikarpur-premium #shikarpur-doctors [data-native-more][hidden]{display:none!important}
+.sp-shikarpur-premium .sp-shk-local-source{color:#235cc7;font-weight:840;font-size:12px}
+.sp-shikarpur-premium #shikarpur-hospitals{background:#fff;padding:56px 0}
+.sp-shikarpur-premium #shikarpur-hospitals h2{font-size:clamp(27px,3.4vw,39px);letter-spacing:-1px;color:#143762}
+.sp-shikarpur-premium #shikarpur-hospitals .lead{font-size:14px;color:#6a7f99;line-height:1.8}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:26px
+}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-card{
+ display:flex;flex-direction:column;gap:14px;min-width:0;padding:21px;
+ background:#fff;border:1px solid #e0e9f6;border-radius:16px;box-shadow:0 8px 22px #1b44770a
+}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-mark{
+ flex:0 0 auto;background:#e9f1ff;color:#265fc7;width:48px;height:48px;border-radius:12px
+}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-card h3{font-size:18px;line-height:1.35;color:#1c3962}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-address{font-size:12px;color:#66819f}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-summary{font-size:12px;line-height:1.8;color:#6c7f99}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-tags span{font-size:10px;color:#35649b;background:#eef4ff;border-radius:8px}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-actions{margin-top:auto}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-actions a{
+ font-size:11px;font-weight:790;border-radius:9px;padding:10px 12px
+}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-local{background:#edf4ff;color:#2057b7}
+.sp-shikarpur-premium #shikarpur-hospitals .sp-shk-slashcure{background:#1d58c6;color:#fff}
+.sp-shikarpur-premium .sp-shk-local-shortcuts .eyebrow,
+.sp-shikarpur-premium :is(#shikarpur-doctors,#shikarpur-hospitals) .eyebrow{color:#d84c66;font-weight:850;letter-spacing:1.2px}
+.sp-shikarpur-premium .city-detail .detail-aside{background:#f6f9fe;border:1px solid #dce6f4;border-radius:15px}
+.sp-shikarpur-premium .city-detail .detail-aside h3{color:#1b3d66}
+.sp-shikarpur-premium .city-detail .category-links a{background:#edf4ff;border:1px solid #dbe7f9;border-radius:9px;color:#255dc1}
+.sp-shikarpur-premium .band-cta{border-radius:19px;background:linear-gradient(110deg,#17408a,#0a224c);padding:35px 40px}
+.sp-shikarpur-premium .band-cta :is(h2,p,.kicker){color:white}
+.sp-shikarpur-premium .band-cta .btn{background:#e74d63;border:0;border-radius:9px;color:white}
+.sp-shikarpur-premium #sp-qa-fallback{background:#f5f8fd}
+@media(max-width:940px){
+ .sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sp-shikarpur-premium #shikarpur-doctors [data-native-results]{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+ .sp-shikarpur-premium .sp-shk-local-cats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-grid,
+ .sp-shikarpur-premium #shikarpur-doctors [data-native-results]{grid-template-columns:1fr}
+ .sp-shikarpur-premium .sp-shk-local-cats a{padding:12px 14px;min-height:56px}
+ .sp-shikarpur-premium #shikarpur-hospitals .sp-shk-hospital-card{padding:18px}
+ .sp-shikarpur-premium .band-cta{padding:26px}
+}
