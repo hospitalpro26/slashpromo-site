@@ -1,4 +1,4 @@
-import {EVENTS,cleanPath,json,sameOrigin,countEvent} from "../_lib/analytics.js";
+import {EVENTS,cleanPath,json,sameOrigin,countEvent,countVisitorGeo} from "../_lib/analytics.js";
 export async function onRequestPost({request,env}){
   if(!sameOrigin(request))return json({error:"Cross-origin events are not accepted."},403);
   if(!env.QA_DB)return json({error:"Analytics database not configured."},503);
@@ -11,6 +11,11 @@ export async function onRequestPost({request,env}){
   if(!body||typeof body!=="object"||!EVENTS.has(body.event)||!cleanPath(body.path))return json({error:"Invalid analytics event."},400);
   try{
     await countEvent(env.QA_DB,body.event,body.path);
+    if(body.event==="page_view"){
+      // Preserve normal page views if the additional geo counter is temporarily unavailable.
+      try{await countVisitorGeo(env.QA_DB,body.path,request.cf)}
+      catch{console.warn("SlashPromo aggregate visitor geography counter unavailable.")}
+    }
     return new Response(null,{status:204,headers:{"Cache-Control":"no-store","X-Robots-Tag":"noindex"}});
   }catch{return json({error:"Analytics temporarily unavailable."},503)}
 }
