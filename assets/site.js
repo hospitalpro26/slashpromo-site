@@ -386,7 +386,7 @@ import("/assets/cross-profile-links.js?v=20261108-national-contact-qa2").catch((
   if(/^\/(?:admin|qa-admin|control-center|analytics|enquiries|secure-backups|api)(?:\/|$)/i.test(location.pathname))return;
   const link=document.createElement("link");
   link.rel="stylesheet";
-  link.href="/assets/location-personalization.css?v=20261109-consent1";
+  link.href="/assets/location-personalization.css?v=20261109-consent2";
   document.head.appendChild(link);
-  import("/assets/location-personalization.js?v=20261109-consent1").catch(()=>{});
+  import("/assets/location-personalization.js?v=20261109-consent2").catch(()=>{});
 })();
