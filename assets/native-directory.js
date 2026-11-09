@@ -17,7 +17,7 @@
     ["cardio","Cardiologists"],["paeds","Paediatricians"],
     ["gynae","Gynecologists"],["surgeon","Surgeons"],
     ["orthopedic","Orthopedic Surgeons"],["physio","Physiotherapists"],
-    ["dentist","Dentists"],["rheum","Rheumatologists"],
+    ["dentist","Dentists"],["derm","Dermatologists"],["rheum","Rheumatologists"],
     ["pulmo","Pulmonologists"],["urology","Urologists"],
     ["psychiatry","Psychiatrists"],["hematology","Hematologists"],
     ["other","Other specialties"]
@@ -36,6 +36,7 @@
     if(/psychiatr/.test(s))return "psychiatry";
     if(/hematolog/.test(s))return "hematology";
     if(/dentist|prosthodont/.test(s))return "dentist";
+    if(/dermatolog|skin specialist|aesthetic medicine/.test(s))return "derm";
     if(/surgeon|surgery|laparoscop/.test(s))return "surgeon";
     if(/pediatric|child specialist|neonatal/.test(s))return "paeds";
     if(/physician|internal medicine|postgraduate trainee/.test(s))return "physician";
