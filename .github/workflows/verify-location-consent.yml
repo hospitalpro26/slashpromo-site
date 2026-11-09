@@ -1,0 +1,29 @@
+name: Verify voluntary visitor location
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'assets/site.js'
+      - 'assets/native-directory.js'
+      - 'assets/location-personalization.js'
+      - 'assets/location-personalization.css'
+      - 'privacy/index.html'
+      - 'scripts/test-location-consent.mjs'
+      - '.github/workflows/verify-location-consent.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-location-consent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check script syntax
+        run: |
+          node --check assets/site.js
+          node --check assets/native-directory.js
+          node --check assets/location-personalization.js
+          node --check scripts/test-location-consent.mjs
+      - name: Test optional permission and privacy rules
+        run: node scripts/test-location-consent.mjs
