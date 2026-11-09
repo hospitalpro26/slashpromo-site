@@ -1,0 +1,11 @@
+/* Clear, responsive patient guidance on high-impression directory pages. */
+.sp-seo-patient-guide{background:#f5f9ff;border:1px solid #cbdff2;border-radius:15px;color:#203b5d;padding:18px 19px;margin:16px 0 21px;box-shadow:0 5px 20px rgba(24,63,112,.05)}
+main>.sp-seo-patient-guide{width:min(1140px,calc(100% - 42px));margin:20px auto}
+.sp-seo-patient-guide h2{font:800 clamp(1.05rem,2vw,1.34rem)/1.35 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.02em;color:#153d75;margin:0 0 9px}
+.sp-seo-patient-guide p{font-size:.91rem;line-height:1.65;color:#294d6c;margin:0 0 12px}
+.sp-seo-patient-guide a:not(.sp-profile-links a){color:#115ca5;text-decoration:underline;font-weight:750;text-underline-offset:2px}
+.sp-seo-patient-guide .sp-profile-links{display:flex;flex-wrap:wrap;gap:9px;margin:10px 0 0;max-width:100%}
+.sp-seo-patient-guide .sp-profile-links>a{display:inline-flex;align-items:center;justify-content:center;background:#fff!important;border:1px solid #bbd2e9;border-radius:9px;padding:10px 12px;min-height:42px;color:#124f91!important;font-size:.82rem;font-weight:750;line-height:1.45;text-decoration:none!important;overflow-wrap:anywhere}
+.sp-seo-patient-guide .sp-profile-links>a:hover{border-color:#4c87c3;background:#ecf5ff!important}
+.sp-seo-patient-guide a:focus-visible{outline:3px solid #367cbe;outline-offset:2px}
+@media(max-width:620px){.sp-seo-patient-guide{padding:15px;margin:12px 0 16px}main>.sp-seo-patient-guide{width:calc(100% - 30px)}.sp-seo-patient-guide .sp-profile-links{display:grid;grid-template-columns:1fr}.sp-seo-patient-guide .sp-profile-links>a{text-align:center;width:100%}}

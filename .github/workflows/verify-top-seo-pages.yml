@@ -1,0 +1,51 @@
+name: Verify five priority SEO pages
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'hospitals/sukkur/red-crescent-hospital-sukkur/index.html'
+      - 'doctors/lahore/dr-muhammad-umair-arshad/index.html'
+      - 'hospitals/sukkur/dr-ziauddin-hospital-sukkur/index.html'
+      - 'hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/index.html'
+      - 'sukkur/index.html'
+      - 'sitemap.xml'
+      - 'assets/seo-patient-guide.css'
+      - 'scripts/test-top-seo-pages.mjs'
+      - '.github/workflows/verify-top-seo-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Check priority SEO content against published directory information
+        run: |
+          node --check scripts/test-top-seo-pages.mjs
+          node scripts/test-top-seo-pages.mjs
+      - name: Verify live website reflects latest SEO metadata
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 20); do
+            ok=true
+            for path in               /hospitals/sukkur/red-crescent-hospital-sukkur/               /doctors/lahore/dr-muhammad-umair-arshad/               /hospitals/sukkur/dr-ziauddin-hospital-sukkur/               /hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/               /sukkur/; do
+              code=$(curl -fsSL --max-time 12 -o /tmp/seo-page.html -w '%{http_code}' "https://slashpromo.com${path}?check=${GITHUB_SHA}" || true)
+              if [ "$code" != "200" ] || ! grep -q 'seo-patient-guide.css?v=20261109-top5-seo' /tmp/seo-page.html; then
+                ok=false
+                echo "Not published: ${path}, status=${code}"
+                break
+              fi
+            done
+            if [ "$ok" = true ]; then
+              echo "PASS: Five optimized public pages are served by Cloudflare."
+              exit 0
+            fi
+            sleep 12
+          done
+          echo 'Live priority SEO deployment verification failed or pending.' >&2
+          exit 1
