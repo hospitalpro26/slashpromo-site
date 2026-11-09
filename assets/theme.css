@@ -329,3 +329,11 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
 .sp-wa-handoff{display:block;margin:5px 0}
 .sp-wa-open{display:block;text-align:center;text-decoration:none!important;padding:12px!important;min-height:44px;box-sizing:border-box;color:#fff!important;line-height:1.4}
 .sp-wa-open:focus-visible{outline:3px solid #1d63bf;outline-offset:2px}
+
+/* WhatsApp-first contact form primary action. */
+.sp-wa-query-form input[type="email"]{min-height:41px}
+.sp-wa-query-form .sp-wa-submit{padding:12px 14px;width:100%;display:block;line-height:1.4}
+.sp-wa-query-panel .sp-wa-privacy a{color:#1369ad!important;text-decoration:underline!important;font-weight:700}
+.sp-team-whatsapp-float{z-index:190}
+.sp-wa-query-panel{z-index:191}
+@media(max-height:550px){.sp-wa-query-panel{max-height:calc(100dvh - 82px)}}
