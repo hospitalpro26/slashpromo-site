@@ -214,7 +214,7 @@
         btn.className="sp-specialty-pill";
         btn.dataset.nativeFacet=key;
         btn.textContent=label;
-        if(key)btn.title=String(counts.get(key))+" Sukkur doctor profile(s)";
+        if(key)btn.title=String(counts.get(key))+" "+(initialCity||"local")+" doctor profile(s)";
         facetTabs.appendChild(btn);
       });
       setFacetState();
