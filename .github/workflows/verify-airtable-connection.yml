@@ -1,0 +1,55 @@
+name: Verify Airtable review queue connection
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-airtable-connection.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.repository == 'hospitalpro26/slashpromo-site'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Read-only Airtable authentication check
+        env:
+          SLASHPROMO_AIRTABLE_PAT: ${{ secrets.SLASHPROMO_AIRTABLE_PAT }}
+        run: |
+          node --input-type=module <<'NODE'
+          const pat = process.env.SLASHPROMO_AIRTABLE_PAT;
+          if (!pat) {
+            console.error('FAIL: GitHub repository secret SLASHPROMO_AIRTABLE_PAT is missing or empty.');
+            process.exit(1);
+          }
+          const endpoint = 'https://api.airtable.com/v0/appvI05OTnWWQeXaZ/tbl5cEkwJ3wts5aQt?pageSize=1';
+          try {
+            const response = await fetch(endpoint, {
+              method: 'GET',
+              headers: {'Authorization': 'Bearer ' + pat, 'Accept': 'application/json'},
+              signal: AbortSignal.timeout(18000)
+            });
+            if (!response.ok) {
+              console.error('FAIL: Airtable access rejected with HTTP ' + response.status + '. Verify token resource access and data.records:read scope.');
+              process.exit(1);
+            }
+            const body = await response.json();
+            if (!Array.isArray(body.records)) {
+              console.error('FAIL: Unexpected Airtable API response.');
+              process.exit(1);
+            }
+            const message = 'PASS: GitHub Actions authenticated to the private Airtable Doctors table (read-only check; no records changed).';
+            console.log(message);
+            if (process.env.GITHUB_STEP_SUMMARY) {
+              const fs = await import('node:fs');
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, '## Airtable connection verified\n' + message + '\n\nNo doctor pages published. Write capability will be exercised only when a new reviewable candidate is discovered.\n');
+            }
+          } catch (error) {
+            console.error('FAIL: Could not complete Airtable read check (' + error.name + ').');
+            process.exit(1);
+          }
+          NODE
