@@ -21,11 +21,14 @@ export async function onRequestGet(ctx){
   const whereGeo="WHERE day>=?"+(city?" AND page_city=?":"");
   try{
     await ensureAnalytics(env.QA_DB);
+    /* Content cities describe what visitors opened, never where visitors live.
+       Homepage and national directory hubs must not inflate the "Other" row. */
+    const pageGroup="CASE WHEN page_path='/' THEN 'homepage' WHEN page_path IN ('/doctors/','/hospitals/','/clinics/','/laboratories/','/cities/') THEN 'directories' ELSE city END";
     const statements=[
       env.QA_DB.prepare("SELECT event,SUM(n) AS total FROM site_analytics_daily "+where+" GROUP BY event").bind(...binds),
       env.QA_DB.prepare("SELECT day,event,SUM(n) AS total FROM site_analytics_daily "+where+" GROUP BY day,event ORDER BY day ASC").bind(...binds),
       env.QA_DB.prepare("SELECT page_path,city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_open' THEN n ELSE 0 END) AS whatsapp_opens,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues,SUM(CASE WHEN event='qa_submitted' THEN n ELSE 0 END) AS questions FROM site_analytics_daily "+where+" GROUP BY page_path,city ORDER BY views DESC,referrals DESC LIMIT 50").bind(...binds),
-      env.QA_DB.prepare("SELECT city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues FROM site_analytics_daily "+where+" GROUP BY city ORDER BY views DESC LIMIT 30").bind(...binds),
+      env.QA_DB.prepare("SELECT "+pageGroup+" AS city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues FROM site_analytics_daily "+where+" GROUP BY 1 ORDER BY views DESC LIMIT 30").bind(...binds),
       env.QA_DB.prepare("SELECT country,SUM(n) AS views FROM site_visitor_geo_daily "+whereGeo+" GROUP BY country ORDER BY views DESC,country ASC LIMIT 20").bind(...binds),
       env.QA_DB.prepare("SELECT country,visitor_city,SUM(n) AS views FROM site_visitor_geo_daily "+whereGeo+" GROUP BY country,visitor_city ORDER BY views DESC,visitor_city ASC LIMIT 30").bind(...binds),
       env.QA_DB.prepare("SELECT COALESCE(SUM(n),0) AS recorded,COALESCE(SUM(CASE WHEN country='ZZ' THEN n ELSE 0 END),0) AS unknown_country FROM site_visitor_geo_daily "+whereGeo).bind(...binds)

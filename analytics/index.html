@@ -32,7 +32,8 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 .chart-caption{display:flex;justify-content:space-between;gap:10px;margin-top:7px;font-size:11px;color:#607991}
 .notice{padding:13px 15px;background:#edf5ff;border:1px solid #caddf3;border-radius:10px;font-size:13px;color:#254a71}.qa-status-strip{display:flex;gap:12px;flex-wrap:wrap;margin:13px 0}.qa-status-strip span{display:inline-flex;gap:5px;border:1px solid #d2e2f2;background:#f3f8ff;padding:6px 10px;border-radius:9px;font-size:12px;color:#215179}#qa-records td{vertical-align:top;line-height:1.5;overflow-wrap:anywhere}#qa-records td:nth-child(2){min-width:190px}#qa-records td:nth-child(3){min-width:190px}.qa-answer-private{color:#627891;font-style:italic}
 .placeholder{color:#647c93;font-style:italic}
-@media(max-width:730px){.panels{grid-template-columns:1fr}.wide{grid-column:auto}main{padding:18px 12px}.toolbar{padding:13px}th,td{padding:8px 5px}}
+.comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.comparison-subpanel{border:1px solid #dce6f1;border-radius:11px;padding:13px;background:#fafcff;min-width:0}.comparison-subpanel h3{font-size:15px;margin:0 0 4px}.comparison-subpanel p{font-size:12px;margin:0 0 9px}.comparison-list{list-style:none;margin:0;padding:0}.comparison-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #e4edf6;padding:9px 0;font-size:13px}.comparison-list li:last-child{border-bottom:0}.comparison-list .compare-label{overflow-wrap:anywhere}.comparison-list .compare-count{font-variant-numeric:tabular-nums;font-weight:750;white-space:nowrap}
+@media(max-width:730px){.comparison-grid{grid-template-columns:1fr}.panels{grid-template-columns:1fr}.wide{grid-column:auto}main{padding:18px 12px}.toolbar{padding:13px}th,td{padding:8px 5px}}
 </style></head>
 <body><main>
 <header><div><a href="/">← SlashPromo public website</a><h1>Private Analytics Dashboard</h1><p>Daily page views, referral clicks, WhatsApp enquiry starts and moderated Q&amp;A engagement.</p></div><div class="link-row"><a href="/qa-admin/" rel="nofollow">Q&amp;A moderation ↗</a> · <a href="/enquiries/" rel="nofollow">Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Control Center ↗</a></div></header>
@@ -40,7 +41,7 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <form class="toolbar" id="filters">
 <label>Private admin key<input id="key" type="password" autocomplete="off" placeholder="Enter QA_ADMIN_KEY" required></label>
 <label>Date range<select id="days"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></label>
-<label>Page city<select id="city"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option><option value="ghotki">Ghotki</option><option value="lahore">Lahore</option><option value="islamabad">Islamabad</option><option value="rawalpindi">Rawalpindi</option><option value="peshawar">Peshawar</option><option value="quetta">Quetta</option><option value="larkana">Larkana</option><option value="bahawalpur">Bahawalpur</option><option value="faisalabad">Faisalabad</option><optgroup label="More cities"><option value="pano-aqil">Pano Aqil</option><option value="lakhi-ghulam-shah">Lakhi Ghulam Shah</option><option value="sobhodero">Sobhodero</option><option value="ubauro">Ubauro</option><option value="sheikhupura">Sheikhupura</option><option value="fort-abbas">Fort Abbas</option><option value="jhelum">Jhelum</option><option value="gojra">Gojra</option><option value="mian-channu">Mian Channu</option><option value="pakpattan">Pakpattan</option><option value="dir-upper">Dir Upper</option></optgroup><option value="other">Other cities and pages</option></select></label>
+<label>Page city<select id="city"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option><option value="ghotki">Ghotki</option><option value="lahore">Lahore</option><option value="islamabad">Islamabad</option><option value="rawalpindi">Rawalpindi</option><option value="peshawar">Peshawar</option><option value="quetta">Quetta</option><option value="larkana">Larkana</option><option value="bahawalpur">Bahawalpur</option><option value="faisalabad">Faisalabad</option><optgroup label="More cities"><option value="pano-aqil">Pano Aqil</option><option value="lakhi-ghulam-shah">Lakhi Ghulam Shah</option><option value="sobhodero">Sobhodero</option><option value="ubauro">Ubauro</option><option value="sheikhupura">Sheikhupura</option><option value="fort-abbas">Fort Abbas</option><option value="jhelum">Jhelum</option><option value="gojra">Gojra</option><option value="mian-channu">Mian Channu</option><option value="pakpattan">Pakpattan</option><option value="dir-upper">Dir Upper</option></optgroup><option value="other">Homepage, nationwide directories and other pages</option></select></label>
 <button id="load" type="submit">Load analytics</button>
 <button id="export-summary" type="button" disabled title="Export aggregate statistics only; private Q&A content is excluded">Download summary CSV</button>
 </form>
@@ -56,8 +57,17 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 </section>
 <div class="panels">
 <section class="panel"><h2>Daily page views</h2><div class="chart" id="chart" role="img" aria-label="Daily page views bar chart"></div><div class="chart-caption"><span id="from-label"></span><span id="to-label"></span></div></section>
-<section class="panel"><h2>Traffic by city</h2><div class="scroll"><table><thead><tr><th>City</th><th class="num">Views</th><th class="num">Slashcure</th><th class="num">WhatsApp</th></tr></thead><tbody id="cities"><tr><td colspan="4" class="placeholder">Load a report to see data.</td></tr></tbody></table></div></section>
-<section class="panel wide" aria-label="Visitor geography"><h2>Visitor geography (approximate)</h2>
+<section class="panel"><h2>Traffic by Slashpromo page city</h2><p class="muted">Which city or section visitors explored on the website — <strong>not</strong> the city where they live. The homepage and nationwide directories are counted separately.</p><div class="scroll"><table><thead><tr><th>Page content</th><th class="num">Views</th><th class="num">Slashcure</th><th class="num">WhatsApp</th></tr></thead><tbody id="cities"><tr><td colspan="4" class="placeholder">Load a report to see data.</td></tr></tbody></table></div></section>
+<section class="panel wide" aria-label="Comparison of page interests and visitor origins">
+<h2>Page interest vs visitor origin</h2>
+<p class="muted">Two different views of the same time period: which Slashpromo page topics get opened, versus where those page views appear to originate. These totals are <strong>not</strong> a person-by-person match.</p>
+<div class="comparison-grid">
+<section class="comparison-subpanel"><h3>Most viewed page cities or sections</h3><p class="muted">Website content opened</p><ol class="comparison-list" id="compare-page-cities"><li class="placeholder">Load analytics to see page interests.</li></ol></section>
+<section class="comparison-subpanel"><h3>Estimated visitor cities</h3><p class="muted">Approximate IP-based location</p><ol class="comparison-list" id="compare-visitor-cities"><li class="placeholder">Load analytics to see visitor origins.</li></ol></section>
+</div>
+<p class="muted">An interest in Sukkur doctors does not mean the visitor is physically in Sukkur. VPNs and cellular networks may affect location estimates.</p>
+</section>
+<section class="panel wide" aria-label="Visitor geography"><h2>Visitor geography — estimated location</h2>
 <p class="muted">Country and city are estimates from Cloudflare's IP geolocation, grouped by page views. Not GPS, not unique visitors, and not the cities described by doctor-directory pages. Use the date range and page-city filter above.</p>
 <div class="metrics"><div class="metric"><span>Geo-recorded page views</span><strong id="geo-recorded">—</strong></div><div class="metric"><span>Unknown country page views</span><strong id="geo-unknown">—</strong></div></div>
 <div class="panels">
@@ -113,6 +123,25 @@ function geoCountry(code){
  if(!code||code==="ZZ")return "Unknown country";
  try{return new Intl.DisplayNames(["en"],{type:"region"}).of(code)||code}catch{return code}
 }
+function pageCityLabel(code){
+ const names={homepage:"Homepage",directories:"Nationwide directories",other:"Other non-city pages"};
+ if(Object.hasOwn(names,code))return names[code];
+ return String(code||"Unknown").split("-").map(word=>word?word[0].toUpperCase()+word.slice(1):"").join(" ");
+}
+function compareGroups(target,rows,describe){
+ const root=$(target);root.replaceChildren();
+ if(!rows.length){const li=document.createElement("li");li.className="placeholder";li.textContent="No recorded page views in this selection.";root.append(li);return}
+ rows.slice(0,5).forEach(record=>{
+   const li=document.createElement("li"),label=document.createElement("span"),value=document.createElement("strong");
+   label.className="compare-label";label.textContent=describe(record);
+   value.className="compare-count";value.textContent=nf.format(Number(record.views)||0);
+   li.append(label,value);root.append(li);
+ });
+}
+function drawComparison(data){
+ compareGroups("#compare-page-cities",data.cities||[],r=>pageCityLabel(r.city));
+ compareGroups("#compare-visitor-cities",data.visitorGeography?.cities||[],r=>(r.city||"Unknown city")+", "+geoCountry(r.country));
+}
 function drawGeography(data){
  const geo=data.visitorGeography||{};
  $("#geo-recorded").textContent=nf.format(geo.recordedPageViews||0);
@@ -156,7 +185,7 @@ function downloadSummary(){
   for(const [label,items] of [["Doctor profile",d.topDoctors||[]],["Hospital profile",d.topHospitals||[]],["Top page",d.pages||[]]]){
     for(const r of items)rows.push([label,r.page_path,r.city,r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
   }
-  for(const r of d.cities||[])rows.push(["Page city",r.city,"",r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
+  for(const r of d.cities||[])rows.push(["Page content group",pageCityLabel(r.city),"",r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
   for(const r of d.visitorGeography?.countries||[])rows.push(["Visitor country",geoCountry(r.country),"",r.views||0,"","",""]);
   for(const r of d.visitorGeography?.cities||[])rows.push(["Visitor city",r.city,geoCountry(r.country),r.views||0,"","",""]);
   const csv="\ufeff"+rows.map(r=>r.map(csvField).join(",")).join("\r\n");
@@ -172,6 +201,7 @@ function draw(data){
   renderProfiles("#top-doctors",data.topDoctors);
   renderProfiles("#top-hospitals",data.topHospitals);
   drawGeography(data);
+  drawComparison(data);
   const totals=Object.fromEntries(data.totals.map(x=>[x.event,Number(x.total)||0]));
   ["page_view","slashcure_click","whatsapp_open","whatsapp_continue","qa_submitted"].forEach(id=>{$("#"+id).textContent=nf.format(totals[id]||0)});
   $("#referral-rate").textContent=rate(totals.slashcure_click,totals.page_view);
@@ -183,7 +213,7 @@ function draw(data){
     cell(tr,nf.format(r.whatsapp_continues||0),"num");cell(tr,nf.format(r.questions||0),"num")
   });
   renderRows("#cities",data.cities||[],"No tracked city data yet.",(tr,r)=>{
-    cell(tr,r.city==="other"?"Other":(r.city[0].toUpperCase()+r.city.slice(1)));
+    cell(tr,pageCityLabel(r.city));
     cell(tr,nf.format(r.views||0),"num");cell(tr,nf.format(r.referrals||0),"num");cell(tr,nf.format(r.whatsapp_continues||0),"num")
   });
   const series=new Map((data.daily||[]).filter(x=>x.event==="page_view").map(x=>[x.day,Number(x.total)||0]));
