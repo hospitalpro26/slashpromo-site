@@ -29,13 +29,22 @@ Status as of 2026-11-09. User requested gradual rollout of the approved premium 
 - Original pre-redesign Shikarpur HTML fully preserved in branch `backup/shikarpur-before-premium-20261109`.
 - Roll back by restoring **only** `shikarpur/index.html` from the backup branch onto a new branch from current main, then testing and merging. This avoids losing future doctor data or other pages.
 
+## Phase 3 — Karachi (this PR)
+- Only `/karachi/` receives the approved premium dark-blue/red city design. Existing other routes and all profile records are unchanged.
+- Restoreable backup branch: `backup/karachi-before-premium-20261109`. Saved original source: https://github.com/hospitalpro26/slashpromo-site/blob/backup/karachi-before-premium-20261109/karachi/index.html
+- Retain all nine Karachi doctor profiles and the individual Slashcure links, including the five Astro Physiocare-associated physiotherapy listings.
+- Show six doctor cards initially, with "Show more doctors" for the remaining three. Render only locally represented specialty tabs (Physiotherapy, Neurology/Neurophysician and Surgery).
+- Retain separate Astro Physiocare hospital profile, four Karachi clinic spotlight cards, Karachi physiotherapist specialty page, direct provider link dropdown, dynamic city Q&A, SEO CollectionPage/ItemList/FAQPage schema, canonical, social links, WhatsApp-first contact and mid-page Slashcure advertisement.
+- Reuse existing `assets/city-premium.css` and `assets/city-premium.js`; add `assets/karachi-premium.css` scoped to `body.sp-karachi-premium`.
+- Safe rollback restores only `karachi/index.html` from backup onto a fresh rollback branch based on current main. Avoid resetting all commits or touching doctor, hospital, Q&A or other city files.
+- All changes require preview validation before merge, then live QA on the canonical URL.
+
 ## Planned next independent batches (NOT yet deployed)
-1. Karachi city directory `/karachi/`, with Astro Physiocare team and local specialties preserved.
-2. Lahore `/lahore/`, including NEO Medical Center and local doctor links.
-3. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
-4. City specialty subpages and hospital directory/clinic pages.
-5. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
-6. Remaining public information pages; maintain high contrast and text readability.
+1. Lahore `/lahore/`, including NEO Medical Center and local doctor links.
+2. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
+3. City specialty subpages and hospital directory/clinic pages.
+4. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
+5. Remaining public information pages; maintain high contrast and text readability.
 
 ## Safe rollback for Khairpur
 1. From **current** main, open a fresh rollback branch.
