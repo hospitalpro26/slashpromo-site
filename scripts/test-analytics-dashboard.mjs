@@ -3,7 +3,7 @@ import {readFileSync} from "node:fs";
 const api=readFileSync(new URL("../functions/api/analytics-report.js",import.meta.url),"utf8");
 const html=readFileSync(new URL("../analytics/index.html",import.meta.url),"utf8");
 const lib=readFileSync(new URL("../functions/_lib/analytics.js",import.meta.url),"utf8");
-const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/g)].map(x=>x[1]).filter(Boolean);
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(x=>x[1]).filter(Boolean);
 assert(scripts.length>0,"Dashboard must contain inline script.");
 for(const script of scripts)new Function(script);
 for(const key of ["topDoctors","topHospitals","visitorGeography"]){
