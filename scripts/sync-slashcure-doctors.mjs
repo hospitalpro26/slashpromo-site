@@ -38,7 +38,8 @@ function doctorIdentity(value){
 }
 function isAlreadyListedByIdentity(candidate,existingDoctors){
   const key=normalizedCitySlug(candidate.city)+':'+doctorIdentity(candidate.doctorSlug);
-  return existingDoctors.some(d=>normalizedCitySlug(d.city)+':'+doctorIdentity(d.name)===key ||
+  return existingDoctors.some(d=>(candidate.source && parseDoctorUrl(d.externalProfile)?.source===candidate.source) ||
+    normalizedCitySlug(d.city)+':'+doctorIdentity(d.name)===key ||
     normalizedCitySlug(d.city)+':'+doctorIdentity(d.url?.split('/').filter(Boolean).at(-1))===key);
 }
 
