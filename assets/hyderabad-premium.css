@@ -1,0 +1,124 @@
+/* Phase 5: Hyderabad landing-page customizations, opt-in only.
+   Reuses city-premium.css for hero/header/search/footer. */
+.sp-hyderabad-premium .sp-quicknav{background:#0d244c!important;border-color:#28446c!important}
+.sp-hyderabad-premium .sp-quicknav .sp-quicknav-message{color:#cee0f8!important;font-size:12px}
+.sp-hyderabad-premium #hyderabad-doctors{
+ background:#f4f8fd;padding:55px 0
+}
+.sp-hyderabad-premium #hyderabad-doctors h2{
+ color:#16365f;letter-spacing:-1.1px;font-size:clamp(27px,3.4vw,39px);line-height:1.25
+}
+.sp-hyderabad-premium #hyderabad-doctors .lead{color:#667f9b;line-height:1.8;font-size:14px}
+.sp-hyderabad-premium #hyderabad-doctors .sp-search-panel{
+ border:1px solid #dce7f5;border-radius:15px;background:#fff;
+ padding:20px;box-shadow:0 10px 28px #1939650d;margin:22px 0
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-search-field{
+ background:white;border:1px solid #e1e9f4;border-radius:9px
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-search-field span{font-size:11px;color:#6c82a0}
+.sp-hyderabad-premium #hyderabad-doctors .sp-search-button{
+ border:0;border-radius:9px;background:#e84d63;color:white;font-weight:820
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-results-heading{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:22px
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-results-heading h3{color:#17395f;font-size:18px}
+.sp-hyderabad-premium #hyderabad-doctors .sp-result-count{
+ font-weight:820;font-size:11px;padding:7px 10px;border-radius:8px;background:#e5efff;color:#2259bd
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-city-facets{
+ display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 25px
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-specialty-pill{
+ appearance:none;border-radius:9px;border:1px solid #dce7f6;background:#fff;
+ padding:10px 14px;font-size:12px;font-weight:790;color:#536e8d;cursor:pointer
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-specialty-pill:hover{
+ background:#ecf4ff;color:#2059c2;border-color:#a8c4ee
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-specialty-pill.active,
+.sp-hyderabad-premium #hyderabad-doctors .sp-specialty-pill[aria-pressed="true"]{
+ color:white;background:#245bcf;border-color:#245bcf
+}
+.sp-hyderabad-premium #hyderabad-doctors .sp-specialty-pill:focus-visible{
+ outline:3px solid #8fb9ff;outline-offset:3px
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results]{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-top:0
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] .sp-directory-card{
+ min-width:0;border-radius:15px;border:1px solid #e1eaf6;background:white;
+ box-shadow:0 7px 25px #1637610c;display:flex;flex-direction:column;padding:23px
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] .sp-directory-body{
+ padding:0;flex:1;display:flex;flex-direction:column
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] .sp-directory-icon{
+ background:#ebf3ff;color:#255ac1;border-radius:12px
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] h3{
+ font-size:18px;color:#173860;letter-spacing:-.4px
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] h3 a{color:#17365f}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] h3 a:hover{color:#225ac5}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] .sp-card-specialty{
+ color:#456d9c;font-size:13px;font-weight:790
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] .sp-card-type{
+ color:#d34d66;font-size:10px;letter-spacing:.65px;font-weight:840
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] .sp-cross-profile-actions{
+ border-top:1px solid #edf1f8;margin-top:auto;padding-top:12px
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-results] .sp-cross-profile-actions a{
+ font-size:12px;font-weight:790
+}
+.sp-hyderabad-premium #hyderabad-doctors [data-native-more][hidden]{display:none!important}
+.sp-hyderabad-premium .sp-hyderabad-care{background:white;padding:55px 0}
+.sp-hyderabad-premium .sp-hyderabad-care h2{
+ color:#163763;font-size:clamp(27px,3.4vw,38px);letter-spacing:-1px
+}
+.sp-hyderabad-premium .sp-hyderabad-care .lead{font-size:14px;color:#647b99;line-height:1.78}
+.sp-hyderabad-premium .sp-hyderabad-care .sp-area-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin-top:25px
+}
+.sp-hyderabad-premium .sp-hyderabad-care .sp-area-card{
+ background:white;border:1px solid #e1eaf6;border-radius:15px;padding:23px;
+ box-shadow:0 8px 22px #1739650a;min-width:0
+}
+.sp-hyderabad-premium .sp-hyderabad-care .sp-area-card h3{font-size:18px;color:#16365d}
+.sp-hyderabad-premium .sp-hyderabad-care .sp-area-card p{
+ color:#657c97;font-size:13px;line-height:1.8
+}
+.sp-hyderabad-premium .sp-hyderabad-care .sp-area-card a{font-size:12px;font-weight:780;color:#235dc9}
+.sp-hyderabad-premium #hyderabad-opd{background:#f4f8fd}
+.sp-hyderabad-premium #hyderabad-opd .detail-aside{
+ background:#fff;border:1px solid #e0eaf6;border-radius:15px
+}
+.sp-hyderabad-premium #hyderabad-opd .category-links a{
+ background:#eff5ff;color:#245cbf;border:1px solid #dbe7f7;border-radius:9px
+}
+.sp-hyderabad-premium .sp-hyderabad-ad{background:#fff}
+.sp-hyderabad-premium .sp-hyderabad-faq{background:#fff;padding:49px 0}
+.sp-hyderabad-premium .sp-hyderabad-faq h2{font-size:clamp(26px,3.2vw,37px);color:#173862}
+.sp-hyderabad-premium .sp-hyderabad-faq details{
+ background:#f6f9ff;border:1px solid #e0e8f4;border-radius:12px;
+ margin-top:12px;padding:17px 20px
+}
+.sp-hyderabad-premium .sp-hyderabad-faq summary{font-weight:820;color:#1b3963;cursor:pointer}
+.sp-hyderabad-premium .sp-hyderabad-faq p{color:#647a96;font-size:13px;line-height:1.8}
+.sp-hyderabad-premium .band-cta{
+ border-radius:18px;background:linear-gradient(110deg,#173e87,#0b224e);padding:35px 40px
+}
+.sp-hyderabad-premium .band-cta :is(h2,p,.kicker){color:#fff}
+.sp-hyderabad-premium .band-cta .btn{background:#e84d63;color:#fff;border:0;border-radius:9px}
+.sp-hyderabad-premium #sp-qa-fallback{background:#f4f8fd}
+@media(max-width:650px){
+ .sp-hyderabad-premium #hyderabad-doctors [data-native-results],
+ .sp-hyderabad-premium .sp-hyderabad-care .sp-area-grid{grid-template-columns:1fr}
+ .sp-hyderabad-premium #hyderabad-doctors .sp-search-panel{padding:15px}
+ .sp-hyderabad-premium .band-cta{padding:25px}
+ .sp-hyderabad-premium #hyderabad-doctors .sp-city-facets{gap:7px}
+ .sp-hyderabad-premium #hyderabad-doctors .sp-specialty-pill{font-size:11px;padding:9px 12px}
+}
