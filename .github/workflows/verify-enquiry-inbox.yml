@@ -30,7 +30,9 @@ jobs:
             node --check "$file"
           done
           grep -q 'action="https://wa.me/' assets/site.js
-          grep -q 'id="sp-wa-email" type="email"' assets/site.js
+          ! grep -q 'id="sp-wa-email"' assets/site.js
+          ! grep -q 'id="sp-wa-phone"' assets/site.js
+          ! grep -q '+92 335 2648572' assets/site.js
           grep -q 'name="text"' assets/site.js
           grep -q 'Message us on WhatsApp' assets/site.js
           ! grep -q 'fetch("/api/enquiries"' assets/site.js

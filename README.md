@@ -155,7 +155,7 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 
 
 ## WhatsApp-first contact and historical private inbox (9 November 2026)
-- Public floating WhatsApp contact: every public page loads assets/site.js and displays the team contact at +92 335 2648572. A visitor enters name, city/area, optional email, optional WhatsApp number, and an enquiry; the browser prepares the exact typed text plus its canonical source-page title and URL for WhatsApp.
+- Public floating WhatsApp contact: every public page loads assets/site.js and displays a friendly WhatsApp button without publishing the contact number in its visible label. A visitor enters only name, city/area, and message; the browser prepares the exact typed text plus its canonical source-page title and URL for WhatsApp. The phone number remains in the functional wa.me destination but is not printed on the page.
 - Primary interaction is a user-initiated native GET form to wa.me with only the one WhatsApp text field named. There is no private database save, Turnstile check or API dependency before a WhatsApp handoff. The visitor must press Send within WhatsApp; a handoff is not a delivery confirmation.
 - Contact page includes a less prominent collapsible private-email option. Emails sent through the visitor's mail app are not publicly posted by SlashPromo.
 - Historical private D1 enquiries remain available at /enquiries/ to authorised operators, protected by QA_ADMIN_KEY and the existing QA_DB. The past storage API, private reply history and 180-day closed-item retention are preserved for records already collected. The floating form no longer sends a POST to /api/enquiries. Never expose private records publicly.

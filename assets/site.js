@@ -159,7 +159,7 @@ import("/assets/cross-profile-links.js?v=20261109-patient3").catch(()=>{});
     toggle.setAttribute("aria-label","Write a message to the SlashPromo team on WhatsApp");
     toggle.setAttribute("aria-controls","sp-wa-query-panel");
     toggle.setAttribute("aria-expanded","false");
-    toggle.innerHTML='<svg class="sp-team-whatsapp-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 11.6a8.4 8.4 0 0 1-12.6 7.2L3 20.1l1.2-4.4a8.4 8.4 0 1 1 16-4.1Z"/><path d="M8.7 8.3c.4 3.2 2.4 5.3 5.5 6.1l1.4-1.6"/></svg><span class="sp-team-whatsapp-copy"><strong>Message on WhatsApp</strong><small>+92 335 2648572</small></span>';
+    toggle.innerHTML='<svg class="sp-team-whatsapp-mark" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.2 11.6a8.4 8.4 0 0 1-12.6 7.2L3 20.1l1.2-4.4a8.4 8.4 0 1 1 16-4.1Z"/><path d="M8.7 8.3c.4 3.2 2.4 5.3 5.5 6.1l1.4-1.6"/></svg><span class="sp-team-whatsapp-copy"><strong>Message on WhatsApp</strong><small>Ask us a question</small></span>';
     const panel=document.createElement("section");
     panel.id="sp-wa-query-panel";panel.className="sp-wa-query-panel";
     panel.setAttribute("role","region");panel.setAttribute("aria-labelledby","sp-wa-query-title");panel.hidden=true;
@@ -168,12 +168,10 @@ import("/assets/cross-profile-links.js?v=20261109-patient3").catch(()=>{});
       '<form id="sp-wa-query-form" class="sp-wa-query-form" action="https://wa.me/'+contact+'" method="get" target="_blank" rel="noopener noreferrer">',
       '<label for="sp-wa-name">Your name *</label><input id="sp-wa-name" type="text" maxlength="100" autocomplete="name" placeholder="Enter your name" required>',
       '<label for="sp-wa-address">City / Area *</label><input id="sp-wa-address" type="text" maxlength="120" autocomplete="address-level2" placeholder="Your city or area, not a home address" required>',
-      '<label for="sp-wa-email">Email (optional)</label><input id="sp-wa-email" type="email" maxlength="160" autocomplete="email" placeholder="name@example.com">',
-      '<label for="sp-wa-phone">Your WhatsApp number (optional)</label><input id="sp-wa-phone" type="tel" maxlength="24" autocomplete="tel" placeholder="+92 300 1234567">',
       '<label for="sp-wa-question">Your message *</label><textarea id="sp-wa-question" rows="4" minlength="5" maxlength="1200" placeholder="Ask about a doctor, OPD, hospital or SlashPromo. Please do not share patient records." required></textarea>',
       '<div class="sp-wa-source"><strong>Related page</strong><span id="sp-wa-source-label"></span></div>',
       '<input id="sp-wa-prefilled" type="hidden" name="text" value="">',
-      '<p class="sp-wa-privacy">This form does not save your message on SlashPromo. Your optional email and WhatsApp contact will appear in the WhatsApp draft if supplied. Do not include medical records or sensitive personal information. Not for emergencies.</p>',
+      '<p class="sp-wa-privacy">No extra contact details needed. Your message will be prepared in WhatsApp, not saved on SlashPromo. Please avoid patient records or other sensitive information. Not for emergencies.</p>',
       '<button id="sp-wa-send" type="submit" class="sp-wa-submit">Continue to WhatsApp ↗</button>',
       '<p class="sp-wa-privacy">WhatsApp opens with the message prepared. <strong>Press Send in WhatsApp</strong> to deliver it. <a href="/contact/">Other contact options</a>.</p>',
       '</form>'
@@ -220,8 +218,6 @@ import("/assets/cross-profile-links.js?v=20261109-patient3").catch(()=>{});
       if(!form.reportValidity()){event.preventDefault();return}
       const name=form.querySelector("#sp-wa-name").value.trim();
       const area=form.querySelector("#sp-wa-address").value.trim();
-      const email=form.querySelector("#sp-wa-email").value.trim();
-      const phone=form.querySelector("#sp-wa-phone").value.trim();
       const question=form.querySelector("#sp-wa-question").value.trim();
       if(!name||!area||question.length<5){event.preventDefault();return}
       // Only the hidden text field is submitted to the WhatsApp URL, directly
@@ -230,8 +226,6 @@ import("/assets/cross-profile-links.js?v=20261109-patient3").catch(()=>{});
         "Hello SlashPromo Team,",
         "Name: "+name,
         "City / Area: "+area,
-        ...(email?["Email: "+email]:[]),
-        ...(phone?["My WhatsApp: "+phone]:[]),
         "",
         "My message:",
         question,
