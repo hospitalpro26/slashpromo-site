@@ -9,9 +9,11 @@
   if(/^\/(?:admin|qa-admin|control-center|analytics|enquiries|secure-backups|api|privacy|cookie-policy|terms|contact|advertise|editorial-policy|advertising-policy|accessibility)(?:\/|$)/.test(path))return;
   if(!document.querySelector(".site-header"))return;
   const CITY_KEY="slashpromo_preferred_city_v1";
-  const PROMPT_KEY="slashpromo_location_prompt_v1";
+  const PROMPT_KEY="slashpromo_location_prompt_v2";
   const SEEN_KEY="slashpromo_seen_pages_v1";
-  const MONTH=30*24*60*60*1000;
+  const DAY=24*60*60*1000;
+  const WEEK=7*DAY;
+  const MONTH=30*DAY;
   const now=Date.now();
   /* These are approximate directory-city centres, not visitor location records.
      Unknown/distant areas are never silently assigned to a city. */
@@ -81,13 +83,14 @@
     const actions=box.querySelector(".sp-location-actions");
     const manual=box.querySelector(".sp-location-manual");
     const dismiss=()=>{
-      put(localStorage,PROMPT_KEY,{until:Date.now()+MONTH});
+      put(localStorage,PROMPT_KEY,{until:Date.now()+WEEK});
       box.remove();
     };
     later.addEventListener("click",dismiss);
     close.addEventListener("click",dismiss);
-    /* A displayed but ignored request should not interrupt every subsequent page. */
-    put(localStorage,PROMPT_KEY,{until:Date.now()+MONTH});
+    /* An unanswered invitation waits one day before showing again;
+       explicit "Not now" waits one week. Accepted city preference lasts 30 days. */
+    put(localStorage,PROMPT_KEY,{until:Date.now()+DAY});
     allow.addEventListener("click",()=>{
       allow.disabled=true;
       later.disabled=true;
