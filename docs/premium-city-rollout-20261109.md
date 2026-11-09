@@ -22,14 +22,20 @@ Status as of 2026-11-09. User requested gradual rollout of the approved premium 
 - New opt-in shared assets: `assets/city-premium.css` and `assets/city-premium.js`.
 - Shared `assets/native-directory.js` adds Neurologist facet and allows other cities to opt into existing six-card preview behavior. It does not auto-change other cities.
 
+## Phase 2 — Shikarpur (this PR)
+- Route: `/shikarpur/` upgraded with shared premium hero/search, a Shikarpur-only local directory (physiotherapy, general surgery and dermatology tabs), premium doctor and hospital cards, and footer matching national homepage.
+- Reuse existing `assets/city-premium.css` and `assets/city-premium.js` and add Shikarpur-specific card styling in `assets/shikarpur-premium.css`.
+- Preserve all 3 existing doctor links, 3 original hospital profiles, city-only category routes, SEO canonical, public Q&A, social, WhatsApp and Slashcure advertising.
+- Original pre-redesign Shikarpur HTML fully preserved in branch `backup/shikarpur-before-premium-20261109`.
+- Roll back by restoring **only** `shikarpur/index.html` from the backup branch onto a new branch from current main, then testing and merging. This avoids losing future doctor data or other pages.
+
 ## Planned next independent batches (NOT yet deployed)
-1. Shikarpur city directory `/shikarpur/`.
-2. Karachi city directory `/karachi/`, with Astro Physiocare team and local specialties preserved.
-3. Lahore `/lahore/`, including NEO Medical Center and local doctor links.
-4. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
-5. City specialty subpages and hospital directory/clinic pages.
-6. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
-7. Remaining public information pages; maintain high contrast and text readability.
+1. Karachi city directory `/karachi/`, with Astro Physiocare team and local specialties preserved.
+2. Lahore `/lahore/`, including NEO Medical Center and local doctor links.
+3. Hyderabad, Pano Aqil and remaining active city pages, one city at a time.
+4. City specialty subpages and hospital directory/clinic pages.
+5. Doctor and hospital profile templates; avoid modifying unique data or structured schema.
+6. Remaining public information pages; maintain high contrast and text readability.
 
 ## Safe rollback for Khairpur
 1. From **current** main, open a fresh rollback branch.
