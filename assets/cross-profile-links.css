@@ -53,3 +53,8 @@ a.sp-cross-link-external .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!
 .sp-card-patient-detail strong{color:#23476c}
 .sp-patient-card-action{background:#eff7ff;color:#15518b!important;border-color:#bfdaed}
 @media(max-width:620px){.sp-patient-guide-wrap{padding:16px}.sp-patient-guide-actions{flex-direction:column}.sp-patient-guide-link{width:100%}.sp-patient-facts{display:block}.sp-patient-fact{margin-bottom:6px}}
+
+/* Keep the existing blue/red Slashcure wordmark legible inside the primary blue patient button. */
+.sp-patient-primary .sp-slashcure-wordmark{display:inline-block;background:#fff!important;padding:1px 4px;border-radius:5px;white-space:nowrap}
+.sp-patient-primary .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
+.sp-patient-primary .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
