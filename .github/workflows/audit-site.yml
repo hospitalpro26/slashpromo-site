@@ -7,6 +7,9 @@ on:
       - sitemap.xml
       - robots.txt
       - assets/site.js
+      - scripts/test-whatsapp-handoff.mjs
+      - contact/index.html
+      - privacy/index.html
       - assets/city-questions.js
       - functions/_lib/qa.js
       - scripts/audit-site.mjs
@@ -36,6 +39,8 @@ jobs:
           node --check functions/api/questions.js
           node --check functions/api/qa-admin.js
           node --check scripts/indexnow.mjs
+      - name: Check WhatsApp-first contact and public page coverage
+        run: node scripts/test-whatsapp-handoff.mjs
       - name: Audit SEO, sitemap and page-specific Q&A
         run: node scripts/audit-site.mjs
       - name: Audit doctor and hospital data quality

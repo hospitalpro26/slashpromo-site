@@ -154,14 +154,12 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - Shared scripts site.js and city-questions.js post first-party event counters. The cache-refresh workflow rewrites versioned references on published HTML pages.
 
 
-## Private Enquiry Management Inbox (8 November 2026)
-- Private dashboard: https://slashpromo.com/enquiries/ (noindex; admin-only data supplied by authenticated API). It uses the existing QA_ADMIN_KEY and QA_DB Cloudflare D1 binding; no additional secrets or database are needed.
-- Public consent-based form: the floating WhatsApp panel collects name, city/area, optional WhatsApp contact and an enquiry (maximum 700 characters). It clearly requires opt-in consent before storing any record, and verifies a Turnstile token using existing QA_TURNSTILE_SITE_KEY and QA_TURNSTILE_SECRET.
-- Public POST /api/enquiries saves a new enquiry with its canonical source path/title/city and produces a short reference. The client then offers a separately clickable WhatsApp link. This does NOT establish that the WhatsApp message was sent or delivered. The form offers direct WhatsApp access without saving.
-- Private GET/POST /api/enquiries-admin uses the server-side QA_ADMIN_KEY to list/filter records, and update New/Contacted/Resolved/Closed statuses and private follow-up notes. It cannot publicly disclose enquiries without the private key. No visitor content is inserted as HTML in the dashboard.
-- Data retention: closed enquiries are deleted 180 days after their close date during database maintenance on supported API requests. Anonymous HMAC spam-rate records are purged after two days. Retained personal data is excluded from the aggregate analytics tables.
-- Link to the inbox from the private Analytics, Q&A moderation and campaign administration pages. All private records and contact numbers must remain restricted to authorised operators.
-
+## WhatsApp-first contact and historical private inbox (9 November 2026)
+- Public floating WhatsApp contact: every public page loads assets/site.js and displays the team contact at +92 335 2648572. A visitor enters name, city/area, optional email, optional WhatsApp number, and an enquiry; the browser prepares the exact typed text plus its canonical source-page title and URL for WhatsApp.
+- Primary interaction is a user-initiated native GET form to wa.me with only the one WhatsApp text field named. There is no private database save, Turnstile check or API dependency before a WhatsApp handoff. The visitor must press Send within WhatsApp; a handoff is not a delivery confirmation.
+- Contact page includes a less prominent collapsible private-email option. Emails sent through the visitor's mail app are not publicly posted by SlashPromo.
+- Historical private D1 enquiries remain available at /enquiries/ to authorised operators, protected by QA_ADMIN_KEY and the existing QA_DB. The past storage API, private reply history and 180-day closed-item retention are preserved for records already collected. The floating form no longer sends a POST to /api/enquiries. Never expose private records publicly.
+- Aggregate analytics still count whatsapp_open and whatsapp_continue; never send personal fields or message bodies to tracking.
 
 ### Private Reply on WhatsApp and reply history (8 November 2026)
 - `/enquiries/` now includes a private reply composer per saved enquiry, **Save private draft**, **Reply on WhatsApp**, and **View reply history**.
