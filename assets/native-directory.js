@@ -11,6 +11,35 @@
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[s]);
   const title = record => record.specialty || record.category || "Healthcare professional";
+  /* Optional local specialty pills. Other city pages do not activate this UI. */
+  const sukDoctorFacetDefinitions = [
+    ["physician","Consultant Physicians"],["gastro","Gastroenterologists"],
+    ["cardio","Cardiologists"],["paeds","Paediatricians"],
+    ["gynae","Gynecologists"],["surgeon","Surgeons"],
+    ["orthopedic","Orthopedic Surgeons"],["physio","Physiotherapists"],
+    ["dentist","Dentists"],["rheum","Rheumatologists"],
+    ["pulmo","Pulmonologists"],["urology","Urologists"],
+    ["psychiatry","Psychiatrists"],["hematology","Hematologists"],
+    ["other","Other specialties"]
+  ];
+  const sukDoctorFacet = record => {
+    const s=normal(title(record));
+    if(/gastroenterol|hepatolog|liver specialist/.test(s))return "gastro";
+    if(/cardiolog|cardiac/.test(s))return "cardio";
+    if(/gynecol|obstetric/.test(s))return "gynae";
+    if(/orthop|spine|limb reconstruction/.test(s))return "orthopedic";
+    if(/physiotherap|rehabilitation/.test(s))return "physio";
+    if(/rheumatol/.test(s))return "rheum";
+    if(/pulmonolog|chest specialist/.test(s))return "pulmo";
+    if(/urolog/.test(s))return "urology";
+    if(/psychiatr/.test(s))return "psychiatry";
+    if(/hematolog/.test(s))return "hematology";
+    if(/dentist|prosthodont/.test(s))return "dentist";
+    if(/surgeon|surgery|laparoscop/.test(s))return "surgeon";
+    if(/pediatric|child specialist|neonatal/.test(s))return "paeds";
+    if(/physician|internal medicine|postgraduate trainee/.test(s))return "physician";
+    return "other";
+  };
   const searchable = record => normal([record.name,record.city,...(record.cities||[]),title(record),record.hospital,record.area,record.qualifications].join(" "));
   const symbol = record => {
     const s=normal(title(record));
@@ -131,6 +160,9 @@
     const label = root.querySelector("[data-native-count]");
     const load = root.querySelector("[data-native-more]");
     const reset = root.querySelector("[data-native-reset]");
+    const previewLimit = type==="doctor" && scope==="sukkur" && root.hasAttribute("data-native-preview-limit") ? Math.max(1,Math.min(18,Number(root.dataset.nativePreviewLimit)||6)) : 0;
+    const facetTabs = previewLimit ? root.querySelector("[data-native-facets]") : null;
+    let activeFacet="";
     if(!output)return;
     let preferredCity=readPreferred();
     const preferenceNote=document.createElement("div");
@@ -159,7 +191,46 @@
       hospital.innerHTML='<option value="">All listed hospitals</option>'+[...names].sort((a,b)=>a[1].localeCompare(b[1])).map(([key,label])=>`<option value="${esc(key)}">${esc(label)}</option>`).join("");
     }
     if(city&&initialCity)city.value=initialCity;
-    let showing = scope === "home" ? 6 : scope === "all" ? 18 : 40;
+    let showing = previewLimit || (scope === "home" ? 6 : scope === "all" ? 18 : 40);
+    const setFacetState = () => {
+      if(!facetTabs)return;
+      facetTabs.querySelectorAll("button[data-native-facet]").forEach(button=>{
+        const selected=button.dataset.nativeFacet===activeFacet;
+        button.classList.toggle("active",selected);
+        button.setAttribute("aria-pressed",String(selected));
+      });
+    };
+    if(facetTabs){
+      const counts=new Map();
+      items.forEach(item=>{
+        const key=sukDoctorFacet(item);
+        counts.set(key,(counts.get(key)||0)+1);
+      });
+      facetTabs.replaceChildren();
+      [["","All doctors"],...sukDoctorFacetDefinitions.filter(([key])=>counts.has(key))].forEach(([key,label])=>{
+        const btn=document.createElement("button");
+        btn.type="button";
+        btn.className="sp-specialty-pill";
+        btn.dataset.nativeFacet=key;
+        btn.textContent=label;
+        if(key)btn.title=String(counts.get(key))+" Sukkur doctor profile(s)";
+        facetTabs.appendChild(btn);
+      });
+      setFacetState();
+      facetTabs.addEventListener("click",event=>{
+        const btn=event.target.closest("button[data-native-facet]");
+        if(!btn||!facetTabs.contains(btn))return;
+        activeFacet=btn.dataset.nativeFacet||"";
+        if(query)query.value="";
+        if(specialties)specialties.value="";
+        if(area)area.value="";
+        if(hospital)hospital.value="";
+        showing=previewLimit;
+        setFacetState();
+        render();
+        root.dispatchEvent(new CustomEvent("slashpromo:doctor-facet-selected",{detail:{facet:activeFacet}}));
+      });
+    }
     const render = () => {
       const q=normal(query?.value);
       const cv=normal(city?.value);
@@ -168,7 +239,8 @@
       const hv=normal(hospital?.value);
       const matches=items.filter(r=>(!q||searchable(r).includes(q)) &&
         (!cv||(r.cities||[r.city]).some(c=>normal(c).includes(cv))) &&
-        (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av) && (!hv||hospitalKey(r.hospital)===hv)).sort((a,b)=>{
+        (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av) && (!hv||hospitalKey(r.hospital)===hv) &&
+        (!activeFacet||sukDoctorFacet(r)===activeFacet)).sort((a,b)=>{
         if(!cv&&!initialCity&&preferredCity){
           const local=normal(preferredCity);
           const aLocal=(a.cities||[a.city]).some(c=>normal(c)===local)?1:0;
@@ -185,15 +257,15 @@
       const hasPreferred=!initialCity&&Boolean(preferredCity)&&items.some(r=>(r.cities||[r.city]).some(c=>normal(c)===normal(preferredCity)));
       preferenceNote.hidden=!hasPreferred;
       if(hasPreferred)preferenceText.textContent="Based on the city you chose to share: "+preferredCity+" listings appear first when no city filter is applied.";
-      if(load){load.hidden=showing>=matches.length;load.textContent=`Show more (${matches.length-current.length} remaining)`;}
+      if(load){load.hidden=showing>=matches.length;load.textContent=previewLimit ? `Show more doctors (${matches.length-current.length} remaining)` : `Show more (${matches.length-current.length} remaining)`;}
       const empty=root.querySelector("[data-native-empty]");
       if(empty)empty.hidden=matches.length!==0;
       root.setAttribute("data-ready","true");
     };
-    form?.addEventListener("submit",e=>{e.preventDefault();showing=1000;render();root.querySelector("[data-native-results]")?.scrollIntoView({behavior:"smooth",block:"start"});});
-    [query,city,specialties,area,hospital].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{showing=scope==="home"?6:1000;render();}));
-    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";if(hospital)hospital.value="";showing=scope==="home"?6:scope==="all"?18:40;render();});
-    load?.addEventListener("click",()=>{showing+=18;render();});
+    form?.addEventListener("submit",e=>{e.preventDefault();activeFacet="";setFacetState();showing=previewLimit||1000;render();root.querySelector("[data-native-results]")?.scrollIntoView({behavior:"smooth",block:"start"});});
+    [query,city,specialties,area,hospital].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{activeFacet="";setFacetState();showing=previewLimit||(scope==="home"?6:1000);render();}));
+    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";if(hospital)hospital.value="";activeFacet="";setFacetState();showing=previewLimit||(scope==="home"?6:scope==="all"?18:40);render();});
+    load?.addEventListener("click",()=>{showing+=previewLimit||18;render();});
     window.addEventListener("slashpromo:city-preference",ev=>{
       preferredCity=typeof ev.detail?.city==="string"?ev.detail.city:"";
       render();
