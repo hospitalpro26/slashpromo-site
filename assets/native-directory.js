@@ -96,8 +96,8 @@
         '<div class="sp-cross-profile-actions" aria-label="SlashPromo and Slashcure navigation">'+
           '<a class="sp-cross-link sp-cross-link-local" href="'+esc(r.url)+'">View SlashPromo Profile ↗</a>'+
           '<a class="sp-cross-link '+(external.direct?'sp-cross-link-external':'sp-cross-link-fallback')+'" href="'+esc(external.url)+'" target="_blank" rel="noopener noreferrer">'+esc(external.label)+'</a>'+
-          (r.kind==="hospital"&&typeof r.phone==="string"&&/^[+0-9\\s().-]{7,25}$/.test(r.phone.trim())?
-            '<a class="sp-cross-link sp-patient-card-action" href="tel:'+esc(r.phone.replace(/[^+\\d]/g,""))+'">Call published number</a>':"")+
+          (r.kind==="hospital"&&typeof r.phone==="string"&&/^[+0-9\s().-]{7,25}$/.test(r.phone.trim())?
+            '<a class="sp-cross-link sp-patient-card-action" href="tel:'+esc(r.phone.replace(/[^+\d]/g,""))+'">Call published number</a>':"")+
           (r.kind==="hospital"&&typeof r.address==="string"&&r.address.trim().length>8?
             '<a class="sp-cross-link sp-patient-card-action" href="https://www.google.com/maps/search/?api=1&amp;query='+encodeURIComponent(r.address.trim())+'" target="_blank" rel="noopener noreferrer">Search address on map ↗</a>':"")+
         '</div>'+
