@@ -1,6 +1,6 @@
 /* Regression audit for static SEO and moderated Q&A route coverage.
    Run locally: node scripts/audit-site.mjs */
-import {readFileSync,existsSync,appendFileSync} from "node:fs";
+import {readFileSync,existsSync,appendFileSync,readdirSync} from "node:fs";
 import {CITIES,questionPage} from "../functions/_lib/qa.js";
 
 const BASE="https://slashpromo.com";
@@ -57,6 +57,86 @@ function check(url){
   }
 }
 for(const url of urls)check(url);
+
+/* Crawlability and canonical integrity across the full static build.
+   Search engines should discover every indexable canonical HTML page,
+   but never private dashboards or legacy redirect duplicates. */
+const redirectRules=new Map();
+for(const raw of readFileSync("_redirects","utf8").split(/\r?\n/)){
+  const line=raw.trim();
+  if(!line||line.startsWith("#"))continue;
+  const cols=line.split(/\s+/);
+  if(cols.length>=3&&["301","308"].includes(cols[2]))redirectRules.set(cols[0],cols[1]);
+}
+function htmlFiles(dir="."){
+  const output=[];
+  for(const item of readdirSync(dir,{withFileTypes:true})){
+    if([".git",".github","node_modules","assets","functions","scripts"].includes(item.name))continue;
+    const next=dir==="."?item.name:dir+"/"+item.name;
+    if(item.isDirectory())output.push(...htmlFiles(next));
+    else if(item.isFile()&&(next==="index.html"||next.endsWith("/index.html")))output.push(next);
+  }
+  return output;
+}
+let schemaBlocks=0,redirectedPages=0,privatePages=0,indexablePages=0,missingLocalLinks=0;
+const staticPages=new Set(htmlFiles());
+for(const file of staticPages){
+  const html=readFileSync(file,"utf8");
+  const path=file==="index.html"?"/":"/"+file.slice(0,-"index.html".length);
+  const expected=BASE+path;
+  const canonical=html.match(/<link\s+rel=["']canonical["'][^>]*>/i)?.[0];
+  const canonicalUrl=getAttr(canonical,"href");
+  const robotsTag=html.match(/<meta\s+name=["']robots["'][^>]*>/i)?.[0];
+  const noindex=/\bnoindex\b/i.test(getAttr(robotsTag,"content"));
+  const redirect=redirectRules.get(path);
+  if(redirect){
+    redirectedPages++;
+    if(seen.has(expected))errors.push("Redirect source included in sitemap: "+path);
+    if(!noindex)errors.push("Redirect fallback must not be indexable: "+file);
+    if(canonicalUrl!==BASE+redirect)errors.push("Redirect fallback canonical differs from target: "+file);
+  }else if(noindex){
+    privatePages++;
+    if(seen.has(expected))errors.push("Non-indexable private page in sitemap: "+file);
+  }else{
+    indexablePages++;
+    if(canonicalUrl===expected&&!seen.has(expected))errors.push("Indexable canonical page omitted from sitemap: "+file);
+    if(!canonicalUrl)warnings.push("Indexable page missing canonical link: "+file);
+    else if(canonicalUrl!==expected)warnings.push("Indexable page points to different canonical URL: "+file);
+  }
+  if(!noindex&&!redirect){
+    const schemas=[...html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+    for(const match of schemas){
+      schemaBlocks++;
+      try{
+        const root=JSON.parse(match[1]);
+        if(root["@context"]!=="https://schema.org")warnings.push("JSON-LD missing schema.org context: "+file);
+        const entities=Array.isArray(root["@graph"])?root["@graph"]:[root];
+        for(const entity of entities){
+          if(typeof entity.url==="string"&&entity.url.startsWith(BASE)&&entity.url!==expected)
+            warnings.push("Structured data page URL differs from canonical: "+file+" => "+entity.url);
+        }
+      }catch(error){errors.push("Invalid JSON-LD: "+file+": "+error.message)}
+    }
+    if(!schemas.length)warnings.push("Indexable page has no JSON-LD: "+file);
+  }
+  const hrefs=[...html.matchAll(/\bhref=["'](\/[^"']*)["']/gi)].map(m=>m[1]);
+  for(const href of new Set(hrefs)){
+    if(href.startsWith("//"))continue;
+    const link=href.split(/[?#]/,1)[0];
+    if(!link.endsWith("/")||link.startsWith("/api/")||link.startsWith("/go/"))continue;
+    if(!staticPages.has(link.slice(1)+"index.html")&&!(link==="/"&&staticPages.has("index.html"))&&!redirectRules.has(link)){
+      missingLocalLinks++;
+      warnings.push("Internal navigation points to missing static page: "+file+" -> "+link);
+    }
+  }
+}
+const sitemapDates=[...xml.matchAll(/<url>\s*<loc>([^<]+)<\/loc>([\s\S]*?)<\/url>/g)];
+const today=new Date().toISOString().slice(0,10);
+for(const [,url,body] of sitemapDates){
+  const modified=body.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1];
+  if(modified&&(!/^\d{4}-\d\d-\d\d$/.test(modified)||Number.isNaN(Date.parse(modified))||modified>today))
+    errors.push("Sitemap lastmod is invalid or in future: "+url+" "+modified);
+}
 if(!urls.includes(BASE+"/"))errors.push("Sitemap is missing the homepage.");
 if(!readFileSync("robots.txt","utf8").includes("Sitemap: "+BASE+"/sitemap.xml"))
   errors.push("robots.txt is missing the canonical sitemap location.");
@@ -66,6 +146,11 @@ if(!existsSync(key+".txt")||readFileSync(key+".txt","utf8").trim()!==key)
 const summary=[
   "SlashPromo static site audit",
   "Sitemap URLs: "+urls.length,
+  "Indexable HTML pages: "+indexablePages,
+  "Private noindex pages: "+privatePages,
+  "Legacy redirected HTML pages: "+redirectedPages,
+  "Validated JSON-LD blocks: "+schemaBlocks,
+  "Internal links to missing static pages (warnings): "+missingLocalLinks,
   "City home Q&A pages: "+roots,
   "Scoped local Q&A pages: "+scoped,
   "Errors: "+errors.length,
@@ -78,6 +163,11 @@ if(process.env.GITHUB_STEP_SUMMARY){
  const md="## SlashPromo SEO and Q&A audit\n\n"+
    "| Check | Count |\n|---|---:|\n"+
    "| Sitemap URLs | "+urls.length+" |\n"+
+   "| Indexable HTML pages | "+indexablePages+" |\n"+
+   "| Redirect fallback pages | "+redirectedPages+" |\n"+
+   "| Private noindex pages | "+privatePages+" |\n"+
+   "| JSON-LD blocks | "+schemaBlocks+" |\n"+
+   "| Missing internal links (warnings) | "+missingLocalLinks+" |\n"+
    "| City root Q&A pages | "+roots+" |\n"+
    "| Scoped local Q&A pages | "+scoped+" |\n"+
    "| Errors | "+errors.length+" |\n"+
