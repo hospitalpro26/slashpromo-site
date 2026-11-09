@@ -30,7 +30,11 @@ export async function onRequestGet(ctx){
       env.QA_DB.prepare("SELECT country,visitor_city,SUM(n) AS views FROM site_visitor_geo_daily "+whereGeo+" GROUP BY country,visitor_city ORDER BY views DESC,visitor_city ASC LIMIT 30").bind(...binds),
       env.QA_DB.prepare("SELECT COALESCE(SUM(n),0) AS recorded,COALESCE(SUM(CASE WHEN country='ZZ' THEN n ELSE 0 END),0) AS unknown_country FROM site_visitor_geo_daily "+whereGeo).bind(...binds)
     ];
-    const [totals,daily,pages,cities,geoCountries,geoCities,geoTotals]=await env.QA_DB.batch(statements);
+    /* Rank actual provider profiles separately from directory and specialty pages. */
+    const profileColumns="page_path,city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues";
+    const doctorProfiles=env.QA_DB.prepare("SELECT "+profileColumns+" FROM site_analytics_daily "+where+" AND page_path GLOB '/doctors/*/dr-*' GROUP BY page_path,city ORDER BY views DESC,referrals DESC LIMIT 25").bind(...binds);
+    const hospitalProfiles=env.QA_DB.prepare("SELECT "+profileColumns+" FROM site_analytics_daily "+where+" AND page_path GLOB '/hospitals/*/*/' GROUP BY page_path,city ORDER BY views DESC,referrals DESC LIMIT 25").bind(...binds);
+    const [totals,daily,pages,cities,geoCountries,geoCities,geoTotals,topDoctors,topHospitals]=await env.QA_DB.batch([...statements,doctorProfiles,hospitalProfiles]);
     await ensureDb(env);
     const qaCity=city&&city!=="other"?city:"";
     const qaArgs=qaCity?[qaCity]:[];
@@ -43,6 +47,7 @@ export async function onRequestGet(ctx){
     }
     const qaRecent=await env.QA_DB.prepare("SELECT id,city,COALESCE(NULLIF(page_path,''),'/'||city||'/') AS page_path,category,question,answer,status,created_at,answered_at FROM questions"+qaFilter+" ORDER BY created_at DESC LIMIT 20").bind(...qaArgs).all();
     return json({since,days,city:city||"all",generatedAt:new Date().toISOString(),totals:totals.results||[],daily:daily.results||[],pages:pages.results||[],cities:cities.results||[],
+      topDoctors:topDoctors.results||[],topHospitals:topHospitals.results||[],
       visitorGeography:{
         source:"Cloudflare approximate IP geolocation; page views only, not unique people",
         days,

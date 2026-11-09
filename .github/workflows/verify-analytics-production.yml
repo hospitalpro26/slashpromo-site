@@ -33,6 +33,7 @@ jobs:
           node --check functions/api/analytics-report.js
           node --check functions/api/control-center.js
           node scripts/test-visitor-geography.mjs
+          node scripts/test-analytics-dashboard.mjs
           grep -q 'Visitor geography' control-center/index.html
           grep -q 'Visitor geography' analytics/index.html
           node --check assets/city-questions.js

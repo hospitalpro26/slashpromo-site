@@ -42,6 +42,7 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <label>Date range<select id="days"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></label>
 <label>City<select id="city"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option><option value="ghotki">Ghotki</option><option value="lahore">Lahore</option><option value="other">Other cities and pages</option></select></label>
 <button id="load" type="submit">Load analytics</button>
+<button id="export-summary" type="button" disabled title="Export aggregate statistics only; private Q&A content is excluded">Download summary CSV</button>
 </form>
 <p id="status" role="status" aria-live="polite">Enter your admin key and select Load analytics. New counters start when tracking is published.</p>
 <section class="metrics" aria-label="Analytics summary">
@@ -50,6 +51,8 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <div class="metric"><span>WhatsApp form opens</span><strong id="whatsapp_open">—</strong></div>
 <div class="metric"><span>Continue to WhatsApp</span><strong id="whatsapp_continue">—</strong></div>
 <div class="metric"><span>Q&amp;A submissions</span><strong id="qa_submitted">—</strong></div>
+<div class="metric"><span>Slashcure clicks / views</span><strong id="referral-rate">—</strong></div>
+<div class="metric"><span>WhatsApp continues / views</span><strong id="whatsapp-rate">—</strong></div>
 </section>
 <div class="panels">
 <section class="panel"><h2>Daily page views</h2><div class="chart" id="chart" role="img" aria-label="Daily page views bar chart"></div><div class="chart-caption"><span id="from-label"></span><span id="to-label"></span></div></section>
@@ -61,10 +64,16 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <section class="panel"><h2>Countries of incoming visits</h2><div class="scroll"><table><thead><tr><th>Country</th><th class="num">Views</th></tr></thead><tbody id="geo-countries"><tr><td colspan="2" class="placeholder">Load analytics to see country estimates.</td></tr></tbody></table></div></section>
 <section class="panel"><h2>Cities of incoming visits</h2><div class="scroll"><table><thead><tr><th>City, country</th><th class="num">Views</th></tr></thead><tbody id="geo-cities"><tr><td colspan="2" class="placeholder">Load analytics to see city estimates.</td></tr></tbody></table></div></section>
 </div><p class="muted">Location reporting starts after this feature is deployed; it cannot retroactively reconstruct earlier visits. VPNs and mobile networks may cause inaccurate city estimates. No raw visitor IP, GPS coordinate or mobile number is recorded in this report.</p></section>
+<section class="panel wide"><h2>Doctor and hospital profile interest</h2>
+<p class="muted">Rankings use actual SlashPromo profile pages, excluding city and specialty directories. Clicks per view is an activity ratio, not a percentage of unique people or confirmed appointments.</p>
+<div class="panels">
+<section class="panel"><h2>Most viewed doctor profiles</h2><div class="scroll"><table><thead><tr><th>Doctor page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-doctors"><tr><td colspan="4" class="placeholder">Load analytics to see doctor profile interest.</td></tr></tbody></table></div></section>
+<section class="panel"><h2>Most viewed hospital profiles</h2><div class="scroll"><table><thead><tr><th>Hospital page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-hospitals"><tr><td colspan="4" class="placeholder">Load analytics to see hospital profile interest.</td></tr></tbody></table></div></section>
+</div></section>
 <section class="panel wide"><h2>Saved Questions &amp; Answers</h2><p class="muted">These are permanently stored Q&amp;A records from the database, including pending and answered questions. Only approved answers are shown on public pages. Open Q&amp;A moderation to review, save drafts or publish verified answers.</p><div class="qa-status-strip" id="qa-status-strip"><span>All saved: <strong id="qa-all">—</strong></span><span>Pending: <strong id="qa-pending">—</strong></span><span>Published: <strong id="qa-approved">—</strong></span><span>Rejected: <strong id="qa-rejected">—</strong></span></div><p><a href="/qa-admin/" rel="nofollow">Open private Q&amp;A moderation dashboard ↗</a></p><div class="scroll"><table><thead><tr><th>Submitted / Status</th><th>Saved Question</th><th>Saved Answer</th><th>Source</th></tr></thead><tbody id="qa-records"><tr><td colspan="4" class="placeholder">Load analytics to see the latest saved Q&amp;A records.</td></tr></tbody></table></div><p class="muted">Showing the latest 20 saved submissions. This table does not display private phone numbers, addresses or visitor names. Q&amp;A history is not restricted to the analytics date filter.</p></section>
 <section class="panel wide"><h2>Top pages and what visitors do</h2><div class="scroll"><table><thead><tr><th>Page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">WhatsApp starts</th><th class="num">Q&amp;A</th></tr></thead><tbody id="pages"><tr><td colspan="5" class="placeholder">Load a report to see data.</td></tr></tbody></table></div></section>
 </div>
-<p class="muted"><strong>Interpretation:</strong> Page views represent page loads, not unique visitors. Slashcure clicks represent outbound link clicks, not completed bookings. “Continue to WhatsApp” indicates the enquiry form prepared and opened WhatsApp, not that the visitor sent the message. Tracking does not include earlier traffic or Google search impressions. All days use UTC.</p>
+<p class="muted"><strong>Interpretation:</strong> Clicks per view may exceed 100% when visitors click multiple times; this is not a visitor conversion rate. Downloaded CSV files include aggregate traffic and geography only, never private Q&amp;A text. Page views represent page loads, not unique visitors. Slashcure clicks represent outbound link clicks, not completed bookings. “Continue to WhatsApp” indicates the enquiry form prepared and opened WhatsApp, not that the visitor sent the message. Tracking does not include earlier traffic or Google search impressions. All days use UTC.</p>
 </main>
 <script>
 "use strict";
@@ -116,11 +125,57 @@ function drawGeography(data){
  fill("#geo-countries",geo.countries||[],r=>geoCountry(r.country));
  fill("#geo-cities",geo.cities||[],r=>(r.city||"Unknown city")+", "+geoCountry(r.country));
 }
+function rate(clicks,views){
+  const c=Number(clicks)||0,v=Number(views)||0;
+  return v>0?(100*c/v).toFixed(1)+"%":"—";
+}
+function renderProfiles(target,records){
+  renderRows(target,records||[],"No profile visits recorded for this period.",(tr,r)=>{
+    const td=document.createElement("td");td.className="path";
+    const a=document.createElement("a");a.href=r.page_path;a.target="_blank";
+    a.rel="noopener noreferrer";a.textContent=r.page_path;
+    td.append(a);tr.append(td);
+    cell(tr,nf.format(r.views||0),"num");
+    cell(tr,nf.format(r.referrals||0),"num");
+    cell(tr,rate(r.referrals,r.views),"num");
+  });
+}
+let latestReport=null;
+function csvField(value){
+  const input=String(value??"");
+  const safe=/^\s*[=+\-@]/.test(input)?"'"+input:input;
+  return '"'+safe.replace(/"/g,'""')+'"';
+}
+function downloadSummary(){
+  if(!latestReport)return;
+  const d=latestReport;
+  const totals=Object.fromEntries((d.totals||[]).map(r=>[r.event,Number(r.total)||0]));
+  const rows=[["Category","Page / location","Page city","Views / count","Slashcure clicks","WhatsApp continues","Clicks per view"]];
+  for(const key of ["page_view","slashcure_click","whatsapp_open","whatsapp_continue","qa_submitted"])
+    rows.push(["Event total",key,"",totals[key]||0,"","",""]);
+  for(const [label,items] of [["Doctor profile",d.topDoctors||[]],["Hospital profile",d.topHospitals||[]],["Top page",d.pages||[]]]){
+    for(const r of items)rows.push([label,r.page_path,r.city,r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
+  }
+  for(const r of d.cities||[])rows.push(["Page city",r.city,"",r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
+  for(const r of d.visitorGeography?.countries||[])rows.push(["Visitor country",geoCountry(r.country),"",r.views||0,"","",""]);
+  for(const r of d.visitorGeography?.cities||[])rows.push(["Visitor city",r.city,geoCountry(r.country),r.views||0,"","",""]);
+  const csv="\ufeff"+rows.map(r=>r.map(csvField).join(",")).join("\r\n");
+  const href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const a=document.createElement("a");a.href=href;
+  a.download="slashpromo-aggregate-analytics-"+d.days+"days-"+new Date().toISOString().slice(0,10)+".csv";
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(href),1000);
+}
+$("#export-summary").addEventListener("click",downloadSummary);
 function draw(data){
   renderSavedQA(data);
+  renderProfiles("#top-doctors",data.topDoctors);
+  renderProfiles("#top-hospitals",data.topHospitals);
   drawGeography(data);
   const totals=Object.fromEntries(data.totals.map(x=>[x.event,Number(x.total)||0]));
   ["page_view","slashcure_click","whatsapp_open","whatsapp_continue","qa_submitted"].forEach(id=>{$("#"+id).textContent=nf.format(totals[id]||0)});
+  $("#referral-rate").textContent=rate(totals.slashcure_click,totals.page_view);
+  $("#whatsapp-rate").textContent=rate(totals.whatsapp_continue,totals.page_view);
   renderRows("#pages",data.pages||[],"No tracked page events yet.",(tr,r)=>{
     const td=document.createElement("td");td.className="path";
     const a=document.createElement("a");a.href=r.page_path;a.target="_blank";a.rel="noopener noreferrer";a.textContent=r.page_path;td.append(a);tr.append(td);
@@ -144,12 +199,14 @@ function draw(data){
 }
 $("#filters").addEventListener("submit",async event=>{
   event.preventDefault();const key=$("#key").value.trim();if(!key)return;
+  latestReport=null;$("#export-summary").disabled=true;
   const button=$("#load");button.disabled=true;$("#status").textContent="Loading aggregate analytics…";
   try{
     const params=new URLSearchParams({days:$("#days").value});if($("#city").value)params.set("city",$("#city").value);
     const response=await fetch("/api/analytics-report?"+params.toString(),{headers:{"X-QA-Admin-Key":key,"Accept":"application/json"},cache:"no-store"});
     const data=await response.json();if(!response.ok)throw Error(data.error||"Could not load report.");
-    draw(data);$("#status").textContent="Showing aggregate events from "+data.since+" ("+data.days+" days). Refreshed "+new Date().toLocaleString("en-PK")+".";
+    draw(data);latestReport=data;$("#export-summary").disabled=false;
+    $("#status").textContent="Showing aggregate events from "+data.since+" ("+data.days+" days). Refreshed "+new Date().toLocaleString("en-PK")+".";
   }catch(error){$("#status").textContent="Unable to load: "+(error.message||"Check your key and Cloudflare database.")}finally{button.disabled=false}
 });
 </script></body></html>
