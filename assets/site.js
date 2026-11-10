@@ -4,7 +4,7 @@
   if(!/^\/(?:shikarpur|doctors\/shikarpur|hospitals\/shikarpur)(?:\/|$)/i.test(window.location.pathname))return;
   if(document.querySelector('script[data-shikarpur-babu-ad]'))return;
   var script=document.createElement("script");
-  script.src="/assets/shikarpur-babu-ad.js?v=20261110-babu1";
+  script.src="/assets/shikarpur-babu-ad.js?v=20261110-babu2";
   script.setAttribute("data-shikarpur-babu-ad","");
   document.head.appendChild(script);
 })();
