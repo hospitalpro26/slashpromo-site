@@ -201,3 +201,7 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/pano-aqil/health-topics/neck-pain-physiotherapy/
 - https://slashpromo.com/pano-aqil/health-topics/sciatica-physiotherapy/
 - https://slashpromo.com/pano-aqil/health-topics/knee-pain-arthritis-physiotherapy/
+- https://slashpromo.com/sukkur/orthopedics/fracture-nonunion/
+- https://slashpromo.com/sukkur/orthopedics/ilizarov-limb-reconstruction/
+- https://slashpromo.com/sukkur/orthopedics/fracture-trauma-care/
+- https://slashpromo.com/sukkur/orthopedics/knee-pain-orthopedic-care/

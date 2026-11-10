@@ -49,6 +49,10 @@ jobs:
         run: |
           node --check scripts/test-pano-aqil-hina.mjs
           node scripts/test-pano-aqil-hina.mjs
+      - name: Validate Sukkur orthopedic patient guides and verified sidebar listings
+        run: |
+          node --check scripts/test-sukkur-orthopedics.mjs
+          node scripts/test-sukkur-orthopedics.mjs
       - name: Verify Shikarpur physiotherapy pages without publishing
         run: |
           node --check scripts/test-shikarpur-physiotherapy.mjs
