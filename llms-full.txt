@@ -167,6 +167,11 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/sukkur/health-topics/womens-health-and-pregnancy/
 - https://slashpromo.com/sukkur/health-topics/endoscopy-consultations/
 - https://slashpromo.com/sukkur/health-topics/physiotherapy-and-rehabilitation/
+- https://slashpromo.com/sukkur/health-topics/cervical-neck-pain-physiotherapy/
+- https://slashpromo.com/sukkur/health-topics/sciatica-leg-pain-physiotherapy/
+- https://slashpromo.com/sukkur/health-topics/lower-back-pain-physiotherapy/
+- https://slashpromo.com/sukkur/health-topics/frozen-shoulder-physiotherapy/
+- https://slashpromo.com/sukkur/health-topics/knee-pain-arthritis-physiotherapy/
 - https://slashpromo.com/sukkur/health-topics/dental-and-restorative-care/
 - https://slashpromo.com/sukkur/health-topics/antenatal-and-obstetric-care/
 - https://slashpromo.com/lahore/
