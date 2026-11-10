@@ -101,11 +101,11 @@
       const path = parsed.pathname.replace(/\/?$/, "/");
       if(parsed.protocol==="https:" && /^(?:www\.)?slashcure\.com$/i.test(parsed.hostname)
          && !parsed.search && !parsed.hash){
-        if(r.kind==="hospital" && /^\/hospitals\/[^/]+\/[^/]+\/$/.test(path)) external=parsed.href;
+        if((r.kind==="hospital" || r.listingType==="hospital_roster") && /^\/hospitals\/[^/]+\/[^/]+\/$/.test(path)) external=parsed.href;
         if(r.kind!=="hospital" && (/^\/dr-[a-z0-9-]+\/$/i.test(path) || /^\/[a-z0-9-]+\/[a-z0-9-]+\/dr-[a-z0-9-]+\/$/i.test(path))) external=parsed.href;
       }
     }catch(_){}
-    if(external)return {url:external,label:r.kind==="hospital"?"Hospital OPD & contact on Slashcure ↗":"Check OPD & contact on Slashcure ↗",direct:true};
+    if(external)return {url:external,label:r.kind==="hospital"?"Hospital OPD & contact on Slashcure ↗":r.listingType==="hospital_roster"?"View hospital doctor roster on Slashcure ↗":"Check OPD & contact on Slashcure ↗",direct:true};
     if(r.kind==="hospital")return {url:"https://slashcure.com/hospitals",label:"Browse hospitals on Slashcure ↗",direct:false};
     const search = new URL("https://slashcure.com/doctors");
     search.searchParams.set("type","all");
@@ -114,6 +114,7 @@
     return {url:search.href,label:"Search doctor & OPD on Slashcure ↗",direct:false};
   };
   const card = (r, sukDoctorIcons=false) => {
+    const hospitalRoster = r.listingType==="hospital_roster";
     const type=sukDoctorIcons ? specialtyIconType(r) : "";
     const icon=sukDoctorIcons ? '<div class="sp-directory-icon sp-specialty-icon sp-specialty-'+type+'" aria-hidden="true">'+specialtyIcon(type)+'</div>'
       : '<div class="sp-directory-icon" aria-hidden="true">'+esc(symbol(r))+'</div>';
@@ -121,14 +122,14 @@
     return '<article class="sp-directory-card'+(sukDoctorIcons ? " sp-specialty-card" : "")+'">'+
       icon+
       '<div class="sp-directory-body">'+
-        '<span class="sp-card-type">'+(r.kind==="hospital"?"HEALTHCARE FACILITY":"DOCTOR PROFILE")+' · '+esc(r.city)+'</span>'+
+        '<span class="sp-card-type">'+(r.kind==="hospital"?"HEALTHCARE FACILITY":hospitalRoster?"HOSPITAL-ROSTER LISTING":"DOCTOR PROFILE")+' · '+esc(r.city)+'</span>'+
         '<h3><a href="'+esc(r.url)+'">'+esc(r.name)+'</a></h3>'+
         '<p class="sp-card-specialty">'+esc(title(r))+'</p>'+
         (r.hospital?'<p class="sp-card-clinic">⌖ '+esc(r.hospital)+'</p>':"")+
         (r.area?'<p class="sp-card-patient-detail"><strong>Listed area:</strong> '+esc(r.area)+'</p>':"")+
         (r.kind==="hospital"&&r.address?'<p class="sp-card-patient-detail"><strong>Address:</strong> '+esc(r.address)+'</p>':"")+
         '<div class="sp-cross-profile-actions" aria-label="SlashPromo and Slashcure navigation">'+
-          '<a class="sp-cross-link sp-cross-link-local" href="'+esc(r.url)+'">View SlashPromo Profile ↗</a>'+
+          '<a class="sp-cross-link sp-cross-link-local" href="'+esc(r.url)+'">'+(hospitalRoster?"Hospital on SlashPromo ↗":"View SlashPromo Profile ↗")+'</a>'+
           '<a class="sp-cross-link '+(external.direct?'sp-cross-link-external':'sp-cross-link-fallback')+'" href="'+esc(external.url)+'" target="_blank" rel="noopener noreferrer">'+esc(external.label)+'</a>'+
           (r.kind==="hospital"&&typeof r.phone==="string"&&/^[+0-9\s().-]{7,25}$/.test(r.phone.trim())?
             '<a class="sp-cross-link sp-patient-card-action" href="tel:'+esc(r.phone.replace(/[^+\d]/g,""))+'">Call published number</a>':"")+
@@ -150,7 +151,9 @@
     const scope = root.dataset.scope || "all";
     const initialCity = root.dataset.city || "";
     const linkedDoctors = new Set((db.doctors||[]).map(d=>d.id));
-    const items = (type === "hospital" ? db.hospitals : db.doctors).filter(r =>
+    // Opt-in hospital roster references are not independent doctor profiles.
+    const hospitalRoster = type==="doctor" && root.dataset.includeHospitalRoster==="true" && Array.isArray(db.hospitalRoster) ? db.hospitalRoster : [];
+    const items = [...(type === "hospital" ? db.hospitals : db.doctors),...hospitalRoster].filter(r =>
       (type !== "hospital" || (Array.isArray(r.linkedDoctorIds) && r.linkedDoctorIds.some(id=>linkedDoctors.has(id))) || /^https:\/\/(?:www\.)?slashcure\.com\/hospitals\/[^/]+\/[^/]+\/?$/i.test(r.externalProfile||"")) &&
       (!initialCity || (r.cities||[r.city]).some(c=>normal(c) === normal(initialCity))) &&
       (!root.dataset.specialtyMatch || normal(title(r)).includes(normal(root.dataset.specialtyMatch))));
@@ -257,7 +260,7 @@
       const current=matches.slice(0,showing);
       const sukDoctorIcons=(scope === "sukkur" || scope === "karachi") && type === "doctor";
       output.innerHTML=current.map(r=>card(r,sukDoctorIcons)).join("");
-      const state=matches.length===0?"No matching profiles yet. Try a different name, city or specialty.":`${matches.length} ${type === "hospital"?"healthcare facilities":"doctor profiles"} found`;
+      const state=matches.length===0?"No matching profiles yet. Try a different name, city or specialty.":`${matches.length} ${type === "hospital"?"healthcare facilities":hospitalRoster.length?"doctor listings":"doctor profiles"} found`;
       if(label)label.textContent=state;
       const hasPreferred=!initialCity&&Boolean(preferredCity)&&items.some(r=>(r.cities||[r.city]).some(c=>normal(c)===normal(preferredCity)));
       preferenceNote.hidden=!hasPreferred;

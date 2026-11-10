@@ -1687,5 +1687,143 @@
       "listingScope": "institutional-only",
       "linkedDoctorIds": []
     }
+  ],
+  "hospitalRoster": [
+    {
+      "id": "shikarpur-alkhidmat-dr-aamir-abbas-soomor",
+      "name": "Dr. Aamir Abbas Soomor",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "General Physician",
+      "qualifications": "MBBS, RMP",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    },
+    {
+      "id": "shikarpur-alkhidmat-dr-ashfaque-ahmed-bhutto",
+      "name": "Dr. Ashfaque Ahmed Bhutto",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Neurologist",
+      "qualifications": "MBBS, DCH, MPhil",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    },
+    {
+      "id": "shikarpur-alkhidmat-dr-munir-ahmed",
+      "name": "Dr. Munir Ahmed",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Ophthalmologist",
+      "qualifications": "BSVS",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    },
+    {
+      "id": "shikarpur-alkhidmat-dr-nadeem-bajkani",
+      "name": "Dr. Nadeem Bajkani",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Gastroenterologist",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    },
+    {
+      "id": "shikarpur-alkhidmat-dr-shadab-shah",
+      "name": "Dr. Shadab Shah",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Orthopedic Surgeon",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    },
+    {
+      "id": "shikarpur-alkhidmat-dr-sher-muhammad-soomro",
+      "name": "Dr. Sher Muhammad Soomro",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Ophthalmologist",
+      "qualifications": "BSVS",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    },
+    {
+      "id": "shikarpur-alkhidmat-dr-tahir-mumtaz",
+      "name": "Dr. Tahir Mumtaz",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Cardiologist",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    },
+    {
+      "id": "shikarpur-alkhidmat-dr-tooba",
+      "name": "Dr. Tooba",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "Gynecologist / Obstetrician",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Alkhidmat Medical Center",
+      "area": "Foujdari Road, Begari Wah",
+      "url": "/hospitals/shikarpur/alkhidmat-medical-center/",
+      "externalProfile": "https://slashcure.com/hospitals/shikarpur/alkhidmat-medical-center",
+      "kind": "doctor",
+      "listingType": "hospital_roster",
+      "sourceChecked": "2026-11-10"
+    }
   ]
 }
