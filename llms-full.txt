@@ -168,6 +168,10 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/sukkur/health-topics/womens-health-and-pregnancy/
 - https://slashpromo.com/sukkur/health-topics/endoscopy-consultations/
 - https://slashpromo.com/sukkur/health-topics/physiotherapy-and-rehabilitation/
+- https://slashpromo.com/sukkur/health-topics/general-surgery-symptoms/
+- https://slashpromo.com/sukkur/health-topics/gallstones-laparoscopic-surgery/
+- https://slashpromo.com/sukkur/health-topics/hernia-symptoms-surgery/
+- https://slashpromo.com/sukkur/health-topics/appendicitis-symptoms/
 - https://slashpromo.com/sukkur/health-topics/cervical-neck-pain-physiotherapy/
 - https://slashpromo.com/sukkur/health-topics/sciatica-leg-pain-physiotherapy/
 - https://slashpromo.com/sukkur/health-topics/lower-back-pain-physiotherapy/
