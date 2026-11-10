@@ -49,3 +49,7 @@ jobs:
         run: |
           node --check scripts/test-google-search-priorities.mjs
           node scripts/test-google-search-priorities.mjs
+      - name: Verify Red Crescent expansion uses reviewed doctors only
+        run: |
+          node --check scripts/test-red-crescent-patient-guide.mjs
+          node scripts/test-red-crescent-patient-guide.mjs
