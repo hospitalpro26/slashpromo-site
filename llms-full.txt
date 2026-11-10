@@ -163,6 +163,7 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/sukkur/health-topics/joint-and-back-pain/
 - https://slashpromo.com/sukkur/health-topics/breathing-and-lung-concerns/
 - https://slashpromo.com/sukkur/health-topics/tuberculosis-symptoms/
+- https://slashpromo.com/sukkur/health-topics/mental-health-psychiatry-symptoms/
 - https://slashpromo.com/sukkur/health-topics/childhood-fever-and-illness/
 - https://slashpromo.com/sukkur/health-topics/womens-health-and-pregnancy/
 - https://slashpromo.com/sukkur/health-topics/endoscopy-consultations/
