@@ -79,3 +79,26 @@ a.sp-cross-link-external .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!
 .sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link:hover{background:#163467;transform:translateY(-1px)}
 .sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link:focus-visible{outline:3px solid #257ec6;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link{transition:none}.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link:hover{transform:none}}
+
+
+/* Compact, fully-clickable Ghotki cross-city doctor link on Sukkur profile sidebars. */
+.sp-profile-panel a.sp-ghotki-pulmo-compact{
+ display:block;position:relative;margin:17px 0 12px;padding:13px 39px 13px 14px;
+ background:#f5f9ff;border:1px solid #d4e4f5;border-radius:12px;
+ box-shadow:none;text-decoration:none!important;color:#1a3455;
+ transition:border-color .16s ease,background .16s ease;
+}
+.sp-profile-panel a.sp-ghotki-pulmo-compact h2{
+ font-size:16px;line-height:1.35;letter-spacing:-.02em;color:#173c72;
+ margin:0 0 5px!important;
+}
+.sp-profile-panel a.sp-ghotki-pulmo-compact p{
+ font-size:12.5px;line-height:1.55;color:#425874;margin:0!important;
+}
+.sp-profile-panel a.sp-ghotki-pulmo-compact strong{color:#164d91}
+.sp-profile-panel a.sp-ghotki-pulmo-compact .sp-ghotki-pulmo-arrow{
+ position:absolute;top:14px;right:13px;color:#1c62a5;font-size:15px;font-weight:900;
+}
+.sp-profile-panel a.sp-ghotki-pulmo-compact:hover{background:#eaf3ff;border-color:#a7caed}
+.sp-profile-panel a.sp-ghotki-pulmo-compact:focus-visible{outline:3px solid #1d72bc;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.sp-profile-panel a.sp-ghotki-pulmo-compact{transition:none}}
