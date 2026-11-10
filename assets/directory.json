@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-09",
+  "updatedAt": "2026-11-10",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
@@ -334,21 +334,6 @@
       "kind": "doctor"
     },
     {
-      "id": "lahore-dr-tallal-ejaz",
-      "name": "Dr Tallal Ejaz",
-      "city": "Lahore",
-      "cities": [
-        "Lahore"
-      ],
-      "specialty": "Dentist",
-      "hospital": "NEO Medical Center · Johar Town",
-      "qualifications": "BDS, RDS",
-      "url": "/doctors/lahore/dr-tallal-ejaz/",
-      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
-      "hospitalpro": "",
-      "kind": "doctor"
-    },
-    {
       "id": "lahore-dr-ammara-gill",
       "name": "Dr. Ammara Gill",
       "city": "Lahore",
@@ -554,6 +539,21 @@
       "hospital": "NEO Medical Center · Johar Town",
       "qualifications": "MBBS, FCPS",
       "url": "/doctors/lahore/dr-sara-tariq/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "lahore-dr-tallal-ejaz",
+      "name": "Dr Tallal Ejaz",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Dentist",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "BDS, RDS",
+      "url": "/doctors/lahore/dr-tallal-ejaz/",
       "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
       "hospitalpro": "",
       "kind": "doctor"
@@ -1311,6 +1311,21 @@
       "hospitalpro": "https://hospitalpro.online/dr-sajid-khadim.html",
       "kind": "doctor",
       "area": "Shikarpur Road, Sukkur"
+    },
+    {
+      "id": "sukkur-dr-salma-lakho",
+      "name": "Dr. Salma Lakho",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant Physician (Internal Medicine)",
+      "hospital": "Sukkur Blood Bank Hospital (SBDDS), Sukkur",
+      "qualifications": "MBBS, MD",
+      "url": "/doctors/sukkur/dr-salma-lakho/",
+      "externalProfile": "https://slashcure.com/consultant-physicians/sukkur/dr-salma-lakho",
+      "hospitalpro": "",
+      "kind": "doctor"
     },
     {
       "id": "sukkur-dr-tahir-mumtaz-memon",
