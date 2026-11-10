@@ -201,3 +201,4 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/pano-aqil/health-topics/neck-pain-physiotherapy/
 - https://slashpromo.com/pano-aqil/health-topics/sciatica-physiotherapy/
 - https://slashpromo.com/pano-aqil/health-topics/knee-pain-arthritis-physiotherapy/
+- Female consultant physician in Sukkur: https://slashpromo.com/sukkur/female-consultant-physician/
