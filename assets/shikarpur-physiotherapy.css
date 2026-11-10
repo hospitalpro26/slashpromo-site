@@ -1,0 +1,28 @@
+/* Shikarpur patient-first physiotherapy specialty / health-guide pages. */
+.phys-main{background:#f5f8fd;color:#233c5b}
+.phys-hero{background:linear-gradient(120deg,#112d62,#174c8c);padding:44px 0;color:#fff}
+.phys-hero h1{font-weight:850;letter-spacing:-.025em;font-size:clamp(1.7rem,4vw,2.7rem);line-height:1.2;max-width:930px;margin:12px 0}
+.phys-hero p{color:#e1eafb;max-width:810px;font-size:1.04rem}
+.phys-eyebrow{font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.77rem;color:#bed5f6}
+.phys-breadcrumb{font-size:.84rem;color:#d1e6ff}
+.phys-breadcrumb a,.phys-hero-actions a{color:#fff}
+.phys-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.phys-hero-actions a{display:inline-block;border:1px solid #8ab4eb;border-radius:10px;padding:9px 13px;text-decoration:none;font-weight:650}
+.phys-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(260px,1fr);gap:24px;padding:28px 0 52px}
+.phys-article,.phys-sidebar{min-width:0}
+.phys-section,.phys-card{background:#fff;border:1px solid #d8e3f1;border-radius:14px;padding:23px;margin:0 0 20px;box-shadow:0 3px 16px rgba(20,55,98,.04)}
+.phys-section h2,.phys-card h2{font-size:1.24rem;line-height:1.35;color:#173d73;margin:18px 0 8px}
+.phys-section h2:first-child,.phys-card h2:first-child{margin-top:0}
+.phys-section h3{font-size:1rem;color:#213e67;margin:17px 0 7px}
+.phys-section p,.phys-card p{font-size:.96rem;color:#344f6d;line-height:1.74;margin:8px 0 14px}
+.phys-section [lang="ur"]{font-family:system-ui,"Noto Nastaliq Urdu",sans-serif;font-size:1.04rem;line-height:2.15;background:#f4f8ff;border-inline-start:3px solid #174e96;padding:12px 14px;border-radius:9px}
+.phys-section a,.phys-card a{color:#145eaf;overflow-wrap:anywhere}
+.phys-intro{background:#eff6ff;border-color:#c6daf5}
+.phys-card .phys-eyebrow{color:#2a6da6}
+.phys-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.phys-links a{display:block;background:#f0f6ff;border:1px solid #cfe0f5;border-radius:10px;padding:11px;text-decoration:none;font-size:.9rem;font-weight:750;color:#145e9b}
+.phys-btn{display:block;background:#19559d;color:#fff!important;padding:12px 14px;border-radius:9px;font-weight:750;text-align:center;text-decoration:none;margin:9px 0}
+.phys-btn-outline{background:#fff!important;color:#19559d!important;border:1px solid #19559d}
+.phys-actions{margin-top:15px}
+.phys-sidebar{position:relative}
+@media(max-width:860px){.phys-layout{grid-template-columns:1fr;padding:17px 0 34px}.phys-hero{padding:28px 0}.phys-section,.phys-card{padding:18px}.phys-links{grid-template-columns:1fr}}

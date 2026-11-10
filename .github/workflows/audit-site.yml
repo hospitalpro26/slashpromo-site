@@ -45,3 +45,7 @@ jobs:
         run: node scripts/audit-site.mjs
       - name: Audit doctor and hospital data quality
         run: node scripts/audit-profile-quality.mjs
+      - name: Verify Shikarpur physiotherapy pages without publishing
+        run: |
+          node --check scripts/test-shikarpur-physiotherapy.mjs
+          node scripts/test-shikarpur-physiotherapy.mjs
