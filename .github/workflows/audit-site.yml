@@ -45,3 +45,7 @@ jobs:
         run: node scripts/audit-site.mjs
       - name: Audit doctor and hospital data quality
         run: node scripts/audit-profile-quality.mjs
+      - name: Check priority Google search snippets without publishing
+        run: |
+          node --check scripts/test-google-search-priorities.mjs
+          node scripts/test-google-search-priorities.mjs
