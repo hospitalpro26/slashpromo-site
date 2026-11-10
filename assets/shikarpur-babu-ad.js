@@ -26,6 +26,11 @@
       'padding:12px 15px;border:1px solid #164f9d;background:#155bc0;color:#fff!important;font-size:14px!important;font-weight:850!important;line-height:1.4!important}',
       '.sp-babu-card .sp-babu-action:hover{background:#104a9f}',
       '.sp-babu-card .sp-babu-action:focus-visible{outline:3px solid #21a571;outline-offset:3px}',
+      '.sp-babu-directory-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,330px);gap:22px;align-items:start;margin:23px 0 28px}',
+      '.sp-babu-directory-layout>.sp-shk-local-grid{margin:0!important;grid-template-columns:repeat(2,minmax(0,1fr));min-width:0}',
+      '.sp-babu-directory-sidebar{position:sticky;top:20px;min-width:0;align-self:start}',
+      '@media(max-width:940px){.sp-babu-directory-layout{grid-template-columns:1fr}.sp-babu-directory-sidebar{position:static}.sp-babu-directory-layout>.sp-shk-local-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}',
+      '@media(max-width:560px){.sp-babu-directory-layout>.sp-shk-local-grid{grid-template-columns:1fr}}',
       '.sp-babu-fallback{width:100%;display:flex;justify-content:flex-end;margin:18px 0 25px}',
       '.sp-babu-fallback .sp-babu-card{width:min(355px,100%)}',
       '.sp-babu-profile-column>.sp-babu-card,.sp-shk-profile-aside>.sp-babu-card,.phys-sidebar>.sp-babu-card{margin-top:16px}',
@@ -67,16 +72,27 @@
     var anyAside = main.querySelector(".wrap > aside:not(.sp-babu-card)");
     if(anyAside && wrapAside(anyAside))return;
 
-    /* Directory pages have no right sidebar; create a right-aligned, non-overlay card above listings. */
+    /* Category listings: preserve the listing grid and place the ad in its own right-side column. */
     var directorySection=main.querySelector(".sp-shk-local-section");
     var directoryWrap=directorySection && directorySection.querySelector(".wrap");
+    var grid=directoryWrap && directoryWrap.querySelector(".sp-shk-local-grid");
+    if(grid){
+      var layout=document.createElement("div");
+      layout.className="sp-babu-directory-layout";
+      var sidebar=document.createElement("div");
+      sidebar.className="sp-babu-directory-sidebar";
+      grid.parentNode.insertBefore(layout,grid);
+      layout.appendChild(grid);
+      sidebar.appendChild(makeCard());
+      layout.appendChild(sidebar);
+      return;
+    }
+    /* Fallback for any future Shikarpur template without a defined sidebar or directory grid. */
     var holder=document.createElement("div");
     holder.className="sp-babu-fallback";
     holder.appendChild(makeCard());
-    if(directoryWrap){
-      var grid=directoryWrap.querySelector(".sp-shk-local-grid");
-      if(grid)directoryWrap.insertBefore(holder,grid);else directoryWrap.appendChild(holder);
-    }else{
+    if(directoryWrap)directoryWrap.appendChild(holder);
+    else{
       var sections=main.querySelectorAll("section");
       if(sections.length>1)main.insertBefore(holder,sections[1]);else main.appendChild(holder);
     }
