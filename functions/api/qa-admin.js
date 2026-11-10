@@ -1,5 +1,5 @@
 import {requireOptionalAccess} from "../_lib/optional-access.js";
-import {CITIES,reply,ensureDb,constantTimeEqual} from "../_lib/qa.js";
+import {CITIES,reply,ensureDb,constantTimeEqual,hasPrivateInfo} from "../_lib/qa.js";
 function authorized(request,env){
   return Boolean(env.QA_ADMIN_KEY && constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY));
 }
@@ -57,6 +57,9 @@ export async function onRequestPost(ctx){
   if(!/^[a-f0-9-]{36}$/i.test(id)||!["approved","rejected","draft"].includes(status)||answer.length>2000)
     return reply({error:"Invalid moderation action."},400);
   if(status==="approved"&&answer.length<12)return reply({error:"Provide a verified public answer before publishing."},400);
+  // Keep visitor contact details and identifiers out of publicly approved answers.
+  if(status==="approved"&&hasPrivateInfo(answer))
+    return reply({error:"Remove private contact details, patient IDs and medical record identifiers from the public answer."},400);
   const now=new Date().toISOString();
   try{
     await ensureDb(env);
