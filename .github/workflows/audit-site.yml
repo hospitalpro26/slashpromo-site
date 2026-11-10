@@ -45,6 +45,10 @@ jobs:
         run: node scripts/audit-site.mjs
       - name: Audit doctor and hospital data quality
         run: node scripts/audit-profile-quality.mjs
+      - name: Test new Pano Aqil physiotherapist and health pages
+        run: |
+          node --check scripts/test-pano-aqil-hina.mjs
+          node scripts/test-pano-aqil-hina.mjs
       - name: Verify Shikarpur physiotherapy pages without publishing
         run: |
           node --check scripts/test-shikarpur-physiotherapy.mjs

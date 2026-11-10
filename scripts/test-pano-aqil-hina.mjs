@@ -1,0 +1,35 @@
+import assert from "node:assert/strict";
+import {readFileSync,existsSync} from "node:fs";
+const routes=["/doctors/pano-aqil/dr-hina-soomro/","/doctors/pano-aqil/physiotherapists/","/pano-aqil/health-topics/neck-pain-physiotherapy/","/pano-aqil/health-topics/sciatica-physiotherapy/","/pano-aqil/health-topics/knee-pain-arthritis-physiotherapy/"];
+const profile="/doctors/pano-aqil/dr-hina-soomro/";
+const site="https://slashpromo.com";
+const sitemap=readFileSync("sitemap.xml","utf8");
+const ai=readFileSync("ai.txt","utf8");
+const llms=readFileSync("llms.txt","utf8");
+const full=readFileSync("llms-full.txt","utf8");
+const names=new Set();
+for(const route of routes){
+ const file=route.slice(1)+"index.html";assert(existsSync(file),"Missing "+file);
+ const h=readFileSync(file,"utf8");const url=site+route;
+ assert(h.includes('<link rel="canonical" href="'+url+'"'),"Wrong canonical "+file);
+ assert(h.includes('content="index,follow,max-image-preview:large"'),"Unexpected indexing "+file);
+ assert(h.includes('meta property="og:title"')&&h.includes('meta name="twitter:title"'),"Missing meta "+file);
+ assert(h.includes('lang="ur"')&&h.includes('dir="rtl"'),"Missing Urdu content "+file);
+ assert(h.includes('id="sp-qa-fallback"')&&h.includes('/assets/site.js'),"Q&A support missing "+file);
+ assert(!/slashcure/i.test(h),"No external profile or platform references allowed on Hina pages: "+file);
+ assert(h.includes('href="'+profile+'"'),"Unlinked doctor profile "+file);
+ assert(sitemap.includes('<loc>'+url+'</loc><lastmod>2026-11-10</lastmod>'),"Missing sitemap "+file);
+ assert(ai.includes(url)&&llms.includes(url)&&full.includes(url),"Missing AI index "+file);
+ const s=h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+ assert(s,"Missing JSON-LD "+file);const j=JSON.parse(s[1]);assert.equal(j["@context"],"https://schema.org");
+ assert(j["@graph"].some(o=>o.url===url),"Wrong page schema "+file);
+ const title=h.match(/<title>([^<]+)<\/title>/)?.[1];assert(title&&!names.has(title),"Missing/duplicate title "+file);names.add(title);
+}
+const doc=readFileSync(profile.slice(1)+"index.html","utf8");
+for(const x of ["Dr. Hina Soomro","Visiting Lecturer (BNBWU)","KPM Supervisor, Sukkur Region","Dua Medical Center","A Block","Monday to Saturday","4:00 PM to 8:00 PM"])assert(doc.includes(x),"Doctor fact missing: "+x);
+assert(!doc.includes("PhD")&&!doc.includes("FCPS")&&!doc.includes("DPT"),"Unsupported qualification included");
+const city=readFileSync("pano-aqil/index.html","utf8");
+assert(city.includes('id="profile-hina-soomro"')&&city.includes('href="'+profile+'"'),"Pano city missing doctor");
+const doctorDirectory=JSON.parse(readFileSync("assets/directory.json","utf8"));
+assert(!doctorDirectory.doctors.some(d=>/hina.{0,12}soomro/i.test(d.name)),"Unverified external profile doctor record created");
+console.log("PASS: Pano Aqil 5-page physiotherapy expansion, user-supplied profile details, no external doctor links, medical Urdu/English guides, structured data and SEO inventory.");
