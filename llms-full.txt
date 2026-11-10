@@ -191,3 +191,8 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - Hussain Diagnostic Center (2 doctors): https://slashcure.com/hospitals/khairpur/hussain-diagnostic-center
 - Across these three Khairpur facilities, 18 doctor names are unique; Dr. Sadaf Sagar Chandio is cross-listed at Ali Medical Center and Health Care Clinic.
 - The two new Hussain Diagnostic Center doctors are source-linked, not individual SlashPromo personal-profile pages.
+
+- https://slashpromo.com/doctors/shikarpur/physiotherapists/
+- https://slashpromo.com/shikarpur/health-topics/back-pain-and-sciatica-physiotherapy/
+- https://slashpromo.com/shikarpur/health-topics/frozen-shoulder-physiotherapy/
+- https://slashpromo.com/shikarpur/health-topics/post-injury-rehabilitation/
