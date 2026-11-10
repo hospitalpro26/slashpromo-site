@@ -23,10 +23,10 @@ assert(html.includes('href="/shikarpur/'),"No city links "+route);
 assert(html.includes("not")&&html.includes("emergency"),"Missing safeguards "+route);
 assert(sitemap.includes("<loc>"+canonical+"</loc><lastmod>2026-11-10</lastmod>"),"Missing sitemap "+route);
 assert(ai.includes(canonical)&&llms.includes(canonical)&&full.includes(canonical),"Missing AI references "+route);
-const jsons=[...html.matchAll(/<script type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/g)];
+const jsons=[...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
 assert(jsons.length>0,"Missing structured data "+route);
 for(const match of jsons){const j=JSON.parse(match[1]);assert.equal(j["@context"],"https://schema.org");const nodes=j["@graph"]||[j];assert(nodes.some(n=>n.url===canonical),"Wrong JSONLD url "+route);}
-const anchors=new Set([...html.matchAll(/\\bid="([^"]+)"/g)].map(m=>m[1]));
+const anchors=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]));
 for(const a of html.matchAll(/href="#([^"]+)"/g))assert(anchors.has(a[1]),"Broken local fragment "+route);
 }
 const city=readFileSync("shikarpur/index.html","utf8"),doctor=readFileSync("doctors/shikarpur/dr-ali-ilyas-napar/index.html","utf8");
