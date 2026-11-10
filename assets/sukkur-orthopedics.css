@@ -1,0 +1,23 @@
+/* Orthopedic patient guides: semantic two-column article + right-side published-doctor directory. */
+.sp-ortho-main{background:#f2f6fb;color:#233d5d}
+.sp-ortho-hero{background:linear-gradient(115deg,#173c70,#14548d);color:#fff;padding:38px 0}
+.sp-ortho-hero h1{color:#fff;font-size:clamp(1.65rem,3.5vw,2.55rem);line-height:1.2;max-width:960px;margin:10px 0}
+.sp-ortho-hero p{color:#e5f0fd;max-width:875px;line-height:1.7}
+.sp-ortho-breadcrumb{font-size:.86rem;color:#f3f8ff;margin:0 0 14px}
+.sp-ortho-breadcrumb a{color:#fff}
+.sp-ortho-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(265px,1fr);gap:24px;padding:28px 0 42px}
+.sp-ortho-card{background:#fff;border:1px solid #d5e1f0;border-radius:13px;padding:23px;margin-bottom:20px;box-shadow:0 4px 16px #1c38520b}
+.sp-ortho-card h2{font-size:1.24rem;color:#123a6e;line-height:1.4;margin:20px 0 10px}
+.sp-ortho-card h2:first-child{margin-top:0}
+.sp-ortho-card h3{font-size:1.05rem;color:#214b7b;margin:16px 0 8px}
+.sp-ortho-card p,.sp-ortho-card li{line-height:1.75;color:#3a546e}
+.sp-ortho-card a{color:#12559b;overflow-wrap:anywhere}
+.sp-ortho-card [lang="ur"]{font-family:system-ui,"Noto Nastaliq Urdu",sans-serif;font-size:1.05rem;line-height:2.25;background:#f5f9ff;padding:14px;border-radius:9px}
+.sp-ortho-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.sp-ortho-links a{padding:10px 11px;border-radius:8px;border:1px solid #cbdff4;background:#eef6ff;text-decoration:none;font-weight:650}
+.sp-ortho-alert{background:#fff2ee;border-left:4px solid #bc4329;padding:12px 15px;border-radius:7px}
+.sp-ortho-doctors{list-style:none;padding:0;margin:12px 0}
+.sp-ortho-doctors li{padding:11px 0;border-bottom:1px solid #dbe6f1;display:flex;align-items:baseline;justify-content:space-between;gap:9px;flex-wrap:wrap}
+.sp-ortho-doctors li span{color:#526f8b;font-size:.87rem}
+.sp-ortho-muted{color:#627b95;font-size:.87rem}
+@media(max-width:850px){.sp-ortho-layout{grid-template-columns:1fr;padding:17px 0 30px}.sp-ortho-card{padding:18px}.sp-ortho-links{grid-template-columns:1fr}.sp-ortho-hero{padding:26px 0}}
