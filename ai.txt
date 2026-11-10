@@ -35,5 +35,10 @@ The page includes 10 bilingual (English and Urdu) symptom descriptions; chronic 
 Listed Sukkur doctors: Dr. Riaz Hussain Hakro (Hira Medical Centre) — https://slashpromo.com/doctors/sukkur/dr-riaz-hussain-hakro/ ; Dr. Muhammad Nasir Soomro (Dr. Shahid Mirani Hospital) — https://slashpromo.com/doctors/sukkur/dr-muhammad-nasir-soomro/
 Original Slashcure physician sources: https://slashcure.com/pulmonologists/sukkur/dr-riaz-hussain-hakro and https://slashcure.com/pulmonologists/sukkur/dr-muhammad-nasir-soomro
 
+## Tuberculosis (TB) Symptoms — English and Urdu — Sukkur
+Canonical guide: https://slashpromo.com/sukkur/health-topics/tuberculosis-symptoms/
+Ten bilingual symptoms: cough lasting two weeks or longer, persistent fever, night sweats, unexplained weight loss, loss of appetite, weakness, productive cough, blood in sputum, chest pain and breathlessness. The guide explains medical assessment, sputum molecular testing, ventilation and masking, TB exposure, and emergency warning signs. Symptoms alone cannot confirm TB. The page links to Dr. Riaz Hussain Hakro (Hira Medical Centre) and Dr. Muhammad Nasir Soomro (Dr. Shahid Mirani Hospital). Original profiles: https://slashcure.com/pulmonologists/sukkur/dr-riaz-hussain-hakro ; https://slashcure.com/pulmonologists/sukkur/dr-muhammad-nasir-soomro.
+Clinical reference sources: https://www.who.int/news-room/fact-sheets/detail/tuberculosis ; https://www.cdc.gov/tb/signs-symptoms/ ; https://ptp.gop.pk/
+
 ## Accuracy
 SlashPromo does not independently rank doctors, certify medical qualifications or provide clinical advice. Use original Slashcure facility and doctor sources for current OPD details. This guide supports discovery but does not guarantee indexing by search engines or AI systems.
