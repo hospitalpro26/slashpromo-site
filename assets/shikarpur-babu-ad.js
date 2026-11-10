@@ -24,7 +24,13 @@
       '.sp-babu-since{color:#12734e!important;font-weight:900!important}',
       '.sp-babu-card .sp-babu-action{box-sizing:border-box;display:flex;align-items:center;justify-content:center;text-decoration:none!important;border-radius:10px;',
       'padding:12px 15px;border:1px solid #164f9d;background:#155bc0;color:#fff!important;font-size:14px!important;font-weight:850!important;line-height:1.4!important}',
-      '.sp-babu-card .sp-babu-action:hover{background:#104a9f}',
+      '.sp-babu-card .sp-babu-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}',
+      '.sp-babu-card .sp-babu-action{padding:11px 7px;font-size:13px!important;min-width:0}',
+      '.sp-babu-card .sp-babu-action.sp-babu-whatsapp{background:#0d8059;border-color:#0d8059}',
+      '.sp-babu-card .sp-babu-contact{font-size:14px!important;color:#214460!important;margin-bottom:15px!important}',
+      '.sp-babu-card .sp-babu-contact strong{font-weight:900!important}',
+      '@media(max-width:375px){.sp-babu-card .sp-babu-actions{grid-template-columns:1fr}}',
+      '.sp-babu-card .sp-babu-action:hover{filter:brightness(.93)}',
       '.sp-babu-card .sp-babu-action:focus-visible{outline:3px solid #21a571;outline-offset:3px}',
       '.sp-babu-directory-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,330px);gap:22px;align-items:start;margin:23px 0 28px}',
       '.sp-babu-directory-layout>.sp-shk-local-grid{margin:0!important;grid-template-columns:repeat(2,minmax(0,1fr));min-width:0}',
@@ -49,7 +55,9 @@
         '<h3>Babu Cloth Store</h3>'+
         '<p class="sp-babu-location">Meena Bazar, Shikarpur</p>'+
         '<p>Cloth store <span class="sp-babu-since">· Since 1982</span></p>'+
-        '<a class="sp-babu-action" href="/advertisers/babu-cloth-store/">View Store Details ↗</a>';
+        '<p class="sp-babu-contact">WhatsApp: <strong>+92 336 2388806</strong></p>'+
+        '<div class="sp-babu-actions"><a class="sp-babu-action sp-babu-whatsapp" href="https://wa.me/923362388806?text=Assalam-o-Alaikum%2C%0A%0AI%20came%20across%20Babu%20Cloth%20Store%2C%20Meena%20Bazar%2C%20Shikarpur%2C%20and%20would%20like%20to%20learn%20more%20about%20your%20collection%20of%20clothes%20and%20perfumes.%0A%0ACould%20you%20please%20share%20details%20about%20your%20available%20products%2C%20latest%20collections%2C%20prices%2C%20and%20ordering%20options%3F%0A%0AThank%20you.%20I%20look%20forward%20to%20hearing%20from%20you.%0A%0AI%20found%20your%20store%20on%20Slashpromo.com." target="_blank" rel="noopener noreferrer" aria-label="Open WhatsApp chat with Babu Cloth Store">WhatsApp ↗</a>'+
+        '<a class="sp-babu-action" href="/advertisers/babu-cloth-store/">View details ↗</a></div>';
       return ad;
     }
     function wrapAside(aside){
