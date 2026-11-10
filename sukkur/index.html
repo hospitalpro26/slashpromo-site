@@ -20,21 +20,32 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
 .sp-sukkur-direct-grid a:hover{border-color:#cc1339;color:#a7102e}
 </style><link rel="stylesheet" href="/assets/city-questions.css?v=20261108-nationwide-qa7"><link rel="stylesheet" href="/assets/sukkur-premium.css?v=20261109-sukkurtabs1"><script defer src="/assets/sukkur-premium.js?v=20261109-sukkurtabs1"></script>
 <style id="sp-fizza-sukkur-ad-style">
-/* Compact, non-overlay sponsored card directly under the Sukkur promotions panel. */
+/* Right-rail Fizza card: blue/green moving edge with high-contrast readable copy. */
+@property --ft-border-angle {syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes ft-edge-travel {to {--ft-border-angle:360deg}}
 .sp-sukkur-premium .sp-sukkur-sidebar{display:grid;gap:15px;align-content:start;min-width:0}
 .sp-sukkur-premium .sp-sukkur-sidebar .detail-aside{min-width:0}
-.sp-sukkur-premium #sukkur-fizza-tax-ad{display:block;position:relative;max-width:100%;min-width:0;padding:18px 19px 19px;border:1px solid #d8e8e1;border-left:4px solid #187c5d;border-radius:17px;background:linear-gradient(150deg,#fff 35%,#f1faf6);box-shadow:0 12px 30px rgba(19,54,75,.12),0 3px 9px rgba(19,54,75,.04);transition:box-shadow .2s ease,transform .2s ease}
-.sp-sukkur-premium #sukkur-fizza-tax-ad:hover{box-shadow:0 16px 34px rgba(19,54,75,.15);transform:translateY(-2px)}
-.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-label{display:inline-block;color:#426b5c;background:#e7f4ec;border-radius:999px;padding:5px 10px;font-size:10px;line-height:1.45;text-transform:uppercase;letter-spacing:.055em;font-weight:800}
-.sp-sukkur-premium #sukkur-fizza-tax-ad h3{margin:11px 0 7px;color:#173856;font-size:20px;line-height:1.2;letter-spacing:-.35px}
-.sp-sukkur-premium #sukkur-fizza-tax-ad p{margin:0 0 15px;color:#526779;font-size:13px;line-height:1.6}
-.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:9px;min-width:0}
-.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions a{display:flex;align-items:center;justify-content:center;padding:11px 8px;min-width:0;border-radius:9px;border:1px solid #c7d9e2;background:#fff;color:#23537e;text-align:center;text-decoration:none;font-size:12px;font-weight:800;line-height:1.35}
-.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions a.ft-contact{background:#0d8059;border-color:#0d8059;color:#fff}
-.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions a:focus-visible{outline:3px solid #6bbca3;outline-offset:3px}
-@media(max-width:800px){.sp-sukkur-premium .sp-sukkur-sidebar{gap:14px}.sp-sukkur-premium #sukkur-fizza-tax-ad{width:100%;padding:17px 18px}}
+.sp-sukkur-premium #sukkur-fizza-tax-ad{
+ --ft-border-angle:0deg;
+ display:block;position:relative;max-width:100%;min-width:0;
+ padding:20px 20px 21px;border:3px solid transparent;border-radius:18px;
+ background:linear-gradient(155deg,#fff 15%,#f8fcff 100%) padding-box,
+ conic-gradient(from var(--ft-border-angle),#155bd3 0deg,#168c5e 85deg,#155bd3 180deg,#168c5e 265deg,#155bd3 360deg) border-box;
+ box-shadow:0 12px 30px rgba(19,54,75,.12),0 3px 9px rgba(19,54,75,.04);
+ animation:ft-edge-travel 6s linear infinite;
+ transition:box-shadow .2s ease,transform .2s ease
+}
+.sp-sukkur-premium #sukkur-fizza-tax-ad:hover{box-shadow:0 16px 34px rgba(19,54,75,.16);transform:translateY(-2px)}
+.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-label{display:inline-block;color:#225f54;background:#e4f4ef;border-radius:999px;padding:6px 11px;font-size:11px;line-height:1.5;text-transform:uppercase;letter-spacing:.035em;font-weight:850}
+.sp-sukkur-premium #sukkur-fizza-tax-ad h3{margin:12px 0 9px;color:#123761;font-size:23px;line-height:1.24;letter-spacing:-.35px;font-weight:900}
+.sp-sukkur-premium #sukkur-fizza-tax-ad p{margin:0 0 16px;color:#284663;font-size:15px;line-height:1.65;font-weight:750}
+.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px;min-width:0}
+.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions a{display:flex;align-items:center;justify-content:center;padding:12px 9px;min-width:0;border-radius:9px;border:1px solid #b8cfe2;background:#fff;color:#164a83;text-align:center;text-decoration:none;font-size:13px;font-weight:850;line-height:1.4}
+.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions a.ft-contact{background:#087c53;border-color:#087c53;color:#fff}
+.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions a:focus-visible{outline:3px solid #2367c9;outline-offset:3px}
+@media(max-width:800px){.sp-sukkur-premium .sp-sukkur-sidebar{gap:14px}.sp-sukkur-premium #sukkur-fizza-tax-ad{width:100%;padding:17px 18px}.sp-sukkur-premium #sukkur-fizza-tax-ad h3{font-size:21px}.sp-sukkur-premium #sukkur-fizza-tax-ad p{font-size:14px}}
 @media(max-width:380px){.sp-sukkur-premium #sukkur-fizza-tax-ad .ft-actions{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){.sp-sukkur-premium #sukkur-fizza-tax-ad{transition:none}.sp-sukkur-premium #sukkur-fizza-tax-ad:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.sp-sukkur-premium #sukkur-fizza-tax-ad{animation:none;--ft-border-angle:0deg;transition:none}.sp-sukkur-premium #sukkur-fizza-tax-ad:hover{transform:none}}
 </style></head><body class="sp-sukkur-premium"><a href="#main" class="skip">Skip to content</a><header class="site-header"><div class="topbar"><div class="wrap"><p><b>Healthcare promotions across Pakistan</b> · Every city welcome</p><a href="/advertise/" class="extra">Campaign inquiries open ↗</a></div></div><div class="wrap nav"><a class="wordmark" href="/" aria-label="SlashPromo home">Slash<span class="promo">Promo</span><span class="dotcom">.com</span></a><button class="menu-toggle" type="button" data-menu-toggle aria-controls="main-navigation" aria-expanded="false">☰ Menu</button><nav class="navlinks" data-nav id="main-navigation" aria-label="Main navigation"><a href="/cities/" aria-current="page">Explore cities</a><a href="/doctors/" >Find doctors</a><a href="/about/" >About</a><a href="/contact/" >Contact</a><a href="/advertise/" class="btn small">Promote your practice ↗</a></nav></div></header><nav class="sp-quicknav" aria-label="Quick city links" data-sp-city-nav><div class="wrap"><div class="sp-quicknav-inner"><a href="/" data-city-shortcut="home">Home</a><span class="sp-quicknav-sep" aria-hidden="true">/</span><a href="/sukkur/" data-city-shortcut="sukkur" aria-current="page">Sukkur</a><span class="sp-quicknav-sep" aria-hidden="true">/</span><a href="/khairpur/" data-city-shortcut="khairpur">Khairpur</a><span class="sp-quicknav-sep" aria-hidden="true">/</span><a href="/karachi/" data-city-shortcut="karachi">Karachi</a><span class="sp-quicknav-sep" aria-hidden="true">/</span><a href="/hyderabad/" data-city-shortcut="hyderabad">Hyderabad</a><span class="sp-quicknav-sep" aria-hidden="true">/</span><a href="/shikarpur/" data-city-shortcut="shikarpur">Shikarpur</a><span class="sp-quicknav-sep" aria-hidden="true">/</span><a href="/pano-aqil/" data-city-shortcut="pano-aqil">Pano Aqil</a></div><p class="sp-quicknav-message">Find the best doctors in Sukkur, Sindh. View complete weekly OPD schedules, check published availability and explore online appointment options.</p></div></nav><main id="main"><section class="sp-premium-sukkur-hero" aria-labelledby="sukkur-hero-heading">
   <div class="wrap sp-premium-sukkur-grid">
     <div>
