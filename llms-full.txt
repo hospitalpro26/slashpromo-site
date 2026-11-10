@@ -196,3 +196,8 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/shikarpur/health-topics/back-pain-and-sciatica-physiotherapy/
 - https://slashpromo.com/shikarpur/health-topics/frozen-shoulder-physiotherapy/
 - https://slashpromo.com/shikarpur/health-topics/post-injury-rehabilitation/
+- https://slashpromo.com/doctors/pano-aqil/dr-hina-soomro/
+- https://slashpromo.com/doctors/pano-aqil/physiotherapists/
+- https://slashpromo.com/pano-aqil/health-topics/neck-pain-physiotherapy/
+- https://slashpromo.com/pano-aqil/health-topics/sciatica-physiotherapy/
+- https://slashpromo.com/pano-aqil/health-topics/knee-pain-arthritis-physiotherapy/

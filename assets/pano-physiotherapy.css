@@ -1,0 +1,28 @@
+/* Responsive Pano Aqil doctor and physiotherapy information pages. */
+.pa-pt-main{background:#f3f7fc;color:#233d5d}
+.pa-pt-hero{background:linear-gradient(115deg,#142e60,#17518f);color:#fff;padding:38px 0}
+.pa-pt-hero h1{color:#fff;font-size:clamp(1.7rem,4vw,2.6rem);line-height:1.2;letter-spacing:-.025em;font-weight:850;margin:12px 0}
+.pa-pt-hero p{color:#dceafa;max-width:850px;line-height:1.7}
+.pa-pt-label{color:#b6ddff;font-size:.78rem;text-transform:uppercase;font-weight:800;letter-spacing:.05em}
+.pa-pt-crumb{color:#dceaff;font-size:.86rem;margin-bottom:16px}
+.pa-pt-crumb a,.pa-pt-hero-actions a{color:white}
+.pa-pt-hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.pa-pt-hero-actions a{padding:8px 13px;border:1px solid #a5cdf2;border-radius:9px;font-weight:700;text-decoration:none}
+.pa-pt-layout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(250px,1fr);gap:23px;padding:24px 0 46px}
+.pa-pt-card{background:white;border:1px solid #d5e1ef;border-radius:15px;padding:23px;margin-bottom:20px;box-shadow:0 4px 18px #133a5d0b}
+.pa-pt-card h2{color:#173e73;font-size:1.27rem;line-height:1.4;margin:20px 0 9px}
+.pa-pt-card h2:first-child{margin-top:0}
+.pa-pt-card h3{color:#244467;font-size:1rem;margin:17px 0 6px}
+.pa-pt-card p{line-height:1.8;font-size:.95rem;color:#38516b;margin:7px 0 14px}
+.pa-pt-card a{color:#1d5d9d;overflow-wrap:anywhere}
+.pa-pt-card .pa-pt-label{color:#356c9d}
+.pa-pt-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 0}
+.pa-pt-links a{display:block;background:#eef5ff;border:1px solid #cddff2;border-radius:8px;padding:10px 12px;font-weight:700;text-decoration:none}
+.pa-pt-facts{display:grid;gap:8px;margin:13px 0}
+.pa-pt-facts>div{padding:10px 12px;background:#f2f7fd;border-radius:9px}
+.pa-pt-facts dt{font-size:.83rem;color:#58718e;font-weight:750}
+.pa-pt-facts dd{margin:3px 0;color:#1b3d65;font-weight:650}
+.pa-pt-notice{background:#eef6ff;border:1px solid #c7dff8;border-radius:9px;padding:12px 14px}
+.pa-pt-card [lang="ur"]{font-family:system-ui,"Noto Nastaliq Urdu",sans-serif;line-height:2.2;font-size:1.05rem;background:#f5f8fd;padding:13px;border-radius:9px}
+.pa-pt-disclaimer{font-size:.86rem!important;color:#627993!important}
+@media(max-width:850px){.pa-pt-layout{grid-template-columns:1fr;padding:16px 0 30px}.pa-pt-card{padding:18px}.pa-pt-links{grid-template-columns:1fr}.pa-pt-hero{padding:27px 0}}
