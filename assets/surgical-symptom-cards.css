@@ -1,0 +1,17 @@
+/* Compact bilingual surgical symptom checklist for existing Sukkur surgeon profiles.
+   Informational only; the list does not confirm available procedures. */
+.sp-surgeon-symptom-guide{margin:25px 0;padding:20px 19px 17px;border:1px solid #cbdef0;border-radius:15px;background:linear-gradient(160deg,#f4f9ff,#fff);box-shadow:0 7px 25px #1139650a}
+.sp-profile-panel .sp-surgeon-symptom-guide h2{font-size:clamp(1.15rem,2.4vw,1.45rem);line-height:1.35;letter-spacing:-.02em;color:#153e72;margin:4px 0 9px}
+.sp-surgeon-symptom-guide .sp-sg-label{color:#1e5e9d;font-size:.7rem;font-weight:900;letter-spacing:.075em;text-transform:uppercase}
+.sp-profile-panel .sp-surgeon-symptom-guide .sp-sg-intro{margin:0 0 15px;font-size:.88rem;line-height:1.75;color:#425e7d}
+.sp-surgeon-symptom-guide ul.sp-sg-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;list-style:none;margin:0;padding:0}
+.sp-surgeon-symptom-guide .sp-sg-list li{min-width:0;padding:12px 13px;background:#fff;border:1px solid #dce6f2;border-radius:10px}
+.sp-surgeon-symptom-guide .sp-sg-list strong{display:block;color:#173e70;font-size:.83rem;line-height:1.5;font-weight:850}
+.sp-surgeon-symptom-guide .sp-sg-list [lang="ur-PK"]{display:block;text-align:right;direction:rtl;unicode-bidi:isolate;color:#235a89;font:1rem/1.85 "Noto Naskh Arabic",Tahoma,serif;margin:4px 0}
+.sp-surgeon-symptom-guide .sp-sg-list a{display:inline-block;color:#1c5a97;font-size:.75rem;font-weight:800;line-height:1.6;text-decoration:underline;text-underline-offset:2px}
+.sp-profile-panel .sp-surgeon-symptom-guide .sp-sg-emergency{border-top:1px solid #edc8c4;margin:13px 0 0;padding:11px 0 0;font-size:.81rem;line-height:1.65;color:#8c302e}
+.sp-surgeon-symptom-guide .sp-sg-emergency strong{color:#9a2523}
+.sp-surgeon-symptom-guide .sp-sg-emergency [lang="ur-PK"]{display:block;text-align:right;direction:rtl;font:1rem/1.95 "Noto Naskh Arabic",Tahoma,serif;margin-top:6px;color:#8c302e}
+.sp-surgeon-symptom-guide a:focus-visible{outline:3px solid #256bb0;outline-offset:3px;border-radius:3px}
+@media(max-width:1000px){.sp-surgeon-symptom-guide ul.sp-sg-list{grid-template-columns:1fr}}
+@media(max-width:620px){.sp-surgeon-symptom-guide{padding:15px 13px}.sp-surgeon-symptom-guide .sp-sg-list li{padding:11px 12px}}
