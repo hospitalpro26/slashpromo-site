@@ -1,3 +1,13 @@
+/* Reusable Shikarpur-only advertiser: one city-scoped loader for all published and future Shikarpur routes. */
+(function(){
+  "use strict";
+  if(!/^\/(?:shikarpur|doctors\/shikarpur|hospitals\/shikarpur)(?:\/|$)/i.test(window.location.pathname))return;
+  if(document.querySelector('script[data-shikarpur-babu-ad]'))return;
+  var script=document.createElement("script");
+  script.src="/assets/shikarpur-babu-ad.js?v=20261110-babu1";
+  script.setAttribute("data-shikarpur-babu-ad","");
+  document.head.appendChild(script);
+})();
 /* SlashPromo lightweight interactions, with anonymous aggregate analytics. */
 (function(){
   "use strict";
