@@ -32,6 +32,11 @@ for(const a of html.matchAll(/href="#([^"]+)"/g))assert(anchors.has(a[1]),"Broke
 const city=readFileSync("shikarpur/index.html","utf8"),doctor=readFileSync("doctors/shikarpur/dr-ali-ilyas-napar/index.html","utf8");
 assert(routes.every(route=>city.includes('href="/'+route+'"')),"City hub missing links");
 assert(routes.every(route=>doctor.includes('href="/'+route+'"')),"Doctor profile missing guide links");
+const specialty=readFileSync("doctors/shikarpur/physiotherapists/index.html","utf8");
+assert(specialty.includes("<h1>Find the Best Physiotherapist in Shikarpur</h1>"),"Requested Shikarpur title missing");
+assert(specialty.includes("not a clinical ranking")||specialty.includes("not imply that he is the only"),"Unsupported clinical ranking");
+assert(city.includes('id="shk-physio-discovery">Find the Best Physiotherapist in Shikarpur'),"City heading not updated");
+assert(doctor.includes(">Find the Best Physiotherapist in Shikarpur ↗</a>"),"Doctor sidebar not updated");
 assert.equal(directory.doctors.filter(d=>d.city==="Shikarpur").length,3,"Doctor directory mutated");
 assert(doctor.includes('"sameAs":["'+slashcure+'"]'),"Doctor schema source profile link missing");
 console.log("PASS: 4 new Shikarpur physiotherapy pages, unique verified clinician, bilingual medical guidance, city and doctor backlinks, canonical/meta/schema/sitemap/AI links.");
