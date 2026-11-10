@@ -58,3 +58,24 @@ a.sp-cross-link-external .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!
 .sp-patient-primary .sp-slashcure-wordmark{display:inline-block;background:#fff!important;padding:1px 4px;border-radius:5px;white-space:nowrap}
 .sp-patient-primary .sp-slashcure-wordmark .sp-slashcure-blue{color:#195eb4!important}
 .sp-patient-primary .sp-slashcure-wordmark .sp-slashcure-red{color:#c62d43!important}
+
+
+/* Geo-relevant cross-city pulmonology promotion for Sukkur doctor sidebars. */
+.sp-profile-panel .sp-ghotki-pulmo-promo{
+ margin:25px 0 9px;padding:21px 19px;background:linear-gradient(145deg,#f1f7ff 0%,#fff 100%);
+ border:1px solid #cbdff4;border-radius:16px;box-shadow:0 7px 20px rgba(21,59,109,.065);
+}
+.sp-profile-panel .sp-ghotki-pulmo-kicker{display:block;color:#1d5fa7;font-size:10px;font-weight:850;line-height:1.5;letter-spacing:.075em;text-transform:uppercase;margin-bottom:7px}
+.sp-profile-panel .sp-ghotki-pulmo-promo h2{color:#143561;font-size:clamp(18px,2vw,23px);line-height:1.25;letter-spacing:-.035em;margin:0 0 10px}
+.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-intro{color:#1d3553;font-size:13px;line-height:1.7;margin:0 0 10px}
+.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-intro strong{color:#103e76}
+.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-clinic{color:#235d8e;font-size:12px;line-height:1.6;font-weight:750;margin:0 0 8px}
+.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-note{color:#4e617a;font-size:12px;line-height:1.55;margin:0 0 14px}
+.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link{
+ display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;min-height:44px;padding:11px 12px;
+ background:#224586;color:#fff!important;border:1px solid #224586;border-radius:10px;
+ text-decoration:none;font-size:12px;font-weight:820;line-height:1.5;transition:background .18s ease,transform .18s ease
+}
+.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link:hover{background:#163467;transform:translateY(-1px)}
+.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link:focus-visible{outline:3px solid #257ec6;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link{transition:none}.sp-profile-panel .sp-ghotki-pulmo-promo .sp-ghotki-pulmo-link:hover{transform:none}}
