@@ -118,3 +118,5 @@ Original provider source: https://slashcure.com/hospitals/khairpur/hussain-diagn
 - Facility-linked specialists are not separate individual SlashPromo doctor profiles unless explicitly stated above.
 - Doctor consultation schedules, current availability, fees, testing inventory and emergency services may change. Refer to the original provider profile for current published information.
 - This plain-text index helps readers discover sources. Search-engine or AI-assistant inclusion is not guaranteed.
+
+- Female consultant physician in Sukkur: https://slashpromo.com/sukkur/female-consultant-physician/
