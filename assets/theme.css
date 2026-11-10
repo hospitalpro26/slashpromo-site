@@ -337,3 +337,30 @@ nav.sp-quicknav[data-sp-city-nav] a:focus-visible{outline:2px solid #80ead8!impo
 .sp-team-whatsapp-float{z-index:190}
 .sp-wa-query-panel{z-index:191}
 @media(max-height:550px){.sp-wa-query-panel{max-height:calc(100dvh - 82px)}}
+
+
+/* Polished, readable related-Sukkur-specialists sidebar.
+   Keep the small, restrained doctor-card design and make bilingual links scan-friendly. */
+.sp-profile-panel #sp-related-specialists{margin-top:25px;padding-top:17px;border-top:1px solid #e4eaf3}
+.sp-profile-panel #sp-related-specialists h2{margin:0 0 14px!important;font-size:clamp(1.15rem,2vw,1.4rem);line-height:1.3}
+.sp-profile-panel #sp-related-specialists .footer-list{display:grid;gap:8px}
+.sp-profile-panel #sp-related-specialists .footer-list a{
+ display:block;padding:11px 12px;line-height:1.6;font-size:13px;
+ background:#f3f7fd;border:1px solid #e0e8f4;border-radius:11px;
+ color:#1c416e;text-decoration:none;overflow-wrap:anywhere;
+ transition:background .18s ease,border-color .18s ease,transform .18s ease
+}
+.sp-profile-panel #sp-related-specialists .footer-list a:hover{
+ color:#154782;background:#e9f2fd;border-color:#bbd2ed;transform:translateY(-1px)
+}
+.sp-profile-panel #sp-related-specialists .footer-list a:focus-visible{
+ outline:3px solid #246fbb;outline-offset:3px
+}
+.sp-profile-panel #sp-related-specialists .footer-list [lang="ur-PK"]{
+ display:inline-block;unicode-bidi:isolate;direction:rtl;font-family:"Noto Naskh Arabic",Tahoma,serif;line-height:1.8;margin-inline:4px
+}
+.sp-profile-panel .sp-profile-links a:hover{filter:brightness(1.07);text-decoration:underline;text-underline-offset:3px}
+@media(prefers-reduced-motion:reduce){
+ .sp-profile-panel #sp-related-specialists .footer-list a{transition:none}
+ .sp-profile-panel #sp-related-specialists .footer-list a:hover{transform:none}
+}
