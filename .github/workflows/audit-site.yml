@@ -45,3 +45,5 @@ jobs:
         run: node scripts/audit-site.mjs
       - name: Audit doctor and hospital data quality
         run: node scripts/audit-profile-quality.mjs
+      - name: Test Smart Doctor Finder Phase 1 without publishing
+        run: node scripts/test-smart-doctor-finder.mjs
