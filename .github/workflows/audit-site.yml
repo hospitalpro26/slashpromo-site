@@ -53,3 +53,5 @@ jobs:
         run: |
           node --check scripts/test-shikarpur-physiotherapy.mjs
           node scripts/test-shikarpur-physiotherapy.mjs
+      - name: Test Smart Doctor Finder Phase 1 without publishing
+        run: node scripts/test-smart-doctor-finder.mjs

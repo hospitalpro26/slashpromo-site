@@ -4,9 +4,11 @@
   const roots = Array.from(document.querySelectorAll("[data-native-directory]"));
   if (!roots.length) return;
   const normal = input => String(input || "").normalize("NFKD").toLowerCase()
-    .replace(/[\u0300-\u036f]/g, "").replace(/paediatric/g,"pediatric")
-    .replace(/gynaecolog/g,"gynecolog").replace(/orthopaed/g,"orthoped")
-    .replace(/physiotherap/g,"physiotherap").replace(/[^a-z0-9]+/g," ").trim();
+    .replace(/[\u0300-\u036f\u064b-\u065f\u0670]/g,"")
+    .replace(/[يى]/g,"ی").replace(/ك/g,"ک")
+    .replace(/paediatric/g,"pediatric").replace(/gynaecolog/g,"gynecolog")
+    .replace(/orthopaed/g,"orthoped").replace(/physiotherap/g,"physiotherap")
+    .replace(/[^a-z0-9\u0600-\u06ff]+/g," ").trim();
   const esc = input => String(input || "").replace(/[&<>"']/g, s => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   })[s]);
@@ -46,6 +48,31 @@
     return "other";
   };
   const searchable = record => normal([record.name,record.city,...(record.cities||[]),title(record),record.hospital,record.area,record.qualifications].join(" "));
+  /* Search aliases point to published medical specialties, not diagnoses or inferred credentials. */
+  const specialtyAliases = new Map([
+    [["دل کا ڈاکٹر","ماہر امراض قلب","heart doctor","heart specialist","cardiac specialist"],"cardio"],
+    [["بچوں کا ڈاکٹر","ماہر امراض اطفال","child specialist","pediatrician","paediatrician"],"paeds"],
+    [["خواتین کا ڈاکٹر","ماہر امراض نسواں","gynecologist","gynaecologist"],"gynae"],
+    [["جوڑوں کا ڈاکٹر","رمیٹالوجسٹ","rheumatologist"],"rheum"],
+    [["فزیوتھراپسٹ","physiotherapist","physical therapist"],"physio"],
+    [["جلد کا ڈاکٹر","dermatologist","skin specialist"],"derm"],
+    [["دانتوں کا ڈاکٹر","dentist","dental specialist"],"dentist"],
+    [["ہڈیوں کا ڈاکٹر","orthopedic doctor","orthopaedic doctor"],"orthopedic"],
+    [["معدے کا ڈاکٹر","gastroenterologist","stomach specialist"],"gastro"],
+    [["ماہر امراض اعصاب","neurologist","neurophysician"],"neuro"],
+    [["پھیپھڑوں کا ڈاکٹر","pulmonologist","chest specialist"],"pulmo"],
+    [["ماہر نفسیات","psychiatrist"],"psychiatry"]
+  ].flatMap(([phrases,facet])=>phrases.map(phrase=>[normal(phrase),facet])));
+  const matchesTextSearch = (record,query) => {
+    if(!query)return true;
+    const specialty=specialtyAliases.get(query);
+    return specialty ? sukDoctorFacet(record)===specialty : searchable(record).includes(query);
+  };
+  const filterByCity = (records,cityName) => {
+    const selected=normal(cityName);
+    return records.filter(record=>!selected || (record.cities||[record.city]).some(c=>normal(c).includes(selected)));
+  };
+  const hospitalKey = value => normal(value).replace(/(?: sukku?r| airport road| teer chowk)+$/,"").trim();
   const symbol = record => {
     const s=normal(title(record));
     if(record.kind === "hospital")return "✚";
@@ -103,18 +130,18 @@
          && !parsed.search && !parsed.hash){
         if(r.kind==="hospital" && /^\/hospitals\/[^/]+\/[^/]+\/$/.test(path)) external=parsed.href;
         if(r.kind!=="hospital" && (/^\/dr-[a-z0-9-]+\/$/i.test(path) || /^\/[a-z0-9-]+\/[a-z0-9-]+\/dr-[a-z0-9-]+\/$/i.test(path))) external=parsed.href;
-        // A hospital roster source is useful, but must not be labeled as an individual doctor profile.
+        // Hospital roster records must retain their facility link, never claim a direct doctor profile.
         if(r.kind!=="hospital" && /^\/hospitals\/[^/]+\/[^/]+\/$/.test(path))
           return {url:parsed.href,label:"View hospital listing on Slashcure ↗",direct:true};
       }
     }catch(_){}
-    if(external)return {url:external,label:r.kind==="hospital"?"Hospital OPD & contact on Slashcure ↗":"Check OPD & contact on Slashcure ↗",direct:true};
+    if(external)return {url:external,label:r.kind==="hospital"?"Open published Slashcure hospital profile ↗":"Open published Slashcure doctor profile ↗",direct:true};
     if(r.kind==="hospital")return {url:"https://slashcure.com/hospitals",label:"Browse hospitals on Slashcure ↗",direct:false};
     const search = new URL("https://slashcure.com/doctors");
     search.searchParams.set("type","all");
     if(r.city)search.searchParams.set("loc",r.city);
     if(r.name)search.searchParams.set("q",r.name);
-    return {url:search.href,label:"Search doctor & OPD on Slashcure ↗",direct:false};
+    return {url:search.href,label:"Search Slashcure (direct doctor link unavailable) ↗",direct:false};
   };
   const card = (r, sukDoctorIcons=false) => {
     const type=sukDoctorIcons ? specialtyIconType(r) : "";
@@ -161,6 +188,21 @@
     const query = root.querySelector("[data-native-query]");
     const city = root.querySelector("[data-native-city]");
     const specialties = root.querySelector("[data-native-specialty]");
+    /* Reuse existing local filters. Add only missing controls for doctor directories. */
+    const ensureDoctorFilter = (attribute,caption) => {
+      if(type!=="doctor" || !form || root.querySelector("["+attribute+"]"))return;
+      const labelEl=document.createElement("label");
+      labelEl.className="sp-search-field";
+      const labelText=document.createElement("span");
+      labelText.textContent=caption;
+      const select=document.createElement("select");
+      select.setAttribute(attribute,"");
+      select.setAttribute("aria-label",caption);
+      labelEl.append(labelText,select);
+      form.insertBefore(labelEl,form.querySelector('button[type="submit"]'));
+    };
+    if(items.some(r=>r.hospital && r.hospital.trim()))ensureDoctorFilter("data-native-hospital","Hospital / clinic");
+    if(items.some(r=>r.area && r.area.trim()))ensureDoctorFilter("data-native-area","Clinic area (where listed)");
     const area = root.querySelector("[data-native-area]");
     const hospital = root.querySelector("[data-native-hospital]");
     const datalist = root.querySelector("[data-native-city-list]");
@@ -191,13 +233,33 @@
     if(datalist)datalist.innerHTML=cities.map(v=>`<option value="${esc(v)}"></option>`).join("");
     if(specialties)specialties.innerHTML='<option value="">All specialties</option>'+
       specs.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
-    if(area){const areas=[...new Set(items.map(r=>r.area||"").filter(Boolean))].sort();area.innerHTML='<option value="">All listed areas</option>'+areas.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");}
-    const hospitalKey = value => normal(value).replace(/(?: sukku?r| airport road| teer chowk)+$/,"").trim();
-    if(hospital){
-      const names=new Map();
-      items.filter(r=>r.hospital).forEach(r=>{const key=hospitalKey(r.hospital);if(key&&!names.has(key))names.set(key,r.hospital.replace(/,\s*Sukkur$/i,""));});
-      hospital.innerHTML='<option value="">All listed hospitals</option>'+[...names].sort((a,b)=>a[1].localeCompare(b[1])).map(([key,label])=>`<option value="${esc(key)}">${esc(label)}</option>`).join("");
-    }
+    /* Hospital and area choices reflect only fields actually published for the chosen city. */
+    const refreshDependentFilters = () => {
+      const scoped=filterByCity(items,city?.value);
+      if(area){
+        const selected=area.value;
+        const areas=[...new Set(scoped.map(r=>r.area||"").filter(Boolean))].sort();
+        area.innerHTML='<option value="">All listed areas</option>'+areas.map(value=>'<option value="'+esc(value)+'">'+esc(value)+'</option>').join("");
+        area.value=areas.includes(selected)?selected:"";
+        area.disabled=!areas.length;
+        const wrapper=area.closest("label.sp-search-field");
+        if(wrapper)wrapper.hidden=!areas.length;
+      }
+      if(hospital){
+        const selected=hospital.value;
+        const names=new Map();
+        scoped.filter(r=>r.hospital).forEach(r=>{
+          const key=hospitalKey(r.hospital);
+          if(key&&!names.has(key))names.set(key,r.hospital.replace(/,\s*Sukkur$/i,""));
+        });
+        hospital.innerHTML='<option value="">All listed hospitals</option>'+
+          [...names].sort((a,b)=>a[1].localeCompare(b[1])).map(([key,label])=>'<option value="'+esc(key)+'">'+esc(label)+'</option>').join("");
+        hospital.value=names.has(selected)?selected:"";
+        hospital.disabled=!names.size;
+        const wrapper=hospital.closest("label.sp-search-field");
+        if(wrapper)wrapper.hidden=!names.size;
+      }
+    };
     if(city&&initialCity)city.value=initialCity;
     let showing = previewLimit || (scope === "home" ? 6 : scope === "all" ? 18 : 40);
     const setFacetState = () => {
@@ -245,8 +307,7 @@
       const sv=normal(specialties?.value);
       const av=normal(area?.value);
       const hv=normal(hospital?.value);
-      const matches=items.filter(r=>(!q||searchable(r).includes(q)) &&
-        (!cv||(r.cities||[r.city]).some(c=>normal(c).includes(cv))) &&
+      const matches=filterByCity(items,city?.value).filter(r=>matchesTextSearch(r,q) &&
         (!sv||normal(title(r)) === sv) && (!av||normal(r.area)===av) && (!hv||hospitalKey(r.hospital)===hv) &&
         (!activeFacet||sukDoctorFacet(r)===activeFacet)).sort((a,b)=>{
         if(!cv&&!initialCity&&preferredCity){
@@ -271,8 +332,9 @@
       root.setAttribute("data-ready","true");
     };
     form?.addEventListener("submit",e=>{e.preventDefault();activeFacet="";setFacetState();showing=previewLimit||1000;render();root.querySelector("[data-native-results]")?.scrollIntoView({behavior:"smooth",block:"start"});});
+    city?.addEventListener("input",refreshDependentFilters);
     [query,city,specialties,area,hospital].forEach(el=>el?.addEventListener(el?.tagName==="SELECT"?"change":"input",()=>{activeFacet="";setFacetState();showing=previewLimit||(scope==="home"?6:1000);render();}));
-    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";if(hospital)hospital.value="";activeFacet="";setFacetState();showing=previewLimit||(scope==="home"?6:scope==="all"?18:40);render();});
+    reset?.addEventListener("click",()=>{if(query)query.value="";if(city)city.value=initialCity;if(specialties)specialties.value="";if(area)area.value="";if(hospital)hospital.value="";refreshDependentFilters();activeFacet="";setFacetState();showing=previewLimit||(scope==="home"?6:scope==="all"?18:40);render();});
     load?.addEventListener("click",()=>{showing+=previewLimit||18;render();});
     window.addEventListener("slashpromo:city-preference",ev=>{
       preferredCity=typeof ev.detail?.city==="string"?ev.detail.city:"";
@@ -283,8 +345,9 @@
       if(query&&params.has("q"))query.value=params.get("q").slice(0,100);
       if(city&&params.has("city"))city.value=params.get("city").slice(0,100);
     }
-    if(scope==="sukkur" && type==="doctor" && area && params.has("area")){const wanted=params.get("area").slice(0,100);if([...area.options].some(o=>o.value===wanted))area.value=wanted;}
-    if(scope==="sukkur" && type==="doctor" && hospital && params.has("hospital")){const wanted=params.get("hospital").slice(0,100);if([...hospital.options].some(o=>o.value===wanted))hospital.value=wanted;}
+    refreshDependentFilters();
+    if(type==="doctor" && area && params.has("area")){const wanted=params.get("area").slice(0,100);if([...area.options].some(o=>o.value===wanted))area.value=wanted;}
+    if(type==="doctor" && hospital && params.has("hospital")){const wanted=params.get("hospital").slice(0,100);if([...hospital.options].some(o=>o.value===wanted))hospital.value=wanted;}
     render();
   };
   fetch("/assets/directory.json",{cache:"no-store"}).then(r=>{
