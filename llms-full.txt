@@ -207,3 +207,13 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/sukkur/health-topics/persistent-fever-infections/
 - https://slashpromo.com/sukkur/health-topics/anemia-fatigue-weakness/
 - https://slashpromo.com/sukkur/health-topics/thyroid-problems-symptoms/
+
+# Ghotki respiratory guide URL inventory (2026-11-11)
+https://slashpromo.com/ghotki/health-topics/
+https://slashpromo.com/doctors/ghotki/pulmonologists/
+https://slashpromo.com/ghotki/health-topics/asthma-wheezing/
+https://slashpromo.com/ghotki/health-topics/copd-chronic-bronchitis/
+https://slashpromo.com/ghotki/health-topics/persistent-cough/
+https://slashpromo.com/ghotki/health-topics/pneumonia-chest-infections/
+https://slashpromo.com/ghotki/health-topics/tuberculosis-tb-symptoms/
+https://slashpromo.com/ghotki/health-topics/shortness-of-breath/
