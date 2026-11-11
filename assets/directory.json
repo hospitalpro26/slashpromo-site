@@ -14,7 +14,7 @@
       "qualifications": "MBBS, MD (Gastroenterology)",
       "hospital": "Zubair Hospital",
       "url": "/doctors/bahawalpur/dr-hafiz-muhammad-zubair/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/gastroenterologists/bahawalpur/dr-hafiz-muhammad-zubair",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -29,7 +29,7 @@
       "qualifications": "MBBS",
       "hospital": "",
       "url": "/doctors/dir-upper/dr-sayed-zada-pir-habib-gul/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/general-physicians/dir-upper/dr-sayed-zada-pir-habib-gul",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -44,7 +44,7 @@
       "qualifications": "DPT",
       "hospital": "Professor Hospital",
       "url": "/doctors/faisalabad/dr-saba-faisal/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/physiotherapists/faisalabad/dr-saba-faisal-physiotherapist",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -149,7 +149,7 @@
       "qualifications": "MBBS, M.Med Internal Medicine, CHPE, DHPE",
       "hospital": "Alkaram Hospital",
       "url": "/doctors/jhelum/dr-muhammad-usman-janjua/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/consultant-physicians/dina-jhelum/dr-muhammad-usman-janjua",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -659,7 +659,7 @@
       "qualifications": "MBBS, FCPS; fellowship in trauma",
       "hospital": "",
       "url": "/doctors/mian-channu/dr-hafiz-muhammad-umar/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/orthopedic-surgeons/mian-channu/dr-hafiz-muhammad-umar",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -705,7 +705,7 @@
       "qualifications": "BDS, RDS; training in clear aligners",
       "hospital": "Sadiq Dental Care",
       "url": "/doctors/pakpattan/dr-kashif-ali/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/dentists/pakpattan/dr-kashif-ali",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -783,7 +783,7 @@
       "qualifications": "MBBS, FCPS",
       "hospital": "Alshifa Health Care Center",
       "url": "/doctors/peshawar/dr-rehmat-khan/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/orthopedic-surgeons/peshawar/dr-rehmat-khan",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -798,7 +798,7 @@
       "qualifications": "DPT",
       "hospital": "Wellness Physiotherapy Clinic",
       "url": "/doctors/quetta/dr-muhammad-yasir-sajjad/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/consultant-physiotherapists/quetta/dr-muhammad-yasir-sajjad",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -813,7 +813,7 @@
       "qualifications": "Consultant Physiotherapist",
       "hospital": "Wellness Physiotherapy and Rehabilitation Center",
       "url": "/doctors/quetta/dr-muqadas-marri/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/consultant-physiotherapists/quetta/dr-muqadas-marri",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -858,7 +858,7 @@
       "qualifications": "MBBS",
       "hospital": "Abu Al Hassan Hospital",
       "url": "/doctors/sheikhupura/dr-hafiz-abdul-rehman/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/general-physicians/sheikhupura/dr-hafiz-abdul-rehman",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -873,7 +873,7 @@
       "qualifications": "MBBS, MS",
       "hospital": "Shakir Hospital",
       "url": "/doctors/sheikhupura/dr-laeeq-ahmad/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/paediatric-surgeons/sheikhupura/dr-laeeq-ahmad",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -933,7 +933,7 @@
       "qualifications": "MBBS, FCPS",
       "hospital": "Muhammadi Medicare Clinic",
       "url": "/doctors/sobhodero/dr-bisharat-ali-sahito/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/paediatricians/sobhodero/dr-bisharat-ali-sahito",
       "hospitalpro": "",
       "kind": "doctor"
     },
@@ -1433,7 +1433,7 @@
       "qualifications": "MBBS, MCPS (General Surgery), FCPS (Orthopedic Surgery)",
       "hospital": "Doctor Medical Centre",
       "url": "/doctors/wari/dr-mahboob-ali/",
-      "externalProfile": "",
+      "externalProfile": "https://slashcure.com/orthopedic-surgeons/wari/dr-mahboob-ali",
       "hospitalpro": "",
       "kind": "doctor"
     }
