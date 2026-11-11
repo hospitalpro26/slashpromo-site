@@ -214,7 +214,22 @@ footer{border-top:1px solid var(--line);padding:25px 0}.footin{display:flex;just
   <div class="field"><label for="searchSpecialty">Medical specialty</label><select id="searchSpecialty"><option value="">All specialties</option></select></div>
   <button class="search-submit" type="submit">Find Doctors ↗</button>
  </form>
+ <div class="container" style="padding-top:15px">
+  <p style="margin:0;color:#345578;font-size:13px;line-height:1.7"><strong>Need more filters?</strong> <a id="advancedDoctorFinder" href="/doctors/" style="font-weight:800;color:#1452a3;text-decoration:underline">Open Smart Doctor Finder — hospital, clinic area, and Urdu search ↗</a></p>
+ </div>
  <div class="container citystrip"><strong>EXPLORE CITIES</strong><a href="/sukkur/">Sukkur</a><a href="/karachi/">Karachi</a><a href="/lahore/">Lahore</a><a href="/khairpur/">Khairpur</a><a href="/shikarpur/">Shikarpur</a><a href="/hyderabad/">Hyderabad</a><a href="/pano-aqil/">Pano Aqil</a><a href="/cities/">All cities ↗</a></div>
+ <section class="section container" aria-labelledby="discovery-paths-title">
+   <div class="hrow"><div><span class="overline">Explore by healthcare need</span><h2 id="discovery-paths-title">Specialties and health guides</h2><p class="lede">Choose an existing specialty or read an introductory health topic, then explore linked doctors and their original Slashcure profiles.</p></div><a class="arrow-link" href="/sukkur/health-topics/">All Sukkur health guides ↗</a></div>
+   <div class="local-grid">
+     <a href="/doctors/sukkur/consultant-physicians/"><strong>Consultant physicians — Sukkur</strong><small>Internal medicine and consultant physician profiles</small><span>Find physicians ↗</span></a>
+     <a href="/doctors/sukkur/gastroenterologists/"><strong>Gastroenterologists — Sukkur</strong><small>Digestive and liver healthcare profiles</small><span>Find specialists ↗</span></a>
+     <a href="/doctors/karachi/physiotherapists/"><strong>Physiotherapists — Karachi</strong><small>Rehabilitation and physiotherapy providers</small><span>Find physiotherapists ↗</span></a>
+     <a href="/doctors/sukkur/rheumatologists/"><strong>Rheumatologists — Sukkur</strong><small>Joint, muscle and autoimmune healthcare</small><span>Find specialists ↗</span></a>
+     <a href="/sukkur/health-topics/diabetes-care/"><strong>Diabetes care guide</strong><small>General information and when to seek care</small><span>Read guide ↗</span></a>
+     <a href="/sukkur/health-topics/breathing-and-lung-concerns/"><strong>Breathing and lung concerns</strong><small>Symptoms and appropriate care pathways</small><span>Read guide ↗</span></a>
+   </div>
+   <p class="note">Health information is educational. Search results do not rank doctors or confirm current OPD availability.</p>
+ </section>
  <section class="section container" aria-labelledby="categories-title">
   <div class="hrow"><div><span class="overline">Discover healthcare</span><h2 id="categories-title">What are you looking for?</h2><p class="lede">Explore specialists, hospitals, diagnostic services and local healthcare centers.</p></div><a class="arrow-link" href="/cities/">Explore all locations ↗</a></div>
   <div class="categories">
@@ -297,6 +312,30 @@ var term=document.getElementById("searchTerm");
 var city=document.getElementById("searchCity");
 var specialty=document.getElementById("searchSpecialty");
 var buttons=[].slice.call(document.querySelectorAll("[data-filter]"));
+var advancedFinder=document.getElementById("advancedDoctorFinder");
+var homeAliases=[
+ [/^(دل کا ڈاکٹر|ماہر امراض قلب|heart doctor|heart specialist)$/i,/cardiolog|cardiac/i],
+ [/^(بچوں کا ڈاکٹر|ماہر امراض اطفال|child specialist|pediatrician|paediatrician)$/i,/paediatrician|pediatrician|child specialist/i],
+ [/^(خواتین کا ڈاکٹر|ماہر امراض نسواں|gynecologist|gynaecologist)$/i,/gynecol|gynaecol|obstetric/i],
+ [/^(فزیوتھراپسٹ|physiotherapist|physical therapist)$/i,/physiotherap/i],
+ [/^(پھیپھڑوں کا ڈاکٹر|chest specialist|pulmonologist)$/i,/pulmonolog|chest specialist/i],
+ [/^(دانتوں کا ڈاکٹر|dentist)$/i,/dentist/i],
+ [/^(ہڈیوں کا ڈاکٹر|orthopedic doctor|orthopaedic doctor)$/i,/orthop/i]
+];
+function homeNormalize(input){return String(input||"").toLowerCase().replace(/[\u064b-\u065f\u0670]/g,"").replace(/[يى]/g,"ی").replace(/ك/g,"ک").trim()}
+function queryMatch(d,q){
+ if(!q)return true;
+ var alias=homeAliases.find(function(a){return a[0].test(q)});
+ if(alias)return alias[1].test(d.specialty||"");
+ return [d.name,d.specialty,d.city,d.hospital,d.qualifications].join(" ").toLowerCase().includes(q);
+}
+function syncAdvancedLink(){
+ if(!advancedFinder)return;
+ var params=new URLSearchParams();
+ if(term.value.trim())params.set("q",term.value.trim().slice(0,100));
+ if(city.value)params.set("city",city.value);
+ advancedFinder.href="/doctors/"+(params.toString()?"?"+params.toString():"");
+}
 /* Menu state is managed by /assets/site.js through data-menu-toggle/data-nav
    to keep keyboard, Escape, and existing launch checks consistent. */
 function el(tag,cls,text){var node=document.createElement(tag);if(cls)node.className=cls;if(text!==undefined)node.textContent=text;return node}
@@ -318,17 +357,18 @@ function draw(){
  document.getElementById("resultsInfo").textContent=filtered.length===allDoctors.length ? "Browse the full directory below" : filtered.length+" matching profiles";
 }
 function apply(){
- var q=term.value.trim().toLowerCase(),c=city.value,s=specialty.value;
+ var q=homeNormalize(term.value),c=city.value,s=specialty.value;
  filtered=allDoctors.filter(function(d){
-  return (!c||d.city===c)&&(!s||d.specialty===s)&&(!q||[d.name,d.specialty,d.city,d.hospital,d.qualifications].join(" ").toLowerCase().includes(q));
+  return (!c||d.city===c)&&(!s||d.specialty===s)&&queryMatch(d,q);
  });
- shown=6;buttons.forEach(function(b){var active=b.dataset.filter===c;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});draw();
+ shown=6;buttons.forEach(function(b){var active=b.dataset.filter===c;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});syncAdvancedLink();draw();
 }
 function makeOptions(select,values){values.forEach(function(v){var option=el("option","",v);option.value=v;select.appendChild(option)})}
 document.getElementById("doctorSearch").addEventListener("submit",function(event){
  event.preventDefault();apply();document.getElementById("find-doctors").scrollIntoView({behavior:"smooth",block:"start"});
 });
 buttons.forEach(function(b){b.addEventListener("click",function(){city.value=b.dataset.filter;apply()})});
+[term,city,specialty].forEach(function(control){control.addEventListener("input",syncAdvancedLink);control.addEventListener("change",syncAdvancedLink)});
 loadMore.addEventListener("click",function(){shown+=9;draw()});
 fetch("/assets/directory.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Directory unavailable");return r.json()}).then(function(data){
  if(!Array.isArray(data.doctors))throw Error("Invalid directory");
