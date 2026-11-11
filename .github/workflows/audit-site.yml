@@ -55,3 +55,5 @@ jobs:
           node scripts/test-shikarpur-physiotherapy.mjs
       - name: Test Smart Doctor Finder Phase 1 without publishing
         run: node scripts/test-smart-doctor-finder.mjs
+      - name: Validate nationwide specialty directory without publishing
+        run: node scripts/test-specialty-directory.mjs
