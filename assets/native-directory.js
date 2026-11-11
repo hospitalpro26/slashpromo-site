@@ -103,6 +103,9 @@
          && !parsed.search && !parsed.hash){
         if(r.kind==="hospital" && /^\/hospitals\/[^/]+\/[^/]+\/$/.test(path)) external=parsed.href;
         if(r.kind!=="hospital" && (/^\/dr-[a-z0-9-]+\/$/i.test(path) || /^\/[a-z0-9-]+\/[a-z0-9-]+\/dr-[a-z0-9-]+\/$/i.test(path))) external=parsed.href;
+        // A hospital roster source is useful, but must not be labeled as an individual doctor profile.
+        if(r.kind!=="hospital" && /^\/hospitals\/[^/]+\/[^/]+\/$/.test(path))
+          return {url:parsed.href,label:"View hospital listing on Slashcure ↗",direct:true};
       }
     }catch(_){}
     if(external)return {url:external,label:r.kind==="hospital"?"Hospital OPD & contact on Slashcure ↗":"Check OPD & contact on Slashcure ↗",direct:true};
