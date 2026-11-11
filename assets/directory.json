@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-10",
+  "updatedAt": "2026-11-11",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
@@ -723,6 +723,23 @@
       "externalProfile": "https://slashcure.com/paediatricians/pano-aqil-sindh/dr-farooq-illahi",
       "hospitalpro": "",
       "kind": "doctor"
+    },
+    {
+      "id": "pano-aqil-dr-hina-soomro",
+      "name": "Dr. Hina Soomro",
+      "city": "Pano Aqil",
+      "cities": [
+        "Pano Aqil"
+      ],
+      "specialty": "Consultant Physiotherapist",
+      "qualifications": "DPT",
+      "hospital": "Dua Medical Center",
+      "url": "/doctors/pano-aqil/dr-hina-soomro/",
+      "externalProfile": "https://slashcure.com/physiotherapists/panoaqil/dr-hina-soomro",
+      "hospitalpro": "",
+      "kind": "doctor",
+      "area": "Near Old NADRA Office, Katchery Road",
+      "experience": "6+ years (published on Slashcure)"
     },
     {
       "id": "pano-aqil-dr-parvez-ahmed",

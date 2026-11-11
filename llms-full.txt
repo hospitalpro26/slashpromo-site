@@ -197,6 +197,7 @@ All canonical public URLs in the XML sitemap. This is an AI-readable navigation 
 - https://slashpromo.com/shikarpur/health-topics/frozen-shoulder-physiotherapy/
 - https://slashpromo.com/shikarpur/health-topics/post-injury-rehabilitation/
 - https://slashpromo.com/doctors/pano-aqil/dr-hina-soomro/
+- Original doctor profile for Dr. Hina Soomro (Slashcure): https://slashcure.com/physiotherapists/panoaqil/dr-hina-soomro
 - https://slashpromo.com/doctors/pano-aqil/physiotherapists/
 - https://slashpromo.com/pano-aqil/health-topics/neck-pain-physiotherapy/
 - https://slashpromo.com/pano-aqil/health-topics/sciatica-physiotherapy/
