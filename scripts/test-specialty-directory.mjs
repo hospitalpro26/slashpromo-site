@@ -32,7 +32,7 @@ assert.equal(byId("paediatrics").match.test("Consultant Paediatric Surgeon"),fal
 assert.ok(js.includes("ماہر امراض قلب")||js.includes("دل کا ڈاکٹر"),"Urdu heart alias");
 assert.ok(js.includes("بچوں کا ڈاکٹر"),"Urdu child-health alias");
 const routes=[...html.matchAll(/href="(\/[^"#?]*)"/g)].map(m=>m[1]);
-for(const p of routes){if(p!=="/")assert.ok(sitemap.includes("<loc>https://slashpromo.com"+p+"</loc>"),"Linked page missing sitemap "+p);}
+for(const p of routes){if(p!=="/"&&!p.startsWith("/assets/"))assert.ok(sitemap.includes("<loc>https://slashpromo.com"+p+"</loc>"),"Linked page missing sitemap "+p);}
 assert.ok(js.includes("safePath(d.url)"),"Only structured SlashPromo doctor routes allowed");
 assert.ok(!js.includes("innerHTML"),"Public doctor names must be rendered with textContent, not HTML");
 console.log("PASS: 20 verified-data specialty groups, Urdu labels, sitemap links, SEO canonical and safe doctor rendering.");
