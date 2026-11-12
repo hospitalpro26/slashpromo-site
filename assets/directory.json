@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-11",
+  "updatedAt": "2026-11-12",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
@@ -1124,6 +1124,22 @@
       "hospitalpro": "https://hospitalpro.online/dr-dost-muhammad.html",
       "kind": "doctor",
       "area": "Shikarpur Road, Sukkur"
+    },
+    {
+      "id": "sukkur-dr-farman-ali-bijarani",
+      "name": "Dr. Farman Ali Bijarani",
+      "city": "Sukkur",
+      "cities": [
+        "Sukkur"
+      ],
+      "specialty": "Consultant General & Laparoscopic Surgeon · Emergency & Trauma Surgery",
+      "qualifications": "MBBS, FCPS, CHPE · 20+ years of experience",
+      "hospital": "Hira Medical Center · GMMMC Teaching Hospital Sukkur",
+      "area": "Barrage Road, Sukkur",
+      "url": "/doctors/sukkur/dr-farman-ali-bijarani/",
+      "externalProfile": "https://slashcure.com/general-surgeons-laproscopic-surgeons/sukkur/dr-farman-ali-bijarani",
+      "hospitalpro": "",
+      "kind": "doctor"
     },
     {
       "id": "sukkur-dr-habibullah-maitlo",
