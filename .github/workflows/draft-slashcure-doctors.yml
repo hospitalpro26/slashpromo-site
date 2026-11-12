@@ -35,33 +35,7 @@ jobs:
         run: node scripts/test-sync-slashcure-doctors.mjs
       - name: Test Airtable sync without network access
         run: node scripts/test-sync-airtable-doctor-reviews.mjs
-      - name: Retire old duplicate-only review branch
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          stale="automation/slashcure-onboarding-42630643912"
-          if ! git ls-remote --exit-code --heads origin "$stale" >/dev/null 2>&1; then
-            echo 'No obsolete onboarding branch remains.'
-            exit 0
-          fi
-          if [ "$(gh pr list --state open --head "$stale" --json number --jq length)" != 0 ]; then
-            echo 'Old branch has an open PR; leaving it untouched.'
-            exit 0
-          fi
-          if node --input-type=module -e '
-            import fs from "node:fs"; import {execFileSync} from "node:child_process";
-            const now=JSON.parse(fs.readFileSync("assets/directory.json","utf8"));
-            const old=JSON.parse(execFileSync("git",["show","refs/remotes/origin/automation/slashcure-onboarding-42630643912:assets/directory.json"],{encoding:"utf8"}));
-            const extra=old.doctors.filter(d=>!now.doctors.some(x=>x.url===d.url));
-            if(extra.length!==1 || extra[0].name!=="Dr. Komal Kandhir PT" ||
-               !now.doctors.some(d=>d.city==="Sukkur"&&d.name==="Dr. Komal Kandhir"))process.exit(1);
-          '; then
-            git push origin --delete "$stale"
-            echo 'Removed old automation-only draft that duplicated Dr. Komal Kandhir.'
-          else
-            echo '::warning::Stale review branch did not match known duplicate; left untouched.'
-          fi
+      # Do not automatically delete review branches; preserve all human review history.
       - name: Detect pending human review before drafting
         id: pending
         env:

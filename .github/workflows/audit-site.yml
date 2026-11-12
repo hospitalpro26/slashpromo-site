@@ -12,6 +12,8 @@ on:
       - privacy/index.html
       - assets/city-questions.js
       - functions/_lib/qa.js
+      - functions/api/qa-admin.js
+      - scripts/test-qa-moderation.mjs
       - scripts/audit-site.mjs
       - scripts/audit-profile-quality.mjs
       - assets/directory.json
@@ -39,6 +41,8 @@ jobs:
           node --check functions/api/questions.js
           node --check functions/api/qa-admin.js
           node --check scripts/indexnow.mjs
+      - name: Test admin-only Q&A public-answer privacy protections
+        run: node scripts/test-qa-moderation.mjs
       - name: Check WhatsApp-first contact and public page coverage
         run: node scripts/test-whatsapp-handoff.mjs
       - name: Audit SEO, sitemap and page-specific Q&A

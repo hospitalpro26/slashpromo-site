@@ -108,7 +108,7 @@ function addReviewLink(file,d){
   return true;
 }
 function report(data){
-  const lines=['# Daily Slashcure doctor discovery','', 'Public links discovered: '+data.found,'Already known: '+data.known,'New eligible links: '+data.pending,'Drafts prepared: '+data.drafts.length,'', '## Review required'];
+  const lines=['# Daily Slashcure doctor discovery','', 'Public links discovered: '+data.found,'Already known: '+data.known,'New eligible links: '+data.pending,'Drafts prepared: '+data.drafts.length,'Source coverage: '+(data.coverage||'not evaluated'),'Unreachable sources: '+(data.sourceFailures?.length||0),'', '## Review required'];
   for(const d of data.drafts)lines.push('- '+d.name+' ('+d.specialty+', '+d.city+'): '+d.externalProfile+'; draft '+SITE+d.url);
   lines.push('', '## Required approval before publication','- [ ] Verify name, city and specialty against the real doctor profile','- [ ] Verify credentials and active hospital/clinic affiliation; add hospital links only after confirmation','- [ ] Check OPD hours, contact information and service details; do not invent missing data','- [ ] Review city/specialty links and structured data','- [ ] Merge only when accurate. Cloudflare deploys and IndexNow submits after merging.','', '## Deferred / uncertain');
   lines.push(...data.deferred.map(x=>'- '+x));
@@ -123,7 +123,8 @@ function report(data){
 async function main(){
   const apply=process.argv.includes('--apply');
   const db=JSON.parse(fs.readFileSync('assets/directory.json','utf8'));
-  const cities=[...new Set(db.doctors.map(x=>normalizedCitySlug(x.city)))].sort();
+  // A national catch-all label is not a city directory and must not generate /doctors/pakistan 404 checks.
+  const cities=[...new Set(db.doctors.map(x=>normalizedCitySlug(x.city)).filter(x=>x&&x!=='pakistan'))].sort();
   const sources=[],links=new Map();
   // The national Slashcure directory is paginated. Inspect all early pages so
   // a doctor outside page one (or a newly represented city) is not overlooked.
@@ -136,7 +137,13 @@ async function main(){
     }));
     for(const r of results){sources.push({url:r.url,result:r.result+'; '+r.links.length+' links'});for(const item of r.links)links.set(item.source,item);}
   }
+  // A successful run with only partial source coverage must not be presented as a complete scan.
+  const primaryDirectory=HOST+'/doctors/?page=1';
+  if(!sources.some(x=>x.url===primaryDirectory&&x.result.startsWith('OK;')))
+    throw new Error('Primary Slashcure doctor directory was unavailable: discovery completeness cannot be trusted. No drafts created.');
   if(!links.size)throw new Error('No public doctor links detected: stop safely and investigate source availability');
+  const sourceFailures=sources.filter(x=>!x.result.startsWith('OK;'));
+  if(sourceFailures.length)console.warn('::warning::Partial Slashcure discovery coverage: '+sourceFailures.map(x=>x.url+' ('+x.result+')').join('; '));
   const existing=new Set(db.doctors.map(x=>parseDoctorUrl(x.externalProfile)?.source).filter(Boolean));
   const byNameCity=new Set(db.doctors.map(x=>normalizedCitySlug(x.city)+':'+doctorIdentity(x.name)));
   const alreadyDrafted=new Set();
@@ -179,7 +186,7 @@ async function main(){
     }
     fs.writeFileSync('sitemap.xml',sitemap);
   }
-  report({found:links.size,known:links.size-newLinks.length,pending:newLinks.length,drafts,deferred,sources,applied:apply});
+  report({found:links.size,known:links.size-newLinks.length,pending:newLinks.length,drafts,deferred,sources,sourceFailures,coverage:sourceFailures.length?'partial':'all sources available',applied:apply});
   if(!apply)console.log('Dry run: no files changed.');
 }
 if(process.argv[1]&&fileURLToPath(import.meta.url)===path.resolve(process.argv[1]))main().catch(e=>{console.error(e);process.exitCode=1;});
