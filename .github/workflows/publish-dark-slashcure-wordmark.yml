@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pull-requests: write
 jobs:
   update-sitewide-asset-versions:
     runs-on: ubuntu-latest
@@ -45,7 +46,9 @@ jobs:
           PY
           node --check assets/site.js
           node --check assets/slashcure-strip.js
-      - name: Commit HTML cache refresh for production
+      - name: Prepare HTML cache refresh for owner review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
@@ -53,5 +56,16 @@ jobs:
           git add -u
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh dark blue/red Slashcure wordmark assets on all pages'
-            git push origin HEAD:main
+            branch="automation/publish-wordmark-$GITHUB_RUN_ID"
+            git switch -c "$branch"
+            git push -u origin "$branch"
+            compare_url="https://github.com/$GITHUB_REPOSITORY/compare/main...$branch?expand=1"
+            if gh pr create --base main --head "$branch" --draft \
+              --title "Review Slashcure wordmark cache refresh before publication" \
+              --body "Refresh existing dark Slashcure wordmark asset cache versions across public pages. Owner review and explicit approval are required before any merge. This workflow never publishes automatically."; then
+              echo "Created draft PR for review; no changes published." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::warning::Automated draft PR creation unavailable; review branch preserved: $compare_url"
+              echo "Open a manual draft PR to review changes: $compare_url" >> "$GITHUB_STEP_SUMMARY"
+            fi
           fi
