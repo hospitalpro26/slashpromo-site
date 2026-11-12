@@ -1619,7 +1619,7 @@
       "name": "Hira Medical Centre",
       "city": "Sukkur",
       "category": "Medical centre",
-      "description": "Hira Medical Centre in Sukkur lists associated specialists in cardiology, pulmonology, orthopedics, gastroenterology, hepatology and dental prosthodontics. Confirm OPD timings with each clinician.",
+      "description": "Hira Medical Centre in Sukkur lists associated specialists in general and laparoscopic surgery, cardiology, pulmonology, orthopedics, gastroenterology, hepatology and dental prosthodontics. Confirm OPD timings with each clinician.",
       "url": "/hospitals/sukkur/hira-medical-centre/",
       "hospitalpro": "https://hospitalpro.online/hospitals/hira-medical-centre-sukkur/",
       "externalProfile": "",
@@ -1629,7 +1629,8 @@
         "sukkur-dr-aneel-ahmed-ghanghro",
         "sukkur-dr-deepak-kumar",
         "sukkur-prof-dr-kirpal-das-makheja",
-        "sukkur-dr-riaz-hussain-hakro"
+        "sukkur-dr-riaz-hussain-hakro",
+        "sukkur-dr-farman-ali-bijarani"
       ]
     },
     {
