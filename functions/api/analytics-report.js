@@ -11,14 +11,19 @@ export async function onRequestGet(ctx){
   const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   const params=new URL(request.url).searchParams;
   const days=Number(params.get("days")||7);
-  if(![7,30,90].includes(days))return json({error:"Choose 7, 30 or 90 days."},400);
+  if(![1,7,30,90].includes(days))return json({error:"Choose 1, 7, 30 or 90 days."},400);
+  const selectedDay=params.get("day");
+  if(selectedDay&&days!==1)return json({error:"An individual day requires the one-day filter."},400);
+  const today=new Date().toISOString().slice(0,10);
+  if(selectedDay&&(!/^\d{4}-\d{2}-\d{2}$/.test(selectedDay)||Number.isNaN(Date.parse(selectedDay+"T00:00:00Z"))||new Date(selectedDay+"T00:00:00Z").toISOString().slice(0,10)!==selectedDay||selectedDay>today))return json({error:"Choose a valid day that is not in the future."},400);
   const city=(params.get("city")||"").trim().toLowerCase();
   if(city&&city!=="other"&&!CITY_NAMES.has(city))return json({error:"Invalid city filter."},400);
   const d=new Date();d.setUTCDate(d.getUTCDate()-days+1);
-  const since=d.toISOString().slice(0,10);
-  const where="WHERE day>=?"+(city?" AND city=?":"");
-  const binds=city?[since,city]:[since];
-  const whereGeo="WHERE day>=?"+(city?" AND page_city=?":"");
+  const since=selectedDay||d.toISOString().slice(0,10);
+  const dateCondition=days===1?" AND day<=?":"";
+  const where="WHERE day>=?"+dateCondition+(city?" AND city=?":"");
+  const binds=days===1?(city?[since,since,city]:[since,since]):(city?[since,city]:[since]);
+  const whereGeo="WHERE day>=?"+dateCondition+(city?" AND page_city=?":"");
   try{
     await ensureAnalytics(env.QA_DB);
     /* Content cities describe what visitors opened, never where visitors live.
