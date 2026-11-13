@@ -34,7 +34,7 @@ export async function onRequestPost(ctx){
   const cities=[...new Set(records.flatMap(r=>[r.city,...(r.cities||[])].filter(Boolean)))];
   let city=cities.find(c=>interpretation.includes(norm(c)))||"";
   let aiUsed=false;
-  if(ctx.env.AI){
+  if(ctx.env.AI&&ctx.env.AI_DISCOVERY_ENABLED==="true"){
     try{
       const response=await ctx.env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast",{messages:[
         {role:"system",content:"You classify healthcare provider directory searches, never diagnose. Respond with ONLY a JSON object with strings query and city. Rewrite the user input as concise English specialist or doctor search keywords, preserving doctor names. City must be one of the provided city names or empty. Do not invent providers or give medical advice. Cities: "+cities.join(", ")},
