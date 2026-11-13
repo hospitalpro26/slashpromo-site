@@ -20,7 +20,8 @@ function score(record,query,city){const name=norm(record.name),specialty=expand(
    make a general surgeon a match for a general physician. */
 const SPECIALTY_RULES=[
   {terms:/\b(general physician|family physician|family medicine|primary care)\b/,test:/\b(general physician|family physician|family medicine|general practitioner)\b/},
-  {terms:/\b(consultant physician|internal medicine|medicine specialist)\b/,test:/\b(consultant physician|internal medicine|general physician|medicine specialist)\b/},
+  {terms:/\b(consultant physician)\b/,test:/\b(consultant physician|internal medicine specialist)\b/},
+  {terms:/\b(internal medicine|medicine specialist)\b/,test:/\b(consultant physician|internal medicine|medicine specialist)\b/},
   {terms:/\b(physician|medical doctor)\b/,test:/\b(physician|internal medicine|general practitioner)\b/},
   {terms:/\b(paediatrician|pediatrician|child specialist)\b/,test:/\b(paediatrician|pediatrician|paediatric|pediatric)\b/},
   {terms:/\b(physiotherapist|physiotherapy|physical therapist)\b/,test:/\b(physiotherap|physical therap|rehabilitation)\b/},
@@ -33,6 +34,7 @@ const SPECIALTY_RULES=[
   {terms:/\b(urolog)\w*/,test:/\burolog\w*/},
   {terms:/\b(neurosurgeon)\b/,test:/\bneurosurgeon\b/},
   {terms:/\b(orthopaedic|orthopedic)\w*/,test:/\b(orthopaedic|orthopedic)\w*/},
+  {terms:/\b(general surgeon|general surgery|laparoscopic surgeon)\b/,test:/\b(general|laparoscopic)\b.*\bsurgeon\b|\bgeneral surgery\b/},
   {terms:/\b(surgeon|surgery|laparoscopic)\b/,test:/\b(surgeon|surgery|laparoscopic)\b/},
   {terms:/\b(ent|otolaryngolog)\w*/,test:/\b(ent|otolaryngolog)\w*/},
   {terms:/\b(dentist|dental)\b/,test:/\b(dentist|dental|orthodont)\w*/}
