@@ -15,6 +15,31 @@ function score(record,query,city){const name=norm(record.name),specialty=expand(
   for(const token of query.split(" ").filter(t=>t.length>2&&!STOP.has(t))){if(name.includes(token))score+=5;if(specialty.includes(token))score+=8;if(hospital.includes(token))score+=2;}
   return score;
 }
+
+/* A specialty is a hard constraint. Shared words like "general" must not
+   make a general surgeon a match for a general physician. */
+const SPECIALTY_RULES=[
+  {terms:/\b(general physician|family physician|family medicine|primary care)\b/,test:/\b(general physician|family physician|family medicine|general practitioner)\b/},
+  {terms:/\b(consultant physician|internal medicine|medicine specialist)\b/,test:/\b(consultant physician|internal medicine|general physician|medicine specialist)\b/},
+  {terms:/\b(physician|medical doctor)\b/,test:/\b(physician|internal medicine|general practitioner)\b/},
+  {terms:/\b(paediatrician|pediatrician|child specialist)\b/,test:/\b(paediatrician|pediatrician|paediatric|pediatric)\b/},
+  {terms:/\b(physiotherapist|physiotherapy|physical therapist)\b/,test:/\b(physiotherap|physical therap|rehabilitation)\b/},
+  {terms:/\b(rheumatolog|joint specialist)\w*/,test:/\brheumatolog\w*/},
+  {terms:/\b(pulmonolog|chest specialist|lung specialist)\w*/,test:/\b(pulmonolog|chest specialist)\w*/},
+  {terms:/\b(cardiolog|heart specialist)\w*/,test:/\b(cardiolog|heart specialist)\w*/},
+  {terms:/\b(gastroenterolog|stomach specialist)\w*/,test:/\bgastroenterolog\w*/},
+  {terms:/\b(dermatolog|skin specialist)\w*/,test:/\bdermatolog\w*/},
+  {terms:/\b(gynecolog|obstetrician|gynaecolog)\w*/,test:/\b(gynecolog|gynaecolog|obstetric)\w*/},
+  {terms:/\b(urolog)\w*/,test:/\burolog\w*/},
+  {terms:/\b(neurosurgeon)\b/,test:/\bneurosurgeon\b/},
+  {terms:/\b(orthopaedic|orthopedic)\w*/,test:/\b(orthopaedic|orthopedic)\w*/},
+  {terms:/\b(surgeon|surgery|laparoscopic)\b/,test:/\b(surgeon|surgery|laparoscopic)\b/},
+  {terms:/\b(ent|otolaryngolog)\w*/,test:/\b(ent|otolaryngolog)\w*/},
+  {terms:/\b(dentist|dental)\b/,test:/\b(dentist|dental|orthodont)\w*/}
+];
+function specialtyRule(question){const q=expand(question);return SPECIALTY_RULES.find(rule=>rule.terms.test(q))||null}
+function specialtyMatches(record,rule){return !rule||record.kind==="doctor"&&rule.test.test(expand(record.specialty||""))}
+
 function safeResult(r){return {name:r.name,city:r.city,specialty:r.specialty||r.category||"Healthcare facility",hospital:r.hospital||"",url:r.url,slashcureUrl:r.externalProfile||""}}
 export async function onRequestPost(ctx){
   const req=ctx.request;
@@ -46,9 +71,9 @@ export async function onRequestPost(ctx){
       aiUsed=true;
     }catch{ /* Deterministic directory lookup remains available when inference fails. */ }
   }
-  const query=norm(interpretation),place=norm(city);
+  // Never allow an AI paraphrase to discard an explicit specialty or city.\n  const rule=specialtyRule(question)||specialtyRule(interpretation);\n  const originalCity=cities.find(c=>expand(question).includes(norm(c)));\n  if(originalCity)city=originalCity;\n  const query=norm(interpretation),place=norm(city);
   const ranked=records.map(r=>({r,points:score(r,query,place),cityMatch:!place||norm([r.city,...(r.cities||[])].join(" ")).includes(place)}))
-    .filter(x=>x.points>0&&x.cityMatch).sort((a,b)=>b.points-a.points||a.r.name.localeCompare(b.r.name)).slice(0,8);
+    .filter(x=>x.points>0&&x.cityMatch&&specialtyMatches(x.r,rule)).sort((a,b)=>b.points-a.points||a.r.name.localeCompare(b.r.name)).slice(0,8);
   const results=ranked.map(x=>safeResult(x.r));
   explanation=results.length?("Found "+results.length+" matching listed provider"+(results.length===1?"":"s")+(place?" in "+city:"")+". Check the linked profile for the latest details."):"No matching verified directory listing was found. Try a specialty or a different city.";
   return json({message:explanation,results,aiUsed,note:"Directory discovery only. Not a diagnosis or professional recommendation. Clinic schedules and credentials should be checked with the provider. Results come only from Slashpromo's existing directory."});
