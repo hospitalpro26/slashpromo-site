@@ -334,6 +334,21 @@
       "kind": "doctor"
     },
     {
+      "id": "lahore-dr-tallal-ejaz",
+      "name": "Dr Tallal Ejaz",
+      "city": "Lahore",
+      "cities": [
+        "Lahore"
+      ],
+      "specialty": "Dentist",
+      "hospital": "NEO Medical Center · Johar Town",
+      "qualifications": "BDS, RDS",
+      "url": "/doctors/lahore/dr-tallal-ejaz/",
+      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
       "id": "lahore-dr-ammara-gill",
       "name": "Dr. Ammara Gill",
       "city": "Lahore",
@@ -539,21 +554,6 @@
       "hospital": "NEO Medical Center · Johar Town",
       "qualifications": "MBBS, FCPS",
       "url": "/doctors/lahore/dr-sara-tariq/",
-      "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
-      "hospitalpro": "",
-      "kind": "doctor"
-    },
-    {
-      "id": "lahore-dr-tallal-ejaz",
-      "name": "Dr Tallal Ejaz",
-      "city": "Lahore",
-      "cities": [
-        "Lahore"
-      ],
-      "specialty": "Dentist",
-      "hospital": "NEO Medical Center · Johar Town",
-      "qualifications": "BDS, RDS",
-      "url": "/doctors/lahore/dr-tallal-ejaz/",
       "externalProfile": "https://slashcure.com/hospitals/lahore/neo-medical-center",
       "hospitalpro": "",
       "kind": "doctor"
@@ -889,6 +889,21 @@
       "hospital": "Muhammad Ilyas Medical Center",
       "url": "/doctors/shikarpur/dr-ali-ilyas-napar/",
       "externalProfile": "https://slashcure.com/consultant-physiotherapists/shikarpur/dr-ali-ilyas-napar",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
+    {
+      "id": "shikarpur-dr-fayyaz-ahmed",
+      "name": "Dr. Fayyaz Ahmed Mahar",
+      "city": "Shikarpur",
+      "cities": [
+        "Shikarpur"
+      ],
+      "specialty": "General Physician",
+      "hospital": "",
+      "qualifications": "",
+      "url": "/doctors/shikarpur/dr-fayyaz-ahmed/",
+      "externalProfile": "https://slashcure.com/general-physicians/shikarpur/dr-fayyaz-ahmed",
       "hospitalpro": "",
       "kind": "doctor"
     },
