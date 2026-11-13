@@ -40,7 +40,8 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <div class="notice">Access is protected by your existing private <strong>QA_ADMIN_KEY</strong>. Enter it below to load data. The key stays in this browser tab's memory. This dashboard contains aggregate counts only; no patient names, WhatsApp messages, IPs or addresses are stored in analytics.</div>
 <form class="toolbar" id="filters">
 <label>Private admin key<input id="key" type="password" autocomplete="off" placeholder="Enter QA_ADMIN_KEY" required></label>
-<label>Date range<select id="days"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></label>
+<label>Date range<select id="days"><option value="1">One day</option><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select></label>
+<label id="single-day-filter" hidden>Choose day (UTC)<input id="single-day" type="date"></label>
 <label>Page city<select id="city"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option><option value="ghotki">Ghotki</option><option value="lahore">Lahore</option><option value="islamabad">Islamabad</option><option value="rawalpindi">Rawalpindi</option><option value="peshawar">Peshawar</option><option value="quetta">Quetta</option><option value="larkana">Larkana</option><option value="bahawalpur">Bahawalpur</option><option value="faisalabad">Faisalabad</option><optgroup label="More cities"><option value="pano-aqil">Pano Aqil</option><option value="lakhi-ghulam-shah">Lakhi Ghulam Shah</option><option value="sobhodero">Sobhodero</option><option value="ubauro">Ubauro</option><option value="sheikhupura">Sheikhupura</option><option value="fort-abbas">Fort Abbas</option><option value="jhelum">Jhelum</option><option value="gojra">Gojra</option><option value="mian-channu">Mian Channu</option><option value="pakpattan">Pakpattan</option><option value="dir-upper">Dir Upper</option></optgroup><option value="other">Homepage, nationwide directories and other pages</option></select></label>
 <button id="load" type="submit">Load analytics</button>
 <button id="export-summary" type="button" disabled title="Export aggregate statistics only; private Q&A content is excluded">Download summary CSV</button>
@@ -227,16 +228,22 @@ function draw(data){
   chart.setAttribute("aria-label",nf.format(totals.page_view||0)+" page views across "+data.days+" days (daily bar chart)");
   $("#from-label").textContent=points[0]?.date||"";$("#to-label").textContent=points.at(-1)?.date||"";
 }
+const dayPicker=$("#single-day"),singleDayFilter=$("#single-day-filter");
+function updateDayFilter(){singleDayFilter.hidden=$("#days").value!=="1";dayPicker.disabled=singleDayFilter.hidden}
+dayPicker.max=new Date().toISOString().slice(0,10);
+dayPicker.value=dayPicker.max;
+$("#days").addEventListener("change",updateDayFilter);
+updateDayFilter();
 $("#filters").addEventListener("submit",async event=>{
   event.preventDefault();const key=$("#key").value.trim();if(!key)return;
   latestReport=null;$("#export-summary").disabled=true;
   const button=$("#load");button.disabled=true;$("#status").textContent="Loading aggregate analytics…";
   try{
-    const params=new URLSearchParams({days:$("#days").value});if($("#city").value)params.set("city",$("#city").value);
+    const params=new URLSearchParams({days:$("#days").value});if($("#days").value==="1")params.set("day",dayPicker.value);if($("#city").value)params.set("city",$("#city").value);
     const response=await fetch("/api/analytics-report?"+params.toString(),{headers:{"X-QA-Admin-Key":key,"Accept":"application/json"},cache:"no-store"});
     const data=await response.json();if(!response.ok)throw Error(data.error||"Could not load report.");
     draw(data);latestReport=data;$("#export-summary").disabled=false;
-    $("#status").textContent="Showing aggregate events from "+data.since+" ("+data.days+" days). Refreshed "+new Date().toLocaleString("en-PK")+".";
+    $("#status").textContent="Showing aggregate events for "+(data.days===1?data.since:data.since+" ("+data.days+" days)").replace(" for "," from ") + ". Refreshed "+new Date().toLocaleString("en-PK")+".";
   }catch(error){$("#status").textContent="Unable to load: "+(error.message||"Check your key and Cloudflare database.")}finally{button.disabled=false}
 });
 </script></body></html>
