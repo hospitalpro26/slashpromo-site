@@ -243,7 +243,7 @@ $("#filters").addEventListener("submit",async event=>{
     const response=await fetch("/api/analytics-report?"+params.toString(),{headers:{"X-QA-Admin-Key":key,"Accept":"application/json"},cache:"no-store"});
     const data=await response.json();if(!response.ok)throw Error(data.error||"Could not load report.");
     draw(data);latestReport=data;$("#export-summary").disabled=false;
-    $("#status").textContent="Showing aggregate events for "+(data.days===1?data.since:data.since+" ("+data.days+" days)").replace(" for "," from ") + ". Refreshed "+new Date().toLocaleString("en-PK")+".";
+    $("#status").textContent=(data.days===1?"Showing aggregate events for "+data.since+" (UTC). ":"Showing aggregate events from "+data.since+" ("+data.days+" days). ")+"Refreshed "+new Date().toLocaleString("en-PK")+".";
   }catch(error){$("#status").textContent="Unable to load: "+(error.message||"Check your key and Cloudflare database.")}finally{button.disabled=false}
 });
 </script></body></html>
