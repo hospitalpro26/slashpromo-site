@@ -9,6 +9,7 @@
     "/api/qa-admin",
     "/api/analytics",
     "/api/analytics-report",
+    "/api/ai-discovery",
     "/api/enquiries",
     "/api/enquiries-admin",
     "/api/enquiry-replies",
