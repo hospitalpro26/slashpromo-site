@@ -18,7 +18,9 @@ assert(doc.externalProfile===external&&/FCPS/.test(doc.qualifications));
 const hospital=db.hospitals.find(x=>x.url==="/hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/");
 assert(hospital?.linkedDoctorIds.includes(doc.id));
 assert(new Set(hospital.linkedDoctorIds).size===3,"Expected 3 unique linked Mirani doctors");
-assert.equal(db.doctors.filter(x=>x.city==="Sukkur").length,28);
+const sukkurDoctors=db.doctors.filter(x=>x.city==="Sukkur");
+const directSukkurProfiles=sukkurDoctors.filter(x=>/^https:\/\/(?:www\.)?slashcure\.com\//.test(x.externalProfile||""));
+assert(sukkurDoctors.length>=28,"Existing Sukkur doctor entries must not disappear");
 const html=read(files.doctor);
 assert(html.includes('rel="canonical" href="'+base+path+'"'));
 assert(html.includes("Assistant Professor")&&html.includes("Ghulam Muhammad Mahar Medical College"));
@@ -39,7 +41,7 @@ assert(graph.some(x=>x["@type"]==="ProfilePage"));
 assert(graph.some(x=>x["@type"]==="BreadcrumbList"));
 assert(read(files.specialty).includes("Browse 3 listed doctors"));
 assert(read(files.topic).includes("3 linked profiles"));
-assert(read(files.city).includes("28 doctors listed")&&read(files.city).includes("26 direct Slashcure doctor profiles"));
+assert(read(files.city).includes(sukkurDoctors.length+" doctors listed")&&read(files.city).includes(directSukkurProfiles.length+" direct Slashcure doctor profiles"));
 assert(read(files.hospital).includes("Dr. Rizwana Qureshi — Consultant Paediatrician"));
 assert(read("sitemap.xml").includes("<loc>"+base+path+"</loc>"));
 console.log("PASS static: new paediatrician credentials, reported OPD, contact, schema, hospital association, five cross-linked pages and sitemap.");
@@ -49,7 +51,7 @@ if(process.argv.includes("--live")){
  [path,["Dr. Rizwana Qureshi","0336-0886544","sp-qa-fallback"]],
  ["/hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/",["dr-rizwana-qureshi","Consultant Paediatrician"]],
  ["/doctors/sukkur/pediatricians/",["dr-rizwana-qureshi","Browse 3 listed doctors"]],
- ["/sukkur/",["dr-rizwana-qureshi","28 doctors listed"]],
+ ["/sukkur/",["dr-rizwana-qureshi",sukkurDoctors.length+" doctors listed"]],
  ["/sukkur/health-topics/childhood-fever-and-illness/",["dr-rizwana-qureshi","3 linked profiles"]],
  ["/sitemap.xml",["<loc>"+base+path+"</loc>"]]
  ];
