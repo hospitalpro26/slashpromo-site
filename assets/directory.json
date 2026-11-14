@@ -6,6 +6,7 @@
     {
       "id": "ratodero-dr-nadia-khan-arbani",
       "name": "Dr. Nadia Khan Arbani",
+      "gender": "female",
       "city": "Ratodero",
       "cities": ["Ratodero"],
       "specialty": "Consultant Physician & Internal Medicine Specialist",
@@ -1361,6 +1362,7 @@
     {
       "id": "sukkur-dr-salma-lakho",
       "name": "Dr. Salma Lakho",
+      "gender": "female",
       "city": "Sukkur",
       "cities": [
         "Sukkur"
