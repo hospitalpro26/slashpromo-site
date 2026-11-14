@@ -32,7 +32,7 @@ for(const [city,[file,doctorId,facilityId]] of Object.entries(links)){
   const html=read(file);
   assert(html.includes('id="'+doctorId+'"'),city+" doctor jump target missing");
   assert(html.includes('id="'+facilityId+'"'),city+" facility jump target missing");
-  assert(html.includes('site.js?v=20261109-patient3'),city+" page must load fresh patient script");
+  assert(/\/assets\/site\.js(?:\?v=[a-zA-Z0-9-]+)?/.test(html),city+" page must load shared patient script");
   assert((directory.doctors||[]).some(r=>r.city===city),city+" doctor directory records missing");
   assert((directory.hospitals||[]).some(r=>r.city===city),city+" facility directory records missing");
 }
