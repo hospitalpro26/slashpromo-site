@@ -135,7 +135,7 @@
           return {url:parsed.href,label:"View hospital listing on Slashcure ↗",direct:true};
       }
     }catch(_){}
-    if(external)return {url:external,label:r.kind==="hospital"?"Open published Slashcure hospital profile ↗":"Open published Slashcure doctor profile ↗",direct:true};
+    if(external)return {url:external,label:r.kind==="hospital"?"Open published Slashcure hospital profile ↗":"Check OPD & contact on Slashcure ↗",direct:true};
     if(r.kind==="hospital")return {url:"https://slashcure.com/hospitals",label:"Browse hospitals on Slashcure ↗",direct:false};
     const search = new URL("https://slashcure.com/doctors");
     search.searchParams.set("type","all");
