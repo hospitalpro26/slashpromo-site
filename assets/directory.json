@@ -1,8 +1,21 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-12",
+  "updatedAt": "2026-11-14",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
+    {
+      "id": "ratodero-dr-nadia-khan-arbani",
+      "name": "Dr. Nadia Khan Arbani",
+      "city": "Ratodero",
+      "cities": ["Ratodero"],
+      "specialty": "Consultant Physician & Internal Medicine Specialist",
+      "qualifications": "MBBS, FCPS",
+      "hospital": "Barkat Clinic",
+      "url": "/doctors/ratodero/dr-nadia-khan-arbani/",
+      "externalProfile": "https://slashcure.com/consultant-physicians/ratodero/dr-nadia-khan-arbani",
+      "hospitalpro": "",
+      "kind": "doctor"
+    },
     {
       "id": "bahawalpur-dr-hafiz-muhammad-zubair",
       "name": "Dr. Hafiz Muhammad Zubair",
