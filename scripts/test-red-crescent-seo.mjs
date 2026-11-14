@@ -1,0 +1,18 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const html=readFileSync(new URL("../hospitals/sukkur/red-crescent-hospital-sukkur/index.html",import.meta.url),"utf8");
+const directory=JSON.parse(readFileSync(new URL("../assets/directory.json",import.meta.url),"utf8"));
+const record=directory.hospitals.find(h=>h.url==="/hospitals/sukkur/red-crescent-hospital-sukkur/");
+assert(record,"Hospital directory record must exist");
+assert(html.includes("<title>Red Crescent Hospital Sukkur: Doctors, Location &amp; OPD | SlashPromo</title>"));
+assert(html.includes('rel="canonical" href="https://slashpromo.com/hospitals/sukkur/red-crescent-hospital-sukkur/"'));
+assert(html.includes("hospital-wide telephone number has not been independently confirmed"),"Do not invent contact information");
+assert(html.includes("not a complete hospital staff list"),"Do not claim a complete roster");
+assert(html.includes('href="/doctors/sukkur/consultant-physicians/"'));
+assert(html.includes('href="/doctors/sukkur/general-surgeons/"'));
+assert(html.includes("the facility pin has not been independently verified"),"Maps search must not imply a verified listing");
+assert(html.includes('href="/doctors/sukkur/dr-tofique-ahmed-kamboh/"'));
+assert(html.includes('href="/doctors/sukkur/dr-aftab-ahmed-mughal/"'));
+assert.equal(record.linkedDoctorIds.length,2,"Do not invent hospital affiliations");
+for(const match of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g))JSON.parse(match[1]);
+console.log("PASS: Red Crescent SEO metadata, source-aware doctor links, truthful contact and map guidance.");
