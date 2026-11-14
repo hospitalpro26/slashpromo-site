@@ -81,6 +81,7 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <section class="panel"><h2>Most viewed doctor profiles</h2><div class="scroll"><table><thead><tr><th>Doctor page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-doctors"><tr><td colspan="4" class="placeholder">Load analytics to see doctor profile interest.</td></tr></tbody></table></div></section>
 <section class="panel"><h2>Most viewed hospital profiles</h2><div class="scroll"><table><thead><tr><th>Hospital page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-hospitals"><tr><td colspan="4" class="placeholder">Load analytics to see hospital profile interest.</td></tr></tbody></table></div></section>
 </div></section>
+<section class="panel wide"><h2>Health articles bringing visitors to Slashcure</h2><p class="muted">See which symptom and condition guides generate outbound Slashcure clicks. Counts are aggregated by source article; clicks do not confirm appointments.</p><div class="scroll"><table><thead><tr><th>Health article</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-articles"><tr><td colspan="4" class="placeholder">Load analytics to see article referrals.</td></tr></tbody></table></div></section>
 <section class="panel wide"><h2>Saved Questions &amp; Answers</h2><p class="muted">These are permanently stored Q&amp;A records from the database, including pending and answered questions. Only approved answers are shown on public pages. Open Q&amp;A moderation to review, save drafts or publish verified answers.</p><div class="qa-status-strip" id="qa-status-strip"><span>All saved: <strong id="qa-all">—</strong></span><span>Pending: <strong id="qa-pending">—</strong></span><span>Published: <strong id="qa-approved">—</strong></span><span>Rejected: <strong id="qa-rejected">—</strong></span></div><p><a href="/qa-admin/" rel="nofollow">Open private Q&amp;A moderation dashboard ↗</a></p><div class="scroll"><table><thead><tr><th>Submitted / Status</th><th>Saved Question</th><th>Saved Answer</th><th>Source</th></tr></thead><tbody id="qa-records"><tr><td colspan="4" class="placeholder">Load analytics to see the latest saved Q&amp;A records.</td></tr></tbody></table></div><p class="muted">Showing the latest 20 saved submissions. This table does not display private phone numbers, addresses or visitor names. Q&amp;A history is not restricted to the analytics date filter.</p></section>
 <section class="panel wide"><h2>Top pages and what visitors do</h2><div class="scroll"><table><thead><tr><th>Page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">WhatsApp starts</th><th class="num">Q&amp;A</th></tr></thead><tbody id="pages"><tr><td colspan="5" class="placeholder">Load a report to see data.</td></tr></tbody></table></div></section>
 </div>
@@ -186,6 +187,7 @@ function downloadSummary(){
   for(const [label,items] of [["Doctor profile",d.topDoctors||[]],["Hospital profile",d.topHospitals||[]],["Top page",d.pages||[]]]){
     for(const r of items)rows.push([label,r.page_path,r.city,r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
   }
+  for(const r of d.topArticles||[])rows.push(["Health article",r.page_path,r.city,r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
   for(const r of d.cities||[])rows.push(["Page content group",pageCityLabel(r.city),"",r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
   for(const r of d.visitorGeography?.countries||[])rows.push(["Visitor country",geoCountry(r.country),"",r.views||0,"","",""]);
   for(const r of d.visitorGeography?.cities||[])rows.push(["Visitor city",r.city,geoCountry(r.country),r.views||0,"","",""]);
@@ -201,6 +203,7 @@ function draw(data){
   renderSavedQA(data);
   renderProfiles("#top-doctors",data.topDoctors);
   renderProfiles("#top-hospitals",data.topHospitals);
+  renderProfiles("#top-articles",data.topArticles);
   drawGeography(data);
   drawComparison(data);
   const totals=Object.fromEntries(data.totals.map(x=>[x.event,Number(x.total)||0]));
