@@ -5,32 +5,6 @@ import {CITIES,questionPage} from "../functions/_lib/qa.js";
 
 const BASE="https://slashpromo.com";
 const supported=new Set(CITIES);
-/* The 19 pre-existing Lahore doctor pages did not have scoped Q&A before
-   the Lahore city homepage redesign. Keep them on an explicit, fixed
-   migration list until their profile-page batch adds the proper Q&A form.
-   New Lahore doctor pages are NOT auto-exempt. */
-const deferredLahoreDoctorQA=new Set([
-  "/doctors/lahore/dr-aftab-ansar-lodhi/",
-  "/doctors/lahore/dr-ammara-gill/",
-  "/doctors/lahore/dr-aurangzaib-muhyuddin/",
-  "/doctors/lahore/dr-awais-malik/",
-  "/doctors/lahore/dr-ayman/",
-  "/doctors/lahore/dr-aymen-javed/",
-  "/doctors/lahore/dr-kareem-nawaz/",
-  "/doctors/lahore/dr-m-amir-ishaq/",
-  "/doctors/lahore/dr-muhammad-haris-burki/",
-  "/doctors/lahore/dr-muhammad-irfan-shakir/",
-  "/doctors/lahore/dr-muhammad-umair-arshad/",
-  "/doctors/lahore/dr-osman-mohsin/",
-  "/doctors/lahore/dr-rafia-shah/",
-  "/doctors/lahore/dr-sadiya-binish/",
-  "/doctors/lahore/dr-sara-tariq/",
-  "/doctors/lahore/dr-tallal-ejaz/",
-  "/doctors/lahore/dr-tayyaba-tariq/",
-  "/doctors/lahore/dr-tehreem-rauf/",
-  "/doctors/lahore/dr-usman-ahmad-kamboh/"
-]);
-
 const errors=[],warnings=[],seen=new Set(),titles=new Map();
 const xml=readFileSync("sitemap.xml","utf8");
 const urls=[...xml.matchAll(/<loc>(https:\/\/slashpromo\.com\/[^<]*)<\/loc>/g)].map(m=>m[1]);
@@ -74,11 +48,7 @@ function check(url){
     }else{
       scoped++;
       if(!html.includes("/assets/site.js"))errors.push("Local page missing shared script: "+file);
-      if(!html.includes("sp-qa-fallback")){
-        if(city==="lahore"&&deferredLahoreDoctorQA.has(path))
-          warnings.push("Lahore doctor Q&A scheduled for later profile rollout: "+file);
-        else errors.push("Local page missing Q&A fallback: "+file);
-      }
+      if(!html.includes("sp-qa-fallback"))errors.push("Local page missing Q&A fallback: "+file);
       for(const other of CITIES){
         if(other!==city && questionPage(other,path)!==null)
           errors.push("Cross-city Q&A leak: "+path+" accepted as "+other);
