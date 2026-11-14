@@ -67,6 +67,29 @@ const SPECIALTY_RULES=[
 function specialtyRule(question){const q=expand(question);return SPECIALTY_RULES.find(rule=>rule.terms.test(q))||null}
 function specialtyMatches(record,rule){return !rule||record.kind==="doctor"&&rule.test.test(expand(record.specialty||""))}
 function femaleRequested(question){return /\b(female|lady|woman|women)\b/.test(expand(question))}
+/* Conservative directory routing, not diagnosis or personalized triage.
+   Explicitly requested specialties always take precedence over these hints. */
+const SYMPTOM_HINTS=[
+  {terms:["diabetes","diabetic","blood sugar","sugar doctor","sugar problem","شوگر","ذیابیطس"],specialty:"consultant physician",topic:"diabetes or blood-sugar concerns"},
+  {terms:["thyroid","تھائیرائیڈ","تھائرائیڈ"],specialty:"consultant physician",topic:"thyroid concerns"},
+  {terms:["high blood pressure","hypertension","blood pressure","بلڈ پریشر"],specialty:"consultant physician",topic:"blood-pressure concerns"},
+  {terms:["arthritis","joint pain","joint swelling","گٹھیا","جوڑوں کا درد","جوڑوں میں درد"],specialty:"rheumatologist",topic:"joint or arthritis concerns"},
+  {terms:["asthma","wheezing","persistent cough","chest specialist for cough","دمہ","سانس کا ڈاکٹر","سانس کے ڈاکٹر","سینے کی بیماری"],specialty:"pulmonologist",topic:"breathing or respiratory concerns"},
+  {terms:["child fever","baby fever","fever in child","child has fever","بچے کو بخار","بچوں کا بخار"],specialty:"paediatrician",topic:"a child's medical concerns"},
+  {terms:["skin rash","skin problem","acne","جلد کی بیماری","جلد پر دانے"],specialty:"dermatologist",topic:"skin concerns"},
+  {terms:["toothache","tooth pain","dental pain","دانت میں درد","دانت کا درد"],specialty:"dentist",topic:"dental concerns"},
+  {terms:["pregnancy","pregnant","antenatal","حمل","حاملہ"],specialty:"gynecologist",topic:"pregnancy-related care"},
+  {terms:["back pain","lower back pain","sciatica","کمر درد","کمر میں درد"],specialty:"general physician",topic:"back-pain concerns"}
+];
+function symptomHint(question){
+  const q=" "+norm(question)+" ";
+  return SYMPTOM_HINTS.find(h=>h.terms.some(term=>q.includes(" "+norm(term)+" ")))||null;
+}
+function emergencyConcern(question){
+  const q=norm(question);
+  return /\b(suicid|self harm|overdos|chest pain|stroke|unconscious|bleeding heavily|severe breathlessness|severe shortness of breath|cannot breathe|can t breathe|difficulty breathing severely|sudden paralysis|one sided weakness)\b/i.test(q)
+    ||/(سینے میں شدید درد|سانس نہیں آ رہی|سانس نہیں آرہی|بے ہوش|فالج|خودکشی|شدید خون بہنا)/.test(q);
+}
 
 function safeResult(r){return {name:r.name,city:r.city,specialty:r.specialty||r.category||"Healthcare facility",hospital:r.hospital||"",url:r.url,slashcureUrl:r.externalProfile||""}}
 export async function onRequestPost(ctx){
@@ -77,12 +100,14 @@ export async function onRequestPost(ctx){
   let input;try{input=await req.json()}catch{return json({error:"Invalid request."},400)}
   const question=String(input?.question||"").trim();
   if(question.length<5||question.length>240)return json({error:"Enter a search of 5–240 characters."},400);
-  if(/\b(suicid|self.harm|overdos|chest pain|stroke|unconscious|bleeding heavily)\b/i.test(question))
+  if(emergencyConcern(question))
     return json({urgent:true,message:"If this may be an emergency, seek immediate medical care or local emergency assistance. This directory cannot assess emergencies.",results:[]});
   let directory;
   try{const response=await ctx.env.ASSETS.fetch(new Request(new URL("/assets/directory.json",req.url)));if(!response.ok)throw Error();directory=await response.json()}
   catch{return json({error:"Directory is temporarily unavailable."},503)}
   const records=[...(directory.doctors||[]),...(directory.hospitals||[])].filter(r=>r&&r.name&&r.url&&String(r.url).startsWith("/"));
+  const explicitSpecialty=specialtyRule(question);
+  const hint=explicitSpecialty?null:symptomHint(question);
   let interpretation=expand(question),explanation="";
   const cities=[...new Set(records.flatMap(r=>[r.city,...(r.cities||[])].filter(Boolean)))];
   const mentionedCity=text=>{
@@ -91,7 +116,8 @@ export async function onRequestPost(ctx){
   };
   let city=mentionedCity(expand(question));
   let aiUsed=false;
-  if(ctx.env.AI&&ctx.env.AI_DISCOVERY_ENABLED==="true"){
+  // Keep symptom text out of optional generative inference; a reviewed rule handles it locally.
+  if(!hint&&ctx.env.AI&&ctx.env.AI_DISCOVERY_ENABLED==="true"){
     try{
       const response=await ctx.env.AI.run("@cf/meta/llama-3.1-8b-instruct-fast",{messages:[
         {role:"system",content:"You classify healthcare provider directory searches, never diagnose. Respond with ONLY a JSON object with strings query and city. Rewrite the user input as concise English specialist or doctor search keywords, preserving doctor names. City must be one of the provided city names or empty. Do not invent providers or give medical advice. Cities: "+cities.join(", ")},
@@ -104,7 +130,7 @@ export async function onRequestPost(ctx){
     }catch{ /* Deterministic directory lookup remains available when inference fails. */ }
   }
   // Never allow an AI paraphrase to discard an explicit specialty or city.
-  const rule=specialtyRule(question)||specialtyRule(interpretation);
+  const rule=explicitSpecialty||(hint?specialtyRule(hint.specialty):specialtyRule(interpretation));
   // Only explicitly reviewed gender fields can satisfy a gender-specific request.
   const needFemale=femaleRequested(question);
   const originalCity=mentionedCity(expand(question));
@@ -117,5 +143,6 @@ export async function onRequestPost(ctx){
     .sort((a,b)=>b.points-a.points||a.r.name.localeCompare(b.r.name)).slice(0,8);
   const results=ranked.map(x=>safeResult(x.r));
   explanation=results.length?("Found "+results.length+" matching listed provider"+(results.length===1?"":"s")+(place?" in "+city:"")+". Check the linked profile for the latest details."):(needFemale?"No female provider with reviewed gender information matches this specialty and city in the current directory. Try another city or check the full doctor directory.":"No matching directory listing was found for this specialty and city. Try a different city or specialty.");
-  return json({message:explanation,results,aiUsed,note:"Directory discovery only. Not a diagnosis or professional recommendation. Clinic schedules and credentials should be checked with the provider. Results come only from Slashpromo's existing directory."});
+  if(hint)explanation="For "+hint.topic+", "+hint.specialty+" may be a relevant specialty for a non-emergency assessment. This is not a diagnosis or the only appropriate option. "+explanation;
+  return json({message:explanation,results,aiUsed,suggestedSpecialty:hint?.specialty||null,note:"Directory discovery only. Not a diagnosis, triage or professional recommendation. Clinic schedules and credentials should be checked with the provider. Results come only from Slashpromo's existing directory."});
 }
