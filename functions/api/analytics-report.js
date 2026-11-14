@@ -42,7 +42,10 @@ export async function onRequestGet(ctx){
     const profileColumns="page_path,city,SUM(CASE WHEN event='page_view' THEN n ELSE 0 END) AS views,SUM(CASE WHEN event='slashcure_click' THEN n ELSE 0 END) AS referrals,SUM(CASE WHEN event='whatsapp_continue' THEN n ELSE 0 END) AS whatsapp_continues";
     const doctorProfiles=env.QA_DB.prepare("SELECT "+profileColumns+" FROM site_analytics_daily "+where+" AND page_path GLOB '/doctors/*/dr-*' GROUP BY page_path,city ORDER BY views DESC,referrals DESC LIMIT 25").bind(...binds);
     const hospitalProfiles=env.QA_DB.prepare("SELECT "+profileColumns+" FROM site_analytics_daily "+where+" AND page_path GLOB '/hospitals/*/*/' GROUP BY page_path,city ORDER BY views DESC,referrals DESC LIMIT 25").bind(...binds);
-    const [totals,daily,pages,cities,geoCountries,geoCities,geoTotals,topDoctors,topHospitals]=await env.QA_DB.batch([...statements,doctorProfiles,hospitalProfiles]);
+    /* Article referral counts reuse the existing anonymous aggregate page-path events.
+       No visitor identifiers, clinical search terms or outbound destination URLs are stored. */
+    const healthArticles=env.QA_DB.prepare("SELECT "+profileColumns+" FROM site_analytics_daily "+where+" AND page_path LIKE '%/health-topics/%' AND page_path NOT LIKE '%/health-topics/' GROUP BY page_path,city ORDER BY referrals DESC,views DESC LIMIT 30").bind(...binds);
+    const [totals,daily,pages,cities,geoCountries,geoCities,geoTotals,topDoctors,topHospitals,topArticles]=await env.QA_DB.batch([...statements,doctorProfiles,hospitalProfiles,healthArticles]);
     await ensureDb(env);
     const qaCity=city&&city!=="other"?city:"";
     const qaArgs=qaCity?[qaCity]:[];
@@ -55,7 +58,7 @@ export async function onRequestGet(ctx){
     }
     const qaRecent=await env.QA_DB.prepare("SELECT id,city,COALESCE(NULLIF(page_path,''),'/'||city||'/') AS page_path,category,question,answer,status,created_at,answered_at FROM questions"+qaFilter+" ORDER BY created_at DESC LIMIT 20").bind(...qaArgs).all();
     return json({since,days,city:city||"all",generatedAt:new Date().toISOString(),totals:totals.results||[],daily:daily.results||[],pages:pages.results||[],cities:cities.results||[],
-      topDoctors:topDoctors.results||[],topHospitals:topHospitals.results||[],
+      topDoctors:topDoctors.results||[],topHospitals:topHospitals.results||[],topArticles:topArticles.results||[],
       visitorGeography:{
         source:"Cloudflare approximate IP geolocation; page views only, not unique people",
         days,
