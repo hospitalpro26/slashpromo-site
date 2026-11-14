@@ -1,6 +1,17 @@
 # SlashPromo — Healthcare Directory in Pakistan
 
 ## Ratodero, Sindh
+### Phase A: health guides and nearby cities
+- [nearby healthcare](https://slashpromo.com/ratodero/nearby-healthcare/)
+- [larkana](https://slashpromo.com/larkana/)
+- [hepatitis b c](https://slashpromo.com/ratodero/health-topics/hepatitis-b-c/)
+- [chronic kidney disease](https://slashpromo.com/ratodero/health-topics/chronic-kidney-disease/)
+- [asthma breathing](https://slashpromo.com/ratodero/health-topics/asthma-breathing/)
+- [persistent fever](https://slashpromo.com/ratodero/health-topics/persistent-fever/)
+- [anemia weakness](https://slashpromo.com/ratodero/health-topics/anemia-weakness/)
+- [gastritis abdominal pain](https://slashpromo.com/ratodero/health-topics/gastritis-abdominal-pain/)
+- [heart failure symptoms](https://slashpromo.com/ratodero/health-topics/heart-failure-symptoms/)
+- [diabetes complications](https://slashpromo.com/ratodero/health-topics/diabetes-complications/)
 - [Find Doctors in Ratodero](https://slashpromo.com/ratodero/)
 - [Dr. Nadia Khan Arbani — Consultant Physician](https://slashpromo.com/doctors/ratodero/dr-nadia-khan-arbani/) — source: https://slashcure.com/consultant-physicians/ratodero/dr-nadia-khan-arbani
 - [Consultant Physicians in Ratodero](https://slashpromo.com/ratodero/consultant-physicians/)
