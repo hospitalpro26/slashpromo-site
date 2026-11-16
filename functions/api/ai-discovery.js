@@ -22,7 +22,16 @@ const aliases={
   "سکھر":"sukkur","رتوڈیرو":"ratodero","لاڑکانہ":"larkana",
   "کراچی":"karachi","لاہور":"lahore","خیرپور":"khairpur",
   "شکارپور":"shikarpur","گھوٹکی":"ghotki","حیدرآباد":"hyderabad",
-  "پنو عاقل":"pano aqil","پنوعاقل":"pano aqil"
+  "پنو عاقل":"pano aqil","پنوعاقل":"pano aqil",
+  "sugar ka doctor":"consultant physician","sugar doctor":"consultant physician",
+  "dil ka doctor":"cardiologist","dil ke doctor":"cardiologist",
+  "bachon ka doctor":"paediatrician","bachay ka doctor":"paediatrician",
+  "lady physician":"female physician",
+  "jild ka doctor":"dermatologist","skin ka doctor":"dermatologist",
+  "saans ka doctor":"pulmonologist","seenay ka doctor":"pulmonologist",
+  "joron ka doctor":"rheumatologist","jodon ka doctor":"rheumatologist",
+  "haddiyon ka doctor":"orthopaedic","haddi ka doctor":"orthopaedic",
+  "aurton ka doctor":"gynecologist","gynae doctor":"gynecologist"
 };
 function expand(text){
   let value=" "+norm(text)+" ";
@@ -115,6 +124,10 @@ export async function onRequestPost(ctx){
     return cities.find(c=>normalized.includes(" "+norm(c)+" "))||"";
   };
   let city=mentionedCity(expand(question));
+  // Hospital names are resolved from actual published associations, not AI guesses.
+  const originalText=norm(question);
+  const hospitals=[...new Set(records.filter(r=>r.kind==="doctor"&&r.hospital).map(r=>norm(r.hospital)))].filter(h=>h.length>5);
+  const namedHospital=hospitals.sort((a,b)=>b.length-a.length).find(h=>(" "+originalText+" ").includes(" "+h+" "))||"";
   let aiUsed=false;
   // Keep symptom text out of optional generative inference; a reviewed rule handles it locally.
   if(!hint&&ctx.env.AI&&ctx.env.AI_DISCOVERY_ENABLED==="true"){
@@ -139,7 +152,7 @@ export async function onRequestPost(ctx){
   const searchTerms=(" "+query+" ").replace(" "+place+" "," ").trim().split(" ").filter(t=>t.length>2&&!STOP.has(t));
   const cityOnly=Boolean(place)&&searchTerms.length===0;
   const ranked=records.map(r=>({r,points:score(r,query,place),cityMatch:!place||norm([r.city,...(r.cities||[])].join(" ")).includes(place)}))
-    .filter(x=>(Boolean(rule)||cityOnly||x.points>(place?12:0))&&x.cityMatch&&specialtyMatches(x.r,rule)&&(!needFemale||x.r.gender==="female"))
+    .filter(x=>(Boolean(rule)||cityOnly||x.points>(place?12:0))&&x.cityMatch&&specialtyMatches(x.r,rule)&&(!namedHospital||x.r.kind==="doctor"&&norm(x.r.hospital).includes(namedHospital))&&(!needFemale||x.r.gender==="female"))
     .sort((a,b)=>b.points-a.points||a.r.name.localeCompare(b.r.name)).slice(0,8);
   const results=ranked.map(x=>safeResult(x.r));
   explanation=results.length?("Found "+results.length+" matching listed provider"+(results.length===1?"":"s")+(place?" in "+city:"")+". Check the linked profile for the latest details."):(needFemale?"No female provider with reviewed gender information matches this specialty and city in the current directory. Try another city or check the full doctor directory.":"No matching directory listing was found for this specialty and city. Try a different city or specialty.");
