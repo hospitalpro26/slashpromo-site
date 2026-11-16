@@ -46,6 +46,13 @@ const aiChanged=await search("consultant physician in Ratodero",{env:{
 }});
 assert(aiChanged.results.every(r=>r.city==="Ratodero"),"AI must not override user's city");
 assert(aiChanged.results.every(r=>/consultant physician|internal medicine/i.test(r.specialty)),"AI must not override explicit physician specialty");
+const romanUrdu=await search("dil ka doctor Sukkur");
+assert(romanUrdu.results.length>0&&romanUrdu.results.every(r=>/cardiolog/i.test(r.specialty)),"Roman Urdu heart-doctor query must show cardiologists only");
+const romanChild=await search("bachon ka doctor Sukkur");
+assert(romanChild.results.length>0&&romanChild.results.every(r=>/paediatric|pediatric/i.test(r.specialty)),"Roman Urdu child-doctor query must show paediatricians only");
+const namedHospital=await search("general surgeon at Hira Medical Centre in Sukkur");
+assert(namedHospital.results.length>0,"Known Hira surgical listing should be found");
+assert(namedHospital.results.every(r=>/hira medical centre/i.test(r.hospital)&&/surgeon|surgery/i.test(r.specialty)),"Hospital and specialty must both be enforced");
 const emergency=await search("chest pain need doctor");
 assert.equal(emergency.urgent,true,"Emergency warning must remain functional");
 console.log("PASS: physicians vs surgeons, Urdu aliases, female verified listings, exact cities, AI override safety, emergency handling.");
