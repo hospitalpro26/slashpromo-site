@@ -1,0 +1,73 @@
+name: Manual SlashPromo mobile Lighthouse audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sukkur_mobile:
+    name: Audit Sukkur mobile performance
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Configure Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Run mobile Lighthouse on the live Sukkur page
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chromium || true)"
+          if [ -z "$CHROME_PATH" ]; then
+            echo "Chrome not installed on runner."
+            exit 1
+          fi
+          npx --yes lighthouse@13.6.0 "https://slashpromo.com/sukkur/" \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+            --only-categories=performance --quiet \
+            --output=json --output-path="$RUNNER_TEMP/sukkur-mobile-lighthouse.json"
+      - name: Summarize mobile lab metrics
+        if: always()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const path = process.env.RUNNER_TEMP + "/sukkur-mobile-lighthouse.json";
+          if (!fs.existsSync(path)) {
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, "## Sukkur mobile Lighthouse\n\nAudit report unavailable; see job logs.\n");
+            process.exit(1);
+          }
+          const data = JSON.parse(fs.readFileSync(path, "utf8"));
+          const score = Math.round((data.categories?.performance?.score || 0) * 100);
+          const rows = [
+            ["Mobile lab Performance score", score + "/100"],
+            ["LCP", data.audits?.["largest-contentful-paint"]?.displayValue || "N/A"],
+            ["CLS", data.audits?.["cumulative-layout-shift"]?.displayValue || "N/A"],
+            ["TBT (INP proxy, not INP)", data.audits?.["total-blocking-time"]?.displayValue || "N/A"],
+            ["FCP", data.audits?.["first-contentful-paint"]?.displayValue || "N/A"],
+            ["Speed Index", data.audits?.["speed-index"]?.displayValue || "N/A"]
+          ];
+          const lines = [
+            "## SlashPromo Sukkur mobile Lighthouse (lab, single run)",
+            "",
+            "This is a simulated mobile lab test. It is **not** field Core Web Vitals or a measured INP.",
+            "",
+            "| Metric | Value |", "|---|---|",
+            ...rows.map(([name, value]) => "| " + name + " | " + value + " |"),
+            "",
+            "Full JSON is attached as an Actions artifact."
+          ];
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n") + "\n");
+          process.stdout.write(lines.join("\n") + "\n");
+          NODE
+      - name: Preserve raw Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: slashpromo-sukkur-mobile-lighthouse
+          path: ${{ runner.temp }}/sukkur-mobile-lighthouse.json
+          if-no-files-found: warn
+          retention-days: 14
