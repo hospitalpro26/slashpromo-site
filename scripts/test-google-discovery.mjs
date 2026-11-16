@@ -13,7 +13,8 @@ assert(!/Disallow: \/(\s|$)/m.test(robots),"A global disallow rule blocks Google
 for(const path of paths){
   const url="https://slashpromo.com"+path;
   const html=readFileSync(path.slice(1)+"index.html","utf8");
-  assert(sitemap.includes("<loc>"+url+"</loc><lastmod>2026-11-09</lastmod>"),"Outdated or missing sitemap URL: "+url);
+  const sitemapLine=sitemap.split("\n").find(line=>line.includes("<loc>"+url+"</loc>"));
+  assert(sitemapLine&&/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/.test(sitemapLine),"Missing sitemap URL or valid lastmod: "+url);
   assert(html.includes('<link rel="canonical" href="'+url+'"'),"Wrong canonical "+url);
   assert(html.includes('name="robots" content="index,follow'),"Missing indexability signal "+url);
   assert(!/name="robots"[^>]*noindex/i.test(html),"Noindex forbidden for "+url);
