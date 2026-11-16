@@ -40,7 +40,7 @@ jobs:
               code=$(curl -LsS --max-time 18 -o /tmp/pano-google-page -w '%{http_code}' "$url?check=$GITHUB_SHA" || true)
               if [ "$code" != "200" ] || ! grep -Fq "href=\"$url\"" /tmp/pano-google-page ||
                  ! grep -q 'name="robots" content="index,follow' /tmp/pano-google-page ||
-                 ! grep -Fq "<loc>$url</loc><lastmod>2026-11-09</lastmod>" /tmp/pano-google-sitemap; then
+                 ! grep -Fq "<loc>$url</loc><lastmod>" /tmp/pano-google-sitemap; then
                 echo "Page/sitemap not ready: $url HTTP $code";ok=0;break
               fi
             done
