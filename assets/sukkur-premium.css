@@ -300,3 +300,22 @@ body.sp-sukkur-premium{
     transition:none;
   }
 }
+
+
+/* Mobile rendering: defer layout/paint work for long editorial spotlights below
+   the initial Sukkur doctor-finder section. Content remains in the DOM and
+   accessible; browsers without support continue to render normally. */
+@supports (content-visibility: auto) {
+  @media (max-width: 720px) {
+    body.sp-sukkur-premium main > section.sp-sukkur-gastro-spotlight,
+    body.sp-sukkur-premium main > section.sp-sukkur-tb-spotlight,
+    body.sp-sukkur-premium main > section.sp-sukkur-surgery-spotlight,
+    body.sp-sukkur-premium main > section.sp-sukkur-mental-health-spotlight,
+    body.sp-sukkur-premium main > section.sp-sukkur-lung-spotlight,
+    body.sp-sukkur-premium main > section.sp-sukkur-physio-spotlight,
+    body.sp-sukkur-premium main > section.sp-sukkur-rheum-spotlight {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 640px;
+    }
+  }
+}
