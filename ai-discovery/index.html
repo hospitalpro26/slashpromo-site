@@ -22,15 +22,18 @@
 <button type="submit" id="search">Find providers</button></form>
 <div class="ai-samples"><p class="ai-note">Try an English or Urdu search:</p><button type="button" data-example="Who treats arthritis in Sukkur?">Arthritis in Sukkur</button><button type="button" data-example="Diabetes doctor in Ratodero">Diabetes in Ratodero</button><button type="button" data-example="سانس کے ڈاکٹر گھوٹکی میں">سانس کے ڈاکٹر گھوٹکی میں</button><button type="button" data-example="بچوں کا ڈاکٹر شکارپور میں">بچوں کا ڈاکٹر شکارپور میں</button><button type="button" data-example="female consultant physician in Ratodero">Female physician in Ratodero</button></div>
 <p class="ai-note">Use only general search terms. Do not enter detailed symptoms, patient records, phone numbers or other personal health information. This tool is not a diagnosis or medical triage service. Severe or emergency symptoms require urgent medical care.</p></section>
-<p id="status" role="status" aria-live="polite"></p><div id="results" class="ai-results" aria-live="polite"></div>
+<p id="status" role="status" aria-live="polite"></p><div id="suggestions" class="ai-samples" aria-live="polite"></div><div id="results" class="ai-results" aria-live="polite"></div>
 <p class="ai-note">The finder separates specialties: a surgeon is not treated as a consultant physician. Gender-specific results require reviewed directory information. Provider availability and schedules can change. Verify details through the linked provider profile. AI interpretation is used only when enabled by the site administrator.</p></main>
 <script>
-const form=document.querySelector("#finder"),input=document.querySelector("#question"),status=document.querySelector("#status"),results=document.querySelector("#results"),button=document.querySelector("#search");
+const form=document.querySelector("#finder"),input=document.querySelector("#question"),status=document.querySelector("#status"),suggestions=document.querySelector("#suggestions"),results=document.querySelector("#results"),button=document.querySelector("#search");
 document.querySelectorAll("[data-example]").forEach(b=>b.addEventListener("click",()=>{input.value=b.dataset.example;input.focus()}));
-form.addEventListener("submit",async e=>{e.preventDefault();button.disabled=true;status.textContent="Searching verified directory listings…";results.replaceChildren();
+form.addEventListener("submit",async e=>{e.preventDefault();button.disabled=true;status.textContent="Searching published directory listings…";results.replaceChildren();suggestions.replaceChildren();
 try{const response=await fetch("/api/ai-discovery",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({question:input.value}),cache:"no-store"});
 const data=await response.json();if(!response.ok)throw Error(data.error||"Search unavailable");
-status.textContent=data.message||"";for(const item of data.results||[]){const card=document.createElement("article");card.className="ai-result";
+status.textContent=data.message||"";
+if(data.suggestedCities?.length){const hint=document.createElement("p");hint.className="ai-note";hint.textContent=data.clarification?"Browse one city below, or refine your search above:":"Browse listings in these other cities (specialty filters are not carried over):";suggestions.append(hint);
+for(const city of data.suggestedCities){const b=document.createElement("button");b.type="button";b.textContent="Browse "+city;b.addEventListener("click",()=>{input.value="Find doctors in "+city;form.requestSubmit()});suggestions.append(b)}}
+for(const item of data.results||[]){const card=document.createElement("article");card.className="ai-result";
 const heading=document.createElement("h3");heading.textContent=item.name;card.append(heading);
 const info=document.createElement("p");info.textContent=[item.specialty,item.city,item.hospital].filter(Boolean).join(" · ");card.append(info);
 for(const [label,url] of [["View SlashPromo profile",item.url],["View Slashcure profile",item.slashcureUrl]]){if(!url)continue;const link=document.createElement("a");link.textContent=label;link.href=url;link.rel="noopener noreferrer";card.append(link)}results.append(card)}
