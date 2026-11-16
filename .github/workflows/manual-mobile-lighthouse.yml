@@ -25,40 +25,63 @@ jobs:
             echo "Chrome not installed on runner."
             exit 1
           fi
-          npx --yes lighthouse@13.6.0 "https://slashpromo.com/sukkur/" \
-            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
-            --only-categories=performance --quiet \
-            --output=json --output-path="$RUNNER_TEMP/sukkur-mobile-lighthouse.json"
+          for trial in 1 2 3; do
+            echo "Starting mobile lab trial $trial of 3"
+            npx --yes lighthouse@13.6.0 "https://slashpromo.com/sukkur/" \
+              --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+              --only-categories=performance --quiet \
+              --output=json --output-path="$RUNNER_TEMP/sukkur-mobile-lighthouse-$trial.json"
+          done
       - name: Summarize mobile lab metrics
         if: always()
         shell: bash
         run: |
           node - <<'NODE'
           const fs = require("node:fs");
-          const path = process.env.RUNNER_TEMP + "/sukkur-mobile-lighthouse.json";
-          if (!fs.existsSync(path)) {
-            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, "## Sukkur mobile Lighthouse\n\nAudit report unavailable; see job logs.\n");
-            process.exit(1);
-          }
-          const data = JSON.parse(fs.readFileSync(path, "utf8"));
-          const score = Math.round((data.categories?.performance?.score || 0) * 100);
-          const rows = [
-            ["Mobile lab Performance score", score + "/100"],
-            ["LCP", data.audits?.["largest-contentful-paint"]?.displayValue || "N/A"],
-            ["CLS", data.audits?.["cumulative-layout-shift"]?.displayValue || "N/A"],
-            ["TBT (INP proxy, not INP)", data.audits?.["total-blocking-time"]?.displayValue || "N/A"],
-            ["FCP", data.audits?.["first-contentful-paint"]?.displayValue || "N/A"],
-            ["Speed Index", data.audits?.["speed-index"]?.displayValue || "N/A"]
-          ];
+          const root = process.env.RUNNER_TEMP;
+          const reports = [1, 2, 3].map(n => {
+            const file = root + "/sukkur-mobile-lighthouse-" + n + ".json";
+            if (!fs.existsSync(file)) throw new Error("Missing trial report: " + file);
+            return JSON.parse(fs.readFileSync(file, "utf8"));
+          });
+          const value = (report, id) => report.audits?.[id]?.numericValue ?? null;
+          const score = report => Math.round((report.categories?.performance?.score || 0) * 100);
+          const median = values => [...values].sort((a, b) => a - b)[1];
+          const scores = reports.map(score);
+          const blocking = reports.map(r => value(r, "total-blocking-time") ?? 0);
+          const worstIndex = blocking.indexOf(Math.max(...blocking));
+          const rows = reports.map((report, index) => [
+            index + 1,
+            score(report) + "/100",
+            report.audits?.["largest-contentful-paint"]?.displayValue || "N/A",
+            report.audits?.["cumulative-layout-shift"]?.displayValue || "N/A",
+            report.audits?.["total-blocking-time"]?.displayValue || "N/A",
+            report.audits?.["speed-index"]?.displayValue || "N/A"
+          ]);
+          const bootup = reports[worstIndex].audits?.["bootup-time"]?.details?.items || [];
+          const slowScripts = [...bootup]
+            .sort((a, b) => (b.total || 0) - (a.total || 0))
+            .slice(0, 5)
+            .map(item => "| " + String(item.url || "Unknown").replace(/\|/g, "") + " | " + Math.round(item.total || 0) + " ms |");
           const lines = [
-            "## SlashPromo Sukkur mobile Lighthouse (lab, single run)",
+            "## SlashPromo Sukkur: 3 mobile Lighthouse lab runs",
             "",
-            "This is a simulated mobile lab test. It is **not** field Core Web Vitals or a measured INP.",
+            "**Median performance score: " + median(scores) + "/100** (range: " + Math.min(...scores) + "–" + Math.max(...scores) + ").",
             "",
-            "| Metric | Value |", "|---|---|",
-            ...rows.map(([name, value]) => "| " + name + " | " + value + " |"),
+            "Lab results are not field Core Web Vitals. TBT is not measured INP.",
             "",
-            "Full JSON is attached as an Actions artifact."
+            "| Run | Performance | LCP | CLS | TBT | Speed Index |",
+            "|---|---:|---:|---:|---:|---:|",
+            ...rows.map(row => "| " + row.join(" | ") + " |"),
+            "",
+            "Worst TBT trial: " + (worstIndex + 1) + " (" + Math.round(blocking[worstIndex]) + " ms).",
+            "",
+            "### Top script evaluation costs in the worst-TBT trial",
+            "| Script URL | Main-thread processing |",
+            "|---|---:|",
+            ...(slowScripts.length ? slowScripts : ["| Not reported | — |"]),
+            "",
+            "All three raw reports are attached as artifacts."
           ];
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n") + "\n");
           process.stdout.write(lines.join("\n") + "\n");
@@ -67,7 +90,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: slashpromo-sukkur-mobile-lighthouse
-          path: ${{ runner.temp }}/sukkur-mobile-lighthouse.json
+          name: slashpromo-sukkur-mobile-lighthouse-3run
+          path: ${{ runner.temp }}/sukkur-mobile-lighthouse-*.json
           if-no-files-found: warn
           retention-days: 14
