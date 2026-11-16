@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {onRequestGet,onRequestPost} from "../functions/api/ai-discovery.js";
+
+const directory=JSON.parse(readFileSync(new URL("../assets/directory.json",import.meta.url)));
+const schedules=JSON.parse(readFileSync(new URL("../assets/opd-schedules.json",import.meta.url)));
+const env={ASSETS:{fetch:async request=>new Response(JSON.stringify(request.url.endsWith("opd-schedules.json")?schedules:directory),{status:200})}};
+const now=new Date("2026-11-16T09:00:00Z");
+const question="Who treats arthritis in Sukkur?";
+const postRequest=new Request("https://slashpromo.com/api/ai-discovery",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({question})});
+const getRequest=new Request("https://slashpromo.com/api/ai-discovery?q="+encodeURIComponent(question));
+const post=await (await onRequestPost({request:postRequest,env,now})).json();
+const get=await (await onRequestGet({request:getRequest,env,now})).json();
+assert.deepEqual(get.results,post.results,"GET fallback must preserve the same medical-specialty logic");
+assert(get.results.some(r=>/rheumatolog/i.test(r.specialty)),"Rheumatology results must remain discoverable");
+const today=await (await onRequestGet({request:new Request("https://slashpromo.com/api/ai-discovery?q=consultant%20physician%20in%20Ratodero&today=1"),env,now})).json();
+assert(today.results.some(r=>r.name==="Dr. Nadia Khan Arbani"&&r.scheduledToday),"GET must honor today-only scheduling");
+const invalid=await onRequestGet({request:new Request("https://slashpromo.com/api/ai-discovery?q=x"),env,now});
+assert.equal(invalid.status,400,"GET must retain input validation");
+console.log("PASS: mobile GET fallback preserves filters, OPD scheduling, and validation.");

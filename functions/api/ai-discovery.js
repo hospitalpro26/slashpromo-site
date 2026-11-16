@@ -205,3 +205,14 @@ export async function onRequestPost(ctx){
   if(hint)explanation="For "+hint.topic+", "+hint.specialty+" may be a relevant specialty for a non-emergency assessment. This is not a diagnosis or the only appropriate option. "+explanation;
   return json({message:explanation,results,aiUsed,suggestedSpecialty:hint?.specialty||null,suggestedCities,note:"Directory discovery only. Not a diagnosis, triage or professional recommendation. Clinic schedules and credentials should be checked with the provider. Results come only from Slashpromo's existing directory."});
 }
+
+// Read-only fallback for browsers or mobile networks that cannot complete a
+// JSON POST. Both methods use the same validated directory search logic.
+export async function onRequestGet(ctx){
+  const url=new URL(ctx.request.url);
+  const request=new Request(url.origin+url.pathname,{
+    method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({question:url.searchParams.get("q")||"",todayOnly:url.searchParams.get("today")==="1"})
+  });
+  return onRequestPost({...ctx,request});
+}
