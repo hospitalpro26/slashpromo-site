@@ -19,6 +19,7 @@
 <p>Search by doctor, specialty, city, or a brief general health concern in English or Urdu. The finder may suggest a relevant specialty, then links to published SlashPromo and Slashcure profiles. It cannot determine which clinician you personally need.</p>
 <section class="ai-card"><form id="finder"><label for="question">What kind of healthcare provider are you looking for?</label>
 <textarea id="question" maxlength="240" required minlength="5" placeholder="e.g. Who treats arthritis in Sukkur?"></textarea>
+<label style="margin-top:12px;font-weight:500"><input type="checkbox" id="today-only"> Show only doctors with a recently checked published OPD schedule for today (limited pilot)</label>
 <button type="submit" id="search">Find providers</button></form>
 <div class="ai-samples"><p class="ai-note">Try an English or Urdu search:</p><button type="button" data-example="Who treats arthritis in Sukkur?">Arthritis in Sukkur</button><button type="button" data-example="Diabetes doctor in Ratodero">Diabetes in Ratodero</button><button type="button" data-example="سانس کے ڈاکٹر گھوٹکی میں">سانس کے ڈاکٹر گھوٹکی میں</button><button type="button" data-example="بچوں کا ڈاکٹر شکارپور میں">بچوں کا ڈاکٹر شکارپور میں</button><button type="button" data-example="female consultant physician in Ratodero">Female physician in Ratodero</button></div>
 <p class="ai-note">Use only general search terms. Do not enter detailed symptoms, patient records, phone numbers or other personal health information. This tool is not a diagnosis or medical triage service. Severe or emergency symptoms require urgent medical care.</p></section>
@@ -28,7 +29,7 @@
 const form=document.querySelector("#finder"),input=document.querySelector("#question"),status=document.querySelector("#status"),suggestions=document.querySelector("#suggestions"),results=document.querySelector("#results"),button=document.querySelector("#search");
 document.querySelectorAll("[data-example]").forEach(b=>b.addEventListener("click",()=>{input.value=b.dataset.example;input.focus()}));
 form.addEventListener("submit",async e=>{e.preventDefault();button.disabled=true;status.textContent="Searching published directory listings…";results.replaceChildren();suggestions.replaceChildren();
-try{const response=await fetch("/api/ai-discovery",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({question:input.value}),cache:"no-store"});
+try{const response=await fetch("/api/ai-discovery",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({question:input.value,todayOnly:document.querySelector("#today-only").checked}),cache:"no-store"});
 const data=await response.json();if(!response.ok)throw Error(data.error||"Search unavailable");
 status.textContent=data.message||"";
 if(data.suggestedCities?.length){const hint=document.createElement("p");hint.className="ai-note";hint.textContent=data.clarification?"Browse one city below, or refine your search above:":"Browse listings in these other cities (specialty filters are not carried over):";suggestions.append(hint);
@@ -36,6 +37,7 @@ for(const city of data.suggestedCities){const b=document.createElement("button")
 for(const item of data.results||[]){const card=document.createElement("article");card.className="ai-result";
 const heading=document.createElement("h3");heading.textContent=item.name;card.append(heading);
 const info=document.createElement("p");info.textContent=[item.specialty,item.city,item.hospital].filter(Boolean).join(" · ");card.append(info);
-for(const [label,url] of [["View SlashPromo profile",item.url],["View Slashcure profile",item.slashcureUrl]]){if(!url)continue;const link=document.createElement("a");link.textContent=label;link.href=url;link.rel="noopener noreferrer";card.append(link)}results.append(card)}
+if(item.scheduledToday){const note=document.createElement("p");note.className="ai-note";note.textContent="Scheduled today according to a published timetable (checked "+item.scheduledToday.checkedAt+"). "+item.scheduledToday.hours+". Attendance is not confirmed.";card.append(note)}
+for(const [label,url] of [["View SlashPromo profile",item.url],["Check today's OPD on Slashcure",item.opdUrl],["View Slashcure profile",!item.opdUrl?item.slashcureUrl:""]]){if(!url)continue;const link=document.createElement("a");link.textContent=label;link.href=url;link.rel="noopener noreferrer";card.append(link)}results.append(card)}
 }catch(error){status.textContent="Unable to search: "+error.message}finally{button.disabled=false}});
 </script></body></html>
