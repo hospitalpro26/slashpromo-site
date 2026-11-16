@@ -31,7 +31,13 @@ const aliases={
   "saans ka doctor":"pulmonologist","seenay ka doctor":"pulmonologist",
   "joron ka doctor":"rheumatologist","jodon ka doctor":"rheumatologist",
   "haddiyon ka doctor":"orthopaedic","haddi ka doctor":"orthopaedic",
-  "aurton ka doctor":"gynecologist","gynae doctor":"gynecologist"
+  "aurton ka doctor":"gynecologist","gynae doctor":"gynecologist",
+  "dil ka specialist":"cardiologist","heart ka doctor":"cardiologist",
+  "phephron ka doctor":"pulmonologist","sans ka doctor":"pulmonologist",
+  "jodon ka specialist":"rheumatologist","sugar specialist":"consultant physician",
+  "pet ka doctor":"gastroenterologist","maiday ka doctor":"gastroenterologist",
+  "bachon ke doctor":"paediatrician","bache ka doctor":"paediatrician",
+  "khawateen ka doctor":"gynecologist","ladies doctor":"female physician"
 };
 function expand(text){
   let value=" "+norm(text)+" ";
@@ -74,6 +80,10 @@ const SPECIALTY_RULES=[
   {terms:/\b(dentist|dental)\b/,test:/\b(dentist|dental|orthodont)\w*/}
 ];
 function specialtyRule(question){const q=expand(question);return SPECIALTY_RULES.find(rule=>rule.terms.test(q))||null}
+function requestedSpecialties(question){
+  const q=expand(question);
+  return SPECIALTY_RULES.filter(rule=>rule.terms.test(q));
+}
 function specialtyMatches(record,rule){return !rule||record.kind==="doctor"&&rule.test.test(expand(record.specialty||""))}
 function femaleRequested(question){return /\b(female|lady|woman|women)\b/.test(expand(question))}
 /* Conservative directory routing, not diagnosis or personalized triage.
@@ -118,14 +128,25 @@ export async function onRequestPost(ctx){
   const explicitSpecialty=specialtyRule(question);
   const hint=explicitSpecialty?null:symptomHint(question);
   let interpretation=expand(question),explanation="";
+  const originalText=norm(question);
+  const areas=[...new Set(records.filter(r=>r.kind==="doctor"&&r.area).map(r=>norm(r.area)))].filter(a=>a.length>3);
+  const namedArea=areas.sort((a,b)=>b.length-a.length).find(a=>(" "+originalText+" ").includes(" "+a+" "))||"";
+  // An area named Shikarpur Road must not be confused with Shikarpur city.
+  const citySearchText=namedArea?(" "+expand(question)+" ").replace(" "+namedArea+" "," "):expand(question);
   const cities=[...new Set(records.flatMap(r=>[r.city,...(r.cities||[])].filter(Boolean)))];
   const mentionedCity=text=>{
     const normalized=" "+norm(text)+" ";
     return cities.find(c=>normalized.includes(" "+norm(c)+" "))||"";
   };
-  let city=mentionedCity(expand(question));
+  let city=mentionedCity(citySearchText);
+  const requestedCities=cities.filter(c=>(" "+citySearchText+" ").includes(" "+norm(c)+" "));
+  const requestedRules=requestedSpecialties(question);
+  // Never silently choose just one specialty or city in an ambiguous search.
+  if(requestedCities.length>1||requestedRules.length>1&&/\b(or|ya|یا)\b/u.test(norm(question))){
+    return json({message:"Please search for one city and one specialty at a time.",results:[],clarification:true,
+      suggestedCities:requestedCities});
+  }
   // Hospital names are resolved from actual published associations, not AI guesses.
-  const originalText=norm(question);
   const hospitals=[...new Set(records.filter(r=>r.kind==="doctor"&&r.hospital).map(r=>norm(r.hospital)))].filter(h=>h.length>5);
   const namedHospital=hospitals.sort((a,b)=>b.length-a.length).find(h=>(" "+originalText+" ").includes(" "+h+" "))||"";
   let aiUsed=false;
@@ -146,16 +167,19 @@ export async function onRequestPost(ctx){
   const rule=explicitSpecialty||(hint?specialtyRule(hint.specialty):specialtyRule(interpretation));
   // Only explicitly reviewed gender fields can satisfy a gender-specific request.
   const needFemale=femaleRequested(question);
-  const originalCity=mentionedCity(expand(question));
+  const originalCity=mentionedCity(citySearchText);
   if(originalCity)city=originalCity;
   const place=norm(city),query=norm(interpretation);
+  // Clinic areas are hard filters only when an explicitly named, published area
+  // appears in the user's original query. Missing areas are never inferred.
   const searchTerms=(" "+query+" ").replace(" "+place+" "," ").trim().split(" ").filter(t=>t.length>2&&!STOP.has(t));
   const cityOnly=Boolean(place)&&searchTerms.length===0;
   const ranked=records.map(r=>({r,points:score(r,query,place),cityMatch:!place||norm([r.city,...(r.cities||[])].join(" ")).includes(place)}))
-    .filter(x=>(Boolean(rule)||cityOnly||x.points>(place?12:0))&&x.cityMatch&&specialtyMatches(x.r,rule)&&(!namedHospital||x.r.kind==="doctor"&&norm(x.r.hospital).includes(namedHospital))&&(!needFemale||x.r.gender==="female"))
+    .filter(x=>(Boolean(rule)||cityOnly||x.points>(place?12:0))&&x.cityMatch&&specialtyMatches(x.r,rule)&&(!namedHospital||x.r.kind==="doctor"&&norm(x.r.hospital).includes(namedHospital))&&(!namedArea||x.r.kind==="doctor"&&norm(x.r.area)===namedArea)&&(!needFemale||x.r.gender==="female"))
     .sort((a,b)=>b.points-a.points||a.r.name.localeCompare(b.r.name)).slice(0,8);
   const results=ranked.map(x=>safeResult(x.r));
+  const suggestedCities=results.length||!rule||!place?[]:[...new Set(records.filter(r=>specialtyMatches(r,rule)&&(!needFemale||r.gender==="female")&&(!namedHospital||norm(r.hospital).includes(namedHospital))).map(r=>r.city).filter(c=>c&&norm(c)!==place))].sort().slice(0,5);
   explanation=results.length?("Found "+results.length+" matching listed provider"+(results.length===1?"":"s")+(place?" in "+city:"")+". Check the linked profile for the latest details."):(needFemale?"No female provider with reviewed gender information matches this specialty and city in the current directory. Try another city or check the full doctor directory.":"No matching directory listing was found for this specialty and city. Try a different city or specialty.");
   if(hint)explanation="For "+hint.topic+", "+hint.specialty+" may be a relevant specialty for a non-emergency assessment. This is not a diagnosis or the only appropriate option. "+explanation;
-  return json({message:explanation,results,aiUsed,suggestedSpecialty:hint?.specialty||null,note:"Directory discovery only. Not a diagnosis, triage or professional recommendation. Clinic schedules and credentials should be checked with the provider. Results come only from Slashpromo's existing directory."});
+  return json({message:explanation,results,aiUsed,suggestedSpecialty:hint?.specialty||null,suggestedCities,note:"Directory discovery only. Not a diagnosis, triage or professional recommendation. Clinic schedules and credentials should be checked with the provider. Results come only from Slashpromo's existing directory."});
 }
