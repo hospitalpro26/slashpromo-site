@@ -1,5 +1,6 @@
+import {ensureAdminArchiveDb,changeAdminArchive} from "../_lib/admin-archive.js";
 import {requireOptionalAccess} from "../_lib/optional-access.js";
-import {CITIES,reply,ensureDb,constantTimeEqual} from "../_lib/qa.js";
+import {CITIES,reply,ensureDb,constantTimeEqual,sameOrigin} from "../_lib/qa.js";
 function authorized(request,env){
   return Boolean(env.QA_ADMIN_KEY && constantTimeEqual(request.headers.get("X-QA-Admin-Key")||"",env.QA_ADMIN_KEY));
 }
@@ -9,13 +10,15 @@ export async function onRequestGet(ctx){
   const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!env.QA_DB)return reply({error:"QA_DB is missing. Connect the production Cloudflare D1 binding."},503);
   try{
-    await ensureDb(env);
+    await ensureDb(env);await ensureAdminArchiveDb(env);
     const params=new URL(request.url).searchParams;
     const status=["all","pending","approved","rejected"].includes(params.get("status"))
       ?params.get("status"):"all";
     const city=params.get("city")||"";
+    const archived=params.get("archived")==="1";
+    const archiveClause=" "+(archived?"EXISTS":"NOT EXISTS")+" (SELECT 1 FROM admin_archived_records ar WHERE ar.kind='question' AND ar.record_id=questions.id)";
     if(city&&!CITIES.includes(city))return reply({error:"Unsupported city filter."},400);
-    const countSql="SELECT status,COUNT(*) AS total FROM questions"+(city?" WHERE city=?":"")+" GROUP BY status";
+    const countSql="SELECT status,COUNT(*) AS total FROM questions WHERE"+archiveClause+(city?" AND city=?":"")+" GROUP BY status";
     const counts=await env.QA_DB.prepare(countSql).bind(...(city?[city]:[])).all();
     const summary={total:0,pending:0,approved:0,rejected:0};
     for(const record of counts.results||[]){
@@ -26,7 +29,7 @@ export async function onRequestGet(ctx){
     const before=params.get("before")||"";
     if(before&&!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(before))
       return reply({error:"Invalid pagination cursor."},400);
-    let sql="SELECT id,city,COALESCE(NULLIF(page_path,''),'/' || city || '/') AS page_path,category,question,answer,draft_answer,status,created_at,answered_at,updated_at,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent FROM questions WHERE 1=1";
+    let sql="SELECT id,city,COALESCE(NULLIF(page_path,''),'/' || city || '/') AS page_path,category,question,answer,draft_answer,status,created_at,answered_at,updated_at,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent FROM questions WHERE"+archiveClause;
     const binds=[];
     if(status!=="all"){sql+=" AND status=?";binds.push(status);}
     if(city){sql+=" AND city=?";binds.push(city);}
@@ -35,7 +38,7 @@ export async function onRequestGet(ctx){
     const rows=await env.QA_DB.prepare(sql).bind(...binds).all();
     const found=rows.results||[];
     const visible=found.slice(0,100);
-    return reply({questions:visible,summary,hasMore:found.length>100,nextBefore:found.length>100?visible[visible.length-1].created_at:null});
+    return reply({questions:visible,summary,archived,hasMore:found.length>100,nextBefore:found.length>100?visible[visible.length-1].created_at:null});
   }catch{
     return reply({error:"Could not load saved questions. Check the production QA_DB binding."},503);
   }
@@ -46,12 +49,25 @@ export async function onRequestPost(ctx){
   if(!authorized(request,env))return reply({error:"Unauthorized."},401);
   const accessDenied=await requireOptionalAccess(ctx); if(accessDenied)return accessDenied;
   if(!env.QA_DB)return reply({error:"QA_DB is missing. Connect the production Cloudflare D1 binding."},503);
+  if(!sameOrigin(request))return reply({error:"Invalid request origin."},403);
   if(!(request.headers.get("Content-Type")||"").includes("application/json"))return reply({error:"JSON required."},415);
   if(Number(request.headers.get("Content-Length")||0)>5000)return reply({error:"Too large."},413);
   let data;
   try{const raw=await request.text();if(raw.length>5000)return reply({error:"Too large."},413);data=JSON.parse(raw);}
   catch{return reply({error:"Invalid JSON."},400);}
   const id=String(data.id||"");
+  if(data.action==="archive"||data.action==="restore"){
+    if(!/^[a-f0-9-]{36}$/i.test(id))return reply({error:"Invalid question ID."},400);
+    try{
+      await ensureDb(env);await ensureAdminArchiveDb(env);
+      const existing=await env.QA_DB.prepare("SELECT status FROM questions WHERE id=?").bind(id).first();
+      if(!existing)return reply({error:"Question not found."},404);
+      if(data.action==="archive"&&existing.status==="approved")
+        return reply({error:"Unpublish this question by rejecting it before archiving."},409);
+      await changeAdminArchive(env,"question",id,data.action==="archive");
+      return reply({ok:true,archived:data.action==="archive"});
+    }catch{return reply({error:"Could not update question archive."},503);}
+  }
   const status=String(data.status||"");
   const answer=String(data.answer||"").trim();
   if(!/^[a-f0-9-]{36}$/i.test(id)||!["approved","rejected","draft"].includes(status)||answer.length>2000)

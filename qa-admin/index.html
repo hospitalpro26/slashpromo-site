@@ -37,10 +37,11 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1><p><a href="/analytics/" rel="nofollow">View aggregate website analytics ↗</a> · <a href="/enquiries/" rel="nofollow">Private Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Unified Control Center ↗</a></p>
 <p>Review visitor questions by city and by source page, including Sukkur doctor profiles, specialty pages, hospitals and health topics. Only publish verified information and public doctor or clinic contact numbers. Never publish sensitive patient details or provide individual diagnoses.</p>
-<p class="notice">This dashboard requires the private QA_ADMIN_KEY configured in Cloudflare. The key stays in this browser tab's memory and is not saved or included in public pages. Use HTTPS only.</p>
+<p class="notice">This dashboard requires the private QA_ADMIN_KEY configured in Cloudflare. The key stays in this browser tab's memory and is not saved or included in public pages. Use HTTPS only. Archive hides a rejected or pending question from the active dashboard without deleting it. Restore it from Archived questions. Published answers must first be rejected.</p>
 <div class="toolbar">
 <label>Admin key <input type="password" id="key" autocomplete="off" placeholder="Paste private admin key"></label>
 <label>View <select id="filter"><option value="all" selected>All saved questions</option><option value="pending">Awaiting review</option><option value="approved">Published</option><option value="rejected">Rejected</option></select></label>
+<label>Records <select id="archive-view"><option value="0">Active questions</option><option value="1">Archived questions</option></select></label>
 <label>City <select id="city-filter"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="ghotki">Ghotki</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option></select></label>
 <label>Page type <select id="type-filter"><option value="">All pages</option><option value="city">City homepage</option><option value="doctor">Doctor profile</option><option value="hospital">Hospital</option><option value="specialty">Specialty directory</option><option value="health">Health topic</option><option value="other">Other local page</option></select></label>
 <label>Search questions <input type="search" id="query" placeholder="Doctor, question or page" autocomplete="off"></label>
@@ -70,7 +71,7 @@ function node(tag,cls,text){
   return el;
 }
 async function request(method,payload,before){
-  const params=new URLSearchParams({status:statusFilter.value});
+  const params=new URLSearchParams({status:statusFilter.value,archived:document.querySelector("#archive-view").value});
   if(cityFilter.value)params.set("city",cityFilter.value);
   if(before)params.set("before",before);
   const url="/api/qa-admin"+(method==="GET"?"?"+params.toString():"");
@@ -181,6 +182,19 @@ function render(){
     publish.addEventListener("click",()=>submit("approved"));
     reject.addEventListener("click",()=>submit("rejected"));
     actions.append(saveDraft,publish,reject);
+    const archiveMode=document.querySelector("#archive-view").value==="1";
+    const archiveBtn=node("button","qa-draft",archiveMode?"Restore question":"Archive question");
+    if(q.status==="approved"&&!archiveMode){archiveBtn.disabled=true;archiveBtn.title="Reject this published question before archiving it.";}
+    archiveBtn.addEventListener("click",async()=>{
+      if(!window.confirm(archiveMode?"Restore this question to the active dashboard?":"Archive this question? It will be hidden from the active dashboard and can be restored later."))return;
+      archiveBtn.disabled=true;
+      try{
+        await request("POST",{id:q.id,action:archiveMode?"restore":"archive"});
+        await load(false);
+        say(archiveMode?"Question restored.":"Question archived; use Archived questions to restore it.");
+      }catch(error){say(error.message);archiveBtn.disabled=false;}
+    });
+    actions.append(archiveBtn);
     card.append(meta,question,source,privateCard,label,actions);
     items.append(card);
   }
@@ -203,6 +217,7 @@ document.querySelector("#load").addEventListener("click",()=>load(false));
 more.addEventListener("click",()=>load(true));
 statusFilter.addEventListener("change",()=>{questions=[];nextBefore=null;hasMore=false;render();say("Select Load questions to refresh.");});
 cityFilter.addEventListener("change",()=>{questions=[];nextBefore=null;hasMore=false;render();say("Select Load questions to refresh.");});
+document.querySelector("#archive-view").addEventListener("change",()=>{questions=[];nextBefore=null;hasMore=false;render();say("Select Load questions to switch between active and archived records.");});
 typeFilter.addEventListener("change",render);
 queryInput.addEventListener("input",render);
 </script></body></html>
