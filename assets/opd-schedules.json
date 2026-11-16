@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "note": "Reviewed snapshots from public Slashcure clinic timetables. Not live attendance or appointment confirmation. Refresh at least weekly.",
+  "schedules": [
+    {
+      "profile": "https://slashcure.com/consultant-physicians/ratodero/dr-nadia-khan-arbani",
+      "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Saturday"],
+      "hours": "Sunday 11:00 AM–3:00 PM; Monday–Thursday and Saturday 4:30 PM–8:30 PM",
+      "checkedAt": "2026-11-16",
+      "source": "https://slashcure.com/consultant-physicians/ratodero/dr-nadia-khan-arbani"
+    }
+  ]
+}
