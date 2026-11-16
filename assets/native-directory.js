@@ -350,7 +350,8 @@
     if(type==="doctor" && hospital && params.has("hospital")){const wanted=params.get("hospital").slice(0,100);if([...hospital.options].some(o=>o.value===wanted))hospital.value=wanted;}
     render();
   };
-  fetch("/assets/directory.json",{cache:"no-store"}).then(r=>{
+  /* Revalidate the ETag on repeat visits, reusing unchanged directory JSON without stale listings. */
+  fetch("/assets/directory.json",{cache:"no-cache"}).then(r=>{
     if(!r.ok)throw new Error("Directory temporarily unavailable");
     return r.json();
   }).then(db=>roots.forEach(root=>setup(root,db))).catch(()=>{
