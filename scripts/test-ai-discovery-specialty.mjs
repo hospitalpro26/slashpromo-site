@@ -53,6 +53,18 @@ assert(romanChild.results.length>0&&romanChild.results.every(r=>/paediatric|pedi
 const namedHospital=await search("general surgeon at Hira Medical Centre in Sukkur");
 assert(namedHospital.results.length>0,"Known Hira surgical listing should be found");
 assert(namedHospital.results.every(r=>/hira medical centre/i.test(r.hospital)&&/surgeon|surgery/i.test(r.specialty)),"Hospital and specialty must both be enforced");
+const romanLungs=await search("saans ka doctor Ghotki");
+assert(romanLungs.results.length>0&&romanLungs.results.every(r=>/pulmonolog/i.test(r.specialty)),"Roman Urdu respiratory query must only match pulmonologists");
+const area=await search("orthopedic surgeon on Barrage Colony Sukkur");
+assert(area.results.length>0&&area.results.every(r=>r.city==="Sukkur"&&/orthop/i.test(r.specialty)),"Published clinic-area matches must preserve specialty and city");
+const road=await search("paediatrician on Shikarpur Road Sukkur");
+assert(road.results.every(r=>r.city==="Sukkur"),"Shikarpur Road must not become Shikarpur city");
+const ambiguous=await search("cardiologist or pulmonologist in Sukkur");
+assert.equal(ambiguous.clarification,true,"Two explicit specialties require clarification");
+assert.equal(ambiguous.results.length,0,"Ambiguous searches must not return only one specialty");
+const alternative=await search("cardiologist in Ratodero");
+assert.equal(alternative.results.length,0,"Do not invent a local cardiologist");
+assert(alternative.suggestedCities.includes("Sukkur"),"Offer a city with published cardiologists when no local listing exists");
 const emergency=await search("chest pain need doctor");
 assert.equal(emergency.urgent,true,"Emergency warning must remain functional");
 console.log("PASS: physicians vs surgeons, Urdu aliases, female verified listings, exact cities, AI override safety, emergency handling.");
