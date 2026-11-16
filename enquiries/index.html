@@ -67,10 +67,11 @@ button:hover{background:#104b87}button:disabled{opacity:.55;cursor:wait}.muted-b
 <body><main>
 <header><div><a href="/" class="nav">← SlashPromo home</a><h1>Private Enquiry Inbox</h1><p>Manage saved visitor enquiries and follow-up statuses, organised by source page.</p></div>
 <div class="link-row nav"><a href="/control-center/">Control Center ↗</a><a href="/qa-admin/">Q&amp;A dashboard ↗</a><a href="/analytics/">Analytics ↗</a></div></header>
-<p class="notice"><strong>Admin-only records:</strong> enter your existing <strong>QA_ADMIN_KEY</strong>. The key remains in this browser tab and is not stored by this page. Enquiries are saved only after visitors explicitly consent and pass security verification. <strong>A saved enquiry or WhatsApp handoff does not prove a WhatsApp message was sent.</strong> Reply drafts and prepared messages are stored privately. Only after you manually confirm sending will the inbox mark your outbound reply as sent; this is not a delivery receipt. Do not copy visitors' private information into public replies. Closed records are automatically deleted after 180 days.</p>
+<p class="notice"><strong>Admin-only records:</strong> enter your existing <strong>QA_ADMIN_KEY</strong>. The key remains in this browser tab and is not stored by this page. Enquiries are saved only after visitors explicitly consent and pass security verification. <strong>A saved enquiry or WhatsApp handoff does not prove a WhatsApp message was sent.</strong> Reply drafts and prepared messages are stored privately. Only after you manually confirm sending will the inbox mark your outbound reply as sent; this is not a delivery receipt. Do not copy visitors' private information into public replies. Closed records are automatically deleted after 180 days. Archive hides an enquiry from the active inbox without deleting its data or reply history; archived entries can be restored.</p>
 <form class="filters" id="filters">
 <label>Private admin key<input id="key" type="password" autocomplete="off" required placeholder="Enter QA_ADMIN_KEY"></label>
 <label>Status<select id="filter"><option value="all">All saved</option><option value="new">New</option><option value="contacted">Contacted</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select></label>
+<label>Inbox view<select id="archive-view"><option value="0">Active enquiries</option><option value="1">Archived enquiries</option></select></label>
 <label>Page city<select id="city"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option><option value="ghotki">Ghotki</option><option value="lahore">Lahore</option><option value="other">Other</option></select></label>
 <label>Search loaded enquiries<input id="search" type="search" autocomplete="off" placeholder="Name, query, page or city"></label>
 <button type="submit" id="load">Load enquiries</button>
@@ -136,7 +137,19 @@ function render(){
         say("Enquiry status and private note saved.");
       }catch(error){say("Could not save: "+error.message)}finally{save.disabled=false}
     });
-    actions.append(save);footer.append(sLabel,noteLabel,actions);
+    actions.append(save);
+    const archiveBtn=make("button","muted-btn",$("#archive-view").value==="1"?"Restore enquiry":"Archive enquiry");
+    archiveBtn.type="button";
+    archiveBtn.addEventListener("click",async()=>{
+      const restore=$("#archive-view").value==="1";
+      if(!window.confirm(restore?"Restore this enquiry to the active inbox?":"Archive this enquiry? It will leave the active inbox but remain recoverable in Archived enquiries."))return;
+      archiveBtn.disabled=true;
+      try{
+        await request("/api/enquiries-admin",{method:"POST",body:JSON.stringify({id:item.id,action:restore?"restore":"archive"})});
+        await load(false);say(restore?"Enquiry restored to active inbox.":"Enquiry archived. Use Archived enquiries to restore it.");
+      }catch(error){say("Archive update failed: "+error.message);archiveBtn.disabled=false;}
+    });
+    actions.append(archiveBtn);footer.append(sLabel,noteLabel,actions);
 
     // Private reply composer. A prepared reply is NOT marked sent until staff confirms it.
     const replyPanel=make("section","reply-panel");
@@ -261,7 +274,7 @@ async function load(append=false){
   const loadButton=$("#load");loadButton.disabled=true;say("Loading private enquiries…");
   try{
     const start=append?offset:0;
-    const q=new URLSearchParams({status:$("#filter").value,offset:String(start)});
+    const q=new URLSearchParams({status:$("#filter").value,offset:String(start),archived:$("#archive-view").value});
     if($("#city").value)q.set("city",$("#city").value);
     const data=await request("/api/enquiries-admin?"+q.toString());
     entries=append?entries.concat(data.enquiries||[]):(data.enquiries||[]);
@@ -275,6 +288,7 @@ $("#filters").addEventListener("submit",event=>{event.preventDefault();load(fals
 $("#more").addEventListener("click",()=>load(true));
 $("#filter").addEventListener("change",()=>{entries=[];hasMore=false;render();say("Click Load enquiries to apply this filter.")});
 $("#city").addEventListener("change",()=>{entries=[];hasMore=false;render();say("Click Load enquiries to apply this filter.")});
+$("#archive-view").addEventListener("change",()=>{entries=[];hasMore=false;render();say("Click Load enquiries to switch inbox view.")});
 $("#search").addEventListener("input",render);
 $("#more").style.display="none";
 </script></body></html>
