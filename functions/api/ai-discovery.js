@@ -110,7 +110,24 @@ function emergencyConcern(question){
     ||/(سینے میں شدید درد|سانس نہیں آ رہی|سانس نہیں آرہی|بے ہوش|فالج|خودکشی|شدید خون بہنا)/.test(q);
 }
 
-function safeResult(r){return {name:r.name,city:r.city,specialty:r.specialty||r.category||"Healthcare facility",hospital:r.hospital||"",url:r.url,slashcureUrl:r.externalProfile||""}}
+function opdLink(r){
+  const url=String(r.externalProfile||"");
+  try{const parsed=new URL(url);return parsed.protocol==="https:"&&parsed.hostname==="slashcure.com"&&/^\/[^/]+\/[^/]+\/dr-[^/]+\/?$/.test(parsed.pathname)?url+"#clinics":""}
+  catch{return ""}
+}
+function scheduleToday(r,schedules,now){
+  const link=opdLink(r);
+  if(!link)return null;
+  const schedule=schedules.find(s=>s.profile===r.externalProfile);
+  if(!schedule||!/^\d{4}-\d{2}-\d{2}$/.test(schedule.checkedAt))return null;
+  const pieces=Object.fromEntries(new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Karachi",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(now).map(p=>[p.type,p.value]));
+  const today=`${pieces.year}-${pieces.month}-${pieces.day}`;
+  const age=Math.floor((Date.parse(today+"T00:00:00Z")-Date.parse(schedule.checkedAt+"T00:00:00Z"))/86400000);
+  if(!Number.isFinite(age)||age<0||age>7)return null;
+  const day=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Karachi",weekday:"long"}).format(now);
+  return Array.isArray(schedule.days)&&schedule.days.includes(day)?{hours:schedule.hours,checkedAt:schedule.checkedAt,source:link}:null;
+}
+function safeResult(r,schedule){return {name:r.name,city:r.city,specialty:r.specialty||r.category||"Healthcare facility",hospital:r.hospital||"",url:r.url,slashcureUrl:r.externalProfile||"",opdUrl:opdLink(r),scheduledToday:schedule||null}}
 export async function onRequestPost(ctx){
   const req=ctx.request;
   if(req.headers.get("content-type")?.split(";")[0]!=="application/json")return json({error:"Send JSON."},415);
@@ -118,6 +135,8 @@ export async function onRequestPost(ctx){
   if(origin&&origin!==new URL(req.url).origin)return json({error:"Invalid origin."},403);
   let input;try{input=await req.json()}catch{return json({error:"Invalid request."},400)}
   const question=String(input?.question||"").trim();
+  const todayOnly=input?.todayOnly===true;
+  const now=ctx.now instanceof Date?ctx.now:new Date();
   if(question.length<5||question.length>240)return json({error:"Enter a search of 5–240 characters."},400);
   if(emergencyConcern(question))
     return json({urgent:true,message:"If this may be an emergency, seek immediate medical care or local emergency assistance. This directory cannot assess emergencies.",results:[]});
@@ -125,6 +144,9 @@ export async function onRequestPost(ctx){
   try{const response=await ctx.env.ASSETS.fetch(new Request(new URL("/assets/directory.json",req.url)));if(!response.ok)throw Error();directory=await response.json()}
   catch{return json({error:"Directory is temporarily unavailable."},503)}
   const records=[...(directory.doctors||[]),...(directory.hospitals||[])].filter(r=>r&&r.name&&r.url&&String(r.url).startsWith("/"));
+  let schedules=[];
+  try{const response=await ctx.env.ASSETS.fetch(new Request(new URL("/assets/opd-schedules.json",req.url)));if(response.ok){const data=await response.json();schedules=Array.isArray(data.schedules)?data.schedules:[]}}
+  catch{ /* Schedule features fail closed; ordinary directory discovery continues. */ }
   const explicitSpecialty=specialtyRule(question);
   const hint=explicitSpecialty?null:symptomHint(question);
   let interpretation=expand(question),explanation="";
@@ -175,11 +197,11 @@ export async function onRequestPost(ctx){
   const searchTerms=(" "+query+" ").replace(" "+place+" "," ").trim().split(" ").filter(t=>t.length>2&&!STOP.has(t));
   const cityOnly=Boolean(place)&&searchTerms.length===0;
   const ranked=records.map(r=>({r,points:score(r,query,place),cityMatch:!place||norm([r.city,...(r.cities||[])].join(" ")).includes(place)}))
-    .filter(x=>(Boolean(rule)||cityOnly||x.points>(place?12:0))&&x.cityMatch&&specialtyMatches(x.r,rule)&&(!namedHospital||x.r.kind==="doctor"&&norm(x.r.hospital).includes(namedHospital))&&(!namedArea||x.r.kind==="doctor"&&norm(x.r.area)===namedArea)&&(!needFemale||x.r.gender==="female"))
+    .filter(x=>(Boolean(rule)||cityOnly||x.points>(place?12:0))&&x.cityMatch&&specialtyMatches(x.r,rule)&&(!namedHospital||x.r.kind==="doctor"&&norm(x.r.hospital).includes(namedHospital))&&(!namedArea||x.r.kind==="doctor"&&norm(x.r.area)===namedArea)&&(!needFemale||x.r.gender==="female")&&(!todayOnly||scheduleToday(x.r,schedules,now)))
     .sort((a,b)=>b.points-a.points||a.r.name.localeCompare(b.r.name)).slice(0,8);
-  const results=ranked.map(x=>safeResult(x.r));
+  const results=ranked.map(x=>safeResult(x.r,scheduleToday(x.r,schedules,now)));
   const suggestedCities=results.length||!rule||!place?[]:[...new Set(records.filter(r=>specialtyMatches(r,rule)&&(!needFemale||r.gender==="female")&&(!namedHospital||norm(r.hospital).includes(namedHospital))).map(r=>r.city).filter(c=>c&&norm(c)!==place))].sort().slice(0,5);
-  explanation=results.length?("Found "+results.length+" matching listed provider"+(results.length===1?"":"s")+(place?" in "+city:"")+". Check the linked profile for the latest details."):(needFemale?"No female provider with reviewed gender information matches this specialty and city in the current directory. Try another city or check the full doctor directory.":"No matching directory listing was found for this specialty and city. Try a different city or specialty.");
+  explanation=results.length?("Found "+results.length+" matching listed provider"+(results.length===1?"":"s")+(place?" in "+city:"")+". Check the linked profile for the latest details."):(todayOnly?"No recently checked published OPD timetable matches this search for today. This does not mean other doctors are unavailable; check their Slashcure profiles.":needFemale?"No female provider with reviewed gender information matches this specialty and city in the current directory. Try another city or check the full doctor directory.":"No matching directory listing was found for this specialty and city. Try a different city or specialty.");
   if(hint)explanation="For "+hint.topic+", "+hint.specialty+" may be a relevant specialty for a non-emergency assessment. This is not a diagnosis or the only appropriate option. "+explanation;
   return json({message:explanation,results,aiUsed,suggestedSpecialty:hint?.specialty||null,suggestedCities,note:"Directory discovery only. Not a diagnosis, triage or professional recommendation. Clinic schedules and credentials should be checked with the provider. Results come only from Slashpromo's existing directory."});
 }
