@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   refresh-public-html:
@@ -53,7 +54,9 @@ jobs:
           assert "923352648572" in js
           PY
           node --check assets/site.js
-      - name: Commit cache-busted public pages for Cloudflare
+      - name: Prepare WhatsApp asset cache refresh for owner review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
@@ -65,4 +68,15 @@ jobs:
             exit 0
           fi
           git commit -m "Refresh floating WhatsApp button assets on all public pages"
-          git push origin HEAD:main
+          branch="automation/publish-whatsapp-$GITHUB_RUN_ID"
+          git switch -c "$branch"
+          git push -u origin "$branch"
+          compare_url="https://github.com/$GITHUB_REPOSITORY/compare/main...$branch?expand=1"
+          if gh pr create --base main --head "$branch" --draft \
+            --title "Review WhatsApp and analytics asset refresh before publication" \
+            --body "Refresh existing WhatsApp and analytics asset cache versions across public pages. Owner review and explicit approval are required before any merge. This workflow never publishes automatically."; then
+            echo "Created draft PR for review; no changes published." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::Automated draft PR creation unavailable; review branch preserved: $compare_url"
+            echo "Open a manual draft PR to review changes: $compare_url" >> "$GITHUB_STEP_SUMMARY"
+          fi

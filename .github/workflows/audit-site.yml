@@ -23,7 +23,7 @@ permissions:
   contents: read
 
 jobs:
-  audit:
+  audit-seo-qa:
     runs-on: ubuntu-latest
     timeout-minutes: 6
     steps:
