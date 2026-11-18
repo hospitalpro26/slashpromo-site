@@ -319,3 +319,89 @@ body.sp-sukkur-premium{
     }
   }
 }
+
+
+/* Sukkur 2026-11-19: calm, people-led visual language matched to the homepage.
+   This layer changes presentation only; all existing content and tools remain. */
+body.sp-sukkur-premium{
+  --spn:#132e51;--spb:#1956b8;--spr:#be3e52;--spi:#1d3047;--spm:#526277;
+  --spl:#dce2e8;--spbg:#f4f6f8;
+  color:#1d3047;background:#fff;font-size:16px;line-height:1.65;
+}
+.sp-sukkur-premium .site-header{border-color:#e5e8ed}
+.sp-sukkur-premium .site-header .topbar{background:#f2f4f7;color:#526277}
+.sp-sukkur-premium .site-header .topbar p,.sp-sukkur-premium .site-header .topbar a{color:#526277}
+.sp-sukkur-premium .site-header .wordmark{font-weight:800}
+.sp-sukkur-premium .sp-quicknav{background:#f7f8fa!important;border-color:#e4e8ed!important}
+.sp-sukkur-premium .sp-quicknav-message{color:#526277!important}
+.sp-sukkur-premium .sp-quicknav a{color:#264d79!important}
+.sp-sukkur-premium .sp-quicknav a[aria-current="page"]{color:#1956b8!important;font-weight:800}
+.sp-sukkur-premium .sp-premium-sukkur-hero{background:#f4f6f8;color:#1d3047;border-bottom:1px solid #e0e5ea;overflow:visible}
+.sp-sukkur-premium .sp-premium-sukkur-hero:before{display:none}
+.sp-sukkur-premium .sp-premium-sukkur-grid{grid-template-columns:1.2fr .8fr;gap:36px;min-height:0;padding:54px 0 62px;align-items:center}
+.sp-sukkur-premium .sp-premium-breadcrumb{color:#536780;font-size:13px;margin-bottom:25px;gap:9px}
+.sp-sukkur-premium .sp-premium-breadcrumb a{color:#1956b8}
+.sp-sukkur-premium .sp-premium-kicker{color:#a33c4c;font-size:11px;letter-spacing:1.25px}
+.sp-sukkur-premium .sp-premium-kicker:before{width:15px;background:#be3e52}
+.sp-sukkur-premium .sp-premium-sukkur-hero h1{color:#203751;font-size:clamp(38px,4.6vw,57px);font-weight:800;letter-spacing:-1.8px;line-height:1.12;margin:19px 0;max-width:680px}
+.sp-sukkur-premium .sp-premium-sukkur-hero h1 em{color:#1956b8;font-style:normal}
+.sp-sukkur-premium .sp-premium-sukkur-hero p{color:#526277;font-size:16px;line-height:1.75;max-width:590px;margin-bottom:15px}
+.sp-sukkur-premium .sp-premium-sukkur-hero .sp-sukkur-urdu{font-size:15px;text-align:left;font-family:system-ui,sans-serif;color:#626b7a}
+.sp-sukkur-premium .sp-sukkur-people{border-left:1px solid #d9e0e7;padding:8px 0 8px 27px;min-width:0}
+.sp-sukkur-premium .sp-sukkur-overline{display:block;text-transform:uppercase;font-size:11px;font-weight:800;letter-spacing:1px;color:#526277;margin-bottom:20px}
+.sp-sukkur-premium .sp-sukkur-people-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.sp-sukkur-premium .sp-sukkur-people-grid a{min-width:0;text-align:center;color:#203751}
+.sp-sukkur-premium .sp-sukkur-people-grid a:hover strong{color:#1956b8}
+.sp-sukkur-premium .sp-sukkur-people-grid img{width:86px;height:86px;max-width:100%;margin:0 auto 10px;object-fit:cover;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #c8d2df}
+.sp-sukkur-premium .sp-sukkur-people-grid strong{display:block;font-size:12px;line-height:1.4;font-weight:750}
+.sp-sukkur-premium .sp-sukkur-people-grid small{display:block;font-size:11px;color:#66768a;margin-top:4px}
+.sp-sukkur-premium .sp-premium-sukkur-hero .sp-sukkur-people>p{font-size:12px;color:#67768a;margin:17px 0 0;line-height:1.55}
+.sp-sukkur-premium .sp-premium-search{margin:-24px auto 0;border:1px solid #dce2e8;border-radius:7px;box-shadow:0 7px 22px #1d30470d;padding:9px;background:#fff}
+.sp-sukkur-premium .sp-premium-search label{border-color:#e6e9ed;padding:9px 14px}
+.sp-sukkur-premium .sp-premium-search label span{text-transform:none;letter-spacing:0;font-size:13px;font-weight:700;color:#526277}
+.sp-sukkur-premium .sp-premium-search input,.sp-sukkur-premium .sp-premium-search select{font-size:15px;color:#1d3047}
+.sp-sukkur-premium .sp-premium-search button{background:#1956b8;border-radius:4px;font-size:14px;font-weight:750}
+.sp-sukkur-premium .sp-premium-search button:hover{background:#12488e}
+.sp-sukkur-premium .sp-premium-shortcuts{padding:24px 0 20px;border-bottom:1px solid #e2e6eb}
+.sp-sukkur-premium .sp-premium-shortcuts strong{font-size:12px}
+.sp-sukkur-premium .sp-premium-shortcuts a{background:#fff;border:1px solid #dce2e8;color:#345578;border-radius:4px;font-size:13px;font-weight:650}
+.sp-sukkur-premium :is(.section,.sp-index){padding-top:48px;padding-bottom:48px}
+.sp-sukkur-premium .section.soft{background:#f6f8fa}
+.sp-sukkur-premium :is(.section,.sp-index) h2{color:#203751;letter-spacing:-.7px;font-size:clamp(26px,3vw,34px);font-weight:790}
+.sp-sukkur-premium :is(.section,.sp-index) p{color:#526277}
+.sp-sukkur-premium .eyebrow{color:#a33c4c;font-size:12px;letter-spacing:.8px}
+.sp-sukkur-premium :is(.sp-directory-card,.sp-hospital-guide-card){border:1px solid #e0e5ea;border-radius:5px;box-shadow:none;background:#fff}
+.sp-sukkur-premium .sp-directory-card{padding:19px}
+.sp-sukkur-premium .sp-directory-card .sp-card-type{font-size:12px;letter-spacing:0}
+.sp-sukkur-premium .sp-directory-card .sp-card-link{font-size:13px}
+.sp-sukkur-premium #sukkur-quick-start{padding-top:35px}
+.sp-sukkur-premium #sukkur-quick-start .category-links a{background:#f5f7fa;border-radius:4px;font-size:13px}
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill{border-radius:4px;box-shadow:none;font-size:13px}
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill.active,
+.sp-sukkur-premium #listed-doctors .sp-specialty-pill[aria-pressed="true"]{background:#203751;border-color:#203751;box-shadow:none}
+.sp-sukkur-premium #listed-doctors [data-native-more]{border-radius:5px;box-shadow:none;font-size:14px}
+@media(max-width:900px){
+ .sp-sukkur-premium .sp-premium-sukkur-grid{gap:22px;grid-template-columns:1.05fr .95fr;padding:44px 0 56px}
+ .sp-sukkur-premium .sp-sukkur-people{padding-left:17px}
+ .sp-sukkur-premium .sp-sukkur-people-grid{gap:9px}
+ .sp-sukkur-premium .sp-sukkur-people-grid img{width:70px;height:70px}
+}
+@media(max-width:700px){
+ .sp-sukkur-premium .sp-premium-sukkur-grid{grid-template-columns:1fr;gap:23px;padding:35px 0 54px}
+ .sp-sukkur-premium .sp-premium-sukkur-hero h1{font-size:clamp(34px,7vw,46px);letter-spacing:-1.2px}
+ .sp-sukkur-premium .sp-premium-sukkur-hero p{font-size:15px}
+ .sp-sukkur-premium .sp-sukkur-people{border-left:0;border-top:1px solid #d9e0e7;padding:17px 0 0}
+ .sp-sukkur-premium .sp-sukkur-people-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .sp-sukkur-premium .sp-sukkur-people-grid img{width:72px;height:72px}
+ .sp-sukkur-premium .sp-premium-search{margin-top:-20px}
+}
+@media(max-width:560px){
+ .sp-sukkur-premium .sp-premium-sukkur-grid{padding:30px 0 48px}
+ .sp-sukkur-premium .sp-premium-breadcrumb{margin-bottom:16px}
+ .sp-sukkur-premium .sp-premium-sukkur-hero h1{font-size:35px}
+ .sp-sukkur-premium .sp-premium-search{border-radius:5px;padding:8px}
+ .sp-sukkur-premium .sp-premium-search label{padding:10px}
+ .sp-sukkur-premium .sp-premium-search button{font-size:14px}
+ .sp-sukkur-premium :is(.section,.sp-index){padding-top:39px;padding-bottom:39px}
+ .sp-sukkur-premium .sp-sukkur-people-grid strong{font-size:12px}
+}
