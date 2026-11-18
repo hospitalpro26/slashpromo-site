@@ -201,3 +201,6 @@ Deployment note: After configuring QA_DB, QA_TURNSTILE_SITE_KEY, QA_TURNSTILE_SE
 - `scripts/test-google-discovery.mjs` and GitHub Actions `verify-google-discovery.yml` check the live public crawl readiness for these pages. This does **not** establish indexing in Google.
 - Submit the sitemap using verified `sc-domain:slashpromo.com` property in Google Search Console > Sitemaps. For individual pages use URL Inspection > Request Indexing. The Windsor Search Console integration is read-only and cannot request indexing itself.
 - Google Indexing API does not accept regular doctor directory pages; IndexNow notifies Bing and other participating search engines, not Google.
+
+## Production sitemap sync (18 November 2026)
+- Deploy the five approved 17 November Sukkur sitemap lastmod corrections from PR #110. This documentation-only change triggers the normal Cloudflare Pages production build without changing public page content, links, or doctor facts.
