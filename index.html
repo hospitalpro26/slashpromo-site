@@ -47,8 +47,8 @@
     <span class="overline">People behind the profiles</span>
     <div class="people-grid">
      <a href="/doctors/sukkur/dr-rizwana-qureshi/"><img src="/assets/home/dr-rizwana-qureshi.webp" width="400" height="400" alt="Dr. Rizwana Qureshi" fetchpriority="high"><strong>Dr. Rizwana Qureshi</strong><small>Paediatrics · Sukkur</small></a>
-     <a href="/doctors/pano-aqil/dr-saba-ali-raza-mahesar/"><img src="/assets/home/dr-saba-ali-raza-mahesar.webp" width="400" height="400" alt="Dr. Saba Ali Raza Mahesar"><strong>Dr. Saba Ali Raza Mahesar</strong><small>Gynecology · Pano Aqil</small></a>
-     <a href="/doctors/karachi/dr-mahum-jamil/"><img src="/assets/astro-team/dr-mahum-jamil.webp" width="600" height="600" alt="Dr. Mahum Jamil"><strong>Dr. Mahum Jamil</strong><small>Physiotherapy · Karachi</small></a>
+     <a href="/doctors/sukkur/dr-salma-lakho/"><img src="/assets/home/dr-salma-lakho.webp" width="400" height="400" alt="Dr. Salma Lakho"><strong>Dr. Salma Lakho</strong><small>Internal Medicine · Sukkur</small></a>
+     <a href="/doctors/sukkur/dr-aisha-aman/"><img src="/assets/home/dr-aisha-aman.webp" width="400" height="400" alt="Dr. Aisha Aman"><strong>Dr. Aisha Aman</strong><small>Gynecology · Sukkur</small></a>
     </div>
     <p>Explore their profiles and published clinic information.</p>
    </aside>
@@ -223,7 +223,7 @@ loadMore.addEventListener("click",function(){shown+=9;draw()});
 fetch("/assets/directory.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw Error("Directory unavailable");return r.json()}).then(function(data){
  if(!Array.isArray(data.doctors))throw Error("Invalid directory");
  allDoctors=data.doctors.filter(function(d){return d&&typeof d.name==="string"&&typeof d.city==="string"&&safePath(d.url)});
- var pin=["Dr. Rizwana Qureshi","Dr. Saba Ali Raza Mahesar","Dr. Mahum Jamil","Dr. Aneel Ahmed Ghanghro","Dr. Aisha Aman","Dr. Bashir Ahmed Khoso"];
+ var pin=["Dr. Komal Kandhir","Dr. Murk Channa","Prof. Dr. Kirpal Das Makheja","Dr. Aftab Ahmed Mughal","Dr. Salma Lakho","Dr. Aisha Aman","Dr. Rizwana Qureshi","Dr. Aneel Ahmed Ghanghro","Dr. Bashir Ahmed Khoso"];
  allDoctors.sort(function(a,b){var ia=pin.indexOf(a.name),ib=pin.indexOf(b.name);if(ia!==-1&&ib!==-1)return ia-ib;if(ia!==-1)return-1;if(ib!==-1)return 1;return a.name.localeCompare(b.name)});
  makeOptions(city,[...new Set(allDoctors.map(function(d){return d.city}))].sort());
  makeOptions(specialty,[...new Set(allDoctors.map(function(d){return d.specialty}).filter(Boolean))].sort());
