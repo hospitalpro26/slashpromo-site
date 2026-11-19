@@ -16,6 +16,8 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/theme.css?v=20261108-enquiries6">
 <link rel="stylesheet" href="/assets/home/landing.css?v=20261118-design1">
+<link rel="stylesheet" href="/assets/home/feedback.css?v=1">
+<script defer src="/assets/home/feedback.js?v=1"></script>
 </head>
 <body class="home-20261118">
 <a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='8px'" onblur="this.style.left='-9999px'">Skip to content</a>
@@ -138,6 +140,23 @@
    <details><summary>How can I promote a hospital or clinic?</summary><p>Use <a href="/advertise/">Promote Your Practice</a> or <a href="/contact/">contact the SlashPromo team</a> to discuss promotional placements. Advertising and editorial content are identified separately.</p></details>
   </div>
  </section>
+<section class="section container" id="community-feedback" aria-labelledby="feedback-title">
+ <p class="eyebrow">Help us improve</p><h2 id="feedback-title">Community feedback</h2>
+ <p>What made finding healthcare easier? What could we improve? Share your experience using Slashpromo or suggest a city, specialty or feature.</p>
+ <p lang="ur" dir="rtl">اپنی رائے یا بہتری کی تجویز اردو یا انگریزی میں لکھیں۔ تبصرے منظوری کے بعد ظاہر ہوں گے۔</p>
+ <div class="feedback-layout"><div><h3>Leave a comment</h3>
+ <form id="feedback-form">
+ <label for="feedback-name">Display name</label><input id="feedback-name" name="visitorName" minlength="2" maxlength="100" autocomplete="nickname" required>
+ <label for="feedback-city">Your city</label><input id="feedback-city" name="visitorCity" minlength="2" maxlength="80" autocomplete="address-level2" required><small>Your city is shared only with the moderation team.</small>
+ <label for="feedback-message">Your feedback</label><textarea id="feedback-message" name="question" rows="5" minlength="12" maxlength="700" dir="auto" required aria-describedby="feedback-guidance"></textarea>
+ <p id="feedback-guidance">12–700 characters. Please do not include phone numbers, patient records or personal medical details. For doctor enquiries, use <a href="/contact/">Contact us</a>. This section is for platform feedback.</p>
+ <label class="feedback-consent"><input type="checkbox" name="consent" required> I agree that my display name and comment may appear publicly after review.</label>
+ <div class="feedback-trap" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+ <div id="feedback-security"></div><button id="feedback-submit" type="submit" disabled>Submit for review</button>
+ <p id="feedback-status" role="status" aria-live="polite">Loading comments…</p>
+ </form><noscript>Please enable JavaScript to read and submit comments.</noscript></div>
+ <div><h3>From the community</h3><p>Comments are reviewed before publication. They reflect visitors’ views and are not verified reviews of doctors or medical advice.</p><div id="feedback-list"></div></div></div>
+</section>
 </main>
 <section class="home-connect container" aria-label="Follow Slashcure"><span>Healthcare updates from <a href="https://slashcure.com/">Slashcure</a></span><div><a href="https://www.facebook.com/share/1CAH342uwU/">Facebook</a><a href="https://www.instagram.com/slashcureofficial/">Instagram</a><a href="https://whatsapp.com/channel/0029Vb9Mi341HsppC5idYd1a">WhatsApp channel</a><a href="https://www.linkedin.com/company/slashcure/">LinkedIn</a></div></section>
 <footer class="full-footer">

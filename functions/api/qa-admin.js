@@ -72,10 +72,13 @@ export async function onRequestPost(ctx){
   const answer=String(data.answer||"").trim();
   if(!/^[a-f0-9-]{36}$/i.test(id)||!["approved","rejected","draft"].includes(status)||answer.length>2000)
     return reply({error:"Invalid moderation action."},400);
-  if(status==="approved"&&answer.length<12)return reply({error:"Provide a verified public answer before publishing."},400);
+  
   const now=new Date().toISOString();
   try{
     await ensureDb(env);
+    const record=await env.QA_DB.prepare("SELECT page_path FROM questions WHERE id=?").bind(id).first();
+    if(!record)return reply({error:"Question not found."},404);
+    if(status==="approved"&&record.page_path!=="/"&&answer.length<12)return reply({error:"Provide a verified public answer before publishing."},400);
     let result;
     if(status==="draft"){
       result=await env.QA_DB.prepare("UPDATE questions SET draft_answer=?,updated_at=? WHERE id=?").bind(answer||null,now,id).run();
