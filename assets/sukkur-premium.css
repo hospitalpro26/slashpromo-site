@@ -405,3 +405,54 @@ body.sp-sukkur-premium{
  .sp-sukkur-premium :is(.section,.sp-index){padding-top:39px;padding-bottom:39px}
  .sp-sukkur-premium .sp-sukkur-people-grid strong{font-size:12px}
 }
+
+/* Complete the homepage visual language across the Sukkur directory. */
+body.sp-sukkur-premium nav.sp-quicknav[data-sp-city-nav]{background:#f7f8fa!important;border-color:#dce2e8!important;box-shadow:none!important}
+body.sp-sukkur-premium nav.sp-quicknav[data-sp-city-nav] a{color:#264d79!important;font-size:14px!important}
+body.sp-sukkur-premium nav.sp-quicknav[data-sp-city-nav] a[aria-current=page]{color:#1956b8!important;text-decoration-color:#1956b8!important}
+body.sp-sukkur-premium nav.sp-quicknav[data-sp-city-nav] p.sp-quicknav-message{color:#526277!important;border-color:#dce2e8!important;font-size:14px!important}
+.sp-sukkur-premium .topbar b{color:#364d68}
+.sp-sukkur-premium .sp-sukkur-people-grid strong{font-size:14px}
+.sp-sukkur-premium .sp-sukkur-people-grid small,.sp-sukkur-premium .sp-sukkur-people>p{font-size:13px!important}
+.sp-sukkur-premium #listed-doctors .sp-directory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px}
+.sp-sukkur-premium #listed-doctors .sp-directory-card{display:flex;align-items:flex-start;gap:18px;border:0;border-top:1px solid #dce2e8;border-radius:0;padding:25px 0;box-shadow:none;transform:none;background:#fff;min-width:0}
+.sp-sukkur-premium #listed-doctors .sp-directory-icon{flex:0 0 82px;width:82px;height:82px;border-radius:50%;background:#f2f5f8;color:#365b89;box-shadow:none}
+.sp-sukkur-premium #listed-doctors .sp-doctor-portrait img{display:block;width:100%;height:100%;object-fit:contain;background:#fff;border-radius:50%}
+.sp-sukkur-premium #listed-doctors .sp-directory-body{min-width:0}
+.sp-sukkur-premium #listed-doctors h3{font-size:19px;line-height:1.4}
+.sp-sukkur-premium #listed-doctors .sp-card-specialty{font-size:16px;line-height:1.6}
+.sp-sukkur-premium #listed-doctors :is(.sp-card-clinic,.sp-card-patient-detail){font-size:14px;line-height:1.65}
+.sp-sukkur-premium .sp-cross-profile-actions{display:flex;flex-wrap:wrap;gap:9px}
+.sp-sukkur-premium .sp-cross-profile-actions a{font-size:14px;border-radius:4px;line-height:1.5;white-space:normal}
+.sp-sukkur-premium #listed-doctors .sp-cross-link-external{background:#1956b8;color:#fff;border-color:#1956b8;box-shadow:none}
+.sp-sukkur-premium #listed-doctors .sp-cross-link-external:hover{background:#123e84;color:#fff}
+.sp-sukkur-premium .sp-sukkur-reading{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 32px;margin-block:32px}
+.sp-sukkur-premium .sp-sukkur-reading>.section{padding:24px 0!important;background:#fff;border-top:1px solid #dce2e8;min-width:0}
+.sp-sukkur-premium .sp-sukkur-reading>.section>.wrap{width:100%;padding:0;max-width:none}
+.sp-sukkur-premium .sp-sukkur-reading h2{font-size:23px;line-height:1.4;letter-spacing:-.3px}
+.sp-sukkur-premium .sp-sukkur-reading p{font-size:16px;line-height:1.7}
+.sp-sukkur-premium :is(.sp-hospital-guide-card,.sp-area-card){border:0;border-top:2px solid #c1cedd;border-radius:0;box-shadow:none}
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-strip{background:#132e51;border-radius:6px;box-shadow:none}
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-strip:before{display:none}
+.sp-sukkur-premium #sukkur-live-opd-ad :is(h2,p,.sc-promo-mark){color:white}
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-button{background:white;color:#132e51;border-radius:4px;box-shadow:none}
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-wave-letter{animation:none}
+.sp-sukkur-premium :is(input,select){font-size:16px}
+.sp-sukkur-premium :is(a,button,input,select,summary):focus-visible{outline:3px solid #2468ce;outline-offset:3px}
+@media(max-width:760px){
+ .sp-sukkur-premium #listed-doctors .sp-directory-grid,.sp-sukkur-premium .sp-sukkur-reading{grid-template-columns:1fr}
+ .sp-sukkur-premium #listed-doctors .sp-directory-icon{flex-basis:64px;width:64px;height:64px}
+ .sp-sukkur-premium #listed-doctors .sp-directory-card{gap:14px}
+ .sp-sukkur-premium #listed-doctors .sp-cross-profile-actions{flex-direction:column;align-items:stretch}
+ .sp-sukkur-premium #listed-doctors .sp-cross-profile-actions a{text-align:center;min-height:44px}
+ .sp-sukkur-premium .sp-premium-shortcuts a{min-height:44px;display:inline-flex;align-items:center;font-size:14px}
+ .sp-sukkur-premium .sp-sukkur-reading{margin-block:20px}
+}
+.sp-sukkur-premium #listed-doctors{background:#fff}
+.sp-sukkur-premium #listed-doctors .sp-directory-card{flex-direction:row}
+.sp-sukkur-premium #listed-doctors .sp-cross-link-external{background:#1956b8!important;color:#fff!important;border-color:#1956b8!important}
+.sp-sukkur-premium #listed-doctors .sp-cross-link-external :is(span,strong){color:#fff!important}
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-button{color:#132e51!important}
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-mark,
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-mark :is(strong,small),
+.sp-sukkur-premium #sukkur-live-opd-ad .sc-promo-description :is(span,strong){color:#fff!important}
