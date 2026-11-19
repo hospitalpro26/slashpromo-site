@@ -42,8 +42,8 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 <label>Admin key <input type="password" id="key" autocomplete="off" placeholder="Paste private admin key"></label>
 <label>View <select id="filter"><option value="all" selected>All saved questions</option><option value="pending">Awaiting review</option><option value="approved">Published</option><option value="rejected">Rejected</option></select></label>
 <label>Records <select id="archive-view"><option value="0">Active questions</option><option value="1">Archived questions</option></select></label>
-<label>City <select id="city-filter"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="ghotki">Ghotki</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option></select></label>
-<label>Page type <select id="type-filter"><option value="">All pages</option><option value="city">City homepage</option><option value="doctor">Doctor profile</option><option value="hospital">Hospital</option><option value="specialty">Specialty directory</option><option value="health">Health topic</option><option value="other">Other local page</option></select></label>
+<label>City <select id="city-filter"><option value="">All cities</option><option value="homepage">Homepage feedback</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="ghotki">Ghotki</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option></select></label>
+<label>Page type <select id="type-filter"><option value="">All pages</option><option value="feedback">Community feedback</option><option value="city">City homepage</option><option value="doctor">Doctor profile</option><option value="hospital">Hospital</option><option value="specialty">Specialty directory</option><option value="health">Health topic</option><option value="other">Other local page</option></select></label>
 <label>Search questions <input type="search" id="query" placeholder="Doctor, question or page" autocomplete="off"></label>
 <button type="button" id="load">Load questions</button>
 <button type="button" id="more" hidden>Load older questions</button>
@@ -86,6 +86,7 @@ async function request(method,payload,before){
   return data;
 }
 function classify(q){
+  if(q.page_path==="/")return "feedback";
   const parts=String(q.page_path||"/"+q.city+"/").split("/").filter(Boolean);
   if(parts.length===1&&parts[0]===q.city)return "city";
   if(parts[0]==="hospitals"&&parts[1]===q.city)return "hospital";
@@ -114,13 +115,14 @@ function render(){
     return;
   }
   for(const q of visible){
+    const feedback=q.page_path==="/";
     const card=node("article","item");
     const meta=node("small","",String(q.city||"").toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
     meta.append(node("span","qa-status "+q.status,q.status==="approved"?"Published":q.status==="rejected"?"Rejected":"Pending"));
     const question=node("h2","",q.question);
     const rawPath=String(q.page_path||"/"+q.city+"/");
     const source=node("p","source","Submitted on: "+rawPath+" · Page type: "+classify(q));
-    if(/^\/(?:[a-z0-9-]+\/){1,6}$/.test(rawPath)){
+    if(rawPath==="/"||/^\/(?:[a-z0-9-]+\/){1,6}$/.test(rawPath)){
       const link=node("a","","Open source page ↗");
       link.href=rawPath;link.target="_blank";link.rel="noopener noreferrer";
       source.append(" · ",link);
@@ -152,16 +154,16 @@ function render(){
     }
     privateCard.append(privateGrid);
     const label=node("label","");
-    label.append(node("span","","Answer for public display (verify all facts first)"));
+    label.append(node("span","",feedback?"Optional public reply to this comment":"Answer for public display (verify all facts first)"));
     const answer=node("textarea","");
     answer.maxLength=2000;answer.value=q.draft_answer??q.answer??"";
     label.append(answer);
     const actions=node("div","buttons");
     const saveDraft=node("button","qa-draft","Save private draft");
-    const publish=node("button","",q.status==="approved"?"Update published answer":"Publish verified answer");
+    const publish=node("button","",feedback?"Approve comment":q.status==="approved"?"Update published answer":"Publish verified answer");
     const reject=node("button","reject","Reject question");
     async function submit(next){
-      if(next==="approved"&&answer.value.trim().length<12){
+      if(next==="approved"&&!feedback&&answer.value.trim().length<12){
         say("A verified public answer of at least 12 characters is required.");
         return;
       }

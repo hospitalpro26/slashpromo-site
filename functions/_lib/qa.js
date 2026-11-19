@@ -1,9 +1,10 @@
 // SlashPromo public Q&A: only approved, non-sensitive content is public.
-export const CITIES = ["sukkur","khairpur","shikarpur","ghotki","karachi","lahore","hyderabad","pano-aqil"];
-export const CATEGORIES = ["Health questions","OPD timings","Doctor contact","Doctors & hospitals","Appointments","Other"];
+export const CITIES = ["homepage","sukkur","khairpur","shikarpur","ghotki","karachi","lahore","hyderabad","pano-aqil"];
+export const CATEGORIES = ["Community feedback","Health questions","OPD timings","Doctor contact","Doctors & hospitals","Appointments","Other"];
 // Keep public threads attached to their actual pages. Old rows without page_path
 // remain visible only on the city root where they were originally submitted.
 export function questionPage(city,path){
+  if(city==="homepage")return path==="/"?"/":null;
   if(!CITIES.includes(city))return null;
   // Legacy city-level questions remain attached only to the city root.
   if(path===undefined||path===null||path==="")return "/"+city+"/";

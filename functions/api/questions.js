@@ -10,7 +10,7 @@ export async function onRequestGet({request,env}){
   try{
     await ensureDb(env);
     const result=await env.QA_DB.prepare(
-      "SELECT id,category,question,answer,answered_at,CASE WHEN public_name_consent=1 THEN visitor_name ELSE NULL END AS author_name FROM questions WHERE city=? AND (page_path=? OR (page_path IS NULL AND ?=('/' || city || '/'))) AND status='approved' AND length(trim(COALESCE(answer,'')))>0 ORDER BY answered_at DESC LIMIT 30"
+      "SELECT id,category,question,answer,answered_at,CASE WHEN public_name_consent=1 THEN visitor_name ELSE NULL END AS author_name FROM questions WHERE city=? AND (page_path=? OR (page_path IS NULL AND ?=('/' || city || '/'))) AND status='approved' AND (page_path='/' OR length(trim(COALESCE(answer,'')))>0) ORDER BY answered_at DESC LIMIT 30"
     ).bind(city,pagePath,pagePath).all();
     return reply({questions:result.results||[],enabled:available,siteKey:available?env.QA_TURNSTILE_SITE_KEY:null});
   }catch(_){
@@ -31,6 +31,7 @@ export async function onRequestPost({request,env}){
   const pagePath=questionPage(city,data.pagePath);
   if(!pagePath) return reply({error:"Choose a supported page."},400);
   const category=String(data.category||"").trim();
+  if((city==="homepage") !== (category==="Community feedback"))return reply({error:"Choose the correct feedback category."},400);
   const question=String(data.question||"").trim().replace(/\s+/g," ");
   // Personal details are stored separately and never included in public API responses.
   const visitorName=String(data.visitorName||"").trim().replace(/\s+/g," ");
@@ -42,6 +43,7 @@ export async function onRequestPost({request,env}){
   const phoneDigits=visitorWhatsApp.replace(/\D/g,"");
   if(visitorName.length<2||visitorName.length>100||visitorCity.length<2||visitorCity.length>80)
     return reply({error:"Please provide your name and city."},400);
+  if(city==="homepage"&&hasPrivateInfo(visitorName))return reply({error:"Please use a display name without contact details."},400);
   if(!publicNameConsent)
     return reply({error:"Please confirm that your name may appear publicly with your approved question."},400);
   if(visitorWhatsApp && (!/^\+?[\d ()-]{10,24}$/.test(visitorWhatsApp)||phoneDigits.length<10||phoneDigits.length>15))
