@@ -1,0 +1,43 @@
+/* Sukkur-inspired city visual language, rolled out gradually on opt-in city homepages.
+   Presentation only: existing directory JS, filters, provider facts, SEO and ads are untouched. */
+body.sp-city-editorial{--cp-navy:#203751;--cp-blue:#1956b8;--cp-red:#a33c4c;--cp-ink:#203751;--cp-muted:#526277;--cp-line:#dce2e8;--cp-pale:#f6f8fa;background:#fff;color:#203751}
+.sp-city-editorial .site-header{background:#fff;border-bottom:1px solid #dce2e8;box-shadow:none}
+.sp-city-editorial .site-header .topbar{background:#f7f8fa;border-bottom:1px solid #e0e5ea}
+.sp-city-editorial .site-header .topbar :is(p,b,a){color:#364d68;font-size:12px}
+.sp-city-editorial .site-header .navlinks a{font-size:14px;font-weight:700}
+.sp-city-editorial .site-header .navlinks .btn{border-radius:5px}
+.sp-city-editorial .sp-city-premium-hero{background:#eef2f6;color:#203751}
+.sp-city-editorial .sp-city-premium-hero:before{display:none}
+.sp-city-editorial .sp-city-premium-hero-inner{padding:51px 0 77px}
+.sp-city-editorial .sp-city-premium-breadcrumb,.sp-city-editorial .sp-city-premium-breadcrumb a{color:#526277}
+.sp-city-editorial .sp-city-premium-kicker{color:#a33c4c;letter-spacing:1px;font-size:12px}
+.sp-city-editorial .sp-city-premium-hero h1{color:#203751;font-size:clamp(37px,5vw,59px);line-height:1.14;letter-spacing:-1.9px;font-weight:800}
+.sp-city-editorial .sp-city-premium-hero h1 em{color:#1956b8}
+.sp-city-editorial .sp-city-premium-hero p{color:#526277;font-size:16px;line-height:1.7}
+.sp-city-editorial .sp-city-premium-proofs{color:#526277;font-size:13px}
+.sp-city-editorial .sp-city-premium-proofs span:before{color:#087c65}
+.sp-city-editorial .sp-city-premium-disc{background:#dce6f2;box-shadow:none}
+.sp-city-editorial .sp-city-premium-disc:after{border-color:#fff}
+.sp-city-editorial .sp-city-premium-float{border:1px solid #d8e1eb;box-shadow:0 10px 24px #28476b1b;border-radius:6px}
+.sp-city-editorial .sp-city-search{border-radius:5px;box-shadow:0 9px 22px #20375114}
+.sp-city-editorial .sp-city-search button{background:#1956b8;border-radius:5px}
+.sp-city-editorial .sp-city-premium-links a{border-radius:5px}
+.sp-city-editorial :is(.section,.kh-section,.tb-section){padding-top:48px;padding-bottom:48px}
+.sp-city-editorial :is(.section,.kh-section,.tb-section) h2{color:#203751;font-size:clamp(26px,3vw,34px);letter-spacing:-.7px;font-weight:790}
+.sp-city-editorial :is(.section,.kh-section,.tb-section) p{line-height:1.72}
+.sp-city-editorial :is(.eyebrow,.kh-overline){color:#a33c4c;letter-spacing:.8px}
+.sp-city-editorial .section.soft{background:#f6f8fa}
+.sp-city-editorial :is(.khp-card,.kh-card,.khp-facility-grid article,.sp-directory-card,.tb-card){border:0;border-top:1px solid #dce2e8;border-radius:0;box-shadow:none;transform:none}
+.sp-city-editorial :is(.khp-grid,.sp-directory-grid){gap:0 32px}
+.sp-city-editorial :is(.khp-card,.sp-directory-card){padding:24px 0}
+.sp-city-editorial .khp-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.sp-city-editorial .khp-avatar{border-radius:50%;width:64px;height:64px;flex-basis:64px}
+.sp-city-editorial .khp-card h3{font-size:19px;line-height:1.4}
+.sp-city-editorial .khp-specialty{font-size:15px}
+.sp-city-editorial .khp-clinic{font-size:14px}
+.sp-city-editorial .khp-cta a[href*="slashcure.com"]{background:#1956b8;color:#fff;border:1px solid #1956b8;border-radius:4px;padding:10px 12px;font-size:13px}
+.sp-city-editorial .sp-cross-link-external{background:#1956b8!important;color:#fff!important;border:1px solid #1956b8!important;border-radius:4px}
+.sp-city-editorial .sp-cross-link-external :is(span,strong){color:#fff!important}
+.sp-city-editorial :is(input,select){font-size:16px}
+.sp-city-editorial :is(a,button,input,select,summary):focus-visible{outline:3px solid #2468ce;outline-offset:3px}
+@media(max-width:760px){.sp-city-editorial .sp-city-premium-hero-inner{padding:34px 0 56px}.sp-city-editorial .sp-city-premium-hero h1{font-size:clamp(34px,7vw,43px);letter-spacing:-1.1px}.sp-city-editorial :is(.khp-grid,.sp-directory-grid){grid-template-columns:1fr}.sp-city-editorial .khp-cta a[href*="slashcure.com"]{min-height:44px;display:inline-flex;align-items:center}.sp-city-editorial .sp-cross-link-external{min-height:44px}}
