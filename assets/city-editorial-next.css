@@ -1,0 +1,33 @@
+/* Sukkur-inspired city design continuation, 2026-11-19.
+   Opt-in homepages only. No change to doctor facts, links, search behavior or advertising. */
+body.sp-next-city{--sp-blue:#1956b8;--sp-ink:#203751;--sp-muted:#526277;--sp-line:#dce2e8;background:#fff;color:var(--sp-ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.sp-next-city .site-header{background:#fff;color:#203751;border-bottom:1px solid #dce2e8;box-shadow:none}
+.sp-next-city .site-header .topbar{background:#f7f8fa;border-bottom:1px solid #e0e5ea;color:#364d68}
+.sp-next-city .site-header .topbar :is(p,b,a){color:#364d68;font-size:12px}
+.sp-next-city .site-header .navlinks a{font-size:14px;font-weight:700}
+.sp-next-city .site-header .navlinks .btn{border-radius:5px}
+.sp-next-city :is(.sp-profile-hero,.page-hero,.rat-hero){background:#eef2f6!important;color:#203751!important;box-shadow:none}
+.sp-next-city :is(.sp-profile-hero,.page-hero,.rat-hero) h1{color:#203751!important;font-size:clamp(35px,5vw,56px);letter-spacing:-1.5px;line-height:1.15;font-weight:800}
+.sp-next-city :is(.sp-profile-hero,.page-hero,.rat-hero) p{color:#526277!important;font-size:16px;line-height:1.7}
+.sp-next-city :is(.sp-profile-hero,.page-hero,.rat-hero) :is(a,.sp-kicker,.sp-crumb){color:#1956b8}
+.sp-next-city .sp-pa-quickfacts span{color:#285177;background:#fff;border:1px solid #dce2e8;border-radius:5px}
+.sp-next-city :is(.section,.gp-section,.rat-section){background:#fff;padding-top:48px;padding-bottom:48px}
+.sp-next-city :is(.section.soft,.gp-section-soft){background:#f6f8fa}
+.sp-next-city :is(.section,.gp-section,.rat-section) h2{color:#203751;font-size:clamp(25px,3vw,34px);letter-spacing:-.65px}
+.sp-next-city :is(.section,.gp-section,.rat-section) p{line-height:1.75;color:#526277}
+.sp-next-city :is(.sp-directory-card,.rat-card,.gp-card){border:0;border-top:1px solid #dce2e8;border-radius:0;box-shadow:none;background:#fff;transform:none}
+.sp-next-city .sp-pa-directory .sp-pa-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}
+.sp-next-city .sp-pa-directory .sp-directory-card{padding:24px 0}
+.sp-next-city .sp-pa-directory .sp-directory-card h3{font-size:19px;line-height:1.4}
+.sp-next-city .sp-pa-actions a{border-radius:4px;min-height:44px;font-size:14px}
+.sp-next-city .sp-pa-main,.sp-next-city .sp-cross-link-external{background:#1956b8!important;color:#fff!important;border-color:#1956b8!important}
+.sp-next-city .sp-cross-link-external :is(span,strong){color:#fff!important}
+.sp-next-city .rat-hero{padding:51px 0 45px}
+.sp-next-city .rat-section{background:#f6f8fa}
+.sp-next-city .rat-card{padding:23px 0}
+.sp-next-city .rat-links a{background:#f7f9fc;border-left:3px solid #1956b8;border-radius:4px;color:#214c7f}
+.sp-next-city .rat-tag{background:#e8eef7;color:#234f80;border-radius:4px}
+.sp-next-city .rat-cta{background:#1956b8;color:#fff!important;border-radius:4px}
+.sp-next-city :is(input,select){font-size:16px}
+.sp-next-city :is(a,button,input,select,summary):focus-visible{outline:3px solid #2468ce;outline-offset:3px}
+@media(max-width:760px){.sp-next-city :is(.sp-profile-hero,.page-hero,.rat-hero) h1{font-size:clamp(32px,7vw,42px)}.sp-next-city .sp-pa-directory .sp-pa-grid{grid-template-columns:1fr}.sp-next-city :is(.section,.gp-section,.rat-section){padding-top:38px;padding-bottom:38px}}
