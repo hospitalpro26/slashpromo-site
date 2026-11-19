@@ -21,3 +21,13 @@ body:has(.site-header) :is(input,select,textarea){font-size:16px}
 body:has(.site-header) :is(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #2468ce;outline-offset:3px}
 @media(max-width:760px){body:has(.site-header) :is(.sp-profile-hero,.page-hero) h1{font-size:clamp(31px,7vw,42px)}body:has(.site-header) :is(.sp-cross-link-external,.sp-pa-main){min-height:44px}}
 @media(prefers-reduced-motion:reduce){body:has(.site-header) :is(.sp-directory-card,.gp-doctor){transition:none}}
+
+/* Contrast fix after live city-page visual QA. */
+body:has(.site-header) .site-header .wordmark{color:#184d9d!important}
+body:has(.site-header) .site-header .wordmark .promo{color:#e24f63!important}
+body:has(.site-header) .site-header .wordmark .dotcom{color:#53647e!important}
+body:has(.site-header) .site-header .navlinks a:not(.btn){color:#344b68!important}
+body:has(.site-header) .site-header .navlinks a:not(.btn):hover{color:#1956b8!important}
+body:has(.site-header) .site-header .navlinks .btn{background:#1956b8!important;color:#fff!important;border-color:#1956b8!important}
+body:has(.site-header) :is(.page-hero,.sp-profile-hero) :is(.eyebrow,.sp-kicker){color:#a33c4c!important}
+body:has(.site-header) :is(.page-hero,.sp-profile-hero) h1 :is(em,span){color:#1956b8}
