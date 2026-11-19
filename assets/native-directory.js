@@ -143,9 +143,11 @@
     if(r.name)search.searchParams.set("q",r.name);
     return {url:search.href,label:"Search Slashcure (direct doctor link unavailable) ↗",direct:false};
   };
+  const sukkurPortraits = {"/doctors/sukkur/dr-aftab-ahmed-mughal/": "/assets/home/dr-aftab-ahmed-mughal-photo.svg", "/doctors/sukkur/dr-rizwana-qureshi/": "/assets/home/dr-rizwana-qureshi.webp", "/doctors/sukkur/dr-aneel-ahmed-ghanghro/": "/assets/home/dr-aneel-ahmed-ghanghro.webp", "/doctors/sukkur/dr-bashir-ahmed-khoso/": "/assets/home/dr-bashir-ahmed-khoso.webp", "/doctors/sukkur/dr-salma-lakho/": "/assets/home/dr-salma-lakho.webp", "/doctors/sukkur/dr-komal-kandhir/": "/assets/home/dr-komal-kandhir-photo.svg", "/doctors/sukkur/prof-dr-kirpal-das-makheja/": "/assets/home/prof-dr-kirpal-das-makheja-photo.svg", "/doctors/sukkur/dr-aisha-aman/": "/assets/home/dr-aisha-aman.webp", "/doctors/sukkur/dr-murk-channa/": "/assets/home/dr-murk-channa-photo.svg"};
   const card = (r, sukDoctorIcons=false) => {
     const type=sukDoctorIcons ? specialtyIconType(r) : "";
-    const icon=sukDoctorIcons ? '<div class="sp-directory-icon sp-specialty-icon sp-specialty-'+type+'" aria-hidden="true">'+specialtyIcon(type)+'</div>'
+    const portrait=sukDoctorIcons && sukkurPortraits[r.url];
+    const icon=portrait ? '<div class="sp-directory-icon sp-doctor-portrait"><img src="'+esc(portrait)+'" width="88" height="88" loading="lazy" decoding="async" alt="'+esc(r.name)+'"></div>' : sukDoctorIcons ? '<div class="sp-directory-icon sp-specialty-icon sp-specialty-'+type+'" aria-hidden="true">'+specialtyIcon(type)+'</div>'
       : '<div class="sp-directory-icon" aria-hidden="true">'+esc(symbol(r))+'</div>';
     const external=slashcureLink(r);
     return '<article class="sp-directory-card'+(sukDoctorIcons ? " sp-specialty-card" : "")+'">'+
