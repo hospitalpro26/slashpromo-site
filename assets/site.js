@@ -307,3 +307,62 @@ import("/assets/cross-profile-links.js?v=20261109-patient3").catch(()=>{});
   document.head.appendChild(link);
   import("/assets/location-personalization.js?v=20261109-consent4").catch(()=>{});
 })();
+
+
+/* Slashcure discovery: contextual, accessible and non-intrusive.
+   Uses only links already published in the page; never fabricates profiles. */
+(function(){
+  "use strict";
+  function render(){
+    if(document.getElementById("sp-slashcure-discovery-v1"))return;
+    if(/^\/(?:admin|qa-admin|control-center|analytics|enquiries|secure-backups|api|review|automation)(?:\/|$)/i.test(location.pathname))return;
+    const main=document.querySelector("main");
+    if(!main)return;
+    const pagePath=location.pathname;
+    const doctorPage=/^\/doctors\/[^/]+\/[^/]+\/?$/.test(pagePath);
+    const hospitalPage=/^\/hospitals\/[^/]+\/[^/]+\/?$/.test(pagePath);
+    const relevant=[...main.querySelectorAll("a[href]")].filter(a=>{
+      try{const url=new URL(a.href,location.href);return url.protocol==="https:" && url.hostname==="slashcure.com" && url.pathname!=="/" && !url.search;}catch{return false;}
+    });
+    const pageSlug=pagePath.split("/").filter(Boolean).slice(-1)[0]||"";
+    let exact=null;
+    if(doctorPage || hospitalPage){
+      exact=relevant.find(a=>{
+        const slug=new URL(a.href).pathname.split("/").filter(Boolean).slice(-1)[0];
+        return slug===pageSlug;
+      })||null;
+    }
+    const section=document.createElement("section");
+    section.id="sp-slashcure-discovery-v1";
+    section.setAttribute("aria-label","Explore healthcare on Slashcure");
+    section.className="sp-slashcure-discovery";
+    const wrap=document.createElement("div");wrap.className="sp-slashcure-discovery-inner";
+    const text=document.createElement("div");
+    const eyebrow=document.createElement("span");eyebrow.className="sp-slashcure-discovery-eyebrow";eyebrow.textContent="HEALTHCARE, CONNECTED";
+    const h=document.createElement("h2");h.textContent="Explore on Slashcure.com";
+    const p=document.createElement("p");
+    p.textContent=doctorPage?"Find public doctor profiles and available contact or appointment options. Confirm the latest details on Slashcure.":hospitalPage?"Browse hospital and doctor profiles, and check the latest published information on Slashcure.":"Discover doctors, hospitals and healthcare services across Pakistan. Check provider details and available contact options on Slashcure.";
+    text.append(eyebrow,h,p);
+    const actions=document.createElement("div");actions.className="sp-slashcure-discovery-actions";
+    function action(href,label,isPrimary){
+      const a=document.createElement("a");
+      a.href=href;a.textContent=label;a.target="_blank";a.rel="noopener noreferrer";
+      a.className="sp-slashcure-discovery-link"+(isPrimary?" sp-primary":"");
+      actions.appendChild(a);
+    }
+    if(exact)action(exact.href,doctorPage?"View this doctor's Slashcure profile":"View this hospital on Slashcure",true);
+    action("https://slashcure.com/","Explore Slashcure.com",!exact);
+    wrap.append(text,actions);section.appendChild(wrap);
+    const footer=document.querySelector("footer");
+    if(footer&&footer.parentNode)footer.parentNode.insertBefore(section,footer);
+    else main.appendChild(section);
+    if(!document.getElementById("sp-slashcure-discovery-style-v1")){
+      const style=document.createElement("style");
+      style.id="sp-slashcure-discovery-style-v1";
+      style.textContent=".sp-slashcure-discovery{background:#f0f6ff;color:#102b53;border-top:1px solid #cbdcf3;border-bottom:1px solid #cbdcf3;padding:24px 16px}.sp-slashcure-discovery-inner{max-width:1120px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}.sp-slashcure-discovery-eyebrow{font-size:11px;font-weight:800;letter-spacing:.09em;color:#ad1e3a}.sp-slashcure-discovery h2{font-size:clamp(20px,2.4vw,28px);color:#123d7a;margin:5px 0 7px;line-height:1.2}.sp-slashcure-discovery p{font-size:14px;line-height:1.6;margin:0;max-width:620px;color:#344a68}.sp-slashcure-discovery-actions{display:flex;gap:10px;flex-wrap:wrap}.sp-slashcure-discovery-link{border:1px solid #145db0;color:#145db0;background:white;text-decoration:none;font-size:13px;font-weight:750;border-radius:9px;padding:12px 16px;display:inline-block}.sp-slashcure-discovery-link.sp-primary{background:#165cae;color:white}.sp-slashcure-discovery-link:hover{text-decoration:underline}.sp-slashcure-discovery-link:focus-visible{outline:3px solid #f0a23c;outline-offset:3px}@media(max-width:560px){.sp-slashcure-discovery-actions{width:100%}.sp-slashcure-discovery-link{flex:1;text-align:center}}";
+      document.head.appendChild(style);
+    }
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render,{once:true});
+  else render();
+})();
