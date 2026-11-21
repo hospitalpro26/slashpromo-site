@@ -47,7 +47,28 @@
   }
   function renderCard(s){
     const card=node("article","hn-story");
-    card.append(node("div","hn-story-top"));
+    // Image URLs come from the editorially reviewed local news feed.
+    // Restrict to approved HTTPS image hosts and never render feed HTML.
+    let safeImage=false;
+    if(typeof s.imageUrl==="string"){
+      try{
+        const source=new URL(s.imageUrl);
+        safeImage=source.protocol==="https:" && !source.username && !source.password &&
+          (source.hostname==="d2ol7oe51mr4n9.cloudfront.net" || source.hostname==="slashpromo.com");
+      }catch{safeImage=false}
+    }
+    const media=node("div",safeImage?"hn-story-top hn-story-has-photo":"hn-story-top");
+    if(safeImage){
+      const img=node("img","hn-story-image");
+      img.src=s.imageUrl;
+      img.alt=typeof s.imageAlt==="string"?s.imageAlt:"Healthcare news photograph";
+      img.loading="lazy";
+      img.decoding="async";
+      img.width=1280;
+      img.height=720;
+      media.append(img);
+    }
+    card.append(media);
     const body=node("div","hn-story-content");
     body.append(node("div","hn-story-kicker",s.topic+" · "+cityLabels[s.city]));
     const title=node("h3","");
