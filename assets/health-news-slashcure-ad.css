@@ -1,0 +1,28 @@
+/* Health News placements share the existing Slashcure slim strip design.
+   This file only animates the exact Slashcure.com wordmark from its first to last letter. */
+.hn-slashcure-ad{padding-top:26px;padding-bottom:26px;background:#f4f7fb}
+.hn-slashcure-ad .sc-promo-strip{max-width:1180px;margin-inline:auto}
+.hn-slashcure-ad .sc-promo-mark{display:block;line-height:1.25;white-space:nowrap;letter-spacing:-.06em}
+.hn-slashcure-ad .hn-sc-letters{display:inline-flex;align-items:baseline}
+.hn-slashcure-ad .hn-sc-char{display:inline-block;transform:translateY(0);animation:hn-sc-character-wave 3.75s ease-in-out infinite;animation-delay:calc(var(--hn-i)*.105s)}
+.hn-slashcure-ad .sc-promo-mark strong{display:inline-flex;color:#c62d43}
+.hn-slashcure-ad .sc-promo-mark small{display:inline-flex;letter-spacing:-.01em;color:#195eb4}
+.hn-slashcure-ad .sc-promo-description{color:#405773}
+.hn-slashcure-ad .sc-promo-tagline{color:#49627f;font-size:12px}
+.hn-slashcure-ad .sc-promo-button{max-width:100%;font-size:14px}
+.hn-slashcure-ad .sc-promo-button-letters{white-space:nowrap}
+.hn-slashcure-ad .sc-promo-strip:focus-within{outline:2px solid transparent}
+@keyframes hn-sc-character-wave{
+  0%,8%,29%,100%{transform:translateY(0)}
+  13%{transform:translateY(-6px)}
+  19%{transform:translateY(1px)}
+}
+@media(max-width:680px){
+  .hn-slashcure-ad{padding:17px 0 24px}
+  .hn-slashcure-ad .sc-promo-mark{font-size:clamp(23px,6.7vw,29px)}
+  .hn-slashcure-ad .sc-promo-description{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hn-slashcure-ad .hn-sc-char{animation:none!important;transform:none!important}
+}
+@media print{.hn-slashcure-ad{display:none!important}}
