@@ -3,6 +3,50 @@
   "articles": [
     {
       "status": "published",
+      "title": "Dengue in Sindh: November 2026 Case Reports and Warning Signs",
+      "summary": "Karachi and Sindh dengue figures reported on 12 November are attributed to health department data cited by the press. Learn warning signs and prevention; not a live case count.",
+      "city": "sindh",
+      "topic": "Public health alerts",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/sindh-dengue-cases-november-2026/",
+      "sourceName": "The Express Tribune (figures attributed to Sindh Health Department)",
+      "sourceUrl": "https://tribune.com.pk/story/2639865/city-outpaces-rest-of-sindh-in-dengue-cases"
+    },
+    {
+      "status": "published",
+      "title": "Dog Bite and Rabies Prevention in Pakistan: What to Do Immediately",
+      "summary": "WHO guidance explains immediate wound washing for at least 15 minutes and urgent medical assessment for rabies vaccination or immunoglobulin.",
+      "city": "pakistan",
+      "topic": "Public health alerts",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/dog-bite-rabies-prevention-pakistan/",
+      "sourceName": "World Health Organization",
+      "sourceUrl": "https://www.who.int/news-room/fact-sheets/detail/rabies/"
+    },
+    {
+      "status": "published",
+      "title": "Sindh Polio Drive 2026: 7.104 Million Children Vaccinated in November",
+      "summary": "Pakistan's official polio programme reports about 7.104 million children vaccinated in 20 Sindh districts during the 2–8 November campaign.",
+      "city": "sindh",
+      "topic": "Health campaigns",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/sindh-polio-campaign-november-2026/",
+      "sourceName": "Pakistan Polio Eradication Initiative",
+      "sourceUrl": "https://www.poliofreepakistan.gov.pk/media-room/media-releases/2743-pakistan-vaccinates-24-million-children-in-november-sub-national-polio-campaign"
+    },
+    {
+      "status": "published",
+      "title": "WHO Antibiotic Resistance Awareness Week 2026: Why Testing Matters",
+      "summary": "WHO's 2026 AMR update highlights persistent gaps in laboratory testing and prescribing guidance, alongside World AMR Awareness Week.",
+      "city": "global",
+      "topic": "Medical research",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/who-antimicrobial-resistance-awareness-week-2026/",
+      "sourceName": "World Health Organization",
+      "sourceUrl": "https://www.who.int/news/item/16-11-2026-more-countries-have-antimicrobial-resistance-plans-but-patients-still-lack-testing-and-treatment"
+    },
+    {
+      "status": "published",
       "title": "Kidney Transplant at Ziauddin Hospital Sukkur: Private-Sector Milestone Reported",
       "summary": "A Facebook announcement involving Dr. Naveed Ahmed Mahar reports a kidney transplant at Dr. Ziauddin Hospital Sukkur. The private-sector 'first' claim remains unverified; SIUT performed Sukkur transplants in 2019.",
       "city": "sukkur",
