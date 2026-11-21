@@ -149,7 +149,23 @@ function render(){
         await load(false);say(restore?"Enquiry restored to active inbox.":"Enquiry archived. Use Archived enquiries to restore it.");
       }catch(error){say("Archive update failed: "+error.message);archiveBtn.disabled=false;}
     });
-    actions.append(archiveBtn);footer.append(sLabel,noteLabel,actions);
+    actions.append(archiveBtn);
+    if($("#archive-view").value==="1"){
+      const deleteBtn=make("button","muted-btn","Delete permanently");
+      deleteBtn.type="button";
+      deleteBtn.title="Permanently delete this enquiry and all its reply history.";
+      deleteBtn.addEventListener("click",async()=>{
+        const typed=window.prompt("This will permanently delete this enquiry, contact information and its saved reply history. Type DELETE to confirm:");
+        if(typed!=="DELETE"){say("Deletion cancelled.");return;}
+        deleteBtn.disabled=true;
+        try{
+          await request("/api/enquiries-admin",{method:"POST",body:JSON.stringify({id:item.id,action:"delete_permanently",confirm:"DELETE"})});
+          await load(false);say("Archived enquiry and its reply history permanently deleted.");
+        }catch(error){say("Deletion failed: "+error.message);deleteBtn.disabled=false;}
+      });
+      actions.append(deleteBtn);
+    }
+    footer.append(sLabel,noteLabel,actions);
 
     // Private reply composer. A prepared reply is NOT marked sent until staff confirms it.
     const replyPanel=make("section","reply-panel");
