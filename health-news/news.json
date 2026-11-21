@@ -1,4 +1,17 @@
 {
   "version": 1,
-  "articles": []
+  "articles": [
+    {
+      "status": "published",
+      "title": "Pelvic and Acetabular Fracture Surgery Reported at Sukkur Trauma Centre",
+      "summary": "A Facebook account describes pelvic and acetabular fracture surgery at Sukkur Trauma Centre, with named orthopaedic surgeons. The report has not been independently verified.",
+      "city": "sukkur",
+      "hospitalName": "Trauma and Emergency Response Centre Sukkur",
+      "topic": "Community health",
+      "datePublished": "2026-11-21",
+      "url": "/health-news/sukkur-pelvic-acetabular-fracture-surgery/",
+      "sourceName": "Abdul Wajid Wadho (Facebook report)",
+      "sourceUrl": "https://www.facebook.com/share/p/1CHmKgJ4sx/"
+    }
+  ]
 }
