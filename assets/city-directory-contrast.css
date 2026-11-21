@@ -1,0 +1,90 @@
+/* SlashPromo city + discovery-page refinement, November 2026.
+   Presentation only: content, metadata, Q&A, ads, directory controls and links untouched.
+   Scoped opt-in to avoid changing the approved homepage or private dashboard. */
+body.sp-visual-polish {
+  --sp-polish-ink:#203751;
+  --sp-polish-copy:#40566f;
+  --sp-polish-subtle:#52657b;
+  --sp-polish-blue:#1956b8;
+  --sp-polish-border:#d8e2ee;
+  --sp-polish-surface:#f6f8fb;
+  color:var(--sp-polish-ink);
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+}
+.sp-visual-polish :is(.section,.kh-section,.tb-section,.gp-section,.sp-index,.sp-profile) :is(h2,h3){
+  line-height:1.3; overflow-wrap:break-word;
+}
+.sp-visual-polish :is(.section,.kh-section,.tb-section,.gp-section,.sp-index,.sp-profile) p{
+  line-height:1.75;
+}
+.sp-visual-polish :is(.section,.kh-section,.tb-section,.gp-section,.sp-index,.sp-profile) :is(.lead,.lede,.muted,.description,.sp-subtitle){
+  color:var(--sp-polish-subtle);
+}
+.sp-visual-polish :is(.sp-directory-card,.khp-card,.kh-card,.tb-card,.gp-doctor,.sp-profile-panel){
+  overflow-wrap:anywhere;
+}
+.sp-visual-polish :is(.sp-directory-card,.khp-card,.kh-card,.tb-card,.gp-doctor,.sp-profile-panel) :is(p,small,.meta,.specialty,.location){
+  color:var(--sp-polish-copy);
+}
+.sp-visual-polish a:not(.btn):not(.button):not([class*="cta"]):focus-visible,
+.sp-visual-polish :is(button,input,select,textarea,summary):focus-visible{
+  outline:3px solid #2368c8; outline-offset:3px;
+}
+.sp-visual-polish :is(input,select,textarea) {font-size:max(16px,1rem)}
+.sp-visual-polish :is(input,select,textarea)::placeholder {color:#63748a;opacity:1}
+.sp-visual-polish :is(.sp-directory-card,.khp-card,.kh-card,.tb-card,.gp-doctor,.sp-profile-panel) a:not(.btn):not(.button) {
+  text-underline-offset:3px;
+}
+.sp-visual-polish :is(.sp-directory-card,.khp-card,.kh-card,.tb-card,.gp-doctor,.sp-profile-panel) a:not(.btn):not(.button):hover{
+  text-decoration:underline;
+}
+.sp-visual-polish :is(.sp-cross-link-external,.sp-pa-main){
+  background:#1956b8;color:#fff;border-color:#1956b8;
+}
+.sp-visual-polish :is(.sp-cross-link-external,.sp-pa-main) :is(span,strong,small){
+  color:#fff;
+}
+.sp-visual-polish .site-header .navlinks .btn {
+  background:#1956b8;color:#fff;border-color:#1956b8;
+}
+.sp-visual-polish .site-header .navlinks .btn:hover{
+  background:#12458f;border-color:#12458f;color:#fff;
+}
+/* Editorial city heroes use light surfaces; other premium heroes stay dark. */
+.sp-visual-polish.sp-city-editorial .sp-city-premium-hero :is(p,.sp-city-premium-proofs,.sp-city-premium-breadcrumb){
+  color:#40566f;
+}
+.sp-visual-polish.sp-city-editorial .sp-city-premium-hero h1{color:#203751}
+.sp-visual-polish.sp-city-editorial .sp-city-premium-hero h1 em{color:#1956b8}
+.sp-visual-polish.sp-premium-city:not(.sp-city-editorial) .sp-city-premium-hero :is(p,.sp-city-premium-breadcrumb,.sp-city-premium-proofs){
+  color:#e2ecff;
+}
+.sp-visual-polish.sp-premium-city:not(.sp-city-editorial) .sp-city-premium-hero h1{color:#fff}
+.sp-visual-polish.sp-next-city :is(.page-hero,.sp-profile-hero) :is(p,.sp-subtitle){
+  color:#40566f;
+}
+.sp-visual-polish :is(.section,.kh-section,.tb-section,.gp-section) :is(.eyebrow,.overline,.kh-overline){
+  font-weight:800;
+}
+/* Ensure links can wrap without causing horizontal overflow on phones. */
+.sp-visual-polish :is(.sp-directory-grid,.khp-grid,.sp-pa-grid,.local-grid,.card-grid) > *{min-width:0}
+.sp-visual-polish :is(.sp-directory-grid,.khp-grid,.sp-pa-grid,.local-grid,.card-grid) a{
+  overflow-wrap:anywhere;
+}
+@media(max-width:760px){
+  .sp-visual-polish :is(.sp-city-premium-hero,.page-hero,.sp-profile-hero) h1{
+    line-height:1.14;letter-spacing:-.035em;
+  }
+  .sp-visual-polish :is(.sp-directory-card,.khp-card,.kh-card,.tb-card,.gp-doctor,.sp-profile-panel){
+    padding-inline:max(14px,env(safe-area-inset-left));
+  }
+  .sp-visual-polish :is(.sp-city-search,.sp-specialty-form) :is(button,input,select){
+    min-height:44px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .sp-visual-polish :is(.sp-directory-card,.khp-card,.kh-card,.tb-card,.gp-doctor){
+    transition:none;
+  }
+}
