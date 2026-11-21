@@ -13,6 +13,7 @@ on:
       - assets/city-questions.js
       - functions/_lib/qa.js
       - scripts/audit-site.mjs
+      - scripts/audit-seo-geo.mjs
       - scripts/audit-profile-quality.mjs
       - assets/directory.json
       - .github/workflows/audit-site.yml
@@ -43,6 +44,8 @@ jobs:
         run: node scripts/test-whatsapp-handoff.mjs
       - name: Audit SEO, sitemap and page-specific Q&A
         run: node scripts/audit-site.mjs
+      - name: Audit all published HTML SEO, local GEO and structured data
+        run: node scripts/audit-seo-geo.mjs
       - name: Audit doctor and hospital data quality
         run: node scripts/audit-profile-quality.mjs
       - name: Test new Pano Aqil physiotherapist and health pages
