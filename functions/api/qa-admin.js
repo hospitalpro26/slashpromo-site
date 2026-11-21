@@ -68,6 +68,22 @@ export async function onRequestPost(ctx){
       return reply({ok:true,archived:data.action==="archive"});
     }catch{return reply({error:"Could not update question archive."},503);}
   }
+  if(data.action==="delete_permanently"){
+    if(!/^[a-f0-9-]{36}$/i.test(id)||data.confirm!=="DELETE")return reply({error:"Explicit DELETE confirmation required."},400);
+    try{
+      await ensureDb(env);await ensureAdminArchiveDb(env);
+      const archived=await env.QA_DB.prepare("SELECT record_id FROM admin_archived_records WHERE kind='question' AND record_id=?").bind(id).first();
+      if(!archived)return reply({error:"Archive the question before permanent deletion."},409);
+      const existing=await env.QA_DB.prepare("SELECT status FROM questions WHERE id=?").bind(id).first();
+      if(!existing)return reply({error:"Question not found."},404);
+      if(existing.status==="approved")return reply({error:"Reject the published question before permanently deleting it."},409);
+      await env.QA_DB.batch([
+        env.QA_DB.prepare("DELETE FROM questions WHERE id=?").bind(id),
+        env.QA_DB.prepare("DELETE FROM admin_archived_records WHERE kind='question' AND record_id=?").bind(id)
+      ]);
+      return reply({ok:true,deleted:true});
+    }catch{return reply({error:"Could not permanently delete the question."},503);}
+  }
   const status=String(data.status||"");
   const answer=String(data.answer||"").trim();
   if(!/^[a-f0-9-]{36}$/i.test(id)||!["approved","rejected","draft"].includes(status)||answer.length>2000)
