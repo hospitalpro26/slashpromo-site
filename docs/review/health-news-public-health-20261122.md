@@ -1,3 +1,17 @@
+# PUBLICATION DECISION — 22 NOVEMBER 2026
+
+**Owner approval:** User explicitly requested “Deploy in SEO GEO Meta style” after reviewing the four-story batch. This approves publication of the four reviewed articles (not any unrelated draft PRs).
+
+**Implemented on this branch:** Four HTML articles are now indexable, with Nov 22 publication dates, SEO/GEO/OG/Twitter metadata, NewsArticle + FAQ + BreadcrumbList JSON-LD, original English content, Urdu summaries, qualified source references, and relevant Slashcure links. Four published entries added to `health-news/news.json`; regional Sindh/Pakistan/Global filters added; Health News hub schema and meta description updated; sitemap.xml, llms.txt, llms-full.txt, ai.txt, ai-map.json updated to 236 canonical URLs.
+
+**Verification:** Draft-to-publication metadata and schema checks passed; all four articles appear once in the JSON news feed and sitemap/AI map. Global source links checked: WHO AMR official /news/item/ page; WHO rabies guidance; Pakistan PEI 12 Nov results; dengue 12 Nov newspaper report explicitly attributed to provincial department, since direct surveillance report was not found. Production deployment, HTTP 200 and indexing require separate confirmation and should not be inferred from GitHub merge.
+
+**Editorial limitation:** Dengue statistics remain reported figures from the 12 Nov news article; not a direct official surveillance fetch and not a live count. Existing doctors and providers are not asserted as treating any specific condition.
+
+---
+
+# HISTORICAL REVIEW NOTES (retained for traceability)
+
 # SlashPromo Health News: 22 November 2026 — Editorial Review Batch
 
 **Status:** REVIEW ONLY — do not merge, deploy, publish, or submit to indexing before explicit editorial approval and completed checks.
