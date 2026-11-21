@@ -1,0 +1,1183 @@
+{
+  "schema_version": "1.0",
+  "name": "Slashpromo public AI discovery map",
+  "site": "https://slashpromo.com/",
+  "description": "Canonical public healthcare discovery URLs for Pakistan. Slashpromo links to primary Slashcure profiles where verified.",
+  "generated_from": "https://slashpromo.com/sitemap.xml",
+  "generated_on": "2026-11-22",
+  "notes": [
+    "A navigation index only; not a live medical database, not a provider quality ranking, and not a statement of current appointments or OPD availability.",
+    "Follow each canonical page and its verified Slashcure link for provider facts. Do not infer qualifications, clinic hours, phone numbers, services or current availability from URLs.",
+    "Crawler access and AI inclusion are controlled by each search provider; appearance in ChatGPT or other models is not guaranteed."
+  ],
+  "related": {
+    "human_ai_guide": "https://slashpromo.com/llms.txt",
+    "full_inventory": "https://slashpromo.com/llms-full.txt",
+    "ai_guide": "https://slashpromo.com/ai.txt",
+    "xml_sitemap": "https://slashpromo.com/sitemap.xml",
+    "primary_provider_source": "https://slashcure.com/"
+  },
+  "total_urls": 232,
+  "pages": [
+    {
+      "url": "https://slashpromo.com/dermatology/",
+      "lastmod": "2026-11-18",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/dermatology/scabies-urdu/",
+      "lastmod": "2026-11-18",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ai-discovery/",
+      "lastmod": "2026-11-14",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/nearby-healthcare/",
+      "lastmod": "2026-11-14",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/larkana/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/hepatitis-b-c/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/chronic-kidney-disease/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/asthma-breathing/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/persistent-fever/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/anemia-weakness/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/gastritis-abdominal-pain/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/heart-failure-symptoms/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/diabetes-complications/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/ratodero/dr-nadia-khan-arbani/",
+      "lastmod": "2026-11-14",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/consultant-physicians/",
+      "lastmod": "2026-11-14",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/female-consultant-physician/",
+      "lastmod": "2026-11-14",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/diabetes-care/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/high-blood-pressure/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ratodero/health-topics/thyroid-symptoms/",
+      "lastmod": "2026-11-14",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/",
+      "lastmod": "2026-11-21",
+      "type": "homepage"
+    },
+    {
+      "url": "https://slashpromo.com/cities/",
+      "lastmod": "2026-11-21",
+      "type": "directory"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/",
+      "lastmod": "2026-11-21",
+      "type": "doctor-directory"
+    },
+    {
+      "url": "https://slashpromo.com/specialties/",
+      "lastmod": "2026-11-11",
+      "type": "directory"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/",
+      "lastmod": "2026-11-21",
+      "type": "hospital-directory"
+    },
+    {
+      "url": "https://slashpromo.com/laboratories/",
+      "lastmod": "2026-11-09",
+      "type": "directory"
+    },
+    {
+      "url": "https://slashpromo.com/clinics/",
+      "lastmod": "2026-11-06",
+      "type": "directory"
+    },
+    {
+      "url": "https://slashpromo.com/about/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/advertise/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/contact/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/faq/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/privacy/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/terms/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/cookie-policy/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/advertising-policy/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/editorial-policy/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/accessibility/",
+      "lastmod": "2026-11-06",
+      "type": "site-information"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/best-rheumatologist/",
+      "lastmod": "2026-11-08",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/khairpur/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/khairpur/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-directory"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/khairpur/hussain-diagnostic-center/",
+      "lastmod": "2026-11-09",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/khairpur/health-care-clinic-khairpur/",
+      "lastmod": "2026-11-09",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/khairpur/ali-medical-center-khairpur/",
+      "lastmod": "2026-11-09",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/shikarpur/alkhidmat-medical-center/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/shikarpur/haji-lutufullah-bhayo-memorial/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/shikarpur/muhammad-ilyas-medical-center/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/doctors/",
+      "lastmod": "2026-11-08",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/hospitals/",
+      "lastmod": "2026-11-08",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/laboratories/",
+      "lastmod": "2026-11-08",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/clinics/",
+      "lastmod": "2026-11-08",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/karachi/astro-physiocare/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hyderabad/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/hyderabad/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-directory"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/hyderabad/tabba-heart-institute/",
+      "lastmod": "2026-11-09",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/karachi/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/physiotherapists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/ghotki/dr-imran-ali-kalwar/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/hyderabad/dr-ali-haseeb-qazi/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/khairpur/dr-ashfaque-ali-baloch/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/khairpur/dr-kanwal-aijaz/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-aftab-ansar-lodhi/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-tallal-ejaz/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-ammara-gill/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-aurangzaib-muhyuddin/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-awais-malik/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-ayman/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-aymen-javed/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-kareem-nawaz/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-m-amir-ishaq/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-muhammad-haris-burki/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-muhammad-irfan-shakir/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-muhammad-umair-arshad/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-osman-mohsin/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-rafia-shah/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-sadiya-binish/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-sara-tariq/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-tayyaba-tariq/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-tehreem-rauf/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lahore/dr-usman-ahmad-kamboh/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/larkana/dr-sajid-abbasi/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/ubauro/dr-aabid-raza/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-abdul-ahad-solangi/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-agha-wasif/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-ahmed-raza-laghari/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-aisha-aman/",
+      "lastmod": "2026-11-17",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-amjad-ali-kalwar/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-ammara-bhatti/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-aneel-ahmed-ghanghro/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-arif-soomro/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-bashir-ahmed-khoso/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-deepak-kumar/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-dost-muhammad/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-habibullah-maitlo/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-aftab-ahmed-mughal/",
+      "lastmod": "2026-11-10",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-halar-dahar/",
+      "lastmod": "2026-11-10",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-iqra-chachar/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-israr-ahmed-shaikh/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-komal-kandhir/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-muhammad-nasir-soomro/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-murk-channa/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-naveed-ahmed-mahar/",
+      "lastmod": "2026-11-21",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-noor-jhulan/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-riaz-hussain-hakro/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-saima-shaikh/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-sajid-khadim/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-tahir-mumtaz-memon/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-tofique-ahmed-kamboh/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/prof-dr-kirpal-das-makheja/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/bhatti-children-hospital-sukkur/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/dr-shahid-mirani-hospital-sukkur/",
+      "lastmod": "2026-11-09",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/dr-ziauddin-hospital-sukkur/",
+      "lastmod": "2026-11-18",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/ghulam-muhammad-mahar-medical-teaching-hospital/",
+      "lastmod": "2026-11-21",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/hira-medical-centre/",
+      "lastmod": "2026-11-18",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/mustafai-trust-hospital-sukkur/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/red-crescent-hospital-sukkur/",
+      "lastmod": "2026-11-18",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/river-city-hospital/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/sicvd-hospital-sukkur/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/hospitals/sukkur/sukkur-diagnostic-centre/",
+      "lastmod": "2026-11-08",
+      "type": "hospital-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-adeeqa-aman/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/rawalpindi/dr-ahmad-hassan/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/shikarpur/dr-ali-ilyas-napar/",
+      "lastmod": "2026-11-10",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-anozia-sabir/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-arooba-khayam/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-ayesha-anwar/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/gojra/dr-bilal-nazir/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sobhodero/dr-bisharat-ali-sahito/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/pano-aqil/dr-farooq-illahi/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sheikhupura/dr-hafiz-abdul-rehman/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/mian-channu/dr-hafiz-muhammad-umar/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/bahawalpur/dr-hafiz-muhammad-zubair/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/pakpattan/dr-kashif-ali/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sheikhupura/dr-laeeq-ahmad/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/wari/dr-mahboob-ali/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-mahum-jamil/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-mariya-saleem/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/shikarpur/dr-muhammad-ali/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lakhi-ghulam-shah/dr-muhammad-faheemullah/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-muhammad-nawaz-chachar/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/jhelum/dr-muhammad-usman-janjua/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/quetta/dr-muhammad-yasir-sajjad/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/quetta/dr-muqadas-marri/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/rawalpindi/dr-naila-khan/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/pano-aqil/dr-parvez-ahmed/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/shikarpur/dr-rahim-bux-bhutto/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/hyderabad/dr-rehana-asghar/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/peshawar/dr-rehmat-khan/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/faisalabad/dr-saba-faisal/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/dir-upper/dr-sayed-zada-pir-habib-gul/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/ubauro/dr-shoukat-gul-rind/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/fort-abbas/dr-sidra-ali/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/lakhi-ghulam-shah/dr-tahir-ali-soomro/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/islamabad/dr-tahira-ismail/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/mian-channu/dr-talha-anwar/",
+      "lastmod": "2026-11-06",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-zarmeen-zehra/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/karachi/dr-zeeshan/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/cardiologists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/gastroenterologists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/gynecologists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/orthopedic-surgeons/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dentists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/physiotherapists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/pediatricians/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/pulmonologists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/rheumatologists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/consultant-physicians/",
+      "lastmod": "2026-11-11",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/pediatric-surgeons/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/urologists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/psychiatrists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/general-surgeons/",
+      "lastmod": "2026-11-12",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/hematologists/",
+      "lastmod": "2026-11-08",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/diabetes-care/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/heart-and-chest-symptoms/",
+      "lastmod": "2026-11-08",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/digestive-and-liver-symptoms/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/joint-and-back-pain/",
+      "lastmod": "2026-11-08",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/breathing-and-lung-concerns/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/mental-health-psychiatry-symptoms/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/tuberculosis-symptoms/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/childhood-fever-and-illness/",
+      "lastmod": "2026-11-09",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/womens-health-and-pregnancy/",
+      "lastmod": "2026-11-08",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/endoscopy-consultations/",
+      "lastmod": "2026-11-09",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/cervical-neck-pain-physiotherapy/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/sciatica-leg-pain-physiotherapy/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/lower-back-pain-physiotherapy/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/frozen-shoulder-physiotherapy/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/knee-pain-arthritis-physiotherapy/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/physiotherapy-and-rehabilitation/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/dental-and-restorative-care/",
+      "lastmod": "2026-11-08",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/antenatal-and-obstetric-care/",
+      "lastmod": "2026-11-08",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/lahore/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-rizwana-qureshi/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/pano-aqil/",
+      "lastmod": "2026-11-21",
+      "type": "city-or-feature"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/pano-aqil/dr-saba-ali-raza-mahesar/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/pakistan/dr-muhammad-unis/",
+      "lastmod": "2026-11-09",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/general-surgery-symptoms/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/gallstones-laparoscopic-surgery/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/hernia-symptoms-surgery/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/appendicitis-symptoms/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/shikarpur/physiotherapists/",
+      "lastmod": "2026-11-10",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/health-topics/back-pain-and-sciatica-physiotherapy/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/health-topics/frozen-shoulder-physiotherapy/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/shikarpur/health-topics/post-injury-rehabilitation/",
+      "lastmod": "2026-11-10",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/pano-aqil/dr-hina-soomro/",
+      "lastmod": "2026-11-11",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/pano-aqil/physiotherapists/",
+      "lastmod": "2026-11-11",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/pano-aqil/health-topics/neck-pain-physiotherapy/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/pano-aqil/health-topics/sciatica-physiotherapy/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/pano-aqil/health-topics/knee-pain-arthritis-physiotherapy/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-salma-lakho/",
+      "lastmod": "2026-11-11",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/female-consultant-physician/",
+      "lastmod": "2026-11-11",
+      "type": "specialty-or-local-directory"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/hypertension-symptoms/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/persistent-fever-infections/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/anemia-fatigue-weakness/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/thyroid-problems-symptoms/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/health-topics/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/ghotki/pulmonologists/",
+      "lastmod": "2026-11-11",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/health-topics/asthma-wheezing/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/health-topics/copd-chronic-bronchitis/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/health-topics/persistent-cough/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/health-topics/pneumonia-chest-infections/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/health-topics/tuberculosis-tb-symptoms/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/ghotki/health-topics/shortness-of-breath/",
+      "lastmod": "2026-11-11",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/doctors/sukkur/dr-farman-ali-bijarani/",
+      "lastmod": "2026-11-12",
+      "type": "doctor-profile"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/scabies-urdu/",
+      "lastmod": "2026-11-18",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/sukkur/health-topics/dermatology/",
+      "lastmod": "2026-11-18",
+      "type": "health-guide"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/",
+      "lastmod": "2026-11-21",
+      "type": "health-news-directory"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/sukkur-pelvic-acetabular-fracture-surgery/",
+      "lastmod": "2026-11-21",
+      "type": "health-news-article"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/civil-hospital-sukkur-diabetic-foot-orthopaedic-wards/",
+      "lastmod": "2026-11-21",
+      "type": "health-news-article"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/ziauddin-hospital-sukkur-kidney-transplant/",
+      "lastmod": "2026-11-21",
+      "type": "health-news-article"
+    }
+  ]
+}
