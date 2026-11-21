@@ -1,0 +1,57 @@
+name: Prepare review-first SEO and GEO metadata completion
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/normalize-seo-geo.mjs
+      - .github/workflows/prepare-seo-geo-fixes.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+      - name: Complete missing metadata only on sitemap-listed pages
+        run: node scripts/normalize-seo-geo.mjs --write
+      - name: Validate sitemap, structured data and local discovery
+        run: |
+          node scripts/audit-site.mjs
+          node scripts/audit-seo-geo.mjs
+          git diff --check
+      - name: Open a review PR rather than editing production directly
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "All published pages already contain the required metadata; nothing to propose."
+            exit 0
+          fi
+          if git diff --name-only | grep -vE '(^|/)index[.]html$'; then
+            echo "Unexpected non-HTML modification; refusing to publish."
+            exit 1
+          fi
+          BRANCH="review/seo-geo-public-pages-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add -u
+          git commit -m "Complete missing SEO GEO and breadcrumb metadata on public pages"
+          git push origin "HEAD:refs/heads/$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
+            --title "Review: Complete SEO/GEO metadata across all published SlashPromo pages" \
+            --body "This is a review-first generated PR. It touches only sitemap-listed public HTML files and only adds missing tags for canonical URLs, page descriptions, OpenGraph/Twitter metadata, geographic city context and BreadcrumbList/WebPage JSON-LD. Existing doctor/hospital facts, originals, user content, image assets, noindex pages, redirects, site design, and approved sitemap URLs remain untouched. Generation is deterministic, and the existing full-site SEO/Q&A audit passes. Owner approval is required before merging." \
+            || echo "Auto-create PR unavailable. Review the pushed branch $BRANCH and open its PR manually."
+          echo "Prepared review branch: $BRANCH"
