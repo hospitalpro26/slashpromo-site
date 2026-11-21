@@ -1,3 +1,13 @@
+# Publication approval record — 22 November 2026
+
+Owner explicitly requested **“Deploy please”** following the draft PR #152 review batch. This authorizes publishing the six medical-technology articles in PR #152, not unrelated code changes.
+
+Publication integration implemented: six indexable HTML files with article dates, metadata and valid NewsArticle/FAQ/Breadcrumb schema, translated summaries; 13-entry Health News feed, Medical technology filter and hub schema; 242-URL sitemap, AI-map and llms discovery updates. Sitemap lastmod 2026-11-21 aligns with UTC commit time while article datePublished uses 2026-11-22 Pakistan calendar date. Production live-URL status and Google indexing must still be independently verified after merge.
+
+---
+
+# Original review record (preserved)
+
 # Slashpromo medical technology news — review batch (22 November 2026)
 
 **STATUS: EDITORIAL DRAFT ONLY. DO NOT MERGE OR DEPLOY BEFORE EXPLICIT USER APPROVAL.**
