@@ -58,7 +58,7 @@
            (source.hostname==="slashcure.com" && /^\/doctors\/[a-zA-Z0-9]+\/photo$/.test(source.pathname)));
       }catch{safeImage=false}
     }
-    const media=node("div",safeImage?"hn-story-top hn-story-has-photo":"hn-story-top");
+    const media=node("div",safeImage?("hn-story-top hn-story-has-photo"+(s.imageFit==="contain"?" hn-story-photo-contain":"")):"hn-story-top");
     if(safeImage){
       const img=node("img","hn-story-image");
       img.src=s.imageUrl;
