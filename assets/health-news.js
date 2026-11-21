@@ -5,7 +5,7 @@
   const $=id=>document.getElementById(id);
   const city=$("hn-city"),topic=$("hn-topic"),hospital=$("hn-hospital"),query=$("hn-query");
   const grid=$("hn-stories"),empty=$("hn-empty"),status=$("hn-result-status"),hospitalLinks=$("hn-hospital-links");
-  const cityLabels={sukkur:"Sukkur",khairpur:"Khairpur",shikarpur:"Shikarpur",karachi:"Karachi",hyderabad:"Hyderabad","pano-aqil":"Pano Aqil",ghotki:"Ghotki",ratodero:"Ratodero",larkana:"Larkana",lahore:"Lahore",islamabad:"Islamabad",quetta:"Quetta"};
+  const cityLabels={sindh:"Sindh",pakistan:"Pakistan",global:"Global",sukkur:"Sukkur",khairpur:"Khairpur",shikarpur:"Shikarpur",karachi:"Karachi",hyderabad:"Hyderabad","pano-aqil":"Pano Aqil",ghotki:"Ghotki",ratodero:"Ratodero",larkana:"Larkana",lahore:"Lahore",islamabad:"Islamabad",quetta:"Quetta"};
   const allowedTopics=new Set(["Hospital updates","Public health alerts","Medical research","Health campaigns","Health policy","Education & training","Community health"]);
   let articles=[];
   function node(tag,cls,value){
