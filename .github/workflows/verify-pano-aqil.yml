@@ -33,7 +33,7 @@ jobs:
           node --check assets/city-questions.js
           node --check functions/_lib/qa.js
           node scripts/audit-site.mjs
-          grep -q 'Find Best Doctors in Pano Aqil' pano-aqil/index.html
+          grep -Eq 'Find (the )?Best Doctors in Pano Aqil' pano-aqil/index.html
           grep -q 'FAQPage' pano-aqil/index.html
           grep -q 'sp-qa-fallback' pano-aqil/index.html
           grep -q '/assets/city-questions.js' pano-aqil/index.html
