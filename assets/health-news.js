@@ -54,7 +54,8 @@
       try{
         const source=new URL(s.imageUrl);
         safeImage=source.protocol==="https:" && !source.username && !source.password &&
-          (source.hostname==="d2ol7oe51mr4n9.cloudfront.net" || source.hostname==="slashpromo.com");
+          (source.hostname==="d2ol7oe51mr4n9.cloudfront.net" || source.hostname==="slashpromo.com" ||
+           (source.hostname==="slashcure.com" && /^\/doctors\/[a-zA-Z0-9]+\/photo$/.test(source.pathname)));
       }catch{safeImage=false}
     }
     const media=node("div",safeImage?"hn-story-top hn-story-has-photo":"hn-story-top");
@@ -74,6 +75,19 @@
     const title=node("h3","");
     const link=node("a","",s.title);link.href=s.url;title.append(link);body.append(title);
     body.append(node("p","",s.summary));
+    // Explicit verified doctor link: display only trusted Slashcure doctor profile URLs.
+    if(typeof s.doctorName==="string" && typeof s.doctorProfileUrl==="string"){
+      try{
+        const doctorUrl=new URL(s.doctorProfileUrl);
+        if(doctorUrl.protocol==="https:" && doctorUrl.hostname==="slashcure.com" &&
+           /^\/[a-z0-9-]+\/[a-z0-9-]+\/dr-[a-z0-9-]+\/?$/.test(doctorUrl.pathname) &&
+           !doctorUrl.username && !doctorUrl.password){
+          const doctorLink=node("a","hn-story-doctor",s.doctorName+" — Slashcure profile");
+          doctorLink.href=doctorUrl.href;
+          body.append(doctorLink);
+        }
+      }catch{}
+    }
     if(s.hospitalName)body.append(node("div","hn-story-meta","Hospital: "+s.hospitalName));
     body.append(node("div","hn-story-meta",prettyDate(s.datePublished)+" · Source: "+s.sourceName));
     const source=node("a","hn-story-source","Original source ↗");
