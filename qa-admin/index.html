@@ -196,6 +196,23 @@ function render(){
         say(archiveMode?"Question restored.":"Question archived; use Archived questions to restore it.");
       }catch(error){say(error.message);archiveBtn.disabled=false;}
     });
+    if(archiveMode){
+      const deleteBtn=node("button","reject","Delete permanently");
+      deleteBtn.type="button";
+      deleteBtn.title="Permanently delete this archived record. This cannot be undone.";
+      deleteBtn.addEventListener("click",async()=>{
+        if(q.status==="approved"){say("Reject this published question before permanent deletion.");return;}
+        const typed=window.prompt("Permanent deletion cannot be undone. Type DELETE to remove this question and its private details forever:");
+        if(typed!=="DELETE"){say("Deletion cancelled.");return;}
+        deleteBtn.disabled=true;
+        try{
+          await request("POST",{id:q.id,action:"delete_permanently",confirm:"DELETE"});
+          await load(false);
+          say("Archived question permanently deleted.");
+        }catch(error){say(error.message);deleteBtn.disabled=false;}
+      });
+      actions.append(deleteBtn);
+    }
     actions.append(archiveBtn);
     card.append(meta,question,source,privateCard,label,actions);
     items.append(card);
