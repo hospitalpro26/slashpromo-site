@@ -33,6 +33,7 @@ for(const url of urls){
  const currentCanonical=html.match(/<link\b[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/i)?.[1];
  if(currentCanonical&&currentCanonical!==url)throw Error("Canonical mismatch requiring review: "+file+" => "+currentCanonical);
  const add=[];const has=re=>re.test(html);
+ const isUrdu=/<html\b[^>]*lang=["']ur(?:-PK)?["']/i.test(html);
  if(!title){
    title=strip(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1]||"")||"Healthcare information";
    title=title.slice(0,54)+" | SlashPromo";
@@ -47,7 +48,7 @@ for(const url of urls){
  if(!has(/<meta\b[^>]*name=["']robots["']/i)){
    add.push('<meta name="robots" content="index,follow,max-image-preview:large">');stats.robots++;
  }
- if(!has(/<meta\b[^>]*property=["']og:locale["']/i))add.push('<meta property="og:locale" content="en_PK">');
+ if(!has(/<meta\b[^>]*property=["']og:locale["']/i))add.push('<meta property="og:locale" content="'+(isUrdu?"ur_PK":"en_PK")+'">');
  if(!has(/<meta\b[^>]*property=["']og:type["']/i))add.push('<meta property="og:type" content="'+(path.startsWith("/health-news/")&&path!=="/health-news/"?"article":"website")+'">');
  if(!has(/<meta\b[^>]*property=["']og:title["']/i)){add.push('<meta property="og:title" content="'+enc(title)+'">');stats.og++;}
  if(!has(/<meta\b[^>]*property=["']og:description["']/i)){add.push('<meta property="og:description" content="'+enc(description)+'">');stats.og++;}
@@ -60,7 +61,7 @@ for(const url of urls){
  }
  const hasSchema=has(/<script\b[^>]*type=["']application\/ld\+json["']/i);
  if(!hasSchema){
-   const schema={"@context":"https://schema.org","@type":"WebPage","@id":url+"#webpage","url":url,"name":title,"description":description,"inLanguage":html.includes('lang="ur"')?"ur":"en-PK","isPartOf":{"@type":"WebSite","name":"SlashPromo","url":BASE+"/"}};
+   const schema={"@context":"https://schema.org","@type":"WebPage","@id":url+"#webpage","url":url,"name":title,"description":description,"inLanguage":isUrdu?"ur-PK":"en-PK","isPartOf":{"@type":"WebSite","name":"SlashPromo","url":BASE+"/"}};
    if(geo)schema.spatialCoverage={"@type":"Place","name":geo[0]+", "+geo[1]+", Pakistan"};
    add.push('<script type="application/ld+json">'+JSON.stringify(schema).replaceAll("<","\\u003c")+'</script>');stats.schema++;
  }
