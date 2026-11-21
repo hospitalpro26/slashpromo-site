@@ -5,6 +5,7 @@ Description: Public doctor, hospital, diagnostic laboratory and clinic discovery
 Canonical XML sitemap: https://slashpromo.com/sitemap.xml
 Human- and AI-readable directory: https://slashpromo.com/llms.txt
 Complete canonical URL inventory: https://slashpromo.com/llms-full.txt
+Structured AI discovery map: https://slashpromo.com/ai-map.json
 
 ## Updated Khairpur pages
 Best doctors in Khairpur: https://slashpromo.com/doctors/khairpur/
