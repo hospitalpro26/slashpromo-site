@@ -17,7 +17,7 @@
     "xml_sitemap": "https://slashpromo.com/sitemap.xml",
     "primary_provider_source": "https://slashcure.com/"
   },
-  "total_urls": 232,
+  "total_urls": 236,
   "pages": [
     {
       "url": "https://slashpromo.com/dermatology/",
@@ -1177,6 +1177,26 @@
     {
       "url": "https://slashpromo.com/health-news/ziauddin-hospital-sukkur-kidney-transplant/",
       "lastmod": "2026-11-21",
+      "type": "health-news-article"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/sindh-dengue-cases-november-2026/",
+      "lastmod": "2026-11-22",
+      "type": "health-news-article"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/dog-bite-rabies-prevention-pakistan/",
+      "lastmod": "2026-11-22",
+      "type": "health-news-article"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/sindh-polio-campaign-november-2026/",
+      "lastmod": "2026-11-22",
+      "type": "health-news-article"
+    },
+    {
+      "url": "https://slashpromo.com/health-news/who-antimicrobial-resistance-awareness-week-2026/",
+      "lastmod": "2026-11-22",
       "type": "health-news-article"
     }
   ]
