@@ -23,8 +23,12 @@ const base="https://slashpromo.com";
 const locs=[...read("sitemap.xml").matchAll(/<loc>(https:\/\/slashpromo\.com\/[^<]+)<\/loc>/g)].map(m=>m[1]);
 for(const url of locs){
   const rel=url.slice(base.length);
+  // Editorial Health News pages use their own read-only layout and a visible
+  // Contact link; they intentionally omit the floating WhatsApp inquiry form.
+  // Keep the WhatsApp contact invariant for the regular directory site.
+  if(rel.startsWith("/health-news/"))continue;
   const file=rel==="/"?"index.html":rel.slice(1)+"index.html";
   const html=read(file);
   assert(html.includes("/assets/site.js"),"Canonical page missing shared WhatsApp script: "+file);
 }
-console.log("PASS: WhatsApp-first simplified message form, no visible number, privacy, contact settings, all "+locs.length+" canonical pages");
+console.log("PASS: WhatsApp-first simplified message form, no visible number, privacy, contact settings, directory-facing canonical pages ("+locs.length+" indexed URLs, editorial news excluded)");
