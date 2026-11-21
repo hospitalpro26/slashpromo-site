@@ -28,14 +28,22 @@ for(const url of urls){
  const original=html,parts=path.split("/").filter(Boolean);
  const city=entityRoots.has(parts[0])?parts[1]:parts[0];
  const geo=region[city];
- const title=strip(html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]||"");
- if(!title)throw Error("Missing page title (manual edit required): "+file);
- const description=strip(html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i)?.[1]||"");
- if(!description)throw Error("Missing page description (manual edit required): "+file);
+ let title=strip(html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]||"");
+ let description=strip(html.match(/<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i)?.[1]||"");
  const currentCanonical=html.match(/<link\b[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/i)?.[1];
- if(!currentCanonical)throw Error("Missing canonical (manual review): "+file);
- if(currentCanonical!==url)throw Error("Canonical mismatch: "+file+" => "+currentCanonical);
+ if(currentCanonical&&currentCanonical!==url)throw Error("Canonical mismatch requiring review: "+file+" => "+currentCanonical);
  const add=[];const has=re=>re.test(html);
+ if(!title){
+   title=strip(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1]||"")||"Healthcare information";
+   title=title.slice(0,54)+" | SlashPromo";
+   add.push("<title>"+enc(title)+"</title>");
+ }
+ if(!description){
+   description="Explore "+title.replace(/\s*\|\s*SlashPromo.*/i,"")+" on SlashPromo, with published healthcare information and source links where available. Confirm provider details directly.";
+   description=description.slice(0,175);
+   add.push('<meta name="description" content="'+enc(description)+'">');
+ }
+ if(!currentCanonical)add.push('<link rel="canonical" href="'+enc(url)+'">');
  if(!has(/<meta\b[^>]*name=["']robots["']/i)){
    add.push('<meta name="robots" content="index,follow,max-image-preview:large">');stats.robots++;
  }
