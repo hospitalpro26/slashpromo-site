@@ -55,6 +55,22 @@ export async function onRequestPost(ctx){
       return respond({ok:true,archived:data.action==="archive"});
     }catch{return respond({error:"Could not update archive status."},503);}
   }
+  if(data.action==="delete_permanently"){
+    if(!/^[a-f0-9-]{36}$/i.test(id)||data.confirm!=="DELETE")return respond({error:"Explicit DELETE confirmation required."},400);
+    try{
+      await ensureEnquiryDb(env);await ensureAdminArchiveDb(env);
+      const archived=await env.QA_DB.prepare("SELECT record_id FROM admin_archived_records WHERE kind='enquiry' AND record_id=?").bind(id).first();
+      if(!archived)return respond({error:"Archive the enquiry before permanent deletion."},409);
+      const existing=await env.QA_DB.prepare("SELECT id FROM enquiries WHERE id=?").bind(id).first();
+      if(!existing)return respond({error:"Enquiry not found."},404);
+      await env.QA_DB.batch([
+        env.QA_DB.prepare("DELETE FROM enquiry_replies WHERE enquiry_id=?").bind(id),
+        env.QA_DB.prepare("DELETE FROM enquiries WHERE id=?").bind(id),
+        env.QA_DB.prepare("DELETE FROM admin_archived_records WHERE kind='enquiry' AND record_id=?").bind(id)
+      ]);
+      return respond({ok:true,deleted:true});
+    }catch{return respond({error:"Could not permanently delete the enquiry."},503);}
+  }
   if(!/^[a-f0-9-]{36}$/i.test(id)||!STATUSES.includes(status)||note.length>1000)
     return respond({error:"Invalid enquiry status or notes."},400);
   try{
