@@ -14,6 +14,7 @@ on:
       - functions/_lib/qa.js
       - scripts/audit-site.mjs
       - scripts/audit-seo-geo.mjs
+      - scripts/normalize-seo-geo.mjs
       - scripts/audit-profile-quality.mjs
       - assets/directory.json
       - .github/workflows/audit-site.yml
@@ -40,6 +41,8 @@ jobs:
           node --check functions/api/questions.js
           node --check functions/api/qa-admin.js
           node --check scripts/indexnow.mjs
+          node --check scripts/audit-seo-geo.mjs
+          node --check scripts/normalize-seo-geo.mjs
       - name: Check WhatsApp-first contact and public page coverage
         run: node scripts/test-whatsapp-handoff.mjs
       - name: Audit SEO, sitemap and page-specific Q&A
