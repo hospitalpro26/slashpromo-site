@@ -3,6 +3,72 @@
   "articles": [
     {
       "status": "published",
+      "title": "AI X-Ray Software Helps Detect Feeding Tube Position: GE HealthCare's 2026 Update",
+      "summary": "GE HealthCare's FDA-cleared Critical Care Suite 3.0 adds on-device AI assistance for feeding tube assessment on mobile X-rays for adults and children.",
+      "city": "global",
+      "topic": "Medical technology",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/ai-xray-feeding-tube-critical-care-suite-2026/",
+      "sourceName": "GE HealthCare",
+      "sourceUrl": "https://www.gehealthcare.com/en/about/newsroom/press-releases/critical-care-suite-3-0-brings-first-on-device-ai-for-feeding-tube-detection-to-x-ray-imaging-in-adult-and-pediatric-care"
+    },
+    {
+      "status": "published",
+      "title": "Robotic Surgery in Karachi: JPMC Experience and Ziauddin's New Programme",
+      "summary": "A look at robotic-assisted surgery in Karachi, including JPMC's hospital-reported procedures and a Ziauddin Hospital Karachi programme announcement.",
+      "city": "karachi",
+      "topic": "Medical technology",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/karachi-robotic-surgery-jpmc-ziauddin-2026/",
+      "sourceName": "The Express Tribune (JPMC report)",
+      "sourceUrl": "https://tribune.com.pk/story/2628445/1500-robotic-surgeries-and-counting-at-jpmc"
+    },
+    {
+      "status": "published",
+      "title": "New Diabetes Wearable Tracks Glucose and Ketones Together: FDA 2026 Authorization",
+      "summary": "The US FDA authorized Abbott's Libre Duo wearable for continuous glucose and ketone monitoring in people with diabetes aged 2 and older.",
+      "city": "global",
+      "topic": "Medical technology",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/libre-duo-glucose-ketone-wearable-fda-2026/",
+      "sourceName": "US Food and Drug Administration",
+      "sourceUrl": "https://www.fda.gov/news-events/press-announcements/fda-authorizes-first-wearable-device-continuously-monitors-both-ketone-levels-and-blood-sugar"
+    },
+    {
+      "status": "published",
+      "title": "Alzheimer's Blood Test: FDA Clears Roche pTau217 Assessment in 2026",
+      "summary": "Roche announced US FDA clearance of a pTau217 blood biomarker test to aid assessment in certain symptomatic adults aged 55 and over.",
+      "city": "global",
+      "topic": "Medical technology",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/alzheimers-ptau217-blood-test-fda-roche-2026/",
+      "sourceName": "Roche",
+      "sourceUrl": "https://www.roche.com/investors/updates/inv-update-2026-08-24"
+    },
+    {
+      "status": "published",
+      "title": "New AI Assistant for CT and MRI Teams: GE HealthCare Imaging 360 Update",
+      "summary": "GE HealthCare announced AI-assisted protocoling and workflow features for CT and MRI teams, distinct from autonomous image diagnosis.",
+      "city": "global",
+      "topic": "Medical technology",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/ge-imaging-360-ai-assistant-ct-mri-november-2026/",
+      "sourceName": "GE HealthCare",
+      "sourceUrl": "https://investor.gehealthcare.com/news-releases/news-release-details/ge-healthcare-introduces-new-imaging-360-features-simplify"
+    },
+    {
+      "status": "published",
+      "title": "US ARPA-H HARBOR Project: Up to $42 Million for Medical Imaging AI Research",
+      "summary": "ARPA-H lists an award of up to $42 million to support privacy-aware research with deidentified radiology and pathology imaging data.",
+      "city": "global",
+      "topic": "Medical technology",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/arpa-h-harbor-medical-imaging-ai-project-2026/",
+      "sourceName": "ARPA-H",
+      "sourceUrl": "https://arpa-h.gov/explore-funding/awards/4790"
+    },
+    {
+      "status": "published",
       "title": "Dengue in Sindh: November 2026 Case Reports and Warning Signs",
       "summary": "Karachi and Sindh dengue figures reported on 12 November are attributed to health department data cited by the press. Learn warning signs and prevention; not a live case count.",
       "city": "sindh",
