@@ -249,7 +249,7 @@ function render(){
     const linkPreview=node("p","","");
     linkPreview.hidden=true;
     const safePage=String(q.page_path||"");
-    const pageValid=safePage==="/"||/^\\/(?:[a-z0-9-]+\\/){1,6}$/.test(safePage);
+    const pageValid=safePage==="/"||new RegExp("^/(?:[a-z0-9-]+/){1,6}$").test(safePage);
     if(!pageValid){scanButton.disabled=true;linkState.textContent="Unsupported source path; manually check the relevant public provider page.";}
     scanButton.addEventListener("click",async()=>{
       scanButton.disabled=true;
@@ -268,11 +268,11 @@ function render(){
           try{url=new URL(a.getAttribute("href"),location.origin);}catch{continue;}
           if(url.protocol!=="https:"||url.hostname!=="slashcure.com")continue;
           // Provider URLs only: don't insert broad homepages, ads or unrelated links.
-          if(!/^\\/(?:hospitals|[a-z0-9-]+)\\/[a-z0-9-]+\\/[a-z0-9-]+\\/?$/.test(url.pathname))continue;
+          if(!new RegExp("^/(?:hospitals|[a-z0-9-]+)/[a-z0-9-]+/[a-z0-9-]+/?$").test(url.pathname))continue;
           url.search="";url.hash="";
           const value=url.href;
           if(unique.has(value))continue;
-          const label=(a.textContent||"").trim().replace(/\\s+/g," ").slice(0,85);
+          const label=(a.textContent||"").trim().replace(/\s+/g," ").slice(0,85);
           unique.set(value,label||url.pathname.split("/").pop().replace(/-/g," "));
           if(unique.size>=45)break;
         }
@@ -303,9 +303,8 @@ function render(){
       if(answer.value.includes(u.href)){say("That referral URL is already present in this answer.");return;}
       const line="Related published Slashcure profile (verify relevance and current details): "+u.href;
       if(answer.value.length+line.length+2>answer.maxLength){say("The answer is too long. Shorten it before adding a link.");return;}
-      answer.value+=(answer.value.trim()?"\\n\\n":"")+line;
-      answer.value=answer.value.replace(/\\n/g,"\\n");
-      answer.focus();
+      answer.value+=(answer.value.trim()?"\n\n":"")+line;
+            answer.focus();
       say("Candidate link inserted locally. Verify that the provider is relevant; save a draft and review before publication.");
     });
     linkActions.append(scanButton,linkSelect,addLinkButton);
