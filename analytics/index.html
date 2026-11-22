@@ -34,6 +34,7 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 .placeholder{color:#647c93;font-style:italic}
 .comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.comparison-subpanel{border:1px solid #dce6f1;border-radius:11px;padding:13px;background:#fafcff;min-width:0}.comparison-subpanel h3{font-size:15px;margin:0 0 4px}.comparison-subpanel p{font-size:12px;margin:0 0 9px}.comparison-list{list-style:none;margin:0;padding:0}.comparison-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #e4edf6;padding:9px 0;font-size:13px}.comparison-list li:last-child{border-bottom:0}.comparison-list .compare-label{overflow-wrap:anywhere}.comparison-list .compare-count{font-variant-numeric:tabular-nums;font-weight:750;white-space:nowrap}
 @media(max-width:730px){.comparison-grid{grid-template-columns:1fr}.panels{grid-template-columns:1fr}.wide{grid-column:auto}main{padding:18px 12px}.toolbar{padding:13px}th,td{padding:8px 5px}}
+.seo-import{display:flex;align-items:end;gap:13px;flex-wrap:wrap;padding:15px;background:#f4f9fe;border:1px solid #dce6f1;border-radius:10px;margin:12px 0}.seo-import label{flex:1 1 310px}.seo-import input{width:100%;max-width:560px;padding:9px}.seo-import p{width:100%;margin:0;font-size:12px}.secondary-btn{background:#e9f1fa;color:#1f4b71}.secondary-btn:hover{background:#d7e7f6}.seo-status{display:block;font-size:11px;color:#536c82;margin-top:5px}.seo-low-ctr{font-weight:700;color:#9a5812}
 </style></head>
 <body><main>
 <header><div><a href="/">← SlashPromo public website</a><h1>Private Analytics Dashboard</h1><p>Daily page views, referral clicks, WhatsApp enquiry starts and moderated Q&amp;A engagement.</p></div><div class="link-row"><a href="/qa-admin/" rel="nofollow">Q&amp;A moderation ↗</a> · <a href="/enquiries/" rel="nofollow">Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Control Center ↗</a></div></header>
@@ -82,6 +83,13 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <section class="panel"><h2>Most viewed hospital profiles</h2><div class="scroll"><table><thead><tr><th>Hospital page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-hospitals"><tr><td colspan="4" class="placeholder">Load analytics to see hospital profile interest.</td></tr></tbody></table></div></section>
 </div></section>
 <section class="panel wide"><h2>Health articles bringing visitors to Slashcure</h2><p class="muted">See which symptom and condition guides generate outbound Slashcure clicks. Counts are aggregated by source article; clicks do not confirm appointments.</p><div class="scroll"><table><thead><tr><th>Health article</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-articles"><tr><td colspan="4" class="placeholder">Load analytics to see article referrals.</td></tr></tbody></table></div></section>
+<section class="panel wide" id="seo-referrals" aria-labelledby="seo-referrals-title">
+<h2 id="seo-referrals-title">SEO &amp; Slashcure referral performance · 4 healthcare guides</h2>
+<p class="muted">Private first-party page views and outbound Slashcure clicks from the selected date range. Google metrics appear only after you import a Search Console performance CSV; they are <strong>not fetched automatically</strong>. The CSV is read in this browser tab only, never uploaded to SlashPromo or GitHub.</p>
+<div class="seo-import"><label for="gsc-csv">Optional Google Search Console performance CSV (Pages report)<input type="file" id="gsc-csv" accept=".csv,text/csv"></label><button type="button" id="clear-gsc" class="secondary-btn">Clear imported data</button><p id="gsc-import-status" role="status" aria-live="polite">No Google performance data loaded. Export a Pages report from Google Search Console and import its CSV here.</p></div>
+<div class="scroll"><table><thead><tr><th>Healthcare page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks / view</th><th class="num">Google impressions</th><th class="num">Google clicks</th><th class="num">Google CTR</th><th class="num">Google position</th></tr></thead><tbody id="seo-guide-rows"><tr><td colspan="8" class="placeholder">Enter your admin key and load analytics to see referral counts.</td></tr></tbody></table></div>
+<p class="muted">Low Google CTR is flagged for review only when there are at least 50 impressions and CTR below 2%. Imported Google dates may differ from the first-party date range; compare matching reporting periods before acting. No Search Console appearance or import proves URL indexing status.</p>
+</section>
 <section class="panel wide"><h2>Saved Questions &amp; Answers</h2><p class="muted">These are permanently stored Q&amp;A records from the database, including pending and answered questions. Only approved answers are shown on public pages. Open Q&amp;A moderation to review, save drafts or publish verified answers.</p><div class="qa-status-strip" id="qa-status-strip"><span>All saved: <strong id="qa-all">—</strong></span><span>Pending: <strong id="qa-pending">—</strong></span><span>Published: <strong id="qa-approved">—</strong></span><span>Rejected: <strong id="qa-rejected">—</strong></span></div><p><a href="/qa-admin/" rel="nofollow">Open private Q&amp;A moderation dashboard ↗</a></p><div class="scroll"><table><thead><tr><th>Submitted / Status</th><th>Saved Question</th><th>Saved Answer</th><th>Source</th></tr></thead><tbody id="qa-records"><tr><td colspan="4" class="placeholder">Load analytics to see the latest saved Q&amp;A records.</td></tr></tbody></table></div><p class="muted">Showing the latest 20 saved submissions. This table does not display private phone numbers, addresses or visitor names. Q&amp;A history is not restricted to the analytics date filter.</p></section>
 <section class="panel wide"><h2>Top pages and what visitors do</h2><div class="scroll"><table><thead><tr><th>Page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">WhatsApp starts</th><th class="num">Q&amp;A</th></tr></thead><tbody id="pages"><tr><td colspan="5" class="placeholder">Load a report to see data.</td></tr></tbody></table></div></section>
 </div>
@@ -172,6 +180,89 @@ function renderProfiles(target,records){
   });
 }
 let latestReport=null;
+
+// Search Console data is supplied by the administrator via a local, session-only CSV.
+// Never transmit this file to /api, persist it in storage, or silently equate absence of rows with "not indexed".
+const monitoredGuides=[
+  {path:"/sukkur/affordable-cholecystectomy-surgery-package/",label:"Gallbladder surgery package"},
+  {path:"/sukkur/affordable-c-section-delivery-alkhidmat/",label:"C-section maternity package"},
+  {path:"/sukkur/kidney-stone-pain-urologist/",label:"Kidney stone symptoms & urologist"},
+  {path:"/sukkur/sciatica-cervical-pain-physiotherapist/",label:"Sciatica & cervical pain"}
+];
+let gscRows=null;
+function parseCSV(input){
+  const rows=[],row=[];let part="",quoted=false;
+  for(let i=0;i<input.length;i++){
+    const ch=input[i];
+    if(ch==='"'){if(quoted&&input[i+1]==='"'){part+='"';i++}else quoted=!quoted}
+    else if(ch===","&&!quoted){row.push(part);part=""}
+    else if((ch==="\n"||ch==="\r")&&!quoted){if(ch==="\r"&&input[i+1]==="\n")i++;row.push(part);if(row.some(x=>x.trim()))rows.push([...row]);row.length=0;part=""}
+    else part+=ch;
+  }
+  if(quoted)throw Error("Unclosed CSV quote.");
+  row.push(part);if(row.some(x=>x.trim()))rows.push(row);
+  return rows;
+}
+function normalizeGSCUrl(value){
+  try{const u=new URL(value);if(!["slashpromo.com","www.slashpromo.com"].includes(u.hostname))return null;return u.pathname.endsWith("/")?u.pathname:u.pathname+"/"}catch{return null}
+}
+function numCSV(value){
+  const text=String(value??"").trim().replace(/,/g,"").replace(/%$/,"");
+  const n=Number(text);
+  return Number.isFinite(n)?n:0;
+}
+function formatGscRate(impressions,clicks){return impressions>0?(100*clicks/impressions).toFixed(1)+"%":"—"}
+function drawSeoGuides(data){
+  const root=$("#seo-guide-rows");root.replaceChildren();
+  if(!data){const tr=document.createElement("tr");const td=cell(tr,"Load private analytics first.","placeholder");td.colSpan=8;root.append(tr);return}
+  const rows=new Map((data.featuredGuides||[]).map(r=>[r.page_path,r]));
+  monitoredGuides.forEach(guide=>{
+    const d=rows.get(guide.path)||{},g=gscRows?.get(guide.path),tr=document.createElement("tr");
+    const first=document.createElement("td");first.className="path";
+    const a=document.createElement("a");a.href=guide.path;a.target="_blank";a.rel="noopener noreferrer";a.textContent=guide.label;first.append(a);
+    const tip=document.createElement("small");tip.className="seo-status";tip.textContent=guide.path;first.append(tip);tr.append(first);
+    cell(tr,nf.format(Number(d.views)||0),"num");cell(tr,nf.format(Number(d.referrals)||0),"num");cell(tr,rate(d.referrals,d.views),"num");
+    if(!g){for(let i=0;i<4;i++)cell(tr,"—","num")}
+    else{
+      cell(tr,nf.format(g.impressions),"num");cell(tr,nf.format(g.clicks),"num");
+      const ctr=cell(tr,formatGscRate(g.impressions,g.clicks),"num");
+      if(g.impressions>=50&&g.clicks/g.impressions<.02){ctr.classList.add("seo-low-ctr");ctr.title="Review title and snippet; low CTR is not an indexing error."}
+      cell(tr,g.positionCount>0?(g.positionWeight/g.positionCount).toFixed(1):"—","num");
+    }
+    root.append(tr);
+  });
+}
+$("#gsc-csv").addEventListener("change",async function(){
+  const file=this.files?.[0];if(!file)return;
+  try{
+    if(file.size>2*1024*1024)throw Error("CSV exceeds 2 MB.");
+    const csv=parseCSV((await file.text()).replace(/^\ufeff/,""));
+    if(csv.length<2)throw Error("CSV contains no data rows.");
+    const headers=csv[0].map(x=>x.trim().toLowerCase());
+    const idx=(...names)=>headers.findIndex(x=>names.includes(x));
+    const pageIndex=idx("top pages","pages","page","url");
+    const clickIndex=idx("clicks"),impIndex=idx("impressions");
+    const posIndex=idx("position","average position");
+    if(pageIndex<0||clickIndex<0||impIndex<0)throw Error("Use Search Console's Pages CSV with page, clicks and impressions columns.");
+    const output=new Map();
+    for(const row of csv.slice(1)){
+      const path=normalizeGSCUrl(row[pageIndex]);if(!path||!monitoredGuides.some(g=>g.path===path))continue;
+      const clicks=Math.max(0,numCSV(row[clickIndex])),impressions=Math.max(0,numCSV(row[impIndex]));
+      const pos=posIndex<0?0:numCSV(row[posIndex]);
+      const current=output.get(path)||{clicks:0,impressions:0,positionWeight:0,positionCount:0};
+      current.clicks+=clicks;current.impressions+=impressions;
+      if(posIndex>=0&&pos>0&&impressions>0){current.positionWeight+=pos*impressions;current.positionCount+=impressions}
+      output.set(path,current);
+    }
+    gscRows=output;
+    $("#gsc-import-status").textContent="Imported local CSV: "+output.size+" matching monitored page(s). Google metrics are session-only and may use different dates than SlashPromo analytics.";
+    drawSeoGuides(latestReport);
+  }catch(e){gscRows=null;$("#gsc-import-status").textContent="Could not read CSV: "+e.message;drawSeoGuides(latestReport)}
+});
+$("#clear-gsc").addEventListener("click",()=>{
+  gscRows=null;$("#gsc-csv").value="";$("#gsc-import-status").textContent="Google import cleared from this tab.";drawSeoGuides(latestReport);
+});
+
 function csvField(value){
   const input=String(value??"");
   const safe=/^\s*[=+\-@]/.test(input)?"'"+input:input;
@@ -204,6 +295,7 @@ function draw(data){
   renderProfiles("#top-doctors",data.topDoctors);
   renderProfiles("#top-hospitals",data.topHospitals);
   renderProfiles("#top-articles",data.topArticles);
+  drawSeoGuides(data);
   drawGeography(data);
   drawComparison(data);
   const totals=Object.fromEntries(data.totals.map(x=>[x.event,Number(x.total)||0]));
