@@ -113,7 +113,29 @@
       const category=document.createElement("span");category.className="sp-qa-item-category";category.textContent=item.category||"Healthcare";
       const question=document.createElement("h4");question.textContent=item.question;
       const label=document.createElement("span");label.className="sp-qa-answer-label";label.textContent="SlashPromo team response";
-      const answer=document.createElement("p");answer.textContent=item.answer||"";
+      const answer=document.createElement("p");
+      // Render reviewed Slashcure links as safe DOM anchors. All other
+      // content stays text: never parse visitor or moderator answers as HTML.
+      const body=String(item.answer||"");
+      const re=/https:\/\/slashcure\.com\/[a-z0-9/_-]+\/?/gi;
+      let cursor=0;
+      for(const match of body.matchAll(re)){
+        const index=match.index??0;
+        if(index<cursor)continue;
+        if(index>cursor)answer.append(document.createTextNode(body.slice(cursor,index)));
+        const candidate=match[0];
+        try{
+          const url=new URL(candidate);
+          if(url.protocol==="https:"&&url.hostname==="slashcure.com"){
+            const a=document.createElement("a");
+            a.href=url.href;a.target="_blank";a.rel="noopener noreferrer";
+            a.textContent="Open Slashcure profile ↗";
+            answer.append(a);
+          }else answer.append(document.createTextNode(candidate));
+        }catch{answer.append(document.createTextNode(candidate));}
+        cursor=index+candidate.length;
+      }
+      answer.append(document.createTextNode(body.slice(cursor)));
       article.append(category,question);
       if(typeof item.author_name==="string"&&item.author_name.trim()){
         const byline=document.createElement("p");
