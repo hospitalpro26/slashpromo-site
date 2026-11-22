@@ -8,8 +8,8 @@ assert(CITY_NAMES.has("ratodero"),"Ratodero must be a recognized analytics city"
 assert.equal(pathCity("/ratodero/health-topics/hepatitis-b-c/"),"ratodero");
 assert.equal(pathCity("/doctors/ratodero/dr-nadia-khan-arbani/"),"ratodero");
 assert(backend.includes("topArticles:topArticles.results||[]"),"Article results must be returned");
-assert(backend.includes("AND page_path LIKE '%/health-topics/%'"),"Article query must include condition guides");
-assert(backend.includes("AND page_path NOT LIKE '%/health-topics/'"),"Article query must exclude the category index");
+assert(backend.includes("page_path LIKE '%/health-topics/%'"),"Article query must include condition guides");
+assert(backend.includes("page_path NOT LIKE '%/health-topics/'"),"Article query must exclude the category index");
 assert(backend.includes("page_path LIKE '%/health-news/%'"),"Report must include health news articles");
 assert(backend.includes("page_path NOT LIKE '%/health-news/'"),"Report must exclude health news category index");
 assert(backend.includes("ORDER BY referrals DESC,views DESC"),"Rank articles by outbound clicks");
