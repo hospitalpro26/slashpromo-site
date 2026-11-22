@@ -39,6 +39,7 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 .qa-template-tools{border:1px solid #c5d9eb;background:#f6faff;border-radius:12px;padding:14px;margin:12px 0}.qa-template-tools h3{font-size:14px;margin:0 0 4px;color:#164b72}.qa-template-tools p{font-size:12px;margin:0 0 9px}.qa-template-row{display:flex;gap:9px;flex-wrap:wrap;align-items:end}.qa-template-row label{min-width:190px;flex:1}.qa-template-row select{width:100%;min-width:0}.qa-template-add{background:#256187}.qa-template-note{font-size:12px;color:#4f6a86;margin-top:8px!important}
 
 .qa-link-panel{border:1px solid #bfd5e9;background:#f5faff;border-radius:12px;padding:14px;margin:12px 0}.qa-link-panel h3{font-size:14px;margin:0 0 6px;color:#174a70}.qa-link-panel p{font-size:12px;margin:5px 0;color:#536f89}.qa-link-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.qa-link-actions select{flex:1;min-width:190px}.qa-link-actions button{background:#205e89}.qa-link-panel .qa-link-warning{color:#8a5025;font-weight:650}.qa-link-panel a{color:#13569c;font-weight:700}.qa-link-panel button:disabled{opacity:.5}
+.qa-age{background:#fff1df;color:#875223;margin-left:7px}
 </style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1><p><a href="/analytics/" rel="nofollow">View aggregate website analytics ↗</a> · <a href="/enquiries/" rel="nofollow">Private Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Unified Control Center ↗</a></p>
@@ -52,6 +53,7 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 <label>City <select id="city-filter"><option value="">All cities</option><option value="homepage">Homepage feedback</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="ghotki">Ghotki</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option></select></label>
 <label>Page type <select id="type-filter"><option value="">All pages</option><option value="feedback">Community feedback</option><option value="city">City homepage</option><option value="doctor">Doctor profile</option><option value="hospital">Hospital</option><option value="specialty">Specialty directory</option><option value="health">Health topic</option><option value="other">Other local page</option></select></label>
 <label>Question category <select id="category-filter"><option value="">All categories</option><option value="Community feedback">Community feedback</option><option value="Health questions">Health questions</option><option value="OPD timings">OPD timings</option><option value="Doctor contact">Doctor contact</option><option value="Doctors &amp; hospitals">Doctors &amp; hospitals</option><option value="Appointments">Appointments</option><option value="Other">Other</option></select></label>
+<label>Review order <select id="review-order"><option value="newest">Newest first</option><option value="oldest">Oldest first — catch up on unanswered questions</option></select></label>
 <label>Review focus <select id="review-focus"><option value="">All records</option><option value="sensitive">Privacy-sensitive wording</option><option value="unanswered">No saved public answer</option><option value="draft">Has saved draft</option></select></label>
 <label>Search questions <input type="search" id="query" placeholder="Doctor, question or page" autocomplete="off"></label>
 <button type="button" id="load">Load questions</button>
@@ -68,6 +70,7 @@ const typeFilter=document.querySelector("#type-filter");
 const queryInput=document.querySelector("#query");
 const categoryFilter=document.querySelector("#category-filter");
 const reviewFocus=document.querySelector("#review-focus");
+const reviewOrder=document.querySelector("#review-order");
 const items=document.querySelector("#items");
 const status=document.querySelector("#status");
 const summary=document.querySelector("#summary");
@@ -82,7 +85,7 @@ function node(tag,cls,text){
   return el;
 }
 async function request(method,payload,before){
-  const params=new URLSearchParams({status:statusFilter.value,archived:document.querySelector("#archive-view").value});
+  const params=new URLSearchParams({status:statusFilter.value,archived:document.querySelector("#archive-view").value,sort:reviewOrder.value});
   if(cityFilter.value)params.set("city",cityFilter.value);
   if(before)params.set("before",before);
   const url="/api/qa-admin"+(method==="GET"?"?"+params.toString():"");
@@ -153,6 +156,17 @@ function render(){
     const card=node("article","item");
     const meta=node("small","",String(q.city||"").toUpperCase()+" · "+q.category+" · "+new Date(q.created_at).toLocaleString());
     meta.append(node("span","qa-status "+q.status,q.status==="approved"?"Published":q.status==="rejected"?"Rejected":"Pending"));
+    if(q.status==="pending"){
+      const submitted=Date.parse(q.created_at);
+      if(Number.isFinite(submitted)){
+        const ageDays=Math.max(0,Math.floor((Date.now()-submitted)/86400000));
+        if(ageDays>=1){
+          const age=node("span","qa-status qa-age",ageDays>=7?"Waiting "+ageDays+" days — overdue":ageDays===1?"Waiting 1 day":"Waiting "+ageDays+" days");
+          age.title="Age since submission; not a clinical urgency score.";
+          meta.append(age);
+        }
+      }
+    }
     const question=node("h2","",q.question);
     const rawPath=String(q.page_path||"/"+q.city+"/");
     const source=node("p","source","Submitted on: "+rawPath+" · Page type: "+classify(q));
@@ -397,7 +411,7 @@ async function load(append=false){
     hasMore=Boolean(data.hasMore&&nextBefore);
     updateStats(data.summary);
     render();
-    say("Saved question history loaded from the database. Use View to show pending, published or rejected entries.");
+    say("Saved questions loaded "+(reviewOrder.value==="oldest"?"oldest first":"newest first")+". Dates and pending age are for moderation prioritization, not clinical triage.");
   }catch(error){say(error.message);}
 }
 document.querySelector("#load").addEventListener("click",()=>load(false));
@@ -408,5 +422,6 @@ document.querySelector("#archive-view").addEventListener("change",()=>{questions
 typeFilter.addEventListener("change",render);
 categoryFilter.addEventListener("change",render);
 reviewFocus.addEventListener("change",render);
+reviewOrder.addEventListener("change",()=>{questions=[];nextBefore=null;hasMore=false;render();say("Select Load questions to load the selected review order.");});
 queryInput.addEventListener("input",render);
 </script></body></html>
