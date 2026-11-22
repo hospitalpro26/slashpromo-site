@@ -3,6 +3,18 @@
   "articles": [
     {
       "status": "published",
+      "title": "Karachi's SMBB Institute of Trauma Provides 24/7 Emergency Services",
+      "summary": "SMBBIT in Saddar, Karachi describes round-the-clock trauma care, a 116-bed emergency department, specialist surgery and diagnostic support; a sponsored SAMAA TV feature highlighted the hospital.",
+      "city": "karachi",
+      "hospitalName": "Shaheed Mohtarma Benazir Bhutto Institute of Trauma (SMBBIT)",
+      "topic": "Hospital updates",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/karachi-smbbit-24-hour-emergency-trauma-care/",
+      "sourceName": "SMBB Institute of Trauma (official hospital website)",
+      "sourceUrl": "https://smbbit.gos.pk/DepartmentDetails?id=1"
+    },
+    {
+      "status": "published",
       "title": "GIMS Gambat Reports 272 Successful Kidney Transplants",
       "summary": "GIMS in Gambat, Khairpur, reports 272 successful kidney transplants and highlights free dialysis, transplant surgery and post-transplant medicines in an official video.",
       "city": "khairpur",
