@@ -45,3 +45,8 @@
 
 /* Public author credit is shown only when visitor explicitly consented. */
 .sp-qa-item .sp-qa-byline{font-size:12.5px;font-weight:700;color:#315d91;margin:-2px 0 11px;line-height:1.45}
+
+/* Moderated-answer count and publication dates improve transparency without exposing private records. */
+.sp-qa-results-summary{margin:0 0 13px;padding:9px 12px;border:1px solid #c7dced;border-radius:9px;background:#f3f8fd;color:#24577c;font-size:12.5px;font-weight:750}
+.sp-qa-review-hint{margin:-6px 0 12px}
+.sp-qa-reviewed-date{display:block;margin-top:11px;padding-top:8px;border-top:1px solid #dde7f3;color:#607991;font-size:12px;font-weight:650}
