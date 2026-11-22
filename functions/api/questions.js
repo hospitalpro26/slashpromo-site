@@ -11,7 +11,11 @@ export async function onRequestGet({request,env}){
   try{
     await ensureDb(env);
     const result=await env.QA_DB.prepare(
-      "SELECT id,category,question,answer,answered_at,CASE WHEN public_name_consent=1 THEN visitor_name ELSE NULL END AS author_name FROM questions WHERE city=? AND (page_path=? OR (page_path IS NULL AND ?=('/' || city || '/'))) AND status='approved' AND (page_path='/' OR length(trim(COALESCE(answer,'')))>0) ORDER BY answered_at DESC LIMIT 30"
+      "SELECT id,category,question,answer,answered_at,CASE WHEN public_name_consent=1 THEN visitor_name ELSE NULL END AS author_name "+
+      "FROM questions WHERE city=? AND status='approved' "+
+      "AND (page_path=? OR (?=('/' || city || '/') AND (page_path IS NULL OR page_path='' OR page_path='/' || city))) "+
+      "AND (page_path='/' OR length(trim(COALESCE(answer,'')))>0) "+
+      "ORDER BY answered_at DESC LIMIT 30"
     ).bind(city,pagePath,pagePath).all();
     return reply({questions:result.results||[],enabled:available,siteKey:available?env.QA_TURNSTILE_SITE_KEY:null});
   }catch(_){
