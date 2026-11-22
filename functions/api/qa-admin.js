@@ -26,6 +26,7 @@ export async function onRequestGet(ctx){
       if(Object.hasOwn(summary,record.status)){summary[record.status]=n;summary.total+=n;}
     }
     if(params.get("summary")==="1")return reply({summary,city:city||"all"});
+    const sort=params.get("sort")==="oldest"?"oldest":"newest";
     const before=params.get("before")||"";
     if(before&&!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(before))
       return reply({error:"Invalid pagination cursor."},400);
@@ -33,12 +34,12 @@ export async function onRequestGet(ctx){
     const binds=[];
     if(status!=="all"){sql+=" AND status=?";binds.push(status);}
     if(city){sql+=" AND city=?";binds.push(city);}
-    if(before){sql+=" AND created_at<?";binds.push(before);}
-    sql+=" ORDER BY created_at DESC,id DESC LIMIT 101";
+    if(before){sql+=" AND created_at"+(sort==="oldest"?">":"<")+"?";binds.push(before);}
+    sql+=" ORDER BY created_at "+(sort==="oldest"?"ASC,id ASC":"DESC,id DESC")+" LIMIT 101";
     const rows=await env.QA_DB.prepare(sql).bind(...binds).all();
     const found=rows.results||[];
     const visible=found.slice(0,100);
-    return reply({questions:visible,summary,archived,hasMore:found.length>100,nextBefore:found.length>100?visible[visible.length-1].created_at:null});
+    return reply({questions:visible,summary,archived,sort,hasMore:found.length>100,nextBefore:found.length>100?visible[visible.length-1].created_at:null});
   }catch{
     return reply({error:"Could not load saved questions. Check the production QA_DB binding."},503);
   }
