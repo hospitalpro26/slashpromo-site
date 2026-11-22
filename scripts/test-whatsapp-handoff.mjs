@@ -29,6 +29,11 @@ for(const url of locs){
   if(rel.startsWith("/health-news/"))continue;
   const file=rel==="/"?"index.html":rel.slice(1)+"index.html";
   const html=read(file);
-  assert(html.includes("/assets/site.js"),"Canonical page missing shared WhatsApp script: "+file);
+  // Standalone editorial guides intentionally use the narrower, privacy-first
+  // referral tracker instead of the site-wide WhatsApp contact module.
+  const shared=html.includes("/assets/site.js");
+  const standalone=html.includes("/assets/health-guide-referral-analytics.js");
+  assert(shared||standalone,"Canonical page missing an approved analytics loader: "+file);
+  if(standalone&&!shared)assert(html.includes("/contact/")||html.includes("contact SlashPromo"),"Standalone guide needs a visible contact route: "+file);
 }
 console.log("PASS: WhatsApp-first simplified message form, no visible number, privacy, contact settings, directory-facing canonical pages ("+locs.length+" indexed URLs, editorial news excluded)");
