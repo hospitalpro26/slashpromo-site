@@ -47,8 +47,11 @@ function check(url){
       if(!html.includes("/assets/city-questions.js"))errors.push("City page missing direct Q&A loader: "+file);
     }else{
       scoped++;
-      if(!html.includes("/assets/site.js"))errors.push("Local page missing shared script: "+file);
-      if(!html.includes("sp-qa-fallback"))errors.push("Local page missing Q&A fallback: "+file);
+      // Standalone editorial guides intentionally use a narrow first-party
+      // referral tracker and omit interactive Q&A / the shared site bundle.
+      const standalone=html.includes("/assets/health-guide-referral-analytics.js");
+      if(!html.includes("/assets/site.js")&&!standalone)errors.push("Local page missing an approved analytics script: "+file);
+      if(!html.includes("sp-qa-fallback")&&!standalone)errors.push("Local page missing Q&A fallback: "+file);
       for(const other of CITIES){
         if(other!==city && questionPage(other,path)!==null)
           errors.push("Cross-city Q&A leak: "+path+" accepted as "+other);

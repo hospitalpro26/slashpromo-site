@@ -11,3 +11,14 @@
 @media(max-width:420px){.hero h1{font-size:35px}.hero p.urdu{font-size:16px}.local-grid,.geo-section .local-grid,.editorial-grid{grid-template-columns:1fr}.avatar{width:70px;height:70px}.doctor h3{font-size:17px}.doctor .specialty{font-size:13px}.profile-note-links{font-size:11px}.site-topline{font-size:10px}.footbottom{padding-bottom:85px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .home-20261118 .kicker:before{display:none}.home-20261118 .sc-promo-strip{border-radius:5px;background:#f5f7fa;box-shadow:none}.home-20261118 .sc-promo-strip:before{display:none}.home-20261118 .sc-promo-wave-letter{animation:none}.home-20261118 .sc-promo-button{border-radius:5px;box-shadow:none}.home-20261118 .sc-promo-button:hover{transform:none}
+
+/* Phase 3: direct but contextual healthcare discovery, preserving the existing hero. */
+.home-care-actions{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin-top:20px}
+.home-care-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 15px;min-height:46px;border-radius:8px;font-weight:750;font-size:14px;line-height:1.35;text-align:center}
+.home-care-action.primary{background:#1956b8;color:#fff;border:1px solid #1956b8}
+.home-care-action.secondary{background:#fff;color:#173e78;border:1px solid #a7bfdf}
+.home-care-action.primary:hover{background:#123d85;color:#fff}
+.home-care-action.secondary:hover{background:#eaf1fb;color:#123d85}
+.home-care-action:focus-visible{outline:3px solid #cc394e;outline-offset:3px}
+.home-care-note{font-size:12px;line-height:1.5;color:#526277;margin-top:10px}
+@media(max-width:540px){.home-care-actions{flex-direction:column}.home-care-action{width:100%}}
