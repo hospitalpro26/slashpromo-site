@@ -5,6 +5,7 @@ on:
     paths:
       - '.github/workflows/verify-qa-persistence.yml'
       - 'functions/api/questions.js'
+      - 'scripts/test-qa-legacy-visibility.mjs'
       - 'functions/api/qa-admin.js'
       - 'functions/_lib/qa.js'
       - 'functions/api/analytics-report.js'
@@ -28,6 +29,8 @@ jobs:
           node --check assets/site.js
           node --check functions/api/questions.js
           node --check functions/api/qa-admin.js
+          node --check scripts/test-qa-legacy-visibility.mjs
+          node scripts/test-qa-legacy-visibility.mjs
           node --check functions/_lib/qa.js
           node --check functions/api/analytics-report.js
           grep -q 'draft_answer' functions/_lib/qa.js
