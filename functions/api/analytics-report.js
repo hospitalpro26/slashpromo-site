@@ -45,7 +45,7 @@ export async function onRequestGet(ctx){
     /* Article referral counts reuse the existing anonymous aggregate page-path events.
        No visitor identifiers, clinical search terms or outbound destination URLs are stored. */
     const featuredPaths=["/sukkur/affordable-cholecystectomy-surgery-package/","/sukkur/affordable-c-section-delivery-alkhidmat/","/sukkur/kidney-stone-pain-urologist/","/sukkur/sciatica-cervical-pain-physiotherapist/"];
-    const articleFilter="(page_path LIKE '%/health-topics/%' AND page_path NOT LIKE '%/health-topics/' OR page_path IN ("+featuredPaths.map(()=>"?").join(",") +"))";
+    const articleFilter="((page_path LIKE '%/health-topics/%' AND page_path NOT LIKE '%/health-topics/') OR (page_path LIKE '%/health-news/%' AND page_path NOT LIKE '%/health-news/') OR page_path IN ("+featuredPaths.map(()=>"?").join(",") +"))";
     const healthArticles=env.QA_DB.prepare("SELECT "+profileColumns+" FROM site_analytics_daily "+where+" AND "+articleFilter+" GROUP BY page_path,city ORDER BY referrals DESC,views DESC LIMIT 30").bind(...binds,...featuredPaths);
     // Always return monitored guides, including low-traffic pages outside the top-50 results.
     const featuredGuides=env.QA_DB.prepare("SELECT "+profileColumns+" FROM site_analytics_daily "+where+" AND page_path IN ("+featuredPaths.map(()=>"?").join(",") +") GROUP BY page_path,city ORDER BY page_path ASC").bind(...binds,...featuredPaths);
