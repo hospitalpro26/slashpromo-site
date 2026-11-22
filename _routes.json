@@ -16,7 +16,8 @@
     "/api/control-center",
     "/secure-backups",
     "/secure-backups/*",
-    "/api/secure-backup"
+    "/api/secure-backup",
+    "/api/search-opportunities"
   ],
   "exclude": []
 }
