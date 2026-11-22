@@ -25,6 +25,28 @@ export async function onRequestGet(ctx){
       const n=Number(record.total)||0;
       if(Object.hasOwn(summary,record.status)){summary[record.status]=n;summary.total+=n;}
     }
+    if(params.get("diagnostic")==="1"){
+      // Authorized, aggregate-only reconciliation: never return visitor details
+      // or the original question/answer text. No status changes or row updates.
+      const overview=await env.QA_DB.prepare(
+        "SELECT city,status,COUNT(*) AS total,"+
+        " SUM(CASE WHEN page_path IS NULL THEN 1 ELSE 0 END) AS legacy_null_path,"+
+        " SUM(CASE WHEN page_path='/' THEN 1 ELSE 0 END) AS homepage_path,"+
+        " SUM(CASE WHEN LENGTH(TRIM(COALESCE(answer,'')))>0 THEN 1 ELSE 0 END) AS answered,"+
+        " SUM(CASE WHEN status='approved' AND LENGTH(TRIM(COALESCE(answer,'')))>0 THEN 1 ELSE 0 END) AS approved_answered"+
+        " FROM questions GROUP BY city,status ORDER BY city,status"
+      ).all();
+      const cityRoots=await env.QA_DB.prepare(
+        "SELECT city,COUNT(*) AS total,"+
+        " SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END) AS approved,"+
+        " SUM(CASE WHEN status='approved' AND LENGTH(TRIM(COALESCE(answer,'')))>0 THEN 1 ELSE 0 END) AS approved_answered"+
+        " FROM questions WHERE (page_path='/'||city||'/' OR page_path IS NULL) GROUP BY city ORDER BY city"
+      ).all();
+      const archived=await env.QA_DB.prepare(
+        "SELECT COUNT(*) AS total FROM admin_archived_records WHERE kind='question'"
+      ).first();
+      return reply({checkedAt:new Date().toISOString(),mode:"read-only-aggregates",byCityStatus:overview.results||[],cityRootCounts:cityRoots.results||[],archivedQuestionMarkers:Number(archived?.total||0)});
+    }
     if(params.get("summary")==="1")return reply({summary,city:city||"all"});
     const sort=params.get("sort")==="oldest"?"oldest":"newest";
     const before=params.get("before")||"";
