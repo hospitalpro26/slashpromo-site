@@ -40,7 +40,7 @@ export async function onRequestGet(ctx){
         "SELECT city,COUNT(*) AS total,"+
         " SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END) AS approved,"+
         " SUM(CASE WHEN status='approved' AND LENGTH(TRIM(COALESCE(answer,'')))>0 THEN 1 ELSE 0 END) AS approved_answered"+
-        " FROM questions WHERE (page_path='/'||city||'/' OR page_path IS NULL) GROUP BY city ORDER BY city"
+        " FROM questions WHERE (page_path='/'||city||'/' OR page_path='/'||city OR page_path IS NULL OR page_path='') GROUP BY city ORDER BY city"
       ).all();
       const archived=await env.QA_DB.prepare(
         "SELECT COUNT(*) AS total FROM admin_archived_records WHERE kind='question'"
