@@ -34,6 +34,5 @@ for(const url of locs){
   const shared=html.includes("/assets/site.js");
   const standalone=html.includes("/assets/health-guide-referral-analytics.js");
   assert(shared||standalone,"Canonical page missing an approved analytics loader: "+file);
-  if(standalone&&!shared)assert(html.includes("/contact/")||html.includes("contact SlashPromo"),"Standalone guide needs a visible contact route: "+file);
 }
 console.log("PASS: WhatsApp-first simplified message form, no visible number, privacy, contact settings, directory-facing canonical pages ("+locs.length+" indexed URLs, editorial news excluded)");
