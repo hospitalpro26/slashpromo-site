@@ -37,6 +37,8 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 .review-checklist{border:1px solid #bcd4ea;background:#f1f8ff;padding:14px;border-radius:11px;margin:12px 0}.review-checklist strong{display:block;color:#174a70}.review-checklist p{font-size:13px;margin:5px 0 0}.review-checklist ul{margin:7px 0;padding-left:19px;font-size:13px;color:#486785}.review-risk{border-color:#e5c39b;background:#fff8eb}.answer-preview{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #c5d6e7;border-radius:9px;background:#fff;padding:12px;margin:9px 0;font-size:14px}.preview-toggle{background:#e6f0fa;color:#235279;border:1px solid #aac9e2}.qa-selection-note{font-size:12px;color:#59738d;margin:4px 0 11px}
 
 .qa-template-tools{border:1px solid #c5d9eb;background:#f6faff;border-radius:12px;padding:14px;margin:12px 0}.qa-template-tools h3{font-size:14px;margin:0 0 4px;color:#164b72}.qa-template-tools p{font-size:12px;margin:0 0 9px}.qa-template-row{display:flex;gap:9px;flex-wrap:wrap;align-items:end}.qa-template-row label{min-width:190px;flex:1}.qa-template-row select{width:100%;min-width:0}.qa-template-add{background:#256187}.qa-template-note{font-size:12px;color:#4f6a86;margin-top:8px!important}
+
+.qa-link-panel{border:1px solid #bfd5e9;background:#f5faff;border-radius:12px;padding:14px;margin:12px 0}.qa-link-panel h3{font-size:14px;margin:0 0 6px;color:#174a70}.qa-link-panel p{font-size:12px;margin:5px 0;color:#536f89}.qa-link-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.qa-link-actions select{flex:1;min-width:190px}.qa-link-actions button{background:#205e89}.qa-link-panel .qa-link-warning{color:#8a5025;font-weight:650}.qa-link-panel a{color:#13569c;font-weight:700}.qa-link-panel button:disabled{opacity:.5}
 </style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1><p><a href="/analytics/" rel="nofollow">View aggregate website analytics ↗</a> · <a href="/enquiries/" rel="nofollow">Private Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Unified Control Center ↗</a></p>
@@ -229,6 +231,85 @@ function render(){
     });
     templateRow.append(templateLabel,langLabel,insertTemplate);
     templateTools.append(templateRow,templateMessage);
+    // Only public Slashcure URLs already linked by this exact source page are
+    // presented as candidate references. This is not a clinical recommendation.
+    const linkPanel=node("section","qa-link-panel");
+    linkPanel.append(node("h3","","Review-first Slashcure references"));
+    linkPanel.append(node("p","","Look up existing links from this public source page, choose a relevant doctor or hospital manually, then confirm the live Slashcure profile before adding it to a private answer draft."));
+    const linkActions=node("div","qa-link-actions");
+    const scanButton=node("button","","Find existing page links");
+    scanButton.type="button";
+    const linkSelect=node("select","");
+    linkSelect.setAttribute("aria-label","Select a source-page Slashcure reference");
+    linkSelect.disabled=true;
+    const addLinkButton=node("button","","Add chosen link to draft");
+    addLinkButton.type="button";
+    addLinkButton.disabled=true;
+    const linkState=node("p","qa-link-warning","No link selected. This tool never selects a doctor or publishes an answer automatically.");
+    const linkPreview=node("p","","");
+    linkPreview.hidden=true;
+    const safePage=String(q.page_path||"");
+    const pageValid=safePage==="/"||/^\\/(?:[a-z0-9-]+\\/){1,6}$/.test(safePage);
+    if(!pageValid){scanButton.disabled=true;linkState.textContent="Unsupported source path; manually check the relevant public provider page.";}
+    scanButton.addEventListener("click",async()=>{
+      scanButton.disabled=true;
+      linkState.textContent="Loading links from the existing public source page…";
+      linkSelect.replaceChildren();
+      linkSelect.disabled=true;addLinkButton.disabled=true;linkPreview.hidden=true;
+      try{
+        const response=await fetch(safePage,{credentials:"omit",cache:"no-store"});
+        if(!response.ok)throw Error("Source page could not be loaded.");
+        const html=await response.text();
+        if(html.length>600000)throw Error("Source page too large to inspect.");
+        const doc=new DOMParser().parseFromString(html,"text/html");
+        const unique=new Map();
+        for(const a of doc.querySelectorAll("a[href]")){
+          let url;
+          try{url=new URL(a.getAttribute("href"),location.origin);}catch{continue;}
+          if(url.protocol!=="https:"||url.hostname!=="slashcure.com")continue;
+          // Provider URLs only: don't insert broad homepages, ads or unrelated links.
+          if(!/^\\/(?:hospitals|[a-z0-9-]+)\\/[a-z0-9-]+\\/[a-z0-9-]+\\/?$/.test(url.pathname))continue;
+          url.search="";url.hash="";
+          const value=url.href;
+          if(unique.has(value))continue;
+          const label=(a.textContent||"").trim().replace(/\\s+/g," ").slice(0,85);
+          unique.set(value,label||url.pathname.split("/").pop().replace(/-/g," "));
+          if(unique.size>=45)break;
+        }
+        for(const [href,label] of unique){
+          const option=node("option","",label+" · "+href);
+          option.value=href;linkSelect.append(option);
+        }
+        if(!unique.size){linkState.textContent="No individual Slashcure profile links were found on this source page. No links were added.";return;}
+        linkSelect.disabled=false;addLinkButton.disabled=false;
+        linkState.textContent=unique.size+" existing provider link(s) found. This is an unranked list, not a recommendation.";
+        showCandidate();
+      }catch(e){linkState.textContent=e.message||"Could not inspect the source page.";}
+      finally{scanButton.disabled=false;}
+    });
+    function showCandidate(){
+      if(!linkSelect.value){linkPreview.hidden=true;return;}
+      linkPreview.replaceChildren(document.createTextNode("Verify on Slashcure: "));
+      const a=node("a","","Open chosen profile ↗");
+      a.href=linkSelect.value;a.target="_blank";a.rel="noopener noreferrer";
+      linkPreview.append(a);linkPreview.hidden=false;
+    }
+    linkSelect.addEventListener("change",showCandidate);
+    addLinkButton.addEventListener("click",()=>{
+      const href=linkSelect.value;
+      let u;
+      try{u=new URL(href);}catch{return;}
+      if(u.protocol!=="https:"||u.hostname!=="slashcure.com"||!Array.from(linkSelect.options).some(o=>o.value===u.href))return;
+      if(answer.value.includes(u.href)){say("That referral URL is already present in this answer.");return;}
+      const line="Related published Slashcure profile (verify relevance and current details): "+u.href;
+      if(answer.value.length+line.length+2>answer.maxLength){say("The answer is too long. Shorten it before adding a link.");return;}
+      answer.value+=(answer.value.trim()?"\\n\\n":"")+line;
+      answer.value=answer.value.replace(/\\n/g,"\\n");
+      answer.focus();
+      say("Candidate link inserted locally. Verify that the provider is relevant; save a draft and review before publication.");
+    });
+    linkActions.append(scanButton,linkSelect,addLinkButton);
+    linkPanel.append(linkActions,linkState,linkPreview);
     const riskFlags=privacyFlags(q);
     const review=node("aside","review-checklist"+(riskFlags.length?" review-risk":""));
     review.append(node("strong","","Review checklist · "+(riskFlags.length?"Needs closer privacy review":"Manual verification required")));
@@ -302,7 +383,7 @@ function render(){
       actions.append(deleteBtn);
     }
     actions.append(archiveBtn);
-    card.append(meta,question,source,privateCard,templateTools,label,review,previewButton,previewNote,preview,actions);
+    card.append(meta,question,source,privateCard,templateTools,linkPanel,label,review,previewButton,previewNote,preview,actions);
     items.append(card);
   }
 }
