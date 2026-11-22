@@ -92,9 +92,22 @@ export async function onRequestPost(ctx){
   const now=new Date().toISOString();
   try{
     await ensureDb(env);
-    const record=await env.QA_DB.prepare("SELECT page_path FROM questions WHERE id=?").bind(id).first();
+    const record=await env.QA_DB.prepare("SELECT page_path,question,visitor_whatsapp FROM questions WHERE id=?").bind(id).first();
     if(!record)return reply({error:"Question not found."},404);
     if(status==="approved"&&record.page_path!=="/"&&answer.length<12)return reply({error:"Provide a verified public answer before publishing."},400);
+    // Do not publish a submitted question if private identifiers were missed at intake.
+    // Visitor WhatsApp is private even if the visitor opted into contact.
+    if(status==="approved"){
+      const submitted=String(record.question||"");
+      if(/(?:[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}|(?:\+?92|0)\s*3\d{2}[\s.-]*\d{3}[\s.-]*\d{4}|(?:cnic|patient id|medical record number|national id)\s*[:#-]?\s*\d)/i.test(submitted))
+        return reply({error:"This question appears to include private contact or identifying information. Do not publish; keep it in review or reject it."},400);
+      const phone=String(record.visitor_whatsapp||"").replace(/\D/g,"");
+      const publicAnswerDigits=answer.replace(/\D/g,"");
+      if(phone.length>=10&&publicAnswerDigits.includes(phone.slice(-10)))
+        return reply({error:"The public answer cannot include the visitor's private WhatsApp number."},400);
+      if(/(?:cnic|patient id|medical record number|national id)\s*[:#-]?\s*\d/i.test(answer))
+        return reply({error:"Remove patient or national identifiers from the public answer."},400);
+    }
     let result;
     if(status==="draft"){
       result=await env.QA_DB.prepare("UPDATE questions SET draft_answer=?,updated_at=? WHERE id=?").bind(answer||null,now,id).run();
