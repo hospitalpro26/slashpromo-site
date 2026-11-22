@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-14",
+  "updatedAt": "2026-11-22",
   "note": "SlashPromo-owned searchable directory. Publicly supplied/profile data must be reviewed before adding or editing; schedules should be verified at the provider.",
   "doctors": [
     {
@@ -1470,6 +1470,22 @@
     }
   ],
   "hospitals": [
+    {
+      "id": "sheikhupura-abu-al-hassan-hospital",
+      "name": "Abu Al Hassan Hospital",
+      "city": "Sheikhupura",
+      "category": "Hospital",
+      "description": "Hospital on Hiran Minar Road, Dera Khurshed, Sheikhupura, with published general medicine, paediatrics, surgery, gynaecology, cardiology, orthopaedics, physiotherapy, emergency and diagnostics information.",
+      "address": "Hiran Minar Road, Dera Khurshed, Railway Crossing, Sheikhupura, Punjab, Pakistan",
+      "phone": "03164720963",
+      "url": "/hospitals/sheikhupura/abu-al-hassan-hospital/",
+      "externalProfile": "https://slashcure.com/hospitals/sheikhupura/abu-al-hassan-hospital",
+      "hospitalpro": "",
+      "kind": "hospital",
+      "linkedDoctorIds": [
+        "sheikhupura-dr-hafiz-abdul-rehman"
+      ]
+    },
     {
       "id": "karachi-astro-physiocare",
       "name": "Astro Physiocare",
