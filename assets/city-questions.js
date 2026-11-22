@@ -81,6 +81,8 @@
         </div>
         <div class="sp-qa-card">
           <h3>Approved answers about ${htmlSafe(topic)}</h3>
+          <p class="sp-qa-note sp-qa-review-hint">Only moderator-approved questions and answers appear here. Posted times and clinic details may change.</p>
+          <div id="sp-qa-results-summary" class="sp-qa-results-summary" role="status" aria-live="polite">Loading reviewed questions…</div>
           <div id="sp-qa-questions" class="sp-qa-questions" aria-live="polite"><p class="sp-qa-note">Loading approved questions…</p></div>
           <div class="sp-qa-privacy"><strong>For information, not diagnosis.</strong> General health answers cannot replace examination by a qualified clinician. For emergencies, seek urgent medical care. OPD schedules and contact numbers must be confirmed with the provider before travel.</div>
         </div>
@@ -94,11 +96,13 @@
   const feedback=section.querySelector("#sp-qa-feedback");
   const button=section.querySelector("#sp-qa-submit");
   const results=section.querySelector("#sp-qa-questions");
+  const resultsSummary=section.querySelector("#sp-qa-results-summary");
   const security=section.querySelector("#sp-qa-security");
   let turnstileId=null,turnstileToken="",isReady=false;
   function notice(message,kind="info"){feedback.hidden=false;feedback.dataset.kind=kind;feedback.textContent=message;}
   function renderQuestions(items){
     results.replaceChildren();
+    resultsSummary.textContent=items.length?items.length+" reviewed question"+(items.length===1?"":"s")+" available on this page.":"No reviewed questions published for this page yet.";
     if(!items.length){
       const p=document.createElement("p");p.className="sp-qa-note";
       p.textContent="No approved questions here yet. Useful questions and verified answers will appear after review.";
@@ -117,7 +121,18 @@
         byline.textContent="Asked by "+item.author_name;
         article.append(byline);
       }
-      article.append(label,answer);results.append(article);
+      article.append(label,answer);
+      if(item.answered_at){
+        const stamp=document.createElement("time");
+        const date=new Date(item.answered_at);
+        if(!Number.isNaN(date.getTime())){
+          stamp.className="sp-qa-reviewed-date";
+          stamp.dateTime=date.toISOString();
+          stamp.textContent="Answer published "+new Intl.DateTimeFormat("en-PK",{year:"numeric",month:"short",day:"numeric",timeZone:"Asia/Karachi"}).format(date);
+          article.append(stamp);
+        }
+      }
+      results.append(article);
     }
   }
   function enableSecurity(siteKey){
@@ -174,10 +189,14 @@
       });
       const data=await response.json();
       if(!response.ok)throw Error(data.error||"Please try again later.");
-      window.slashpromoTrack?.("qa_submitted");
-      form.reset();
-      form.elements.visitorCity.value=label;
-      notice("Your question has been saved in the moderation dashboard (Reference: "+(data.reference||"received")+"). It is awaiting review. Only approved questions and consented names appear publicly; your contact details stay private.","success");
+      if(!data.duplicate)window.slashpromoTrack?.("qa_submitted");
+      if(!data.duplicate){
+        form.reset();
+        form.elements.visitorCity.value=label;
+      }
+      notice(data.duplicate
+        ?"A matching question from this page has already been received and remains under review. No new copy was created."
+        :"Your question has been saved in the private moderation dashboard (Reference: "+(data.reference||"received")+"). It is awaiting review. Only approved questions and consented names appear publicly; your contact details stay private.","success");
     }catch(error){notice(error.message||"Could not submit your question.","error");}
     finally{
       turnstileToken="";
