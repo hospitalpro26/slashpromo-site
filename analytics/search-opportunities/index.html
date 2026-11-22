@@ -22,7 +22,7 @@ body{margin:0}main{max-width:1280px;margin:auto;padding:26px 18px 65px}a{color:#
 "use strict";
 (()=>{
  const $=id=>document.getElementById(id),nf=new Intl.NumberFormat("en-PK");
- let unlocked=false,queries=[],pages=[],sessionKey='',liveTotal=null;
+ let unlocked=false,queries=[],pages=[],sessionKey='',liveTotal=null,sourceMode='none';
  const cityNames=["sukkur","karachi","shikarpur","khairpur","hyderabad","pano-aqil","ghotki","larkana","ratodero","sheikhupura","lahore","rawalpindi","peshawar","quetta","islamabad","bahawalpur"];
  const fmtPct=(v)=>Number.isFinite(v)?(v*100).toFixed(2)+"%":"—";
  const num=(v)=>{const n=Number(String(v??"").replace(/[,\s%]/g,""));return Number.isFinite(n)?n:0};
@@ -84,7 +84,7 @@ body{margin:0}main{max-width:1280px;margin:auto;padding:26px 18px 65px}a{color:#
   }catch(err){$("status").textContent=err.message||"Unable to authenticate."}finally{if(!unlocked)btn.disabled=false}
  });
  async function importFile(id,kind){const f=$(id).files?.[0];if(!f)return;if(!unlocked){$("import-status").textContent="Verify administrator access first.";return}if(f.size>5*1024*1024){$("import-status").textContent="CSV exceeds 5 MB limit.";return}
-  try{const parsed=parse(await f.text(),kind);if(!parsed.length)throw Error("No valid SlashPromo rows found");liveTotal=null;if(kind==="pages")pages=parsed;else queries=parsed;render()}catch(err){$("import-status").textContent="Import rejected: "+err.message}
+  try{const parsed=parse(await f.text(),kind);if(!parsed.length)throw Error("No valid SlashPromo rows found");if(sourceMode==="live"){pages=[];queries=[]}sourceMode="csv";liveTotal=null;if(kind==="pages")pages=parsed;else queries=parsed;render()}catch(err){$("import-status").textContent="Import rejected: "+err.message}
  }
  async function loadLive(){
   if(!unlocked||!sessionKey){$("live-status").textContent="Verify the private administrator key first.";return}
@@ -94,7 +94,7 @@ body{margin:0}main{max-width:1280px;margin:auto;padding:26px 18px 65px}a{color:#
     const data=await response.json();if(!response.ok)throw Error(data.error||"Private report is unavailable.");
     if(data.property!=="sc-domain:slashpromo.com"||!Array.isArray(data.pages)||!Array.isArray(data.queries))throw Error("Unexpected private report format.");
     const convert=items=>items.map(x=>({label:x.label,clicks:Number(x.clicks)||0,impressions:Number(x.impressions)||0,ctr:Number(x.ctr)||0,position:Number(x.position)||0,positionSum:(Number(x.position)||0)*(Number(x.impressions)||0),positionCount:Number(x.impressions)||0,city:cityOf(x.label)}));
-    pages=convert(data.pages);queries=convert(data.queries);liveTotal=data.total||null;
+    pages=convert(data.pages);queries=convert(data.queries);liveTotal=data.total||null;sourceMode='live';
     if(data.period?.startDate)$("start-date").value=data.period.startDate;
     if(data.period?.endDate)$("end-date").value=data.period.endDate;
     render();
@@ -107,7 +107,7 @@ $("load-live").addEventListener("click",loadLive);
 $("queries-file").addEventListener("change",()=>importFile("queries-file","queries"));
  $("pages-file").addEventListener("change",()=>importFile("pages-file","pages"));
  $("city").addEventListener("change",render);$("minimum").addEventListener("input",render);
- $("clear-all").addEventListener("click",()=>{queries=[];pages=[];liveTotal=null;sessionKey='';unlocked=false;$("private").classList.add("hidden");$("key").value="";$("unlock").disabled=false;$("queries-file").value="";$("pages-file").value="";$("status").textContent="Session data cleared. Authenticate again.";render()});
+ $("clear-all").addEventListener("click",()=>{queries=[];pages=[];liveTotal=null;sourceMode='none';sessionKey='';unlocked=false;$("private").classList.add("hidden");$("key").value="";$("unlock").disabled=false;$("queries-file").value="";$("pages-file").value="";$("status").textContent="Session data cleared. Authenticate again.";render()});
  function csvSafe(v){let s=String(v??"");if(/^[\s]*[=+@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
  $("export-opps").addEventListener("click",()=>{
   if(!unlocked||!pages.length){$("import-status").textContent="Import a Pages CSV first.";return}
