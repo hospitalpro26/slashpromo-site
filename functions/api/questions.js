@@ -1,4 +1,5 @@
 import {CITIES,CATEGORIES,questionPage,reply,enabled,ensureDb,sameOrigin,hasPrivateInfo,ipDigest} from "../_lib/qa.js";
+import {notifyNewQuestion,notificationEnabled} from "../_lib/qa-email-notify.js";
 
 export async function onRequestGet({request,env}){
   const city=new URL(request.url).searchParams.get("city")||"";
@@ -18,7 +19,8 @@ export async function onRequestGet({request,env}){
   }
 }
 
-export async function onRequestPost({request,env}){
+export async function onRequestPost(ctx){
+  const {request,env}=ctx;
   if(!sameOrigin(request)) return reply({error:"Invalid request origin."},403);
   if(!enabled(env)) return reply({error:"Question submissions are not enabled yet."},503);
   if(!(request.headers.get("Content-Type")||"").includes("application/json")) return reply({error:"Send JSON."},415);
@@ -84,6 +86,12 @@ export async function onRequestPost({request,env}){
       "INSERT INTO questions(id,city,page_path,category,question,status,created_at,ip_hash,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent) VALUES(?,?,?,?,?,'pending',?,?,?,?,?,?,?,?)"
     ).bind(questionId,city,pagePath,category,question,new Date().toISOString(),digest,
       visitorName,visitorCity,visitorWhatsApp||null,visitorSuggestion||null,visitorWhatsApp&&contactConsent?1:0,1).run();
+    // Email is strictly an optional admin alert, never a prerequisite to saving.
+    // waitUntil keeps the request fast and prevents an email outage from losing
+    // a stored question. No notification is triggered for duplicate submissions.
+    if(notificationEnabled(env)&&typeof ctx.waitUntil==="function"){
+      ctx.waitUntil(notifyNewQuestion(env,{id:questionId,city,category,pagePath}));
+    }
     return reply({ok:true,saved:true,pending:true,reference:questionId.slice(0,8).toUpperCase(),message:"Your question was saved in the private moderation dashboard and is awaiting review."},201);
   }catch{return reply({error:"We couldn't save your question. Please try again later."},503);}
 }
