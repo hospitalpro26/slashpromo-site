@@ -1,5 +1,5 @@
 :root{--ah-ink:#11284b;--ah-royal:#124a9f;--ah-sky:#edf5ff;--ah-red:#d84756;--ah-border:#dce7f4}
-.ah-page{color:var(--ah-ink);background:#f7faff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.ah-page{margin:0;color:var(--ah-ink);background:#f7faff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
 .ah-page *{box-sizing:border-box}.ah-page .ah-wrap{max-width:1150px;margin:auto;padding:0 22px}
 .ah-page a{color:#114f9b}.ah-page .ah-nav{background:#fff;border-bottom:1px solid var(--ah-border)}
 .ah-page .ah-nav .ah-wrap{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
