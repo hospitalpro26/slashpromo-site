@@ -35,6 +35,8 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 .qa-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.qa-kpis span{padding:12px;background:#fff;border:1px solid #cfdeef;border-radius:10px;font-size:12px;color:#365b85}.qa-kpis strong{display:block;font-size:23px;color:#163f70}.qa-status{display:inline-block;padding:3px 9px;margin-left:8px;border-radius:999px;background:#e1eaf8;color:#1b4575;font-weight:700;font-size:11px}.qa-status.approved{background:#e0f6e9;color:#125e39}.qa-status.rejected{background:#fae6e9;color:#962c43}.qa-draft{background:#2c688f}.qa-notice{font-size:12px;color:#456c8f}@media(max-width:640px){.qa-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .review-checklist{border:1px solid #bcd4ea;background:#f1f8ff;padding:14px;border-radius:11px;margin:12px 0}.review-checklist strong{display:block;color:#174a70}.review-checklist p{font-size:13px;margin:5px 0 0}.review-checklist ul{margin:7px 0;padding-left:19px;font-size:13px;color:#486785}.review-risk{border-color:#e5c39b;background:#fff8eb}.answer-preview{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #c5d6e7;border-radius:9px;background:#fff;padding:12px;margin:9px 0;font-size:14px}.preview-toggle{background:#e6f0fa;color:#235279;border:1px solid #aac9e2}.qa-selection-note{font-size:12px;color:#59738d;margin:4px 0 11px}
+
+.qa-template-tools{border:1px solid #c5d9eb;background:#f6faff;border-radius:12px;padding:14px;margin:12px 0}.qa-template-tools h3{font-size:14px;margin:0 0 4px;color:#164b72}.qa-template-tools p{font-size:12px;margin:0 0 9px}.qa-template-row{display:flex;gap:9px;flex-wrap:wrap;align-items:end}.qa-template-row label{min-width:190px;flex:1}.qa-template-row select{width:100%;min-width:0}.qa-template-add{background:#256187}.qa-template-note{font-size:12px;color:#4f6a86;margin-top:8px!important}
 </style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1><p><a href="/analytics/" rel="nofollow">View aggregate website analytics ↗</a> · <a href="/enquiries/" rel="nofollow">Private Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Unified Control Center ↗</a></p>
@@ -102,6 +104,16 @@ function classify(q){
   return "other";
 }
 // This UI checklist is advisory: the server still decides if publication is allowed.
+// Editorial starter wording only. Neither AI-generated nor independently doctor-verified.
+// All templates require administrator editing and factual review before publication.
+const answerTemplates=Object.freeze([
+  {id:"opd",category:"OPD timings",name:"OPD schedules",en:"Consultation and OPD timings may change. Please check the doctor's published Slashcure profile and confirm the current clinic session directly with the healthcare provider before visiting.",ur:"ڈاکٹر کی او پی ڈی کے اوقات تبدیل ہو سکتے ہیں۔ براہِ کرم Slashcure پر متعلقہ ڈاکٹر کا پروفائل دیکھیں اور جانے سے پہلے کلینک سے موجودہ اوقات کی تصدیق کریں۔"},
+  {id:"contact",category:"Doctor contact",name:"Public contact information",en:"Please open the doctor's published profile on Slashcure to check available public contact options. We do not share private telephone numbers. Confirm details directly with the healthcare provider.",ur:"رابطے کی دستیاب عوامی معلومات کے لیے متعلقہ ڈاکٹر کا Slashcure پروفائل دیکھیں۔ ہم نجی فون نمبر شائع نہیں کرتے۔ براہِ کرم کلینک یا ڈاکٹر سے معلومات کی تصدیق کریں۔"},
+  {id:"hospital",category:"Doctors & hospitals",name:"Hospital and doctor directory",en:"You can review the published hospital and doctor directory pages on Slashpromo, then follow the relevant Slashcure profile for the provider's latest posted information. Hospital affiliations and consultation arrangements should be confirmed before visiting.",ur:"Slashpromo پر ہسپتال اور ڈاکٹروں کی شائع شدہ فہرست دیکھیں، پھر متعلقہ ڈاکٹر کی معلومات کے لیے Slashcure پروفائل کھولیں۔ جانے سے پہلے ہسپتال اور او پی ڈی کی تفصیلات کی تصدیق کریں۔"},
+  {id:"appointments",category:"Appointments",name:"Appointment or booking enquiry",en:"Booking options vary by doctor and clinic. Please check the relevant Slashcure profile for currently available appointment or messaging options and confirm any booking directly. A question posted here does not create an appointment.",ur:"اپائنٹمنٹ کی سہولت ڈاکٹر اور کلینک کے مطابق مختلف ہو سکتی ہے۔ متعلقہ Slashcure پروفائل پر دستیاب بکنگ یا پیغام رسانی کے اختیارات دیکھیں۔ یہاں سوال لکھنے سے اپائنٹمنٹ بک نہیں ہوتی۔"},
+  {id:"health",category:"Health questions",name:"General health information only",en:"We cannot diagnose a condition or recommend treatment for an individual through public questions. A qualified clinician should assess symptoms and medical history. Seek urgent medical care for severe or rapidly worsening symptoms.",ur:"عوامی سوالات کے ذریعے کسی فرد کی بیماری کی تشخیص یا علاج تجویز نہیں کیا جا سکتا۔ علامات اور طبی تاریخ کے جائزے کے لیے مستند ڈاکٹر سے رجوع کریں۔ شدید یا تیزی سے بگڑتی علامات کی صورت میں فوری طبی مدد حاصل کریں۔"},
+  {id:"feedback",category:"Community feedback",name:"Community suggestion acknowledgement",en:"Thank you for helping improve Slashpromo. Our team will review your suggestion. Please use the contact page for any issue involving private information; do not publish personal or patient details here.",ur:"Slashpromo کو بہتر بنانے کے لیے آپ کی تجویز کا شکریہ۔ ہماری ٹیم اس کا جائزہ لے گی۔ ذاتی یا مریض کی معلومات عوامی سوالات میں شیئر نہ کریں؛ نجی معاملے کے لیے رابطہ صفحہ استعمال کریں۔"}
+]);
 function privacyFlags(q){
   const flags=[];
   const text=[q.question,q.draft_answer].filter(Boolean).join(" ");
@@ -177,6 +189,45 @@ function render(){
     const answer=node("textarea","");
     answer.maxLength=2000;answer.value=q.draft_answer??q.answer??"";
     label.append(answer);
+    // Template inserts are local editor actions; they do not save or publish.
+    const templateTools=node("section","qa-template-tools");
+    templateTools.append(node("h3","","Editable answer starters · English / اردو"));
+    templateTools.append(node("p","","Select a starter, then edit and verify it. No automated answer or publication."));
+    const templateRow=node("div","qa-template-row");
+    const templateLabel=node("label","","Template");
+    const templateSelect=node("select","");
+    const blankOption=node("option","","Choose a response type");
+    blankOption.value="";
+    templateSelect.append(blankOption);
+    for(const item of answerTemplates){
+      const opt=node("option","",item.name+(item.category===q.category?" · matches category":""));
+      opt.value=item.id;
+      templateSelect.append(opt);
+    }
+    const recommended=answerTemplates.find(t=>t.category===q.category);
+    if(recommended)templateSelect.value=recommended.id;
+    templateLabel.append(templateSelect);
+    const langLabel=node("label","","Language");
+    const langSelect=node("select","");
+    for(const [value,title] of [["en","English"],["ur","اردو (Urdu)"],["both","English + اردو"]]){
+      const option=node("option","",title);
+      option.value=value;langSelect.append(option);
+    }
+    langLabel.append(langSelect);
+    const insertTemplate=node("button","qa-template-add","Insert into answer");
+    insertTemplate.type="button";
+    const templateMessage=node("p","qa-template-note","Starter text is not a verified answer. Check doctor, hospital and clinical facts before saving or publishing.");
+    insertTemplate.addEventListener("click",()=>{
+      const t=answerTemplates.find(t=>t.id===templateSelect.value);
+      if(!t){say("Select an answer starter first.");return;}
+      const text=langSelect.value==="ur"?t.ur:langSelect.value==="both"?t.en+"\\n\\n"+t.ur:t.en;
+      if(answer.value.trim()&&!window.confirm("Replace the current answer text with this starter? Unsaved edits in this field will be lost."))return;
+      answer.value=text.replace(/\\n/g,"\n");
+      answer.focus();
+      say("Starter inserted locally. Review, tailor, and save a private draft before publishing.");
+    });
+    templateRow.append(templateLabel,langLabel,insertTemplate);
+    templateTools.append(templateRow,templateMessage);
     const riskFlags=privacyFlags(q);
     const review=node("aside","review-checklist"+(riskFlags.length?" review-risk":""));
     review.append(node("strong","","Review checklist · "+(riskFlags.length?"Needs closer privacy review":"Manual verification required")));
@@ -250,7 +301,7 @@ function render(){
       actions.append(deleteBtn);
     }
     actions.append(archiveBtn);
-    card.append(meta,question,source,privateCard,label,review,previewButton,previewNote,preview,actions);
+    card.append(meta,question,source,privateCard,templateTools,label,review,previewButton,previewNote,preview,actions);
     items.append(card);
   }
 }
