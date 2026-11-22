@@ -73,12 +73,12 @@ export async function onRequestPost({request,env}){
     const digest=await ipDigest(request,env.QA_ADMIN_KEY);
     const since=new Date(Date.now()-86400000).toISOString();
     const count=await env.QA_DB.prepare("SELECT count(*) AS n FROM questions WHERE ip_hash=? AND created_at>=?").bind(digest,since).first();
-    if((count?.n||0)>=4)return reply({error:"Daily question limit reached. Please try again tomorrow."},429);
-    // Review-first duplicate guard: avoid repeated identical pending questions
+        // Review-first duplicate guard: avoid repeated identical pending questions
     // from one visitor on the same page within 24h. Existing records are untouched.
     const duplicate=await env.QA_DB.prepare("SELECT id FROM questions WHERE ip_hash=? AND city=? AND page_path=? AND question=? AND created_at>=? LIMIT 1")
       .bind(digest,city,pagePath,question,since).first();
     if(duplicate)return reply({ok:true,saved:true,pending:true,duplicate:true,message:"A matching question has already been received from this visitor and page in the past 24 hours. It remains in the review queue."},200);
+    if((count?.n||0)>=4)return reply({error:"Daily question limit reached. Please try again tomorrow."},429);
     const questionId=crypto.randomUUID();
     await env.QA_DB.prepare(
       "INSERT INTO questions(id,city,page_path,category,question,status,created_at,ip_hash,visitor_name,visitor_city,visitor_whatsapp,visitor_suggestion,contact_consent,public_name_consent) VALUES(?,?,?,?,?,'pending',?,?,?,?,?,?,?,?)"
