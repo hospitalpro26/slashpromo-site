@@ -3,6 +3,18 @@
   "articles": [
     {
       "status": "published",
+      "title": "GIMS Gambat Reports 272 Successful Kidney Transplants",
+      "summary": "GIMS in Gambat, Khairpur, reports 272 successful kidney transplants and highlights free dialysis, transplant surgery and post-transplant medicines in an official video.",
+      "city": "khairpur",
+      "hospitalName": "Pir Abdul Qadir Shah Jeelani Institute of Medical Sciences (GIMS)",
+      "topic": "Hospital updates",
+      "datePublished": "2026-11-22",
+      "url": "/health-news/gims-gambat-272-kidney-transplants/",
+      "sourceName": "Pir Abdul Qadir Shah Jeelani Institute of Medical Sciences (GIMS)",
+      "sourceUrl": "https://www.facebook.com/reel/1487078770236671"
+    },
+    {
+      "status": "published",
       "title": "AI X-Ray Software Helps Detect Feeding Tube Position: GE HealthCare's 2026 Update",
       "summary": "GE HealthCare's FDA-cleared Critical Care Suite 3.0 adds on-device AI assistance for feeding tube assessment on mobile X-rays for adults and children.",
       "city": "global",
