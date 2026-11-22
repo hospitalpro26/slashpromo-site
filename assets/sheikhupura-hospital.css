@@ -34,3 +34,37 @@
 .ah-page .ah-meta{font-size:.85rem;color:#5c6f84}.ah-page .ah-cityintro{padding:20px 0 4px}
 @media(max-width:800px){.ah-page .ah-hero-grid,.ah-page .ah-figure-grid{grid-template-columns:1fr}.ah-page .ah-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ah-page .ah-hero{padding:34px 0}.ah-page .ah-hero-grid{gap:20px}}
 @media(max-width:540px){.ah-page .ah-grid,.ah-page .ah-service-grid{grid-template-columns:1fr}.ah-page .ah-wrap{padding:0 17px}.ah-page .ah-navlinks{gap:12px;font-size:.81rem}.ah-page .ah-section{padding:38px 0}.ah-page .ah-photo{border-radius:14px}}
+
+/* Sheikhupura 2026-11-22: keep the site-wide dark-blue/red Slashcure wordmark legible over blue CTAs. */
+.ah-page a.ah-button:not(.alt),.ah-page a.ah-button:not(.alt):visited{color:#fff!important}
+.ah-page a.ah-button:not(.alt) .sp-slashcure-wordmark,
+.ah-page a.ah-button:not(.alt) [data-sp-slashcure-wordmark]{
+  display:inline-flex!important;align-items:baseline;
+  background:#fff!important;border:1px solid rgba(255,255,255,.8);
+  padding:2px 6px!important;border-radius:6px!important;white-space:nowrap;
+  vertical-align:baseline;line-height:1.2;
+}
+.ah-page a.ah-button:not(.alt) .sp-slashcure-blue{color:#195eb4!important}
+.ah-page a.ah-button:not(.alt) .sp-slashcure-red{color:#c62d43!important}
+.ah-page a.ah-button:focus-visible,.ah-page a.ah-ad-button:focus-visible{outline:3px solid #efb94d;outline-offset:3px}
+.ah-page .ah-house-ad .sc-promo-strip{max-width:1150px;margin:auto}
+.ah-page .ah-house-ad .sc-promo-mark .sp-slashcure-wordmark{font-size:inherit;font-weight:900;letter-spacing:-.065em}
+.ah-page .ah-house-ad .sc-promo-mark .sp-slashcure-wordmark small{color:#195eb4}
+.ah-page .ah-directory-layout{display:grid;grid-template-columns:minmax(0,1fr) 272px;gap:23px;align-items:start;margin-top:24px}
+.ah-page .ah-doctor-roster{min-width:0}
+.ah-page .ah-doctor-roster>.ah-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0}
+.ah-page .ah-side-ads{min-width:0}
+.ah-page .ah-related-ad{position:sticky;top:20px;overflow:hidden;border-radius:19px;padding:24px 21px;background:linear-gradient(155deg,#edf5ff,#fff 58%,#fceff2);border:1px solid #bfd5ef;box-shadow:0 12px 30px #153e741a}
+.ah-page .ah-related-ad:before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,#195eb4,#49a7df,#d43a54)}
+.ah-page .ah-ad-label{display:inline-block;margin:0 0 16px;font-size:11px;color:#586b84!important;font-weight:800;letter-spacing:.065em;text-transform:uppercase}
+.ah-page .ah-neuro-symbol{display:grid;place-items:center;height:48px;width:48px;background:#1b5da7;color:white;font-size:25px;font-weight:900;border-radius:14px;margin-bottom:14px}
+.ah-page .ah-related-ad h3{font-size:clamp(1.3rem,1.85vw,1.65rem);letter-spacing:-.035em;line-height:1.23;margin-bottom:12px;color:#0b2d60}
+.ah-page .ah-related-ad p{font-size:.88rem;line-height:1.64;color:#405574;margin:0 0 13px}
+.ah-page .ah-related-ad .ah-ad-specialty{color:#155299;font-weight:800}
+.ah-page .ah-related-ad .ah-ad-disclosure{font-size:12px;padding:11px 0;border-top:1px solid #d9e6f5;color:#5c6573}
+.ah-page .ah-ad-button{display:block;text-align:center;color:white!important;background:#1559ae;border-radius:10px;text-decoration:none;padding:13px 12px;font-size:.91rem;font-weight:850;margin-top:11px}
+.ah-page .ah-ad-button:hover{background:#0e3878}
+.ah-page .ah-ad-secondary{display:block;text-align:center;margin-top:13px;font-size:.83rem;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:900px){.ah-page .ah-directory-layout{grid-template-columns:1fr}.ah-page .ah-side-ads{max-width:560px;width:100%;margin:0 auto}.ah-page .ah-related-ad{position:relative;top:auto}}
+@media(max-width:600px){.ah-page .ah-doctor-roster>.ah-grid{grid-template-columns:1fr}.ah-page .ah-directory-layout{gap:24px}.ah-page .ah-house-ad .sc-promo-strip{padding:25px 18px 20px}}
+@media(prefers-reduced-motion:reduce){.ah-page .ah-house-ad .sc-promo-wave-letter{animation:none!important}}
