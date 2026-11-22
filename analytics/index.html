@@ -35,6 +35,16 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 .comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.comparison-subpanel{border:1px solid #dce6f1;border-radius:11px;padding:13px;background:#fafcff;min-width:0}.comparison-subpanel h3{font-size:15px;margin:0 0 4px}.comparison-subpanel p{font-size:12px;margin:0 0 9px}.comparison-list{list-style:none;margin:0;padding:0}.comparison-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid #e4edf6;padding:9px 0;font-size:13px}.comparison-list li:last-child{border-bottom:0}.comparison-list .compare-label{overflow-wrap:anywhere}.comparison-list .compare-count{font-variant-numeric:tabular-nums;font-weight:750;white-space:nowrap}
 @media(max-width:730px){.comparison-grid{grid-template-columns:1fr}.panels{grid-template-columns:1fr}.wide{grid-column:auto}main{padding:18px 12px}.toolbar{padding:13px}th,td{padding:8px 5px}}
 .seo-import{display:flex;align-items:end;gap:13px;flex-wrap:wrap;padding:15px;background:#f4f9fe;border:1px solid #dce6f1;border-radius:10px;margin:12px 0}.seo-import label{flex:1 1 310px}.seo-import input{width:100%;max-width:560px;padding:9px}.seo-import p{width:100%;margin:0;font-size:12px}.secondary-btn{background:#e9f1fa;color:#1f4b71}.secondary-btn:hover{background:#d7e7f6}.seo-status{display:block;font-size:11px;color:#536c82;margin-top:5px}.seo-low-ctr{font-weight:700;color:#9a5812}
+
+/* Mobile-first private dashboard: scroll long tables without shrinking text. */
+.scroll{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.scroll table{min-width:570px}
+#seo-referrals .scroll table{min-width:920px}
+#seo-referrals .scroll th,#seo-referrals .scroll td{white-space:normal}
+.csv-preview{margin:15px 0}.csv-preview[hidden]{display:none!important}
+#csv-text{display:block;width:100%;min-height:210px;padding:12px;border:1px solid #b7c8dd;border-radius:9px;font:12px/1.5 ui-monospace,monospace;white-space:pre;resize:vertical}
+.csv-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:730px){body{overflow-x:hidden}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.metric{padding:12px}.metric strong{font-size:25px}.toolbar label{flex:1 1 145px;min-width:0}.toolbar select,.toolbar input{max-width:100%;width:100%}.toolbar button{flex:1 1 155px}.panel{padding:14px}.scroll{border:1px solid #e4ebf3;border-radius:9px}header h1{font-size:24px}#status{overflow-wrap:anywhere}}
 </style></head>
 <body><main>
 <header><div><a href="/">← SlashPromo public website</a><h1>Private Analytics Dashboard</h1><p>Daily page views, referral clicks, WhatsApp enquiry starts and moderated Q&amp;A engagement.</p></div><div class="link-row"><a href="/qa-admin/" rel="nofollow">Q&amp;A moderation ↗</a> · <a href="/enquiries/" rel="nofollow">Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Control Center ↗</a></div></header>
@@ -46,7 +56,10 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <label>Page city<select id="city"><option value="">All cities</option><option value="sukkur">Sukkur</option><option value="khairpur">Khairpur</option><option value="shikarpur">Shikarpur</option><option value="karachi">Karachi</option><option value="hyderabad">Hyderabad</option><option value="ghotki">Ghotki</option><option value="lahore">Lahore</option><option value="islamabad">Islamabad</option><option value="rawalpindi">Rawalpindi</option><option value="peshawar">Peshawar</option><option value="quetta">Quetta</option><option value="larkana">Larkana</option><option value="bahawalpur">Bahawalpur</option><option value="faisalabad">Faisalabad</option><optgroup label="More cities"><option value="pano-aqil">Pano Aqil</option><option value="lakhi-ghulam-shah">Lakhi Ghulam Shah</option><option value="sobhodero">Sobhodero</option><option value="ubauro">Ubauro</option><option value="sheikhupura">Sheikhupura</option><option value="fort-abbas">Fort Abbas</option><option value="jhelum">Jhelum</option><option value="gojra">Gojra</option><option value="mian-channu">Mian Channu</option><option value="pakpattan">Pakpattan</option><option value="dir-upper">Dir Upper</option></optgroup><option value="other">Homepage, nationwide directories and other pages</option></select></label>
 <button id="load" type="submit">Load analytics</button>
 <button id="export-summary" type="button" disabled title="Export aggregate statistics only; private Q&A content is excluded">Download summary CSV</button>
+<button id="copy-summary" type="button" disabled title="Copy aggregate CSV without downloading a file">Copy CSV</button>
+<button id="view-summary" type="button" disabled title="Open a selectable CSV preview suitable for mobile browsers">View CSV text</button>
 </form>
+<section class="panel csv-preview" id="csv-preview" hidden aria-labelledby="csv-preview-title"><h2 id="csv-preview-title">CSV text · mobile download alternative</h2><p class="muted">If your mobile browser blocks downloads, copy the text below into a spreadsheet app. Only anonymous aggregate statistics are included. No private Q&amp;A answers or patient details.</p><textarea id="csv-text" readonly spellcheck="false" aria-label="Aggregate CSV text"></textarea><div class="csv-actions"><button type="button" id="select-csv">Select all CSV text</button><button type="button" id="close-csv">Close preview</button></div></section>
 <p id="status" role="status" aria-live="polite">Enter your admin key and select Load analytics. New counters start when tracking is published.</p>
 <section class="metrics" aria-label="Analytics summary">
 <div class="metric"><span>Page views</span><strong id="page_view">—</strong></div>
@@ -268,8 +281,8 @@ function csvField(value){
   const safe=/^\s*[=+\-@]/.test(input)?"'"+input:input;
   return '"'+safe.replace(/"/g,'""')+'"';
 }
-function downloadSummary(){
-  if(!latestReport)return;
+function buildSummaryCSV(){
+  if(!latestReport)return null;
   const d=latestReport;
   const totals=Object.fromEntries((d.totals||[]).map(r=>[r.event,Number(r.total)||0]));
   const rows=[["Category","Page / location","Page city","Views / count","Slashcure clicks","WhatsApp continues","Clicks per view"]];
@@ -282,14 +295,33 @@ function downloadSummary(){
   for(const r of d.cities||[])rows.push(["Page content group",pageCityLabel(r.city),"",r.views||0,r.referrals||0,r.whatsapp_continues||0,rate(r.referrals,r.views)]);
   for(const r of d.visitorGeography?.countries||[])rows.push(["Visitor country",geoCountry(r.country),"",r.views||0,"","",""]);
   for(const r of d.visitorGeography?.cities||[])rows.push(["Visitor city",r.city,geoCountry(r.country),r.views||0,"","",""]);
-  const csv="\ufeff"+rows.map(r=>r.map(csvField).join(",")).join("\r\n");
-  const href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  const a=document.createElement("a");a.href=href;
-  a.download="slashpromo-aggregate-analytics-"+d.days+"days-"+new Date().toISOString().slice(0,10)+".csv";
-  document.body.append(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(href),1000);
+  return "\ufeff"+rows.map(r=>r.map(csvField).join(",")).join("\r\n");
+}
+function showCSV(){
+  const csv=buildSummaryCSV();if(!csv)return;
+  $("#csv-text").value=csv;$("#csv-preview").hidden=false;
+  $("#csv-preview").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function downloadSummary(){
+  const csv=buildSummaryCSV();if(!csv)return;
+  try{
+    const href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+    const a=document.createElement("a");a.href=href;
+    a.download="slashpromo-aggregate-analytics-"+latestReport.days+"days-"+new Date().toISOString().slice(0,10)+".csv";
+    document.body.append(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(href),5000);
+    $("#status").textContent="Download requested. If your browser does not save the file, use Copy CSV or View CSV text instead.";
+  }catch(_){showCSV();$("#status").textContent="Download is unavailable in this browser. The CSV text is ready to copy."}
 }
 $("#export-summary").addEventListener("click",downloadSummary);
+$("#view-summary").addEventListener("click",showCSV);
+$("#select-csv").addEventListener("click",()=>{$("#csv-text").focus();$("#csv-text").select();});
+$("#close-csv").addEventListener("click",()=>{$("#csv-preview").hidden=true;});
+$("#copy-summary").addEventListener("click",async()=>{
+  const csv=buildSummaryCSV();if(!csv)return;
+  try{if(!navigator.clipboard?.writeText)throw Error("Clipboard unavailable");await navigator.clipboard.writeText(csv);$("#status").textContent="Anonymous aggregate CSV copied. Paste into your spreadsheet app."}
+  catch(_){showCSV();$("#csv-text").focus();$("#csv-text").select();$("#status").textContent="Select and copy the CSV text manually; this browser restricted clipboard access."}
+});
 function draw(data){
   renderSavedQA(data);
   renderProfiles("#top-doctors",data.topDoctors);
@@ -331,13 +363,13 @@ $("#days").addEventListener("change",updateDayFilter);
 updateDayFilter();
 $("#filters").addEventListener("submit",async event=>{
   event.preventDefault();const key=$("#key").value.trim();if(!key)return;
-  latestReport=null;$("#export-summary").disabled=true;
+  latestReport=null;$("#export-summary").disabled=true;$("#copy-summary").disabled=true;$("#view-summary").disabled=true;$("#csv-preview").hidden=true;
   const button=$("#load");button.disabled=true;$("#status").textContent="Loading aggregate analytics…";
   try{
     const params=new URLSearchParams({days:$("#days").value});if($("#days").value==="1")params.set("day",dayPicker.value);if($("#city").value)params.set("city",$("#city").value);
     const response=await fetch("/api/analytics-report?"+params.toString(),{headers:{"X-QA-Admin-Key":key,"Accept":"application/json"},cache:"no-store"});
     const data=await response.json();if(!response.ok)throw Error(data.error||"Could not load report.");
-    draw(data);latestReport=data;$("#export-summary").disabled=false;
+    draw(data);latestReport=data;$("#export-summary").disabled=false;$("#copy-summary").disabled=false;$("#view-summary").disabled=false;
     $("#status").textContent=(data.days===1?"Showing aggregate events for "+data.since+" (UTC). ":"Showing aggregate events from "+data.since+" ("+data.days+" days). ")+"Refreshed "+new Date().toLocaleString("en-PK")+".";
   }catch(error){$("#status").textContent="Unable to load: "+(error.message||"Check your key and Cloudflare database.")}finally{button.disabled=false}
 });
