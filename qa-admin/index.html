@@ -40,7 +40,7 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 
 .qa-link-panel{border:1px solid #bfd5e9;background:#f5faff;border-radius:12px;padding:14px;margin:12px 0}.qa-link-panel h3{font-size:14px;margin:0 0 6px;color:#174a70}.qa-link-panel p{font-size:12px;margin:5px 0;color:#536f89}.qa-link-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:end}.qa-link-actions select{flex:1;min-width:190px}.qa-link-actions button{background:#205e89}.qa-link-panel .qa-link-warning{color:#8a5025;font-weight:650}.qa-link-panel a{color:#13569c;font-weight:700}.qa-link-panel button:disabled{opacity:.5}
 .qa-age{background:#fff1df;color:#875223;margin-left:7px}
-</style></head>
+ #qa-audit-result table{border-collapse:collapse;margin:12px 0;font-size:13px}#qa-audit-result td,#qa-audit-result th{border-bottom:1px solid #d3dfee;padding:8px}#qa-audit-result{overflow-x:auto}</style></head>
 <body><main>
 <h1>SlashPromo · Private Q&A moderation</h1><p><a href="/analytics/" rel="nofollow">View aggregate website analytics ↗</a> · <a href="/enquiries/" rel="nofollow">Private Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Unified Control Center ↗</a></p>
 <p>Review visitor questions by city and by source page, including Sukkur doctor profiles, specialty pages, hospitals and health topics. Only publish verified information and public doctor or clinic contact numbers. Never publish sensitive patient details or provide individual diagnoses.</p>
@@ -57,8 +57,9 @@ button.reject{background:#a52b41}button:disabled{opacity:.55;cursor:wait}
 <label>Review focus <select id="review-focus"><option value="">All records</option><option value="sensitive">Privacy-sensitive wording</option><option value="unanswered">No saved public answer</option><option value="draft">Has saved draft</option></select></label>
 <label>Search questions <input type="search" id="query" placeholder="Doctor, question or page" autocomplete="off"></label>
 <button type="button" id="load">Load questions</button>
+<button type="button" id="qa-audit" class="qa-draft">Run private data-integrity check</button>
 <button type="button" id="more" hidden>Load older questions</button>
-</div><p id="status" role="status" aria-live="polite"></p><div class="qa-kpis" id="qa-kpis" aria-label="Saved questions by status"><span>All saved <strong id="stat-total">—</strong></span><span>Pending <strong id="stat-pending">—</strong></span><span>Published <strong id="stat-approved">—</strong></span><span>Rejected <strong id="stat-rejected">—</strong></span></div><div class="summary" id="summary">Enter your admin key, choose a city (or All cities), then click Load questions to see all permanently saved submissions and published answers.</div><div id="items"></div>
+</div><p id="status" role="status" aria-live="polite"></p><div class="qa-kpis" id="qa-kpis" aria-label="Saved questions by status"><span>All saved <strong id="stat-total">—</strong></span><span>Pending <strong id="stat-pending">—</strong></span><span>Published <strong id="stat-approved">—</strong></span><span>Rejected <strong id="stat-rejected">—</strong></span></div><div class="summary" id="summary">Enter your admin key, choose a city (or All cities), then click Load questions to see all permanently saved submissions and published answers.</div><section id="qa-audit-result" class="summary" role="status" aria-live="polite" hidden></section><div id="items"></div>
 </main>
 <script>
 "use strict";
@@ -414,6 +415,46 @@ async function load(append=false){
     say("Saved questions loaded "+(reviewOrder.value==="oldest"?"oldest first":"newest first")+". Dates and pending age are for moderation prioritization, not clinical triage.");
   }catch(error){say(error.message);}
 }
+// Read-only aggregate diagnostics; the authenticated API does not expose
+// visitor names, question text, private contact details, or draft answers.
+document.querySelector("#qa-audit").addEventListener("click",async()=>{
+  const button=document.querySelector("#qa-audit");
+  const target=document.querySelector("#qa-audit-result");
+  if(!key.value.trim()){say("Enter the private admin key before running diagnostics.");return;}
+  button.disabled=true;target.hidden=false;
+  target.replaceChildren(node("strong","","Checking private question counts…"));
+  try{
+    const response=await fetch("/api/qa-admin?diagnostic=1",{
+      method:"GET",cache:"no-store",
+      headers:{"X-QA-Admin-Key":key.value.trim(),"Accept":"application/json"}
+    });
+    const data=await response.json();
+    if(!response.ok)throw Error(data.error||"Unable to read diagnostics.");
+    target.replaceChildren(node("strong","","Private Q&A integrity check — "+new Date(data.checkedAt).toLocaleString()));
+    const help=node("p","","Summary counts only. No question data was modified. Public city-root listings require approved records attached to that city page and a published answer.");
+    target.append(help);
+    const rows=Array.isArray(data.cityRootCounts)?data.cityRootCounts:[];
+    const table=node("table","");
+    table.style.width="100%";
+    table.style.textAlign="left";
+    const head=node("tr","");
+    for(const name of ["City","City-root records","Approved","Approved with answers"])head.append(node("th","",name));
+    table.append(head);
+    for(const item of rows){
+      const tr=node("tr","");
+      for(const value of [item.city,item.total,item.approved,item.approved_answered])tr.append(node("td","",String(value??0)));
+      table.append(tr);
+    }
+    if(!rows.length)target.append(node("p","","No city-root question rows were returned by the current D1 binding."));
+    else target.append(table);
+    const legacy=(data.byCityStatus||[]).reduce((sum,item)=>sum+Number(item.legacy_null_path||0),0);
+    target.append(node("p","","Legacy records with no page_path: "+legacy+" · Archived question markers: "+Number(data.archivedQuestionMarkers||0)));
+    say("Read-only Q&A aggregate check completed. Review the city-root counts; no records were changed.");
+  }catch(error){
+    target.replaceChildren(node("p","","Diagnostic unavailable: "+(error.message||"Unable to load.")));
+    say("Private diagnostic failed without changing any questions.");
+  }finally{button.disabled=false;}
+});
 document.querySelector("#load").addEventListener("click",()=>load(false));
 more.addEventListener("click",()=>load(true));
 statusFilter.addEventListener("change",()=>{questions=[];nextBefore=null;hasMore=false;render();say("Select Load questions to refresh.");});
