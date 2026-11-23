@@ -1,0 +1,11 @@
+# Never commit signing material, generated artifacts or local Android SDK state.
+*.jks
+*.keystore
+*.p12
+*.apk
+*.aab
+.gradle/
+local.properties
+build/
+app/build/
+node_modules/
