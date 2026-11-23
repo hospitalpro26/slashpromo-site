@@ -1,0 +1,10 @@
+/* App-only mobile tabs: existing browser navigation remains untouched. */
+.sp-pwa-tabs{display:none}
+@media (display-mode:standalone) and (max-width:767px){
+  body.sp-pwa-public{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .sp-pwa-tabs{position:fixed;bottom:0;left:0;right:0;z-index:900;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:#fff;color:#17213a;border-top:1px solid #dbe3ee;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -5px 20px #0b23531a}
+  .sp-pwa-tabs a{min-height:52px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;font-size:11px;font-weight:700;color:#425572;text-align:center;text-decoration:none;border-radius:10px}
+  .sp-pwa-tabs a[aria-current="page"]{background:#e9f1fb;color:#0b2353}
+  .sp-pwa-tabs a:focus-visible{outline:3px solid #ff756f;outline-offset:-2px}
+  .sp-pwa-tabs svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+}
