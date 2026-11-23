@@ -1,0 +1,28 @@
+{
+  "packageId": "com.slashpromo.app",
+  "host": "slashpromo.com",
+  "name": "SlashPromo — Discover Healthcare & More",
+  "launcherName": "SlashPromo",
+  "display": "standalone",
+  "themeColor": "#0b2353",
+  "themeColorDark": "#0b2353",
+  "backgroundColor": "#f6f7fa",
+  "navigationColor": "#0b2353",
+  "navigationColorDark": "#0b2353",
+  "startUrl": "/?source=android",
+  "iconUrl": "https://slashpromo.com/assets/pwa-icon-512.png",
+  "maskableIconUrl": "https://slashpromo.com/assets/pwa-maskable-512.png",
+  "webManifestUrl": "https://slashpromo.com/manifest.webmanifest",
+  "appVersion": "0.1.0",
+  "appVersionCode": 1,
+  "orientation": "portrait",
+  "enableNotifications": false,
+  "fallbackType": "customtabs",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "release.keystore",
+    "alias": "slashpromo"
+  },
+  "fingerprints": [],
+  "additionalTrustedOrigins": []
+}
