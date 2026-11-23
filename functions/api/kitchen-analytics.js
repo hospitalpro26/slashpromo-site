@@ -7,7 +7,8 @@ const KNOWN=new Map([
   ["/sukkur/local-food/sadias-kitchen/","Sadia's Kitchen"],
   ["/sukkur/local-food/js-kitchen/","JS Kitchen"],
   ["/sukkur/local-food/a2z-home-baker/","A2Z Home Baker"],
-  ["/sukkur/local-food/sukkur-homemade-food/","Sukkur Homemade Food"]
+  ["/sukkur/local-food/sukkur-homemade-food/","Sukkur Homemade Food"],
+  ["/shikarpur/local-food/mahas-foods/","Maha’s Foods · Shikarpur"]
 ]);
 const IS_FOOD=/^\/[a-z0-9-]+\/local-food\/(?:[a-z0-9-]+\/)*$/;
 function labelFor(path){
