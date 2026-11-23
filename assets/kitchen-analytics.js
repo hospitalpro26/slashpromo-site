@@ -1,13 +1,13 @@
-/* SlashPromo privacy-first kitchen analytics: aggregate counts only. */
+/* SlashPromo kitchen analytics: anonymous per-page aggregates only.
+   Injected automatically on city/local-food routes by scoped Cloudflare middleware. */
 (()=>{
   "use strict";
   const path=location.pathname.replace(/\/index\.html$/,"/");
-  const allowed=new Set([
-    "/sukkur/local-food/","/sukkur/local-food/sukkur-township/",
-    "/sukkur/local-food/sadias-kitchen/","/sukkur/local-food/js-kitchen/",
-    "/sukkur/local-food/a2z-home-baker/","/sukkur/local-food/sukkur-homemade-food/"
-  ]);
-  if(!allowed.has(path)||navigator.globalPrivacyControl===true||navigator.doNotTrack==="1")return;
+  const kitchenPage=/^\/[a-z0-9-]+\/local-food\/(?:[a-z0-9-]+\/)*$/;
+  if(!kitchenPage.test(path)||navigator.globalPrivacyControl===true||navigator.doNotTrack==="1")return;
+  /* Existing pages may still reference this file explicitly; count once per load. */
+  if(window.__slashpromoKitchenAnalyticsStarted)return;
+  window.__slashpromoKitchenAnalyticsStarted=true;
   function send(event){
     const payload=JSON.stringify({event,path});
     try{
@@ -16,9 +16,12 @@
     }catch{}
   }
   send("page_view");
-  document.addEventListener("click",e=>{
-    const link=e.target.closest?.("a[href]");
+  document.addEventListener("click",event=>{
+    const link=event.target.closest?.("a[href]");
     if(!link)return;
-    try{const u=new URL(link.href,location.href);if(u.hostname==="wa.me"||u.hostname==="api.whatsapp.com"||u.hostname==="web.whatsapp.com")send("kitchen_whatsapp_click");}catch{}
+    try{
+      const url=new URL(link.href,location.href);
+      if(["wa.me","api.whatsapp.com","web.whatsapp.com"].includes(url.hostname))send("kitchen_whatsapp_click");
+    }catch{}
   },{capture:true});
 })();
