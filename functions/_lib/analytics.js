@@ -1,5 +1,5 @@
 /* Privacy-first aggregate events: no raw IP, user ID, GPS coordinate, phone number or message text stored. */
-export const EVENTS=new Set(["page_view","slashcure_click","whatsapp_open","whatsapp_continue","qa_submitted"]);
+export const EVENTS=new Set(["page_view","slashcure_click","whatsapp_open","whatsapp_continue","kitchen_whatsapp_click","qa_submitted"]);
 export const CITY_NAMES=new Set(["ratodero","sukkur","khairpur","shikarpur","ghotki","karachi","hyderabad","lahore","islamabad","rawalpindi","peshawar","quetta","larkana","bahawalpur","faisalabad","dir-upper","fort-abbas","gojra","jhelum","lakhi-ghulam-shah","mian-channu","pakpattan","pano-aqil","sheikhupura","sobhodero","ubauro"]);
 const PROVIDERS=new Set(["doctors","hospitals","laboratories","clinics"]);
 export function cleanPath(value){
