@@ -1,0 +1,30 @@
+name: Review SlashPromo Android Phase A PWA
+on:
+  pull_request:
+    paths:
+      - 'manifest.webmanifest'
+      - 'sw.js'
+      - 'offline.html'
+      - 'assets/pwa-*'
+      - 'assets/site.js'
+      - 'scripts/test-pwa-phase-a.mjs'
+      - '.github/workflows/pwa-phase-a.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-pwa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate manifest and caching policy
+        run: node scripts/test-pwa-phase-a.mjs
+      - name: Check JavaScript syntax
+        run: |
+          node --check sw.js
+          node --check assets/pwa-mobile.js
+          node --check assets/site.js
