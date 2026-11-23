@@ -49,7 +49,7 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <body><main>
 <header><div><a href="/">← SlashPromo public website</a><h1>Private Analytics Dashboard</h1><p>Daily page views, referral clicks, WhatsApp enquiry starts and moderated Q&amp;A engagement.</p></div><div class="link-row"><a href="/analytics/search-opportunities/" rel="nofollow">Search Opportunities Dashboard ↗</a> · <a href="/qa-admin/" rel="nofollow">Q&amp;A moderation ↗</a> · <a href="/enquiries/" rel="nofollow">Enquiry Inbox ↗</a> · <a href="/control-center/" rel="nofollow">Control Center ↗</a></div></header>
 <div class="notice"><strong>New · Phase 3A Search Opportunities</strong> — Explore queries, impressions, clicks, CTR, average positions, city landing pages and SEO priorities using private Google Search Console exports. <a href="/analytics/search-opportunities/" rel="nofollow"><strong>Open Search Opportunities Dashboard →</strong></a> Raw Google performance data never enters this public repository.</div>
-<div class="notice"><strong>Home Kitchen Analytics:</strong> <a href="/analytics/kitchens/" rel="nofollow">View kitchen page views and WhatsApp clicks →</a></div>
+<div class="notice"><strong>Home Kitchen Analytics:</strong> View the kitchen page views and WhatsApp clicks below in this dashboard.</div>
 <div class="notice">Access is protected by your existing private <strong>QA_ADMIN_KEY</strong>. Enter it below to load data. The key stays in this browser tab's memory. This dashboard contains aggregate counts only; no patient names, WhatsApp messages, IPs or addresses are stored in analytics.</div>
 <form class="toolbar" id="filters">
 <label>Private admin key<input id="key" type="password" autocomplete="off" placeholder="Enter QA_ADMIN_KEY" required></label>
@@ -97,6 +97,13 @@ table tr:last-child td{border:0}.scroll{overflow:auto}
 <section class="panel"><h2>Most viewed doctor profiles</h2><div class="scroll"><table><thead><tr><th>Doctor page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-doctors"><tr><td colspan="4" class="placeholder">Load analytics to see doctor profile interest.</td></tr></tbody></table></div></section>
 <section class="panel"><h2>Most viewed hospital profiles</h2><div class="scroll"><table><thead><tr><th>Hospital page</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-hospitals"><tr><td colspan="4" class="placeholder">Load analytics to see hospital profile interest.</td></tr></tbody></table></div></section>
 </div></section>
+<section class="panel wide" id="kitchen-analytics" aria-labelledby="kitchen-analytics-title">
+<h2 id="kitchen-analytics-title">Home Kitchen Analytics · Sukkur</h2>
+<p class="muted">Visits and direct WhatsApp clicks for the six kitchen and local-food pages. Uses the private admin key and selected date range above. Clicking WhatsApp does not confirm a sent message or an order.</p>
+<div class="metrics"><div class="metric"><span>Kitchen page views</span><strong id="kitchen-views">—</strong></div><div class="metric"><span>Kitchen WhatsApp clicks</span><strong id="kitchen-clicks">—</strong></div><div class="metric"><span>WhatsApp clicks / views</span><strong id="kitchen-rate">—</strong></div></div>
+<p id="kitchen-status" class="muted" role="status">Load analytics to see kitchen performance.</p>
+<div class="scroll"><table><thead><tr><th>Kitchen / directory page</th><th class="num">Views</th><th class="num">WhatsApp clicks</th><th class="num">Clicks / views</th></tr></thead><tbody id="kitchen-rows"><tr><td colspan="4" class="placeholder">Load analytics to see kitchen performance.</td></tr></tbody></table></div>
+</section>
 <section class="panel wide"><h2>Health articles bringing visitors to Slashcure</h2><p class="muted">See which symptom and condition guides generate outbound Slashcure clicks. Counts are aggregated by source article; clicks do not confirm appointments.</p><div class="scroll"><table><thead><tr><th>Health article</th><th class="num">Views</th><th class="num">Slashcure clicks</th><th class="num">Clicks/views</th></tr></thead><tbody id="top-articles"><tr><td colspan="4" class="placeholder">Load analytics to see article referrals.</td></tr></tbody></table></div></section>
 <section class="panel wide" id="seo-referrals" aria-labelledby="seo-referrals-title">
 <h2 id="seo-referrals-title">SEO &amp; Slashcure referral performance · 4 healthcare guides</h2>
@@ -363,6 +370,36 @@ dayPicker.max=new Date().toISOString().slice(0,10);
 dayPicker.value=dayPicker.max;
 $("#days").addEventListener("change",updateDayFilter);
 updateDayFilter();
+async function loadKitchenAnalytics(key,params){
+  const rows=$("#kitchen-rows");rows.replaceChildren();
+  $("#kitchen-views").textContent="—";$("#kitchen-clicks").textContent="—";$("#kitchen-rate").textContent="—";
+  $("#kitchen-status").textContent="Loading kitchen analytics…";
+  if(params.get("city")&&params.get("city")!=="sukkur"){
+    $("#kitchen-status").textContent="Kitchen pages are in Sukkur. Select Sukkur or All cities to see them.";
+    return;
+  }
+  try{
+    const q=new URLSearchParams({days:params.get("days")||"30"});
+    if(params.get("day"))q.set("day",params.get("day"));
+    const response=await fetch("/api/kitchen-analytics?"+q.toString(),{headers:{"X-QA-Admin-Key":key,"Accept":"application/json"},cache:"no-store"});
+    const data=await response.json();
+    if(!response.ok)throw Error(data.error||"Kitchen report unavailable");
+    $("#kitchen-views").textContent=nf.format(data.totalViews||0);
+    $("#kitchen-clicks").textContent=nf.format(data.totalWhatsappClicks||0);
+    $("#kitchen-rate").textContent=rate(data.totalWhatsappClicks,data.totalViews);
+    for(const r of data.rows||[]){
+      const tr=document.createElement("tr"),td=document.createElement("td"),a=document.createElement("a");
+      a.href=r.path;a.target="_blank";a.rel="noopener noreferrer";a.textContent=r.name;td.append(a);tr.append(td);
+      cell(tr,nf.format(r.views||0),"num");
+      cell(tr,nf.format(r.whatsappClicks||0),"num");
+      cell(tr,rate(r.whatsappClicks,r.views),"num");rows.append(tr);
+    }
+    $("#kitchen-status").textContent="Kitchen stats from "+data.since+" (UTC). Events count page loads and outbound click attempts.";
+  }catch(err){
+    const tr=document.createElement("tr"),td=cell(tr,"Kitchen analytics temporarily unavailable.","placeholder");td.colSpan=4;rows.append(tr);
+    $("#kitchen-status").textContent="Could not load kitchen report: "+err.message;
+  }
+}
 $("#filters").addEventListener("submit",async event=>{
   event.preventDefault();const key=$("#key").value.trim();if(!key)return;
   latestReport=null;$("#export-summary").disabled=true;$("#copy-summary").disabled=true;$("#view-summary").disabled=true;$("#csv-preview").hidden=true;
@@ -371,7 +408,7 @@ $("#filters").addEventListener("submit",async event=>{
     const params=new URLSearchParams({days:$("#days").value});if($("#days").value==="1")params.set("day",dayPicker.value);if($("#city").value)params.set("city",$("#city").value);
     const response=await fetch("/api/analytics-report?"+params.toString(),{headers:{"X-QA-Admin-Key":key,"Accept":"application/json"},cache:"no-store"});
     const data=await response.json();if(!response.ok)throw Error(data.error||"Could not load report.");
-    draw(data);latestReport=data;$("#export-summary").disabled=false;$("#copy-summary").disabled=false;$("#view-summary").disabled=false;
+    draw(data);await loadKitchenAnalytics(key,params);latestReport=data;$("#export-summary").disabled=false;$("#copy-summary").disabled=false;$("#view-summary").disabled=false;
     $("#status").textContent=(data.days===1?"Showing aggregate events for "+data.since+" (UTC). ":"Showing aggregate events from "+data.since+" ("+data.days+" days). ")+"Refreshed "+new Date().toLocaleString("en-PK")+".";
   }catch(error){$("#status").textContent="Unable to load: "+(error.message||"Check your key and Cloudflare database.")}finally{button.disabled=false}
 });
