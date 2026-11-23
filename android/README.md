@@ -47,3 +47,19 @@ Do **not** publish a guessed fingerprint or a test signing identity. The existin
 7. Only then request explicit Play publishing approval. No auto-release.
 
 No release signing secret, patient data, or app store credentials may be stored in GitHub source.
+
+
+## Direct Android debug project (Phase B continuation)
+A minimal Gradle Android Browser Helper Trusted Web Activity project is now checked in at `android/app/`. This is an independently reviewable alternative to Bubblewrap generation; choose one generated app project as the source of truth before final Play release and avoid maintaining duplicate release builds.
+
+It uses a provisional `com.slashpromo.app` application ID, Android SDK 35, Java 17 and Android Browser Helper. The **debug** build intentionally uses `com.slashpromo.app.debug`, making it unable to impersonate the eventual production package. It requests INTERNET only; no camera, microphone, location, messaging or notification Android permissions. Browsing data is handled through the installed browser and existing public website, not a native patient database.
+
+The GitHub Actions job `.github/workflows/android-debug-apk.yml` builds an Android **debug-signed test APK** from the PR branch with ephemeral runner credentials and uploads a seven-day artifact. A debug APK is suitable for manual functional tests, not Google Play release or formal TWA origin verification.
+
+Local test if Android SDK, Java 17 and Gradle 8.11.1 are available:
+```bash
+cd android
+gradle --no-daemon :app:assembleDebug
+```
+
+Important: origin verification requires actual Digital Asset Links. Before signature verification, the app may use a Custom Tab with browser UI rather than a verified full-screen TWA. Do not confuse a successful debug build with a verified trusted relationship. Confirm and secure the permanent release signing key through the owner's Android publishing process.
