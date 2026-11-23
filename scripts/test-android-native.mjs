@@ -12,6 +12,9 @@ assert(manifest.includes('android:name="android.permission.INTERNET"'));
 assert(manifest.includes('android:allowBackup="false"'));
 assert(manifest.includes('android:usesCleartextTraffic="false"'));
 assert(manifest.includes('android:host="slashpromo.com"'));
+// Android Browser Helper launcher checks for this component on startup.
+assert(manifest.includes('android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"'));
+assert(manifest.includes('android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL"'));
 assert(!manifest.includes('android.permission.ACCESS_FINE_LOCATION'));
 assert(!manifest.includes('android.permission.CAMERA'));
 assert(!manifest.includes('android.permission.POST_NOTIFICATIONS'));
