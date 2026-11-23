@@ -1,0 +1,49 @@
+{
+  "id": "/",
+  "name": "SlashPromo — Discover Healthcare & More",
+  "short_name": "SlashPromo",
+  "description": "Discover doctors, hospitals, health news, and services across Pakistan.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f7fa",
+  "theme_color": "#0b2353",
+  "lang": "en-PK",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/assets/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/pwa-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Find doctors",
+      "short_name": "Doctors",
+      "url": "/#find-doctors"
+    },
+    {
+      "name": "Explore cities",
+      "short_name": "Cities",
+      "url": "/cities/"
+    },
+    {
+      "name": "Health news",
+      "short_name": "News",
+      "url": "/health-news/"
+    },
+    {
+      "name": "Hospitals",
+      "short_name": "Hospitals",
+      "url": "/hospitals/"
+    }
+  ]
+}

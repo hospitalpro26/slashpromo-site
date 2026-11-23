@@ -380,3 +380,18 @@ import("/assets/cross-profile-links.js?v=20261109-patient3").catch(()=>{});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",render,{once:true});
   else render();
 })();
+
+/* Android Phase A preview: load app enhancements only on public routes.
+   The existing navigation, analytics and directory behavior are unchanged. */
+(function(){
+  "use strict";
+  if(/^\/(?:api|admin|qa-admin|control-center|analytics|enquiries|secure-backups|review|automation)(?:\/|$)/i.test(location.pathname))return;
+  if(!document.querySelector('link[data-pwa-mobile]')){
+    var css=document.createElement("link");css.rel="stylesheet";css.href="/assets/pwa-mobile.css?v=1";css.dataset.pwaMobile="";
+    document.head.appendChild(css);
+  }
+  if(!document.querySelector('script[data-pwa-mobile]')){
+    var script=document.createElement("script");script.src="/assets/pwa-mobile.js?v=1";script.defer=true;script.dataset.pwaMobile="";
+    document.head.appendChild(script);
+  }
+})();
