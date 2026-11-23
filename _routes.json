@@ -17,7 +17,9 @@
     "/secure-backups",
     "/secure-backups/*",
     "/api/secure-backup",
-    "/api/search-opportunities"
+    "/api/search-opportunities",
+    "/api/kitchen-analytics",
+    "/*/local-food/*"
   ],
   "exclude": []
 }
