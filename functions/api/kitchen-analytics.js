@@ -19,7 +19,7 @@ export async function onRequestGet(ctx){
  if(![1,7,30,90].includes(days))return json({error:"Invalid date range"},400);
  const selectedDay=new URL(request.url).searchParams.get("day");
  const today=new Date().toISOString().slice(0,10);
- if(selectedDay&&(days!==1||!/^\\d{4}-\\d{2}-\\d{2}$/.test(selectedDay)||Number.isNaN(Date.parse(selectedDay+"T00:00:00Z"))||new Date(selectedDay+"T00:00:00Z").toISOString().slice(0,10)!==selectedDay||selectedDay>today))return json({error:"Invalid day"},400);
+ if(selectedDay&&(days!==1||!/^\d{4}-\d{2}-\d{2}$/.test(selectedDay)||Number.isNaN(Date.parse(selectedDay+"T00:00:00Z"))||new Date(selectedDay+"T00:00:00Z").toISOString().slice(0,10)!==selectedDay||selectedDay>today))return json({error:"Invalid day"},400);
  const from=new Date();from.setUTCDate(from.getUTCDate()-days+1);
  const since=selectedDay||from.toISOString().slice(0,10);
  try{
