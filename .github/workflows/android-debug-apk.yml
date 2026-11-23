@@ -37,11 +37,11 @@ jobs:
           SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           TOOL="$SDK/cmdline-tools/latest/bin/sdkmanager"
           if [ ! -x "$TOOL" ]; then TOOL="$SDK/cmdline-tools/16.0/bin/sdkmanager"; fi
-          "$TOOL" "platforms;android-35" "build-tools;35.0.0"
+          "$TOOL" "platforms;android-36" "build-tools;35.0.0"
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.11.1'
+          gradle-version: '8.13'
       - name: Build isolated debug APK
         working-directory: android
         run: gradle --no-daemon :app:assembleDebug
