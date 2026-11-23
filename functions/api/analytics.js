@@ -9,6 +9,7 @@ export async function onRequestPost({request,env}){
   try{const raw=await request.text();if(raw.length>512)return json({error:"Too large."},413);body=JSON.parse(raw)}
   catch{return json({error:"Invalid event."},400)}
   if(!body||typeof body!=="object"||!EVENTS.has(body.event)||!cleanPath(body.path))return json({error:"Invalid analytics event."},400);
+  if(body.event==="kitchen_whatsapp_click"&&!/^\/[a-z0-9-]+\/local-food\/(?:[a-z0-9-]+\/)*$/.test(body.path))return json({error:"Invalid kitchen analytics path."},400);
   try{
     await countEvent(env.QA_DB,body.event,body.path);
     if(body.event==="page_view"){
