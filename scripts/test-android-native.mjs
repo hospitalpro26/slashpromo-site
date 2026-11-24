@@ -31,3 +31,15 @@ assert.equal((manifest.match(/android.intent.category.LAUNCHER/g)||[]).length,1)
 for(const marker of ["assets/directory.json","getJSONArray(\"doctors\")","showHome()","renderDoctors()","cityMatches","showDoctor(","showSaved()","setInstanceFollowRedirects(false)"])assert(directory.includes(marker),marker);
 assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 3);
 console.log("PASS dedicated mobile home and directory structure");
+
+const updater=read("android/app/src/main/java/com/slashpromo/app/UpdateActivity.java");
+const provider=read("android/app/src/main/java/com/slashpromo/app/UpdateProvider.java");
+const releaseWorkflow=read(".github/workflows/android-release-candidate.yml");
+for(const marker of ["Arrays.equals(signers(current),signers(next))","Checksum mismatch","code(next)<=code(current)","setInstanceFollowRedirects(false)","FLAG_GRANT_READ_URI_PERMISSION"])assert(updater.includes(marker),marker);
+assert(manifest.includes('android:name=".UpdateProvider"'));
+assert(manifest.includes('android:grantUriPermissions="true"'));
+assert(provider.includes("ParcelFileDescriptor.MODE_READ_ONLY"));
+assert(releaseWorkflow.includes("inputs.publish_update == true"));
+assert(releaseWorkflow.includes("needs: release-candidate"));
+assert(releaseWorkflow.includes("default: false"));
+console.log("PASS signed update structural safeguards");
