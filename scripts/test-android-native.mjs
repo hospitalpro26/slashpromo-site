@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const app=read('android/app/build.gradle');
+const manifest=read('android/app/src/main/AndroidManifest.xml');
+const strings=read('android/app/src/main/res/values/strings.xml');
+const workflow=read('.github/workflows/android-debug-apk.yml');
+assert(app.includes("applicationId 'com.slashpromo.app'"));
+assert(app.includes("applicationIdSuffix '.debug'"));
+assert(app.includes("androidbrowserhelper:2.7.4"));
+assert(manifest.includes('android:name="android.permission.INTERNET"'));
+assert(manifest.includes('android:allowBackup="false"'));
+assert(manifest.includes('android:usesCleartextTraffic="false"'));
+assert(manifest.includes('android:host="slashpromo.com"'));
+// Android Browser Helper launcher checks for this component on startup.
+assert(manifest.includes('android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"'));
+assert(manifest.includes('android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL"'));
+assert(!manifest.includes('android.permission.ACCESS_FINE_LOCATION'));
+assert(!manifest.includes('android.permission.CAMERA'));
+assert(!manifest.includes('android.permission.POST_NOTIFICATIONS'));
+assert(strings.includes('https://slashpromo.com/?source=android'));
+assert(workflow.includes('assembleDebug'));
+assert(!workflow.includes('assembleRelease')&&!workflow.includes('bundleRelease'));
+assert(existsSync(new URL('../android/app/src/main/res/drawable/ic_launcher.xml',import.meta.url)));
+console.log('PASS Android native project structural and privacy tests');
