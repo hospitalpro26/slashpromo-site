@@ -1,0 +1,56 @@
+name: Android release candidate (manual only)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-candidate:
+    runs-on: ubuntu-latest
+    environment: android-release
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Install Android SDK
+        run: |
+          sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - name: Build unsigned release
+        working-directory: android
+        run: gradle --no-daemon :app:assembleRelease
+      - name: Sign and verify candidate
+        shell: bash
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          umask 077
+          : "${KEYSTORE_BASE64:?Missing owner keystore}" "${STORE_PASSWORD:?Missing store password}" "${KEY_PASSWORD:?Missing key password}"
+          key="$(mktemp)"
+          trap 'rm -f "$key"' EXIT
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$key"
+          unset KEYSTORE_BASE64
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          mkdir -p candidate
+          "$tools/zipalign" -p -f 4 android/app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/aligned.apk"
+          "$tools/apksigner" sign --ks "$key" --ks-key-alias slashpromo --ks-pass env:STORE_PASSWORD --key-pass env:KEY_PASSWORD --out candidate/slashpromo-release.apk "$RUNNER_TEMP/aligned.apk"
+          "$tools/apksigner" verify --verbose --print-certs candidate/slashpromo-release.apk > candidate/certificate.txt
+          fingerprint="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' candidate/certificate.txt)"
+          fingerprint="$(printf '%s' "$fingerprint" | sed 's/../&:/g;s/:$//')"
+          node android/generate-assetlinks.mjs "$fingerprint" > candidate/assetlinks.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: slashpromo-release-candidate-review-only
+          path: candidate/
+          if-no-files-found: error
+          retention-days: 7
