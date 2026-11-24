@@ -9,6 +9,7 @@ permissions:
 jobs:
   release-candidate:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     environment: android-release
     timeout-minutes: 25
     steps:
@@ -22,7 +23,11 @@ jobs:
           gradle-version: '8.13'
       - name: Install Android SDK
         run: |
-          sdkmanager "platforms;android-36" "build-tools;35.0.0"
+          set -euo pipefail
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          TOOL="$SDK/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$TOOL" ]; then TOOL="$SDK/cmdline-tools/16.0/bin/sdkmanager"; fi
+          "$TOOL" "platforms;android-36" "build-tools;35.0.0"
       - name: Build unsigned release
         working-directory: android
         run: gradle --no-daemon :app:assembleRelease
@@ -48,6 +53,7 @@ jobs:
           fingerprint="$(sed -n 's/^Signer #1 certificate SHA-256 digest: //p' candidate/certificate.txt)"
           fingerprint="$(printf '%s' "$fingerprint" | sed 's/../&:/g;s/:$//')"
           node android/generate-assetlinks.mjs "$fingerprint" > candidate/assetlinks.json
+          node -e 'const fs=require("fs");const a=JSON.parse(fs.readFileSync("candidate/assetlinks.json"));const b=JSON.parse(fs.readFileSync(".well-known/assetlinks.json"));if(JSON.stringify(a)!==JSON.stringify(b))throw Error("Signing certificate does not match approved website association")'
       - uses: actions/upload-artifact@v4
         with:
           name: slashpromo-release-candidate-review-only
