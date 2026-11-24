@@ -1,6 +1,9 @@
-name: Android release candidate (manual only)
+name: Android signed release (one approval)
 
 on:
+  push:
+    branches: [main]
+    paths: ['android/app/build.gradle']
   workflow_dispatch:
     inputs:
       publish_update:
@@ -11,14 +14,24 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: android-signed-release
+  cancel-in-progress: false
+
 jobs:
   release-candidate:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: android-release
+    permissions:
+      contents: write
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate Android configuration
+        run: node scripts/test-android-native.mjs
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -66,20 +79,8 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  publish-update:
-    needs: release-candidate
-    if: github.ref == 'refs/heads/main' && inputs.publish_update == true
-    runs-on: ubuntu-latest
-    environment: android-release
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: slashpromo-release-candidate-review-only
-          path: candidate
       - name: Publish signed APK only
+        if: github.event_name == 'push' || inputs.publish_update == true
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
