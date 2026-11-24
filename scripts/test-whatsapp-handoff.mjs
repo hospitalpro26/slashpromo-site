@@ -33,6 +33,8 @@ for(const url of locs){
   // referral tracker instead of the site-wide WhatsApp contact module.
   const shared=html.includes("/assets/site.js");
   const standalone=html.includes("/assets/health-guide-referral-analytics.js");
-  assert(shared||standalone,"Canonical page missing an approved analytics loader: "+file);
+  const kitchen=/^\/[a-z0-9-]+\/local-food\/(?:[a-z0-9-]+\/)*$/.test(rel);
+  const kitchenLoader=html.includes("/assets/kitchen-analytics.js");
+  assert(shared||standalone||(kitchen&&kitchenLoader),"Canonical page missing an approved analytics loader: "+file);
 }
 console.log("PASS: WhatsApp-first simplified message form, no visible number, privacy, contact settings, directory-facing canonical pages ("+locs.length+" indexed URLs, editorial news excluded)");
