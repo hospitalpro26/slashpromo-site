@@ -24,6 +24,55 @@ public final class LibraryActivity extends Activity {
     private File book,index,libraryRoot;
     private String bookId="legacy";
     private boolean night=false;
+    private static final class Chapter {
+        final String title; final int page,depth;
+        Chapter(String t,int p,int d){title=t;page=p;depth=d;}
+    }
+    private final java.util.Map<String,java.util.List<Chapter>> chapterCache=new java.util.HashMap<>();
+    private void collectChapters(PDDocument doc,com.tom_roush.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem item,int depth,java.util.List<Chapter> rows,java.util.Set<Object> seen,int[] visited){
+        if(depth>20)return;
+        while(item!=null&&visited[0]++<20000&&seen.add(item.getCOSObject())){
+            String title=item.getTitle();
+            try{
+                com.tom_roush.pdfbox.pdmodel.PDPage target=item.findDestinationPage(doc);
+                int p=target==null?-1:doc.getPages().indexOf(target);
+                if(title!=null&&!title.trim().isEmpty()&&p>=0&&p<doc.getNumberOfPages())rows.add(new Chapter(title.trim(),p,depth));
+            }catch(Exception ignored){}
+            collectChapters(doc,item.getFirstChild(),depth+1,rows,seen,visited);
+            item=item.getNextSibling();
+        }
+    }
+    private void chapters(){
+        final File source=book;final String id=bookId;final int token=generation;
+        final Dialog dialog=new Dialog(this);
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(12),dp(12),dp(12),dp(12));panel.setBackgroundColor(Color.WHITE);
+        panel.addView(label("Chapter index",23));
+        TextView note=label("Reading embedded PDF contents…",14);panel.addView(note);
+        EditText filter=new EditText(this);filter.setSingleLine(true);filter.setHint("Find chapter");panel.addView(filter);
+        ListView list=new ListView(this);panel.addView(list,new LinearLayout.LayoutParams(-1,0,1));
+        Button close=new Button(this);close.setText("Close");close.setOnClickListener(v->dialog.dismiss());panel.addView(close);
+        dialog.setContentView(panel);dialog.show();
+        Window win=dialog.getWindow();if(win!=null){win.setBackgroundDrawableResource(android.R.color.transparent);win.setGravity(Gravity.START|Gravity.TOP);win.setLayout(Math.min(dp(380),(int)(getResources().getDisplayMetrics().widthPixels*0.88)),(int)(getResources().getDisplayMetrics().heightPixels*0.88));win.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE|WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);}
+        worker.execute(()->{
+            java.util.List<Chapter> rows=chapterCache.get(id);String error=null;
+            if(rows==null){rows=new java.util.ArrayList<>();try(PDDocument doc=PDDocument.load(source,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){
+                com.tom_roush.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline outline=doc.getDocumentCatalog().getDocumentOutline();
+                if(outline!=null)collectChapters(doc,outline.getFirstChild(),0,rows,java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<Object,Boolean>()),new int[]{0});
+                chapterCache.put(id,rows);
+            }catch(Exception e){error="Unable to read PDF chapter index.";}}
+            final java.util.List<Chapter> all=rows;final String problem=error;
+            runOnUiThread(()->{if(isDestroyed()||!dialog.isShowing()||generation!=token||!bookId.equals(id))return;
+                if(problem!=null||all.isEmpty()){note.setText(problem!=null?problem:"This PDF has no usable embedded chapter links. Use Search or Go to page.");filter.setEnabled(false);return;}
+                note.setText(all.size()+" linked sections • PDF page numbers");
+                java.util.ArrayList<Chapter> visible=new java.util.ArrayList<>();
+                ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,new java.util.ArrayList<String>());list.setAdapter(adapter);
+                Runnable refresh=()->{visible.clear();adapter.clear();String q=filter.getText().toString().trim().toLowerCase(java.util.Locale.ROOT);for(Chapter c:all){if(!c.title.toLowerCase(java.util.Locale.ROOT).contains(q))continue;visible.add(c);StringBuilder indent=new StringBuilder();for(int i=0;i<Math.min(c.depth,5);i++)indent.append("  ");adapter.add(indent+c.title+"  ·  "+(c.page+1));}adapter.notifyDataSetChanged();};
+                filter.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence x,int a,int c,int f){}public void onTextChanged(CharSequence x,int a,int b,int c){refresh.run();}public void afterTextChanged(android.text.Editable e){}});
+                list.setOnItemClickListener((parent,v,pos,rowId)->{if(pos>=0&&pos<visible.size()&&generation==token&&bookId.equals(id)){int target=visible.get(pos).page;dialog.dismiss();page(target);}});
+                refresh.run();
+            });
+        });
+    }
     private android.content.SharedPreferences prefs(){return getPreferences(MODE_PRIVATE);}
     private String key(String suffix){return "study."+bookId+"."+suffix;}
     private void selectBook(String id){bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
@@ -92,7 +141,7 @@ public final class LibraryActivity extends Activity {
                     runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText(description);});
                 }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText("Unable to verify book information; existing PDF preserved.");});}
             });
-            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);
+            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);button("Chapter index",this::chapters);
         }
     }
     @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy){importBook(data.getData());}}
@@ -174,7 +223,7 @@ public final class LibraryActivity extends Activity {
         body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);
         LinearLayout bar=new LinearLayout(this);body.addView(bar);
         Button back=new Button(this);back.setText(lastQuery.isEmpty()?"Library":"Results");back.setOnClickListener(v->{if(lastQuery.isEmpty())home();else find(lastQuery);});bar.addView(back,new LinearLayout.LayoutParams(0,-2,1));
-        Button lib=new Button(this);lib.setText("Library");lib.setOnClickListener(v->home());bar.addView(lib,new LinearLayout.LayoutParams(0,-2,1));
+        Button lib=new Button(this);lib.setText("Library");lib.setOnClickListener(v->home());bar.addView(lib,new LinearLayout.LayoutParams(0,-2,1));Button chapter=new Button(this);chapter.setText("☰ Chapters");chapter.setAllCaps(false);chapter.setOnClickListener(v->chapters());bar.addView(chapter,new LinearLayout.LayoutParams(0,-2,1));
         TextView pageLabel=label("Loading PDF page "+(number+1)+"…",16);body.addView(pageLabel);
         worker.execute(()->{try(ParcelFileDescriptor fd=ParcelFileDescriptor.open(book,ParcelFileDescriptor.MODE_READ_ONLY);PdfRenderer renderer=new PdfRenderer(ParcelFileDescriptor.dup(fd.getFileDescriptor()))){
             int total=renderer.getPageCount();if(number<0||number>=total)return;

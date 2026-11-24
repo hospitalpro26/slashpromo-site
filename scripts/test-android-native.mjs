@@ -54,3 +54,6 @@ const library=read("android/app/src/main/java/com/slashpromo/app/LibraryActivity
 for(const marker of ["getNoBackupFilesDir()","FLAG_SECURE","staging.renameTo(volume)","Resume reading","toggleBookmark","goToPage(total)","study.night","volume-","selectedBook"])assert(library.includes(marker),marker);
 assert(!library.includes("oldBook.delete()"));
 console.log("PASS private study library structural safeguards");
+
+for(const marker of ["getDocumentOutline()","findDestinationPage(doc)","getFirstChild()","☰ Chapters","Find chapter","chapterCache.get(id)","page(target)"])assert(library.includes(marker),marker);
+console.log("PASS offline chapter navigation structural checks");
