@@ -21,7 +21,17 @@ public final class LibraryActivity extends Activity {
     private LinearLayout body;
     private EditText search;
     private TextView status;
-    private File book,index;
+    private File book,index,libraryRoot;
+    private String bookId="legacy";
+    private boolean night=false;
+    private android.content.SharedPreferences prefs(){return getPreferences(MODE_PRIVATE);}
+    private String key(String suffix){return "study."+bookId+"."+suffix;}
+    private void selectBook(String id){bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
+    private String titleFor(String id){return prefs().getString(id.equals("legacy")?"bookTitle":"study."+id+".title","").trim();}
+    private java.util.TreeSet<Integer> bookmarks(){java.util.TreeSet<Integer> out=new java.util.TreeSet<>();for(String n:prefs().getString(key("bookmarks"),"").split(",")){try{out.add(Integer.parseInt(n));}catch(NumberFormatException ignored){}}return out;}
+    private void toggleBookmark(int number){java.util.TreeSet<Integer> set=bookmarks();if(!set.add(number))set.remove(number);StringBuilder b=new StringBuilder();for(int n:set){if(b.length()>0)b.append(",");b.append(n);}prefs().edit().putString(key("bookmarks"),b.toString()).apply();}
+    private void bookmarkDialog(){java.util.ArrayList<Integer> pages=new java.util.ArrayList<>(bookmarks());if(pages.isEmpty()){Toast.makeText(this,"No bookmarks yet",Toast.LENGTH_SHORT).show();return;}String[] labels=new String[pages.size()];for(int i=0;i<labels.length;i++)labels[i]="PDF page "+(pages.get(i)+1);new AlertDialog.Builder(this).setTitle("Bookmarks").setItems(labels,(d,w)->page(pages.get(w))).setNegativeButton("Close",null).show();}
+    private void goToPage(int total){EditText input=new EditText(this);input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);input.setHint("1–"+total);AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Go to PDF page").setView(input).setPositiveButton("Go",null).setNegativeButton("Cancel",null).create();dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{try{int n=Integer.parseInt(input.getText().toString());if(n<1||n>total)throw new NumberFormatException();dialog.dismiss();page(n-1);}catch(NumberFormatException e){input.setError("Enter a page from 1 to "+total);}}));dialog.show();}
     private int generation=0;
     private boolean busy=false;
     private int currentPage=0;
@@ -41,7 +51,7 @@ public final class LibraryActivity extends Activity {
     private void init(){
         PDFBoxResourceLoader.init(getApplicationContext());
         File dir=new File(getNoBackupFilesDir(),"medical-library");dir.mkdirs();
-        book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");
+        libraryRoot=dir;String selected=prefs().getString("selectedBook","legacy");if(!selected.equals("legacy")&&(!selected.matches("volume-[a-f0-9-]+")||!new File(new File(dir,selected),"book.pdf").isFile()))selected="legacy";selectBook(selected);night=prefs().getBoolean("study.night",false);
         home();
     }
     private int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
@@ -51,7 +61,10 @@ public final class LibraryActivity extends Activity {
     private void layout(){releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
     private void home(){generation++;layout();button("← Back to Slashpromo Home",()->{startActivity(new Intent(this,DirectoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));finish();});body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
         if(busy){status.setText("Preparing library…");return;}
-        button("Add book once (Files or private Drive)",()->{Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);});
+        button("Add another PDF (keep existing books)",()->{Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);});
+        File[] volumes=libraryRoot.listFiles(f->f.isDirectory()&&f.getName().matches("volume-[a-f0-9-]+")&&new File(f,"book.pdf").isFile()&&new File(f,"book.sqlite").isFile());
+        if(new File(libraryRoot,"book.pdf").isFile()&&new File(libraryRoot,"book.sqlite").isFile()){String title=titleFor("legacy");button((bookId.equals("legacy")?"✓ ":"")+(title.isEmpty()?"Original medical book":title),()->{selectBook("legacy");home();});}
+        if(volumes!=null){java.util.Arrays.sort(volumes,java.util.Comparator.comparingLong(File::lastModified).reversed());for(File volume:volumes){String id=volume.getName(),title=titleFor(id);button((bookId.equals(id)?"✓ ":"")+(title.isEmpty()?"Medical PDF":title),()->{selectBook(id);home();});}}
         if(book.isFile()&&index.isFile()){
             final int infoToken=generation;
             TextView details=label("Reading saved book information…",15);body.addView(details);
@@ -68,7 +81,7 @@ public final class LibraryActivity extends Activity {
                         Cursor c=db.rawQuery("SELECT count(*),sum(CASE WHEN length(trim(content))>0 THEN 1 ELSE 0 END) FROM pages",null)){
                         c.moveToFirst();indexed=c.getLong(0);searchable=c.getLong(1);
                     }
-                    String title=getPreferences(MODE_PRIVATE).getString("bookTitle","");
+                    String title=titleFor(bookId);
                     if(title.isEmpty()){
                         try(PDDocument doc=PDDocument.load(book,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){
                             String embedded=doc.getDocumentInformation().getTitle();if(embedded!=null)title=embedded.trim();
@@ -79,7 +92,7 @@ public final class LibraryActivity extends Activity {
                     runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText(description);});
                 }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText("Unable to verify book information; existing PDF preserved.");});}
             });
-            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Open book",()->page(0));
+            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);
         }
     }
     @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy){importBook(data.getData());}}
@@ -88,9 +101,9 @@ public final class LibraryActivity extends Activity {
             String importedName="";
             try(Cursor c=getContentResolver().query(uri,new String[]{android.provider.OpenableColumns.DISPLAY_NAME},null,null,null)){if(c!=null&&c.moveToFirst())importedName=c.getString(0);}catch(Exception ignored){}
             if(importedName==null)importedName="";
-            File pending=new File(book.getParentFile(),"pending.pdf"), dbFile=new File(book.getParentFile(),"pending.sqlite");
+            String id="volume-"+java.util.UUID.randomUUID().toString();File staging=new File(libraryRoot,"pending-"+id),volume=new File(libraryRoot,id);File pending=new File(staging,"book.pdf"), dbFile=new File(staging,"book.sqlite");
             try{
-                if(dbFile.exists())dbFile.delete();
+                if(!staging.mkdir())throw new IOException("Cannot prepare new book");
                 try(InputStream in=getContentResolver().openInputStream(uri);OutputStream out=new FileOutputStream(pending)){
                     if(in==null)throw new IOException("Cannot read PDF");byte[] buf=new byte[65536];int n;long bytes=0;while((n=in.read(buf))!=-1){bytes+=n;if(bytes>1024L*1024*1024)throw new IOException("PDF exceeds 1 GB");out.write(buf,0,n);}
                 }
@@ -100,15 +113,10 @@ public final class LibraryActivity extends Activity {
                         db.beginTransaction();try{for(int p=1;p<=total;p++){stripper.setStartPage(p);stripper.setEndPage(p);String text=stripper.getText(doc).replaceAll("[\\u00ad\\u200b]","").replaceAll("\\s+"," ").trim();if(!text.isEmpty())readable++;db.execSQL("INSERT INTO pages(docid,content) VALUES(?,?)",new Object[]{p,text});if(p%25==0){final int done=p;runOnUiThread(()->{if(!isDestroyed())status.setText("Indexing "+done+" / "+total+" pages");});}}if(readable==0)throw new IOException("No searchable text; OCR not supported yet");db.setTransactionSuccessful();}finally{db.endTransaction();}
                     }finally{db.close();}
                 }
-                // Keep the previous pair until the new PDF and index are complete.
-                File oldBook=new File(book.getParentFile(),"previous.pdf"),oldIndex=new File(book.getParentFile(),"previous.sqlite");
-                if(oldBook.exists()||oldIndex.exists())throw new IOException("Previous recovery files exist");
-                boolean hadBook=book.exists(),hadIndex=index.exists();
-                if(hadBook&&!book.renameTo(oldBook))throw new IOException("Cannot preserve old PDF");
-                if(hadIndex&&!index.renameTo(oldIndex)){if(hadBook)oldBook.renameTo(book);throw new IOException("Cannot preserve old index");}
-                if(!pending.renameTo(book)||!dbFile.renameTo(index)){book.delete();index.delete();if(hadBook)oldBook.renameTo(book);if(hadIndex)oldIndex.renameTo(index);throw new IOException("Cannot activate library");}
-                getPreferences(MODE_PRIVATE).edit().putString("bookTitle",importedName).apply();oldBook.delete();oldIndex.delete();runOnUiThread(()->{busy=false;if(!isDestroyed())home();});
-            }catch(Exception e){pending.delete();dbFile.delete();runOnUiThread(()->{busy=false;if(!isDestroyed()){home();status.setText("Import failed. Check file and free storage, then retry.");}});}
+                // Publish a new independent volume only after PDF and index are complete.
+                if(!staging.renameTo(volume))throw new IOException("Cannot activate new book");
+                prefs().edit().putString("study."+id+".title",importedName).apply();runOnUiThread(()->{busy=false;if(!isDestroyed()){selectBook(id);home();}});
+            }catch(Exception e){pending.delete();dbFile.delete();staging.delete();runOnUiThread(()->{busy=false;if(!isDestroyed()){home();status.setText("Import failed. Check file and free storage, then retry.");}});}
         });
     }
     private String normalized(String text){return java.text.Normalizer.normalize(text,java.text.Normalizer.Form.NFKC).toLowerCase(java.util.Locale.ROOT).replaceAll("[\\p{Pd}\\p{Punct}]+"," ").replaceAll("\\s+"," ").trim();}
@@ -172,11 +180,12 @@ public final class LibraryActivity extends Activity {
             int total=renderer.getPageCount();if(number<0||number>=total)return;
             Bitmap bitmap;try(PdfRenderer.Page p=renderer.openPage(number)){int width=2200;int height=Math.max(1,(int)((long)width*p.getHeight()/p.getWidth()));if(height>3400){width=Math.max(1,(int)((long)width*3400/height));height=3400;}bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE);p.render(bitmap,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
             runOnUiThread(()->{if(isDestroyed()||generation!=token){bitmap.recycle();return;}
-                pageCount=total;displayedBitmap=bitmap;pageLabel.setText("PDF page "+(number+1)+" / "+total+" • Swipe at fit size");
-                ZoomPage img=new ZoomPage(bitmap);body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
+                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("lastPage"),number).apply();pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
+                ZoomPage img=new ZoomPage(bitmap);if(night)img.setColorFilter(new ColorMatrixColorFilter(new float[]{-1,0,0,0,255,0,-1,0,0,255,0,0,-1,0,255,0,0,0,1,0}));body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
                 LinearLayout tools=new LinearLayout(this);body.addView(tools);
-                String[] labels={"−","Fit","+"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f)};
+                String[] labels={"−","Fit","+","Go to","Night"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->{night=!night;prefs().edit().putBoolean("study.night",night).apply();page(number);}};
                 for(int i=0;i<labels.length;i++){final int k=i;Button btn=new Button(this);btn.setText(labels[i]);btn.setMinWidth(0);btn.setMinimumWidth(0);btn.setPadding(0,0,0,0);btn.setOnClickListener(v->actions[k].run());tools.addView(btn,new LinearLayout.LayoutParams(0,-2,1));}
+                LinearLayout marks=new LinearLayout(this);body.addView(marks);Button mark=new Button(this);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");mark.setOnClickListener(v->{toggleBookmark(number);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");});marks.addView(mark,new LinearLayout.LayoutParams(0,-2,1));Button list=new Button(this);list.setText("Bookmarks");list.setOnClickListener(v->bookmarkDialog());marks.addView(list,new LinearLayout.LayoutParams(0,-2,1));
                 LinearLayout nav=new LinearLayout(this);body.addView(nav);Button prev=new Button(this);prev.setText("← Previous");prev.setEnabled(number>0);prev.setOnClickListener(v->page(number-1));nav.addView(prev,new LinearLayout.LayoutParams(0,dp(52),1));Button next=new Button(this);next.setText("Next →");next.setEnabled(number+1<total);next.setOnClickListener(v->page(number+1));nav.addView(next,new LinearLayout.LayoutParams(0,dp(52),1));
             });
         }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==token)body.addView(label("Unable to open page",16));});}});
