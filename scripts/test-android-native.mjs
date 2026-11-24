@@ -46,3 +46,6 @@ assert(releaseWorkflow.indexOf("Sign and verify candidate") < releaseWorkflow.in
 assert(releaseWorkflow.includes("paths: ['android/app/build.gradle']"));
 assert(releaseWorkflow.includes("default: false"));
 console.log("PASS signed update structural safeguards");
+
+for(const marker of ["Downloading update:","Verifying APK integrity and signature","Signing certificate mismatch","safeError(e)","setOnApplyWindowInsetsListener","url=null;digest=null;remoteCode=0"])assert(updater.includes(marker),marker);
+console.log("PASS updater diagnostic structural checks");
