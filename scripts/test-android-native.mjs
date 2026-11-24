@@ -49,3 +49,8 @@ console.log("PASS signed update structural safeguards");
 
 for(const marker of ["Downloading update:","Verifying APK integrity and signature","Signing certificate mismatch","safeError(e)","setOnApplyWindowInsetsListener","url=null;digest=null;remoteCode=0"])assert(updater.includes(marker),marker);
 console.log("PASS updater diagnostic structural checks");
+
+const library=read("android/app/src/main/java/com/slashpromo/app/LibraryActivity.java");
+for(const marker of ["getNoBackupFilesDir()","FLAG_SECURE","staging.renameTo(volume)","Resume reading","toggleBookmark","goToPage(total)","study.night","volume-","selectedBook"])assert(library.includes(marker),marker);
+assert(!library.includes("oldBook.delete()"));
+console.log("PASS private study library structural safeguards");
