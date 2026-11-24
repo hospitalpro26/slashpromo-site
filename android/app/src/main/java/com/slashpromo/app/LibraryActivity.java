@@ -48,6 +48,41 @@ public final class LibraryActivity extends Activity {
         java.util.ArrayList<Integer> pages=new java.util.ArrayList<>(notes.keySet());String[] labels=new String[pages.size()];for(int i=0;i<labels.length;i++){int p=pages.get(i);String n=notes.get(p);labels[i]="Page "+(p+1)+" • "+n.substring(0,Math.min(n.length(),100));}
         new AlertDialog.Builder(this).setTitle("Saved study notes").setItems(labels,(d,w)->page(pages.get(w))).setNegativeButton("Close",null).show();
     }
+
+    private void revisionHub(){
+        final String id=bookId;final String prefix=key("highlights.");
+        java.util.TreeSet<Integer> pages=new java.util.TreeSet<>(bookmarks());
+        java.util.Set<Integer> marked=new java.util.HashSet<>(),noted=new java.util.HashSet<>();
+        for(java.util.Map.Entry<String,?> e:prefs().getAll().entrySet()){
+            if(!(e.getValue() instanceof String))continue;
+            String k=e.getKey(),value=(String)e.getValue();
+            try{
+                if(k.startsWith(prefix)&&new org.json.JSONArray(value).length()>0){int p=Integer.parseInt(k.substring(prefix.length()));if(p>=0){marked.add(p);pages.add(p);}}
+                String np=key("note.");
+                if(k.startsWith(np)&&!value.trim().isEmpty()){int p=Integer.parseInt(k.substring(np.length()));if(p>=0){noted.add(p);pages.add(p);}}
+            }catch(Exception ignored){}
+        }
+        java.util.ArrayList<Integer> all=new java.util.ArrayList<>(pages);
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(12),dp(8),dp(12),dp(8));
+        panel.addView(label(all.size()+" revision pages • "+marked.size()+" highlighted • "+noted.size()+" with notes",15));
+        EditText filter=new EditText(this);filter.setHint("Search saved notes or page number");filter.setSingleLine(true);panel.addView(filter);
+        Spinner mode=new Spinner(this);mode.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"All saved pages","Highlights","Notes","Bookmarks"}));panel.addView(mode);
+        ListView list=new ListView(this);panel.addView(list,new LinearLayout.LayoutParams(-1,dp(320)));
+        java.util.ArrayList<Integer> visible=new java.util.ArrayList<>();
+        ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,new java.util.ArrayList<String>());list.setAdapter(adapter);
+        java.util.Set<Integer> saved=bookmarks();
+        Runnable refresh=()->{visible.clear();adapter.clear();String q=filter.getText().toString().trim().toLowerCase(java.util.Locale.ROOT);int m=mode.getSelectedItemPosition();for(int p:all){
+            if((m==1&&!marked.contains(p))||(m==2&&!noted.contains(p))||(m==3&&!saved.contains(p)))continue;
+            String note=prefs().getString(pageKey("note",p),"");String row="PDF page "+(p+1)+(marked.contains(p)?" • Highlighted":"")+(saved.contains(p)?" • Bookmarked":"")+(noted.contains(p)?" • Note":"");
+            if(!q.isEmpty()&&!row.toLowerCase(java.util.Locale.ROOT).contains(q)&&!note.toLowerCase(java.util.Locale.ROOT).contains(q))continue;
+            visible.add(p);adapter.add(row+(note.trim().isEmpty()?"":"\n"+note.substring(0,Math.min(160,note.length()))));
+        }adapter.notifyDataSetChanged();};
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Revision centre").setView(panel).setNegativeButton("Close",null).create();
+        filter.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence x,int a,int c,int f){}public void onTextChanged(CharSequence x,int a,int b,int c){refresh.run();}public void afterTextChanged(android.text.Editable e){}});
+        mode.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener(){public void onItemSelected(android.widget.AdapterView<?> parent,View v,int pos,long row){refresh.run();}public void onNothingSelected(android.widget.AdapterView<?> parent){}});
+        list.setOnItemClickListener((parent,v,pos,row)->{if(bookId.equals(id)&&pos>=0&&pos<visible.size()){int p=visible.get(pos);dialog.dismiss();page(p);}});
+        dialog.show();refresh.run();
+    }
     private void setFullscreen(boolean enabled){
         fullscreen=enabled;getWindow().getDecorView().setSystemUiVisibility(enabled?(View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY):0);
     }
@@ -171,7 +206,7 @@ public final class LibraryActivity extends Activity {
                     runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText(description);});
                 }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText("Unable to verify book information; existing PDF preserved.");});}
             });
-            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);button("Chapter index",this::chapters);button("Reading history",this::history);button("Saved study notes",this::savedNotes);
+            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);button("Chapter index",this::chapters);button("Reading history",this::history);button("Saved study notes",this::savedNotes);button("Revision centre",this::revisionHub);
         }
     }
     @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy){importBook(data.getData());}}
@@ -277,7 +312,7 @@ public final class LibraryActivity extends Activity {
                 String[] labels={"−","Fit","+","Go to","Night"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->{night=!night;prefs().edit().putBoolean("study.night",night).apply();page(number);}};
                 for(int i=0;i<labels.length;i++){final int k=i;Button btn=new Button(this);btn.setText(labels[i]);btn.setMinWidth(0);btn.setMinimumWidth(0);btn.setPadding(0,0,0,0);btn.setOnClickListener(v->actions[k].run());tools.addView(btn,new LinearLayout.LayoutParams(0,-2,1));}
                 LinearLayout marks=new LinearLayout(this);body.addView(marks);Button mark=new Button(this);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");mark.setOnClickListener(v->{toggleBookmark(number);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");});marks.addView(mark,new LinearLayout.LayoutParams(0,-2,1));Button list=new Button(this);list.setText("Bookmarks");list.setOnClickListener(v->bookmarkDialog());marks.addView(list,new LinearLayout.LayoutParams(0,-2,1));
-                LinearLayout study=new LinearLayout(this);body.addView(study);Button highlight=new Button(this);highlight.setText("Highlight");highlight.setOnClickListener(v->img.toggleMarking(highlight));study.addView(highlight,new LinearLayout.LayoutParams(0,-2,1));Button undo=new Button(this);undo.setText("Undo mark");undo.setOnClickListener(v->img.undoHighlight());study.addView(undo,new LinearLayout.LayoutParams(0,-2,1));Button noteButton=new Button(this);noteButton.setText("Notes");noteButton.setOnClickListener(v->studyNote(number));study.addView(noteButton,new LinearLayout.LayoutParams(0,-2,1));
+                LinearLayout study=new LinearLayout(this);body.addView(study);Button highlight=new Button(this);highlight.setText("Highlight");highlight.setOnClickListener(v->img.toggleMarking(highlight));study.addView(highlight,new LinearLayout.LayoutParams(0,-2,1));Button undo=new Button(this);undo.setText("Undo mark");undo.setOnClickListener(v->img.undoHighlight());study.addView(undo,new LinearLayout.LayoutParams(0,-2,1));Button noteButton=new Button(this);noteButton.setText("Notes");noteButton.setOnClickListener(v->studyNote(number));study.addView(noteButton,new LinearLayout.LayoutParams(0,-2,1));Button revision=new Button(this);revision.setText("Revise");revision.setOnClickListener(v->revisionHub());study.addView(revision,new LinearLayout.LayoutParams(0,-2,1));
                 LinearLayout nav=new LinearLayout(this);body.addView(nav);Button prev=new Button(this);prev.setText("← Previous");prev.setEnabled(number>0);prev.setOnClickListener(v->page(number-1));nav.addView(prev,new LinearLayout.LayoutParams(0,dp(52),1));Button next=new Button(this);next.setText("Next →");next.setEnabled(number+1<total);next.setOnClickListener(v->page(number+1));nav.addView(next,new LinearLayout.LayoutParams(0,dp(52),1));
                 Button focus=new Button(this);focus.setAllCaps(false);body.addView(focus);Runnable applyFocus=()->{int visibility=fullscreen?View.GONE:View.VISIBLE;for(View view:new View[]{bar,pageLabel,tools,marks,study,nav})view.setVisibility(visibility);focus.setText(fullscreen?"Exit full screen":"Full-screen reading");};focus.setOnClickListener(v->{setFullscreen(!fullscreen);applyFocus.run();});applyFocus.run();
             });
