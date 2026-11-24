@@ -24,3 +24,10 @@ assert(workflow.includes('assembleDebug'));
 assert(!workflow.includes('assembleRelease')&&!workflow.includes('bundleRelease'));
 assert(existsSync(new URL('../android/app/src/main/res/drawable/ic_launcher.xml',import.meta.url)));
 console.log('PASS Android native project structural and privacy tests');
+
+const directory=read("android/app/src/main/java/com/slashpromo/app/DirectoryActivity.java");
+assert(manifest.includes('android:name=".DirectoryActivity"'));
+assert.equal((manifest.match(/android.intent.category.LAUNCHER/g)||[]).length,1);
+for(const marker of ["assets/directory.json","getJSONArray(\"doctors\")","showHome()","renderDoctors()","cityMatches","showDoctor(","showSaved()","setInstanceFollowRedirects(false)"])assert(directory.includes(marker),marker);
+assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 3);
+console.log("PASS dedicated mobile home and directory structure");

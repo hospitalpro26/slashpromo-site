@@ -1,6 +1,7 @@
 package com.slashpromo.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
@@ -108,7 +109,7 @@ public final class MainActivity extends Activity {
             b.setPadding(0,0,0,0);
             b.setTextColor(Color.rgb(11,35,83));
             nav.addView(b,new LinearLayout.LayoutParams(0,dp(52),1));
-            b.setOnClickListener(v -> navigate("https://slashpromo.com"+path));
+            b.setOnClickListener(v -> { if ("/about/".equals(path)) { new AlertDialog.Builder(this).setTitle("More").setItems(new String[]{"My Medical Library","Native homepage","About Slashpromo"},(d,which)->{if(which==0)startActivity(new Intent(this,LibraryActivity.class));else if(which==1){startActivity(new Intent(this,DirectoryActivity.class));finish();}else navigate("https://slashpromo.com/about/");}).show(); } else if ("/".equals(path)) { startActivity(new Intent(this,DirectoryActivity.class));finish(); } else navigate("https://slashpromo.com"+path); });
         }
         root.addView(nav);
         setContentView(root);
