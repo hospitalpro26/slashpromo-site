@@ -23,12 +23,40 @@ public final class LibraryActivity extends Activity {
     private TextView status;
     private File book,index,libraryRoot;
     private String bookId="legacy";
-    private boolean night=false;
+    private boolean night=false, fullscreen=false;
+    private String pageKey(String type,int number){return key(type+"."+number);}
+    private void rememberPage(int number){
+        java.util.LinkedHashSet<Integer> pages=new java.util.LinkedHashSet<>();pages.add(number);
+        for(String value:prefs().getString(key("history"),"").split(",")){try{int p=Integer.parseInt(value);if(p>=0)pages.add(p);}catch(NumberFormatException ignored){}}
+        StringBuilder out=new StringBuilder();int count=0;for(int p:pages){if(count++>=100)break;if(out.length()>0)out.append(",");out.append(p);}
+        prefs().edit().putInt(key("lastPage"),number).putString(key("history"),out.toString()).apply();
+    }
+    private void history(){
+        java.util.ArrayList<Integer> pages=new java.util.ArrayList<>();for(String n:prefs().getString(key("history"),"").split(",")){try{int p=Integer.parseInt(n);if(p>=0)pages.add(p);}catch(NumberFormatException ignored){}}
+        if(pages.isEmpty()){Toast.makeText(this,"No reading history yet",Toast.LENGTH_SHORT).show();return;}
+        String[] labels=new String[pages.size()];for(int i=0;i<labels.length;i++)labels[i]="PDF page "+(pages.get(i)+1);
+        new AlertDialog.Builder(this).setTitle("Recently read pages").setItems(labels,(d,w)->page(pages.get(w))).setNegativeButton("Close",null).show();
+    }
+    private void studyNote(int number){
+        final String storageKey=pageKey("note",number);EditText input=new EditText(this);input.setGravity(Gravity.TOP);input.setMinLines(5);input.setInputType(android.text.InputType.TYPE_CLASS_TEXT|android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE);input.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(20000)});input.setText(prefs().getString(storageKey,""));
+        new AlertDialog.Builder(this).setTitle("Study notes • PDF page "+(number+1)).setView(input).setPositiveButton("Save",(d,w)->prefs().edit().putString(storageKey,input.getText().toString()).apply()).setNegativeButton("Cancel",null).show();
+    }
+    private void savedNotes(){
+        String prefix=key("note.");java.util.TreeMap<Integer,String> notes=new java.util.TreeMap<>();
+        for(java.util.Map.Entry<String,?> entry:prefs().getAll().entrySet()){if(entry.getKey().startsWith(prefix)&&entry.getValue() instanceof String){try{int p=Integer.parseInt(entry.getKey().substring(prefix.length()));String note=(String)entry.getValue();if(p>=0&&!note.trim().isEmpty())notes.put(p,note);}catch(NumberFormatException ignored){}}}
+        if(notes.isEmpty()){Toast.makeText(this,"No study notes yet",Toast.LENGTH_SHORT).show();return;}
+        java.util.ArrayList<Integer> pages=new java.util.ArrayList<>(notes.keySet());String[] labels=new String[pages.size()];for(int i=0;i<labels.length;i++){int p=pages.get(i);String n=notes.get(p);labels[i]="Page "+(p+1)+" • "+n.substring(0,Math.min(n.length(),100));}
+        new AlertDialog.Builder(this).setTitle("Saved study notes").setItems(labels,(d,w)->page(pages.get(w))).setNegativeButton("Close",null).show();
+    }
+    private void setFullscreen(boolean enabled){
+        fullscreen=enabled;getWindow().getDecorView().setSystemUiVisibility(enabled?(View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY):0);
+    }
     private static final class Chapter {
         final String title; final int page,depth;
         Chapter(String t,int p,int d){title=t;page=p;depth=d;}
     }
-    private final java.util.Map<String,java.util.List<Chapter>> chapterCache=new java.util.HashMap<>();
+    private final java.util.Map<String,java.util.List<Chapter>> chapterCache=new java.util.concurrent.ConcurrentHashMap<>();
+    private Chapter activeChapter(java.util.List<Chapter> rows,int p){Chapter best=null;if(rows!=null)for(Chapter c:rows)if(c.page<=p&&(best==null||c.page>best.page||(c.page==best.page&&c.depth>=best.depth)))best=c;return best;}
     private void collectChapters(PDDocument doc,com.tom_roush.pdfbox.pdmodel.interactive.documentnavigation.outline.PDOutlineItem item,int depth,java.util.List<Chapter> rows,java.util.Set<Object> seen,int[] visited){
         if(depth>20)return;
         while(item!=null&&visited[0]++<20000&&seen.add(item.getCOSObject())){
@@ -49,6 +77,7 @@ public final class LibraryActivity extends Activity {
         panel.addView(label("Chapter index",23));
         TextView note=label("Reading embedded PDF contents…",14);panel.addView(note);
         EditText filter=new EditText(this);filter.setSingleLine(true);filter.setHint("Find chapter");panel.addView(filter);
+        CheckBox topOnly=new CheckBox(this);topOnly.setText("Main chapters only");panel.addView(topOnly);
         ListView list=new ListView(this);panel.addView(list,new LinearLayout.LayoutParams(-1,0,1));
         Button close=new Button(this);close.setText("Close");close.setOnClickListener(v->dialog.dismiss());panel.addView(close);
         dialog.setContentView(panel);dialog.show();
@@ -63,13 +92,14 @@ public final class LibraryActivity extends Activity {
             final java.util.List<Chapter> all=rows;final String problem=error;
             runOnUiThread(()->{if(isDestroyed()||!dialog.isShowing()||generation!=token||!bookId.equals(id))return;
                 if(problem!=null||all.isEmpty()){note.setText(problem!=null?problem:"This PDF has no usable embedded chapter links. Use Search or Go to page.");filter.setEnabled(false);return;}
-                note.setText(all.size()+" linked sections • PDF page numbers");
+                final Chapter active=activeChapter(all,currentPage);note.setText(all.size()+" linked sections"+(active==null?"":"\nCurrent: "+active.title));
                 java.util.ArrayList<Chapter> visible=new java.util.ArrayList<>();
                 ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,new java.util.ArrayList<String>());list.setAdapter(adapter);
-                Runnable refresh=()->{visible.clear();adapter.clear();String q=filter.getText().toString().trim().toLowerCase(java.util.Locale.ROOT);for(Chapter c:all){if(!c.title.toLowerCase(java.util.Locale.ROOT).contains(q))continue;visible.add(c);StringBuilder indent=new StringBuilder();for(int i=0;i<Math.min(c.depth,5);i++)indent.append("  ");adapter.add(indent+c.title+"  ·  "+(c.page+1));}adapter.notifyDataSetChanged();};
+                Runnable refresh=()->{visible.clear();adapter.clear();String q=filter.getText().toString().trim().toLowerCase(java.util.Locale.ROOT);for(Chapter c:all){if((q.isEmpty()&&topOnly.isChecked()&&c.depth>0)||!c.title.toLowerCase(java.util.Locale.ROOT).contains(q))continue;visible.add(c);StringBuilder indent=new StringBuilder();for(int i=0;i<Math.min(c.depth,5);i++)indent.append("  ");adapter.add((c==active?"▶ ":"")+indent+c.title+"  ·  "+(c.page+1));}adapter.notifyDataSetChanged();};
+                topOnly.setOnCheckedChangeListener((v,checked)->refresh.run());
                 filter.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence x,int a,int c,int f){}public void onTextChanged(CharSequence x,int a,int b,int c){refresh.run();}public void afterTextChanged(android.text.Editable e){}});
                 list.setOnItemClickListener((parent,v,pos,rowId)->{if(pos>=0&&pos<visible.size()&&generation==token&&bookId.equals(id)){int target=visible.get(pos).page;dialog.dismiss();page(target);}});
-                refresh.run();
+                refresh.run();int activeIndex=visible.indexOf(active);if(activeIndex>=0)list.setSelection(activeIndex);
             });
         });
     }
@@ -107,7 +137,7 @@ public final class LibraryActivity extends Activity {
     private TextView label(String s,int size){TextView t=new TextView(this);t.setText(s);t.setTextSize(size);t.setTextColor(0xff183654);t.setPadding(0,dp(8),0,dp(8));return t;}
     private void button(String s,Runnable r){Button b=new Button(this);b.setText(s);b.setAllCaps(false);b.setOnClickListener(v->r.run());body.addView(b);}
     private void releaseBitmap(){if(displayedBitmap!=null){displayedBitmap=null;}}
-    private void layout(){releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
+    private void layout(){setFullscreen(false);releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
     private void home(){generation++;layout();button("← Back to Slashpromo Home",()->{startActivity(new Intent(this,DirectoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));finish();});body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
         if(busy){status.setText("Preparing library…");return;}
         button("Add another PDF (keep existing books)",()->{Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);});
@@ -141,7 +171,7 @@ public final class LibraryActivity extends Activity {
                     runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText(description);});
                 }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText("Unable to verify book information; existing PDF preserved.");});}
             });
-            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);button("Chapter index",this::chapters);
+            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);button("Chapter index",this::chapters);button("Reading history",this::history);button("Saved study notes",this::savedNotes);
         }
     }
     @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy){importBook(data.getData());}}
@@ -208,7 +238,19 @@ public final class LibraryActivity extends Activity {
     private final class ZoomPage extends ImageView {
         private final Matrix transform=new Matrix();private final ScaleGestureDetector pinch;private final GestureDetector gestures;
         private float zoom=1,base=1,x=0,y=0;private Bitmap bitmap;private boolean multiTouch=false;private float downX,downY;
-        ZoomPage(Bitmap image){super(LibraryActivity.this);bitmap=image;setImageBitmap(image);setScaleType(ScaleType.MATRIX);setBackgroundColor(Color.WHITE);
+        private final String highlightKey;
+        private final java.util.ArrayList<RectF> highlights=new java.util.ArrayList<>();
+        private final Paint highlightPaint=new Paint();
+        private boolean marking=false;private PointF start;private RectF preview;
+        private void loadHighlights(){try{org.json.JSONArray arr=new org.json.JSONArray(prefs().getString(highlightKey,"[]"));for(int i=0;i<Math.min(arr.length(),500);i++){org.json.JSONArray a=arr.getJSONArray(i);RectF r=new RectF((float)a.getDouble(0),(float)a.getDouble(1),(float)a.getDouble(2),(float)a.getDouble(3));if(r.left>=0&&r.top>=0&&r.right<=1&&r.bottom<=1&&r.width()>0&&r.height()>0)highlights.add(r);}}catch(Exception ignored){}}
+        private void saveHighlights(){org.json.JSONArray arr=new org.json.JSONArray();try{for(RectF r:highlights){org.json.JSONArray a=new org.json.JSONArray();a.put((double)r.left);a.put((double)r.top);a.put((double)r.right);a.put((double)r.bottom);arr.put(a);}prefs().edit().putString(highlightKey,arr.toString()).apply();}catch(org.json.JSONException ignored){}}
+        void toggleMarking(Button button){marking=!marking;start=null;preview=null;button.setText(marking?"Done marking":"Highlight");if(marking)Toast.makeText(LibraryActivity.this,"Drag over a passage to highlight",Toast.LENGTH_SHORT).show();invalidate();}
+        void undoHighlight(){if(!highlights.isEmpty()){highlights.remove(highlights.size()-1);saveHighlights();invalidate();}}
+        private PointF normalizedPoint(float sx,float sy){Matrix inverse=new Matrix();if(!transform.invert(inverse))return null;float[] xy={sx,sy};inverse.mapPoints(xy);return new PointF(Math.max(0,Math.min(1,xy[0]/bitmap.getWidth())),Math.max(0,Math.min(1,xy[1]/bitmap.getHeight())));}
+        private void drawMark(Canvas canvas,RectF r){RectF b=new RectF(r.left*bitmap.getWidth(),r.top*bitmap.getHeight(),r.right*bitmap.getWidth(),r.bottom*bitmap.getHeight());transform.mapRect(b);canvas.drawRect(b,highlightPaint);}
+        @Override protected void onDraw(Canvas canvas){super.onDraw(canvas);highlightPaint.setColor(night?0x809b7c16:0x70ffd600);for(RectF r:highlights)drawMark(canvas,r);if(preview!=null)drawMark(canvas,preview);}
+        private boolean markTouch(MotionEvent e){int action=e.getActionMasked();if(e.getPointerCount()>1||action==MotionEvent.ACTION_CANCEL){start=null;preview=null;invalidate();return true;}PointF p=normalizedPoint(e.getX(),e.getY());if(p==null)return true;if(action==MotionEvent.ACTION_DOWN){start=p;preview=null;}else if(start!=null&&(action==MotionEvent.ACTION_MOVE||action==MotionEvent.ACTION_UP)){preview=new RectF(Math.min(start.x,p.x),Math.min(start.y,p.y),Math.max(start.x,p.x),Math.max(start.y,p.y));if(action==MotionEvent.ACTION_UP){if(preview.width()>0.002f&&preview.height()>0.002f){if(highlights.size()<500){highlights.add(preview);saveHighlights();}else Toast.makeText(LibraryActivity.this,"Page highlight limit reached",Toast.LENGTH_SHORT).show();}preview=null;start=null;}}invalidate();return true;}
+        ZoomPage(Bitmap image){super(LibraryActivity.this);highlightKey=pageKey("highlights",currentPage);bitmap=image;loadHighlights();setImageBitmap(image);setScaleType(ScaleType.MATRIX);setBackgroundColor(Color.WHITE);
             pinch=new ScaleGestureDetector(LibraryActivity.this,new ScaleGestureDetector.SimpleOnScaleGestureListener(){@Override public boolean onScale(ScaleGestureDetector d){scaleTo(zoom*d.getScaleFactor(),d.getFocusX(),d.getFocusY());return true;}});
             gestures=new GestureDetector(LibraryActivity.this,new GestureDetector.SimpleOnGestureListener(){@Override public boolean onDown(android.view.MotionEvent e){return true;}@Override public boolean onDoubleTap(android.view.MotionEvent e){scaleTo(zoom>1.1f?1:2.5f,e.getX(),e.getY());return true;}@Override public boolean onScroll(android.view.MotionEvent a,android.view.MotionEvent b,float dx,float dy){if(!pinch.isInProgress()&&zoom>1.05f){x-=dx;y-=dy;apply();}return true;}});
         }
@@ -217,7 +259,7 @@ public final class LibraryActivity extends Activity {
         void change(float f){scaleTo(zoom*f,getWidth()/2f,getHeight()/2f);}
         void reset(){scaleTo(1,getWidth()/2f,getHeight()/2f);}
         private void apply(){float w=bitmap.getWidth()*base*zoom,h=bitmap.getHeight()*base*zoom;x=w<=getWidth()?(getWidth()-w)/2f:Math.max(getWidth()-w,Math.min(0,x));y=h<=getHeight()?(getHeight()-h)/2f:Math.max(getHeight()-h,Math.min(0,y));transform.setScale(base*zoom,base*zoom);transform.postTranslate(x,y);setImageMatrix(transform);}
-        @Override public boolean onTouchEvent(android.view.MotionEvent e){if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;if(Math.abs(dx)>dp(70)&&Math.abs(dx)>Math.abs(dy)*1.5f){int next=currentPage+(dx<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
+        @Override public boolean onTouchEvent(android.view.MotionEvent e){if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;if(Math.abs(dx)>dp(70)&&Math.abs(dx)>Math.abs(dy)*1.5f){int next=currentPage+(dx<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
     }
     private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;int token=++generation;currentPage=number;releaseBitmap();
         body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);
@@ -229,16 +271,18 @@ public final class LibraryActivity extends Activity {
             int total=renderer.getPageCount();if(number<0||number>=total)return;
             Bitmap bitmap;try(PdfRenderer.Page p=renderer.openPage(number)){int width=2200;int height=Math.max(1,(int)((long)width*p.getHeight()/p.getWidth()));if(height>3400){width=Math.max(1,(int)((long)width*3400/height));height=3400;}bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE);p.render(bitmap,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
             runOnUiThread(()->{if(isDestroyed()||generation!=token){bitmap.recycle();return;}
-                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("lastPage"),number).apply();pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
+                pageCount=total;displayedBitmap=bitmap;rememberPage(number);pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
                 ZoomPage img=new ZoomPage(bitmap);if(night)img.setColorFilter(new ColorMatrixColorFilter(new float[]{-1,0,0,0,255,0,-1,0,0,255,0,0,-1,0,255,0,0,0,1,0}));body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
                 LinearLayout tools=new LinearLayout(this);body.addView(tools);
                 String[] labels={"−","Fit","+","Go to","Night"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->{night=!night;prefs().edit().putBoolean("study.night",night).apply();page(number);}};
                 for(int i=0;i<labels.length;i++){final int k=i;Button btn=new Button(this);btn.setText(labels[i]);btn.setMinWidth(0);btn.setMinimumWidth(0);btn.setPadding(0,0,0,0);btn.setOnClickListener(v->actions[k].run());tools.addView(btn,new LinearLayout.LayoutParams(0,-2,1));}
                 LinearLayout marks=new LinearLayout(this);body.addView(marks);Button mark=new Button(this);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");mark.setOnClickListener(v->{toggleBookmark(number);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");});marks.addView(mark,new LinearLayout.LayoutParams(0,-2,1));Button list=new Button(this);list.setText("Bookmarks");list.setOnClickListener(v->bookmarkDialog());marks.addView(list,new LinearLayout.LayoutParams(0,-2,1));
+                LinearLayout study=new LinearLayout(this);body.addView(study);Button highlight=new Button(this);highlight.setText("Highlight");highlight.setOnClickListener(v->img.toggleMarking(highlight));study.addView(highlight,new LinearLayout.LayoutParams(0,-2,1));Button undo=new Button(this);undo.setText("Undo mark");undo.setOnClickListener(v->img.undoHighlight());study.addView(undo,new LinearLayout.LayoutParams(0,-2,1));Button noteButton=new Button(this);noteButton.setText("Notes");noteButton.setOnClickListener(v->studyNote(number));study.addView(noteButton,new LinearLayout.LayoutParams(0,-2,1));
                 LinearLayout nav=new LinearLayout(this);body.addView(nav);Button prev=new Button(this);prev.setText("← Previous");prev.setEnabled(number>0);prev.setOnClickListener(v->page(number-1));nav.addView(prev,new LinearLayout.LayoutParams(0,dp(52),1));Button next=new Button(this);next.setText("Next →");next.setEnabled(number+1<total);next.setOnClickListener(v->page(number+1));nav.addView(next,new LinearLayout.LayoutParams(0,dp(52),1));
+                Button focus=new Button(this);focus.setAllCaps(false);body.addView(focus);Runnable applyFocus=()->{int visibility=fullscreen?View.GONE:View.VISIBLE;for(View view:new View[]{bar,pageLabel,tools,marks,study,nav})view.setVisibility(visibility);focus.setText(fullscreen?"Exit full screen":"Full-screen reading");};focus.setOnClickListener(v->{setFullscreen(!fullscreen);applyFocus.run();});applyFocus.run();
             });
         }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==token)body.addView(label("Unable to open page",16));});}});
     }
-    @Override public void onBackPressed(){if(!busy&&book!=null)home();else super.onBackPressed();}
+    @Override public void onBackPressed(){if(fullscreen){setFullscreen(false);page(currentPage);return;}if(!busy&&book!=null)home();else super.onBackPressed();}
     @Override protected void onDestroy(){generation++;releaseBitmap();worker.shutdown();super.onDestroy();}
 }
