@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.slashpromo.app",
+      "sha256_cert_fingerprints": [
+        "1F:C0:B9:0A:2A:2F:DA:C5:7A:17:8C:83:0A:E7:14:E7:5B:2C:14:D1:88:AB:ED:53:4D:CA:5A:FF:9B:2B:B1:68"
+      ]
+    }
+  }
+]
