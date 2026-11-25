@@ -1,3 +1,4 @@
+import {accessOwner} from "./access-owner.js";
 import {verifyGoogle} from "./google-identity.js";
 const encoder = new TextEncoder();
 const hex = bytes => Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2,"0")).join("");
@@ -134,6 +135,7 @@ export default {
   // Operator-only approval API. Secret provisioned out of band; never bundled in APK.
   if(path.startsWith("/v1/admin/")){
    if(env.REVIEW_ADMIN_ENABLED!=="true")return json({error:"Admin access unavailable"},503);
+   if(!await accessOwner(req,env))return json({error:"Administrator identity required"},401);
    if(!env.ADMIN_TOKEN||env.ADMIN_TOKEN.length<32||!equal(req.headers.get("Authorization")||"","Bearer "+env.ADMIN_TOKEN))return json({error:"Unauthorized"},401);
    if(path.endsWith("/accounts")&&req.method==="GET"){
     const rows=await env.DB.prepare("SELECT id,name,email,status,email_verified_at,approved_at,trial_until,paid_until FROM accounts ORDER BY created_at DESC LIMIT 100").all();
