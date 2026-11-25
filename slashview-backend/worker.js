@@ -1,3 +1,4 @@
+import {verifyGoogle} from "./google-identity.js";
 const encoder = new TextEncoder();
 const hex = bytes => Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2,"0")).join("");
 const random = n => hex(crypto.getRandomValues(new Uint8Array(n)));
@@ -41,7 +42,8 @@ export default {
   await env.DB.batch([
    env.DB.prepare("DELETE FROM sessions WHERE expires_at<=?").bind(now),
    env.DB.prepare("DELETE FROM rate_limits WHERE expires_at<=?").bind(now),
-   env.DB.prepare("DELETE FROM account_tokens WHERE expires_at<=?").bind(now)
+   env.DB.prepare("DELETE FROM account_tokens WHERE expires_at<=?").bind(now),
+   env.DB.prepare("DELETE FROM google_nonces WHERE expires_at<=?").bind(now)
   ]);
  },
  async fetch(req,env){
@@ -54,6 +56,40 @@ export default {
   }
   if(env.AUTH_ENABLED!=="true")return json({error:"Authentication not enabled"},503);
   const ip=req.headers.get("CF-Connecting-IP")||"unknown";
+  if(req.method==="POST"&&["/v1/google/nonce","/v1/google/login"].includes(path)){
+   if(env.GOOGLE_ENABLED!=="true"||!env.GOOGLE_CLIENT_ID)return json({error:"Google sign-in unavailable"},503);
+   if(await limited(env.DB,"google:"+ip,15,900))return json({error:"Try again later"},429);
+   const now=Math.floor(Date.now()/1000);
+   if(path.endsWith("/nonce")){
+    const nonce=random(32);
+    await env.DB.prepare("INSERT INTO google_nonces(nonce_hash,expires_at) VALUES (?,?)").bind(await digest(nonce),now+300).run();
+    return json({nonce});
+   }
+   const input=await readJson(req,12000);if(!input)return json({error:"Invalid request"},400);
+   let claims;try{claims=await verifyGoogle(input.idToken,env.GOOGLE_CLIENT_ID)}catch{return json({error:"Invalid Google credential"},401)}
+   const consumed=await env.DB.prepare("DELETE FROM google_nonces WHERE nonce_hash=? AND expires_at>?").bind(await digest(claims.nonce),now).run();
+   if(consumed.meta.changes!==1)return json({error:"Invalid or expired challenge"},401);
+   let account=await env.DB.prepare("SELECT a.* FROM accounts a JOIN google_identities g ON g.account_id=a.id WHERE g.subject=?").bind(claims.sub).first();
+   if(!account){
+    if(env.REGISTRATION_ENABLED!=="true")return json({error:"Registration not enabled"},503);
+    if(input.termsAccepted!==true||input.privacyAcknowledged!==true||input.pricingAccepted!==true||input.policyVersion!=="review-1")return json({error:"Consent required"},400);
+    const email=typeof claims.email==="string"?claims.email.trim().toLowerCase():"";
+    if(claims.email_verified!==true||email.length>254||!/^\S+@\S+\.\S+$/.test(email)||!(email.endsWith("@gmail.com")||(typeof claims.hd==="string"&&claims.hd)))return json({error:"Additional email verification required"},403);
+    const existing=await env.DB.prepare("SELECT id FROM accounts WHERE email=?").bind(email).first();
+    if(existing)return json({error:"Use your existing sign-in method; automatic linking is not supported"},409);
+    const id=random(16), stamp=new Date().toISOString(),name=typeof claims.name==="string"?claims.name.trim().slice(0,100)||"Slashview member":"Slashview member";
+    await env.DB.batch([
+     env.DB.prepare("INSERT INTO accounts(id,email,name,password_hash,salt,email_verified_at,terms_version,privacy_version,pricing_version,consent_at) VALUES (?,?,?,?,?,?,?,?,?,?)").bind(id,email,name,random(32),random(32),stamp,"review-1","review-1","review-1",stamp),
+     env.DB.prepare("INSERT INTO google_identities(subject,account_id) VALUES (?,?)").bind(claims.sub,id)
+    ]);
+    return json({status:"pending",message:"Registration received; administrator approval required"},202);
+   }
+   if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval required"},403);
+   if(entitlement(account)==="expired")return json({error:"Membership expired",membership:"expired"},403);
+   const token=random(32),expires=now+86400;
+   await env.DB.prepare("INSERT INTO sessions(token_hash,account_id,expires_at) VALUES (?,?,?)").bind(await digest(token),account.id,expires).run();
+   return json({token,expires_at:expires});
+  }
   if(req.method==="POST" && ["/v1/verification/request","/v1/verification/confirm","/v1/recovery/request","/v1/recovery/confirm"].includes(path)){
    if(await limited(env.DB,"mail-ip:"+ip,15,900))return json({error:"Try again later"},429);
    const input=await readJson(req);if(!input)return json({error:"Invalid request"},400);
