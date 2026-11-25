@@ -186,7 +186,7 @@ public final class LibraryActivity extends Activity {
         AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Rename book").setView(input).setPositiveButton("Save",null).setNegativeButton("Cancel",null).create();
         dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
             String title=input.getText().toString().trim();if(title.isEmpty()){input.setError("Enter a book title");return;}
-            prefs().edit().putString(id.equals("legacy")?"bookTitle":"study."+id+".title",title).apply();dialog.dismiss();home();
+            prefs().edit().putString(id.equals("legacy")?"bookTitle":"study."+id+".title",title).apply();dialog.dismiss();booksMenu();
         }));dialog.show();
     }
     private void init(){
@@ -198,15 +198,49 @@ public final class LibraryActivity extends Activity {
     private int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
     private TextView label(String s,int size){TextView t=new TextView(this);t.setText(s);t.setTextSize(size);t.setTextColor(0xff183654);t.setPadding(0,dp(8),0,dp(8));return t;}
     private void button(String s,Runnable r){Button b=new Button(this);b.setText(s);b.setAllCaps(false);b.setOnClickListener(v->r.run());body.addView(b);}
+    private void menuCard(String title,String subtitle,Runnable action,boolean enabled){
+        LinearLayout tile=new LinearLayout(this);tile.setOrientation(1);tile.setPadding(dp(16),dp(10),dp(16),dp(10));
+        android.graphics.drawable.GradientDrawable bg=new android.graphics.drawable.GradientDrawable();
+        bg.setColor(enabled?0xfff2f6fc:0xfff2f2f2);bg.setCornerRadius(dp(14));bg.setStroke(dp(1),0xffd8e2ef);tile.setBackground(bg);
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(-1,-2);lp.bottomMargin=dp(10);body.addView(tile,lp);
+        TextView heading=label(title+"  ›",18);heading.setTypeface(null,android.graphics.Typeface.BOLD);heading.setPadding(0,0,0,dp(3));tile.addView(heading);
+        TextView caption=label(subtitle,13);caption.setPadding(0,0,0,0);tile.addView(caption);
+        tile.setEnabled(enabled);tile.setAlpha(enabled?1f:0.55f);tile.setFocusable(enabled);tile.setContentDescription(title+". "+subtitle);
+        if(enabled)tile.setOnClickListener(v->action.run());
+    }
+    private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
+    private void menuScreen(String title){generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
+    private void readingMenu(){
+        menuScreen("Read & search");
+        body.addView(label("Selected: "+(titleFor(bookId).isEmpty()?"Medical PDF":titleFor(bookId)),15));
+        search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);
+        button("Search whole book",()->find(search.getText().toString()));
+        button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));
+        button("Open first page",()->page(0));button("Chapter index",this::chapters);
+    }
+    private void revisionMenu(){
+        menuScreen("Study & revision");
+        body.addView(label("Selected: "+(titleFor(bookId).isEmpty()?"Medical PDF":titleFor(bookId)),15));
+        button("Revision centre",this::revisionHub);button("Bookmarks",this::bookmarkDialog);button("Saved study notes",this::savedNotes);button("Reading history",this::history);
+        body.addView(label("Highlights are also available in the revision centre and PDF reader.",14));
+    }
     private void releaseBitmap(){if(displayedBitmap!=null){displayedBitmap=null;}}
     private void layout(){setFullscreen(false);releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
     private void home(){generation++;layout();button("← Back to Slashpromo Home",()->{startActivity(new Intent(this,DirectoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));finish();});body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
         if(busy){status.setText("Preparing library…");return;}
-        button("Scan hard-copy book • up to 50 pages",this::scanBook);
-        button("Add another PDF (keep existing books)",()->{Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);});
+        boolean ready=book.isFile()&&index.isFile();
+        menuCard("Add new book","Import an existing PDF from your phone",this::pickBook,true);
+        menuCard("Scan hard copies","Camera or gallery • up to 50 pages • automatic PDF and OCR",this::scanBook,true);
+        menuCard("My books","Choose a saved book, view details or rename it",this::booksMenu,true);
+        menuCard("Read & search",ready?"Resume reading, find topics and browse chapters":"Add or select a book first",this::readingMenu,ready);
+        menuCard("Study & revision",ready?"Notes, highlights, bookmarks and reading history":"Add or select a book first",this::revisionMenu,ready);
+        if(ready)body.addView(label("Selected book: "+(titleFor(bookId).isEmpty()?"Medical PDF":titleFor(bookId)),15));
+    }
+    private void booksMenu(){
+        menuScreen("My books");body.addView(label("Choose a book to manage or read.",14));
         File[] volumes=libraryRoot.listFiles(f->f.isDirectory()&&f.getName().matches("volume-[a-f0-9-]+")&&new File(f,"book.pdf").isFile()&&new File(f,"book.sqlite").isFile());
-        if(new File(libraryRoot,"book.pdf").isFile()&&new File(libraryRoot,"book.sqlite").isFile()){String title=titleFor("legacy");button((bookId.equals("legacy")?"✓ ":"")+(title.isEmpty()?"Original medical book":title),()->{selectBook("legacy");home();});}
-        if(volumes!=null){java.util.Arrays.sort(volumes,java.util.Comparator.comparingLong(File::lastModified).reversed());for(File volume:volumes){String id=volume.getName(),title=titleFor(id);button((bookId.equals(id)?"✓ ":"")+(title.isEmpty()?"Medical PDF":title),()->{selectBook(id);home();});}}
+        if(new File(libraryRoot,"book.pdf").isFile()&&new File(libraryRoot,"book.sqlite").isFile()){String title=titleFor("legacy");button((bookId.equals("legacy")?"✓ ":"")+(title.isEmpty()?"Original medical book":title),()->{selectBook("legacy");booksMenu();});}
+        if(volumes!=null){java.util.Arrays.sort(volumes,java.util.Comparator.comparingLong(File::lastModified).reversed());for(File volume:volumes){String id=volume.getName(),title=titleFor(id);button((bookId.equals(id)?"✓ ":"")+(title.isEmpty()?"Medical PDF":title),()->{selectBook(id);booksMenu();});}}
         if(book.isFile()&&index.isFile()){
             final int infoToken=generation;final File infoBook=book,infoIndex=index;final String infoId=bookId;final int resumePage=prefs().getInt(key("lastPage"),0);
             TextView details=label("Reading saved book information…",15);body.addView(details);
@@ -235,7 +269,8 @@ public final class LibraryActivity extends Activity {
                 }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==infoToken)details.setText("Unable to verify book information; existing PDF preserved.");});}
             });
             button("Rename selected book",this::renameBook);
-            search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);button("Search whole book",()->find(search.getText().toString()));button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));button("Open first page",()->page(0));button("Bookmarks",this::bookmarkDialog);button("Chapter index",this::chapters);button("Reading history",this::history);button("Saved study notes",this::savedNotes);button("Revision centre",this::revisionHub);
+            button("Read selected book",this::readingMenu);
+            button("Study & revision",this::revisionMenu);
         }
     }
     @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
