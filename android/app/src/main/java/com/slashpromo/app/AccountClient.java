@@ -60,7 +60,7 @@ final class AccountClient {
  }
  Result request(String path,JSONObject payload,String token) throws Exception {
   if(!ENABLED)throw new IllegalStateException("Account service is not enabled");
-  if(!path.matches("/v1/(register|login|me|logout|verification/request|verification/confirm|recovery/request|recovery/confirm)"))throw new IllegalArgumentException("Invalid endpoint");
+  if(!path.matches("/v1/(register|login|me|logout|verification/request|verification/confirm|recovery/request|recovery/confirm|google/nonce|google/login)"))throw new IllegalArgumentException("Invalid endpoint");
   HttpsURLConnection c=(HttpsURLConnection)new URL(BASE+path).openConnection();
   try{
    c.setInstanceFollowRedirects(false);c.setConnectTimeout(10000);c.setReadTimeout(15000);c.setUseCaches(false);
