@@ -62,8 +62,8 @@ for(const marker of ["getDocumentOutline()","findDestinationPage(doc)","getFirst
 console.log("PASS offline chapter navigation structural checks");
 
 for(const marker of ['pageKey("highlights",currentPage)',"transform.invert(inverse)","saveHighlights()","studyNote(number)","savedNotes","rememberPage(number)","SYSTEM_UI_FLAG_IMMERSIVE_STICKY","Exit full screen","Main chapters only","activeChapter(all,currentPage)"])assert(library.includes(marker),marker);
-assert(app.includes("versionName '0.7.0'"));
-assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 18);
+assert(app.includes("versionName '0.7.1'"));
+assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 19);
 console.log("PASS Smart Study Reader structural safeguards");
 
 for(const marker of ["private void revisionHub()","Search saved notes or page number","All saved pages","key(\"highlights.\")","this::revisionHub"])assert(library.includes(marker),marker);
@@ -90,3 +90,5 @@ assert(!library.includes("Back to Slashpromo Home"));
 assert(library.includes('button("Check for updates"'));
 for(const source of [library,directory,activity,strings,manifest])assert(!source.includes("https://slashpromo.com"));
 console.log("PASS standalone medical study app navigation");
+
+assert(strings.includes(">Slashview<"));assert(library.includes("brandHeader()"));assert(library.includes("Read. Learn. Explore."));assert(updater.includes("Slashview • App updates"));

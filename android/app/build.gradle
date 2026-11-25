@@ -10,8 +10,8 @@ android {
         applicationId 'com.slashpromo.app'
         minSdk 24
         targetSdk 35
-        versionCode 18
-        versionName '0.7.0'
+        versionCode 19
+        versionName '0.7.1'
     }
 
     // Stable signing is opt-in and must use a securely provisioned keystore.
@@ -43,7 +43,7 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-debug'
-            resValue 'string', 'app_name', 'SlashPromo Library Test'
+            resValue 'string', 'app_name', 'Slashview Test'
         }
     }
 
