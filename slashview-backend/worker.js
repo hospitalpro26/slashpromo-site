@@ -18,6 +18,23 @@ export default {async fetch(req,env){
   const path=new URL(req.url).pathname;
   if(!env.DB)return json({error:"Service unavailable"},503);
   const ip=req.headers.get("CF-Connecting-IP")||"unknown";
+  // Operator-only approval API. Secret provisioned out of band; never bundled in APK.
+  if(path==="/v1/admin/accounts"||path==="/v1/admin/approve"){
+   if(!env.ADMIN_TOKEN||env.ADMIN_TOKEN.length<32||!equal(req.headers.get("Authorization")||"","Bearer "+env.ADMIN_TOKEN))return json({error:"Unauthorized"},401);
+   if(path.endsWith("/accounts")&&req.method==="GET"){
+    const rows=await env.DB.prepare("SELECT id,name,email,status,email_verified_at,approved_at,trial_until,paid_until FROM accounts ORDER BY created_at DESC LIMIT 100").all();
+    return json({accounts:rows.results});
+   }
+   if(path.endsWith("/approve")&&req.method==="POST"){
+    const raw=await req.text();if(raw.length>1024)return json({error:"Request too large"},413);
+    let input;try{input=JSON.parse(raw)}catch{return json({error:"Invalid request"},400)}
+    if(typeof input?.id!=="string"||!/^[a-f0-9]{32}$/.test(input.id))return json({error:"Invalid account"},400);
+    const now=new Date(), end=new Date(now);const day=end.getUTCDate();end.setUTCDate(1);end.setUTCMonth(end.getUTCMonth()+3);const last=new Date(Date.UTC(end.getUTCFullYear(),end.getUTCMonth()+1,0)).getUTCDate();end.setUTCDate(Math.min(day,last));
+    const result=await env.DB.prepare("UPDATE accounts SET status='approved',approved_at=?,trial_until=? WHERE id=? AND status='pending' AND email_verified_at IS NOT NULL").bind(now.toISOString(),end.toISOString(),input.id).run();
+    return result.meta.changes===1?json({message:"Approved",trial_until:end.toISOString()}):json({error:"Account not pending or email not verified"},409);
+   }
+   return json({error:"Not found"},404);
+  }
   if(req.method==="POST" && ["/v1/register","/v1/login"].includes(path)){
    if(await limited(env.DB,"ip:"+ip,20,900))return json({error:"Try again later"},429);
    if(!req.headers.get("Content-Type")?.startsWith("application/json"))return json({error:"JSON required"},415);
