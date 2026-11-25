@@ -59,8 +59,8 @@ for(const marker of ["getDocumentOutline()","findDestinationPage(doc)","getFirst
 console.log("PASS offline chapter navigation structural checks");
 
 for(const marker of ['pageKey("highlights",currentPage)',"transform.invert(inverse)","saveHighlights()","studyNote(number)","savedNotes","rememberPage(number)","SYSTEM_UI_FLAG_IMMERSIVE_STICKY","Exit full screen","Main chapters only","activeChapter(all,currentPage)"])assert(library.includes(marker),marker);
-assert(app.includes("versionName '0.4.1'"));
-assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 14);
+assert(app.includes("versionName '0.6.0'"));
+assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 15);
 console.log("PASS Smart Study Reader structural safeguards");
 
 for(const marker of ["private void revisionHub()","Search saved notes or page number","All saved pages","key(\"highlights.\")","this::revisionHub"])assert(library.includes(marker),marker);
@@ -68,3 +68,8 @@ console.log("PASS revision centre structural checks");
 
 for(const marker of ["No saved revision pages yet","No matching revision pages","pages.removeIf(p->p<0)"])assert(library.includes(marker),marker);
 console.log("PASS revision centre stability structural checks");
+
+for(const marker of ["setPageLimit(50)","SCANNER_MODE_FULL","getStartScanIntent(this)","scanned.getPdf().getUri()","recognizePage(pending,p-1,recognizer)","ocrPages<100","Image-only PDF","Rename selected book","final File source=book","Last reading position"])assert(library.includes(marker),marker);
+assert(app.includes("com.google.mlkit:text-recognition:16.0.1"));
+assert(app.includes("play-services-mlkit-document-scanner:16.0.0"));
+console.log("PASS cumulative reader and local scanner structural checks");
