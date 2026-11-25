@@ -1,0 +1,7 @@
+name = "slashview-auth"
+main = "worker.js"
+compatibility_date = "2026-11-25"
+[[d1_databases]]
+binding = "DB"
+database_name = "slashview-auth"
+database_id = "REPLACE_WITH_DEDICATED_DATABASE_ID"
