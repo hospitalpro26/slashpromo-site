@@ -17,6 +17,24 @@ function entitlement(account, now=Date.now()) {
  const active = value => typeof value === "string" && Number.isFinite(Date.parse(value)) && Date.parse(value)>now;
  return active(account.paid_until) ? "paid" : active(account.trial_until) ? "trial" : "expired";
 }
+async function readJson(req,max=4096){
+ if(!req.headers.get("Content-Type")?.startsWith("application/json"))return null;
+ const reader=req.body?.getReader();if(!reader)return null;
+ let size=0, chunks=[];try{while(true){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>max){await reader.cancel();return null}chunks.push(value)}}finally{reader.releaseLock()}
+ const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length}
+ try{return JSON.parse(new TextDecoder().decode(bytes))}catch{return null}
+}
+async function sendCode(env,email,code,purpose){
+ // Optional service binding to a separately provisioned transactional mail Worker.
+ if(!env.MAILER)throw Error("Mail delivery unavailable");
+ const response=await env.MAILER.fetch("https://mailer.internal/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email,code,purpose})});
+ if(!response.ok)throw Error("Mail delivery unavailable");
+}
+async function issueCode(env,account,purpose){
+ const code=random(32), hash=await digest(code), expires=Math.floor(Date.now()/1000)+1800;
+ await env.DB.prepare("INSERT INTO account_tokens(account_id,purpose,token_hash,expires_at) VALUES (?,?,?,?) ON CONFLICT(account_id,purpose) DO UPDATE SET token_hash=excluded.token_hash,expires_at=excluded.expires_at").bind(account.id,purpose,hash,expires).run();
+ try{await sendCode(env,account.email,code,purpose)}catch(e){await env.DB.prepare("DELETE FROM account_tokens WHERE token_hash=?").bind(hash).run();throw e}
+}
 export default {async fetch(req,env){
  try {
   const path=new URL(req.url).pathname;
@@ -27,8 +45,41 @@ export default {async fetch(req,env){
   }
   if(env.AUTH_ENABLED!=="true")return json({error:"Authentication not enabled"},503);
   const ip=req.headers.get("CF-Connecting-IP")||"unknown";
+  if(req.method==="POST" && ["/v1/verification/request","/v1/verification/confirm","/v1/recovery/request","/v1/recovery/confirm"].includes(path)){
+   if(await limited(env.DB,"mail-ip:"+ip,15,900))return json({error:"Try again later"},429);
+   const input=await readJson(req);if(!input)return json({error:"Invalid request"},400);
+   const purpose=path.includes("/verification/")?"verify":"reset";
+   const now=Math.floor(Date.now()/1000);
+   if(path.endsWith("/request")){
+    if(!env.MAILER)return json({error:"Email service unavailable"},503);
+    const email=typeof input.email==="string"?input.email.trim().toLowerCase():"";
+    if(email.length>254||!/^\S+@\S+\.\S+$/.test(email))return json({error:"Invalid email"},400);
+    if(await limited(env.DB,"mail:"+purpose+":"+email,3,3600))return json({error:"Try again later"},429);
+    const account=await env.DB.prepare("SELECT id,email,email_verified_at,status FROM accounts WHERE email=?").bind(email).first();
+    if(account && (purpose==="verify"?!account.email_verified_at:!!account.email_verified_at) && !["rejected","suspended"].includes(account.status)){
+     try{await issueCode(env,account,purpose)}catch{/* generic response prevents disclosure of account existence */}
+    }
+    return json({message:"If eligible, an email will be sent."},202);
+   }
+   if(typeof input.code!=="string"||!/^[a-f0-9]{64}$/.test(input.code))return json({error:"Invalid or expired code"},400);
+   const hash=await digest(input.code);
+   if(purpose==="verify"){
+    const result=await env.DB.prepare("UPDATE accounts SET email_verified_at=? WHERE email_verified_at IS NULL AND id=(SELECT account_id FROM account_tokens WHERE token_hash=? AND purpose='verify' AND expires_at>?)").bind(new Date().toISOString(),hash,now).run();
+    await env.DB.prepare("DELETE FROM account_tokens WHERE token_hash=? AND purpose='verify'").bind(hash).run();
+    return result.meta.changes===1?json({message:"Email verified; approval required"}):json({error:"Invalid or expired code"},400);
+   }
+   if(typeof input.password!=="string"||input.password.length<12||input.password.length>128)return json({error:"Password must be 12–128 characters"},400);
+   const salt=random(32),password=await passwordHash(input.password,salt);
+   const results=await env.DB.batch([
+    env.DB.prepare("DELETE FROM sessions WHERE account_id=(SELECT account_id FROM account_tokens WHERE token_hash=? AND purpose='reset' AND expires_at>?)").bind(hash,now),
+    env.DB.prepare("UPDATE accounts SET password_hash=?,salt=? WHERE id=(SELECT account_id FROM account_tokens WHERE token_hash=? AND purpose='reset' AND expires_at>?) AND email_verified_at IS NOT NULL").bind(password,salt,hash,now),
+    env.DB.prepare("DELETE FROM account_tokens WHERE token_hash=? AND purpose='reset'").bind(hash)
+   ]);
+   return results[1].meta.changes===1?json({message:"Password reset; sign in again"}):json({error:"Invalid or expired code"},400);
+  }
   // Operator-only approval API. Secret provisioned out of band; never bundled in APK.
-  if(path==="/v1/admin/accounts"||path==="/v1/admin/approve"){
+  if(path.startsWith("/v1/admin/")){
+   if(env.REVIEW_ADMIN_ENABLED!=="true")return json({error:"Admin access unavailable"},503);
    if(!env.ADMIN_TOKEN||env.ADMIN_TOKEN.length<32||!equal(req.headers.get("Authorization")||"","Bearer "+env.ADMIN_TOKEN))return json({error:"Unauthorized"},401);
    if(path.endsWith("/accounts")&&req.method==="GET"){
     const rows=await env.DB.prepare("SELECT id,name,email,status,email_verified_at,approved_at,trial_until,paid_until FROM accounts ORDER BY created_at DESC LIMIT 100").all();
@@ -41,6 +92,16 @@ export default {async fetch(req,env){
     const now=new Date(), end=new Date(now);const day=end.getUTCDate();end.setUTCDate(1);end.setUTCMonth(end.getUTCMonth()+3);const last=new Date(Date.UTC(end.getUTCFullYear(),end.getUTCMonth()+1,0)).getUTCDate();end.setUTCDate(Math.min(day,last));
     const result=await env.DB.prepare("UPDATE accounts SET status='approved',approved_at=?,trial_until=? WHERE id=? AND status='pending' AND email_verified_at IS NOT NULL").bind(now.toISOString(),end.toISOString(),input.id).run();
     return result.meta.changes===1?json({message:"Approved",trial_until:end.toISOString()}):json({error:"Account not pending or email not verified"},409);
+   }
+   if(path==="/v1/admin/status"&&req.method==="POST"){
+    const input=await readJson(req,1024);
+    if(!input||typeof input.id!=="string"||!/^[a-f0-9]{32}$/.test(input.id)||!["suspended","rejected"].includes(input.status))return json({error:"Invalid request"},400);
+    const results=await env.DB.batch([
+     env.DB.prepare("UPDATE accounts SET status=? WHERE id=? AND status IN ('pending','approved')").bind(input.status,input.id),
+     env.DB.prepare("DELETE FROM sessions WHERE account_id=?").bind(input.id),
+     env.DB.prepare("DELETE FROM account_tokens WHERE account_id=?").bind(input.id)
+    ]);
+    return results[0].meta.changes===1?json({message:"Account access revoked"}):json({error:"Account not eligible"},409);
    }
    return json({error:"Not found"},404);
   }
