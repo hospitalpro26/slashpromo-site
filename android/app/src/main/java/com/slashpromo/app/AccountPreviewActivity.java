@@ -13,6 +13,8 @@ public class AccountPreviewActivity extends Activity {
  private AccountClient client;
  private final ExecutorService worker=Executors.newSingleThreadExecutor();
  private int generation=0;
+ private static final String GOOGLE_CLIENT_ID=""; // public web OAuth client ID, provision before enabling
+ private android.os.CancellationSignal googleCancel;
  private int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
  private void label(String s,int size){TextView t=new TextView(this);t.setText(s);t.setTextSize(size);body.addView(t);}
  private EditText field(String hint,int type){EditText e=new EditText(this);e.setHint(hint);e.setInputType(type);e.setSaveEnabled(false);e.setImportantForAutofill(android.view.View.IMPORTANT_FOR_AUTOFILL_NO);body.addView(e);return e;}
@@ -26,7 +28,7 @@ public class AccountPreviewActivity extends Activity {
    try{
     String token=authenticated?client.session():"";
     AccountClient.Result r=client.request(path,payload,token);
-    if(r.ok()&&path.equals("/v1/login")){client.saveSession(r.body.getString("token"));message="Signed in. Open Membership to check your status.";}
+    if(r.ok()&&(path.equals("/v1/login")||path.equals("/v1/google/login"))&&r.body.has("token")){client.saveSession(r.body.getString("token"));message="Signed in. Open Membership to check your status.";}
     else if(r.ok()&&path.equals("/v1/me")){JSONObject a=r.body.getJSONObject("account");message="Membership: "+r.body.optString("membership")+"\nTrial ends: "+a.optString("trial_until")+"\nPaid until: "+a.optString("paid_until");}
     else if(r.ok()&&path.equals("/v1/logout")){client.clearSession();message="Signed out.";}
     else{if(authenticated&&r.status==401)client.clearSession();message=r.body.optString(r.ok()?"message":"error",r.ok()?"Request completed":"Request failed");}
@@ -59,10 +61,43 @@ public class AccountPreviewActivity extends Activity {
   }else{
    EditText email=field("Email address",emailType),password=field("Password",passType);
    Button b=button("Sign in",()->{});b.setEnabled(AccountClient.ENABLED);b.setOnClickListener(v->{call(b,status,"/v1/login",data("email",value(email),"password",value(password),"deviceId",client.deviceId()),false);password.setText("");});
-   Button google=button("Continue with Google (setup pending)",()->{});google.setEnabled(false);
+   Button google=button("Continue with Google",()->{});google.setEnabled(AccountClient.ENABLED&&!GOOGLE_CLIENT_ID.isEmpty());google.setOnClickListener(v->googleSignIn(google,status));
   }
   body.addView(status);button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Verify email",()->screen("Verify email"));button("Forgot password",()->screen("Reset password"));button("Membership",()->screen("Membership"));button("Help & Support",()->startActivity(new android.content.Intent(this,SupportActivity.class)));button("Return to library",this::finish);
  }
+ private void googleSignIn(Button button,TextView status){
+  if(!AccountClient.ENABLED||GOOGLE_CLIENT_ID.isEmpty())return;
+  new android.app.AlertDialog.Builder(this).setTitle("Google account and membership")
+   .setMessage("Review the published Terms of Service and Privacy Policy before continuing. New accounts require approval, then three free calendar months and USD $1 monthly manual renewal. No automatic charges. Accept all three to continue.")
+   .setNegativeButton("Cancel",null).setPositiveButton("Accept and continue",(dialog,which)->{
+    button.setEnabled(false);int version=generation;status.setText("Connecting…");
+    worker.execute(()->{try{
+     AccountClient.Result r=client.request("/v1/google/nonce",data(),"");
+     if(!r.ok())throw new Exception();String nonce=r.body.getString("nonce");
+     runOnUiThread(()->{if(isDestroyed()||isFinishing()||generation!=version)return;
+      try{
+       googleCancel=new android.os.CancellationSignal();
+       com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption option=new com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(GOOGLE_CLIENT_ID).setNonce(nonce).build();
+       androidx.credentials.GetCredentialRequest request=new androidx.credentials.GetCredentialRequest.Builder().addCredentialOption(option).build();
+       androidx.credentials.CredentialManager.create(this).getCredentialAsync(this,request,googleCancel,getMainExecutorCompat(),new androidx.credentials.CredentialManagerCallback<androidx.credentials.GetCredentialResponse,androidx.credentials.exceptions.GetCredentialException>(){
+        public void onResult(androidx.credentials.GetCredentialResponse response){
+         if(isDestroyed()||isFinishing()||generation!=version)return;
+         try{androidx.credentials.Credential credential=response.getCredential();
+          if(!(credential instanceof androidx.credentials.CustomCredential))throw new Exception();
+          String type=credential.getType();
+          if(!com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(type))throw new Exception();
+          String idToken=com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.createFrom(credential.getData()).getIdToken();
+          call(button,status,"/v1/google/login",data("idToken",idToken,"deviceId",client.deviceId(),"termsAccepted",true,"privacyAcknowledged",true,"pricingAccepted",true,"policyVersion","review-1"),false);
+         }catch(Exception e){status.setText("Google credential unavailable.");button.setEnabled(true);}
+        }
+        public void onError(androidx.credentials.exceptions.GetCredentialException error){if(!isDestroyed()&&generation==version){status.setText("Google sign-in cancelled or unavailable.");button.setEnabled(true);}}
+       });
+      }catch(Exception e){status.setText("Google sign-in unavailable.");button.setEnabled(true);}
+     });
+    }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==version){status.setText("Google sign-in unavailable.");button.setEnabled(true);}});}});
+   }).show();
+ }
+ private java.util.concurrent.Executor getMainExecutorCompat(){return command->runOnUiThread(command);}
  @Override public void onCreate(Bundle b){super.onCreate(b);client=new AccountClient(this);getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);screen("Sign in");}
- @Override protected void onDestroy(){generation++;worker.shutdown();super.onDestroy();}
+ @Override protected void onDestroy(){generation++;if(googleCancel!=null)googleCancel.cancel();worker.shutdown();super.onDestroy();}
 }
