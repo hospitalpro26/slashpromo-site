@@ -18,6 +18,7 @@ public class AccountPreviewActivity extends Activity {
  field("Email address",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
  if(!mode.equals("Reset password"))field("Password",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
  if(mode.equals("Register")){field("Confirm password",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);label("Administrator approval and email verification required. Three-month trial starts after approval.",16);}
+ if(mode.equals("Register")){label("Privacy and subscription consent (preview)",18);for(String s:new String[]{"I accept the Terms of Service","I acknowledge the Privacy Policy","I understand the three-month trial and $1 monthly renewal; no automatic payment"}){CheckBox c=new CheckBox(this);c.setText(s);c.setChecked(false);c.setSaveEnabled(false);body.addView(c);}}
  Button submit=new Button(this);submit.setText("Unavailable in preview");submit.setEnabled(false);body.addView(submit);
  Button google=new Button(this);google.setText("Continue with Google (setup pending)");google.setAllCaps(false);google.setEnabled(false);body.addView(google);
  button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Forgot password",()->screen("Reset password"));button("Help & Support",()->startActivity(new android.content.Intent(this,SupportActivity.class)));button("Return to library",this::finish);
