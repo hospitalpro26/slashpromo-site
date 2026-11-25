@@ -1,0 +1,57 @@
+const encoder = new TextEncoder();
+const hex = bytes => Array.from(new Uint8Array(bytes), b => b.toString(16).padStart(2,"0")).join("");
+const random = n => hex(crypto.getRandomValues(new Uint8Array(n)));
+const digest = async s => hex(await crypto.subtle.digest("SHA-256", encoder.encode(s)));
+async function passwordHash(password,salt) {
+ const key=await crypto.subtle.importKey("raw",encoder.encode(password),"PBKDF2",false,["deriveBits"]);
+ return hex(await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt:encoder.encode(salt),iterations:600000},key,256));
+}
+function equal(a,b) { if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0; }
+const json=(body,status=200)=>Response.json(body,{status,headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
+async function limited(db,key,max,window) {
+ const now=Math.floor(Date.now()/1000),bucket=await digest(key+":"+Math.floor(now/window));
+ const row=await db.prepare("INSERT INTO rate_limits(bucket,hits,expires_at) VALUES (?,1,?) ON CONFLICT(bucket) DO UPDATE SET hits=hits+1 RETURNING hits").bind(bucket,now+window).first();
+ return row.hits>max;
+}
+export default {async fetch(req,env){
+ try {
+  const path=new URL(req.url).pathname;
+  if(!env.DB)return json({error:"Service unavailable"},503);
+  const ip=req.headers.get("CF-Connecting-IP")||"unknown";
+  if(req.method==="POST" && ["/v1/register","/v1/login"].includes(path)){
+   if(await limited(env.DB,"ip:"+ip,20,900))return json({error:"Try again later"},429);
+   if(!req.headers.get("Content-Type")?.startsWith("application/json"))return json({error:"JSON required"},415);
+   const raw=await req.text();if(raw.length>4096)return json({error:"Request too large"},413);
+   let input;try{input=JSON.parse(raw)}catch{return json({error:"Invalid request"},400)}
+   const email=typeof input?.email==="string"?input.email.trim().toLowerCase():"";
+   const pass=input?.password;
+   if(email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||typeof pass!=="string"||pass.length<12||pass.length>128)return json({error:"Valid email and password of 12–128 characters required"},400);
+   if(await limited(env.DB,"email:"+email,8,900))return json({error:"Try again later"},429);
+   if(path==="/v1/register"){
+    const name=typeof input.name==="string"?input.name.trim():"";
+    if(!name||name.length>100)return json({error:"Valid name required"},400);
+    const salt=random(32), hash=await passwordHash(pass,salt);
+    await env.DB.prepare("INSERT INTO accounts(id,email,name,password_hash,salt) VALUES (?,?,?,?,?) ON CONFLICT(email) DO NOTHING").bind(random(16),email,name,hash,salt).run();
+    return json({message:"Registration request received. Account approval and verification are required."},202);
+   }
+   const account=await env.DB.prepare("SELECT * FROM accounts WHERE email=?").bind(email).first();
+   const hash=await passwordHash(pass,account?.salt||"0".repeat(64));
+   if(!account||!equal(hash,account.password_hash))return json({error:"Invalid credentials"},401);
+   if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval and email verification required"},403);
+   const token=random(32), expires=Math.floor(Date.now()/1000)+86400;
+   await env.DB.prepare("INSERT INTO sessions(token_hash,account_id,expires_at) VALUES (?,?,?)").bind(await digest(token),account.id,expires).run();
+   return json({token,expires_at:expires});
+  }
+  if(["/v1/me","/v1/logout"].includes(path)){
+   const auth=req.headers.get("Authorization")||"";
+   if(!/^Bearer [a-f0-9]{64}$/.test(auth))return json({error:"Unauthorized"},401);
+   const hash=await digest(auth.slice(7));
+   if(path==="/v1/logout"&&req.method==="POST"){await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(hash).run();return json({message:"Signed out"});}
+   if(path!=="/v1/me"||req.method!=="GET")return json({error:"Not found"},404);
+   const account=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.trial_until,a.paid_until FROM accounts a JOIN sessions s ON s.account_id=a.id WHERE s.token_hash=? AND s.expires_at>?").bind(hash,Math.floor(Date.now()/1000)).first();
+   if(!account||account.status!=="approved"||!account.email_verified_at)return json({error:"Unauthorized"},401);
+   return json({account});
+  }
+  return json({error:"Not found"},404);
+ }catch{return json({error:"Service unavailable"},503)}
+}};
