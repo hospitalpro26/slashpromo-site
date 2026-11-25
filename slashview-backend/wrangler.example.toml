@@ -1,7 +1,13 @@
-name = "slashview-auth"
+name = "slashview-api"
 main = "worker.js"
 compatibility_date = "2026-11-25"
 [[d1_databases]]
 binding = "DB"
 database_name = "slashview-auth"
 database_id = "REPLACE_WITH_DEDICATED_DATABASE_ID"
+
+[vars]
+AUTH_ENABLED = "false"
+REGISTRATION_ENABLED = "false"
+REVIEW_ADMIN_ENABLED = "false"
+# MAILER service binding must be provisioned separately before testing delivery.
