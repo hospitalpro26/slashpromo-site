@@ -13,7 +13,7 @@ REVIEW_ADMIN_ENABLED = "false"
 # MAILER service binding must be provisioned separately before testing delivery.
 
 GOOGLE_ENABLED = "false"
-GOOGLE_CLIENT_ID = ""
+GOOGLE_CLIENT_ID = "166627999058-jhqsuk4urhlalnlcrhh98djdoh0lui5l.apps.googleusercontent.com"
 
 ACCESS_TEAM_DOMAIN = ""
 ACCESS_AUD = ""
