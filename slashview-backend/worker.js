@@ -45,10 +45,12 @@ export default {async fetch(req,env){
    if(email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||typeof pass!=="string"||pass.length<12||pass.length>128)return json({error:"Valid email and password of 12–128 characters required"},400);
    if(await limited(env.DB,"email:"+email,8,900))return json({error:"Try again later"},429);
    if(path==="/v1/register"){
+    if(env.REGISTRATION_ENABLED!=="true")return json({error:"Registration not enabled"},503);
+    if(input.termsAccepted!==true||input.privacyAcknowledged!==true||input.pricingAccepted!==true||input.policyVersion!=="review-1")return json({error:"Current terms, privacy and pricing acceptance required"},400);
     const name=typeof input.name==="string"?input.name.trim():"";
     if(!name||name.length>100)return json({error:"Valid name required"},400);
     const salt=random(32), hash=await passwordHash(pass,salt);
-    await env.DB.prepare("INSERT INTO accounts(id,email,name,password_hash,salt) VALUES (?,?,?,?,?) ON CONFLICT(email) DO NOTHING").bind(random(16),email,name,hash,salt).run();
+    await env.DB.prepare("INSERT INTO accounts(id,email,name,password_hash,salt,terms_version,privacy_version,pricing_version,consent_at) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(email) DO NOTHING").bind(random(16),email,name,hash,salt,"review-1","review-1","review-1",new Date().toISOString()).run();
     return json({message:"Registration request received. Account approval and verification are required."},202);
    }
    const account=await env.DB.prepare("SELECT * FROM accounts WHERE email=?").bind(email).first();
