@@ -382,7 +382,7 @@ public final class LibraryActivity extends Activity {
         word.setSpan(new android.text.style.ForegroundColorSpan(0xff0038c8),0,5,0);word.setSpan(new android.text.style.ForegroundColorSpan(0xffed001c),5,9,0);brand.setText(word);body.addView(brand);
         TextView tagline=label("Read. Learn. Explore.",16);tagline.setGravity(Gravity.CENTER);body.addView(tagline);
     }
-    private void home(){generation++;layout();brandHeader();button("Check for updates",()->startActivity(new Intent(this,UpdateActivity.class)));body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
+    private void home(){generation++;layout();brandHeader();if(BuildConfig.DEBUG)button("Account screens (preview)",()->startActivity(new Intent(this,AccountPreviewActivity.class)));button("Check for updates",()->startActivity(new Intent(this,UpdateActivity.class)));body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
         if(busy){status.setText("Preparing library…");return;}
         boolean ready=book.isFile()&&index.isFile();
         libraryOverview();
