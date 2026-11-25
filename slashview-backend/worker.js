@@ -85,13 +85,26 @@ export default {async fetch(req,env){
     const rows=await env.DB.prepare("SELECT id,name,email,status,email_verified_at,approved_at,trial_until,paid_until FROM accounts ORDER BY created_at DESC LIMIT 100").all();
     return json({accounts:rows.results});
    }
-   if(path.endsWith("/approve")&&req.method==="POST"){
-    const raw=await req.text();if(raw.length>1024)return json({error:"Request too large"},413);
-    let input;try{input=JSON.parse(raw)}catch{return json({error:"Invalid request"},400)}
+   if(path==="/v1/admin/approve"&&req.method==="POST"){
+    const input=await readJson(req,1024);
     if(typeof input?.id!=="string"||!/^[a-f0-9]{32}$/.test(input.id))return json({error:"Invalid account"},400);
     const now=new Date(), end=new Date(now);const day=end.getUTCDate();end.setUTCDate(1);end.setUTCMonth(end.getUTCMonth()+3);const last=new Date(Date.UTC(end.getUTCFullYear(),end.getUTCMonth()+1,0)).getUTCDate();end.setUTCDate(Math.min(day,last));
     const result=await env.DB.prepare("UPDATE accounts SET status='approved',approved_at=?,trial_until=? WHERE id=? AND status='pending' AND email_verified_at IS NOT NULL").bind(now.toISOString(),end.toISOString(),input.id).run();
     return result.meta.changes===1?json({message:"Approved",trial_until:end.toISOString()}):json({error:"Account not pending or email not verified"},409);
+   }
+   if(path==="/v1/admin/renew"&&req.method==="POST"){
+    const input=await readJson(req,1024);
+    if(!input||typeof input.id!=="string"||!/^[a-f0-9]{32}$/.test(input.id)||typeof input.reference!=="string"||!/^[A-Za-z0-9_-]{8,100}$/.test(input.reference))return json({error:"Invalid payment reference or account"},400);
+    const account=await env.DB.prepare("SELECT id,paid_until,trial_until FROM accounts WHERE id=? AND status='approved' AND email_verified_at IS NOT NULL").bind(input.id).first();
+    if(!account)return json({error:"Account not eligible"},409);
+    const now=new Date(), end=new Date(Math.max(now.getTime(),Date.parse(account.paid_until)||0,Date.parse(account.trial_until)||0));
+    const day=end.getUTCDate();end.setUTCDate(1);end.setUTCMonth(end.getUTCMonth()+1);end.setUTCDate(Math.min(day,new Date(Date.UTC(end.getUTCFullYear(),end.getUTCMonth()+1,0)).getUTCDate()));
+    const expiry=end.toISOString();
+    const results=await env.DB.batch([
+     env.DB.prepare("INSERT INTO manual_payments(reference,account_id,amount_cents,currency,recorded_at,paid_until) SELECT ?,id,100,'USD',?,? FROM accounts WHERE id=? AND status='approved' AND paid_until IS ? AND trial_until IS ?").bind(input.reference,now.toISOString(),expiry,input.id,account.paid_until,account.trial_until),
+     env.DB.prepare("UPDATE accounts SET paid_until=? WHERE id=? AND status='approved' AND EXISTS(SELECT 1 FROM manual_payments WHERE reference=? AND account_id=? AND paid_until=?) AND paid_until IS ? AND trial_until IS ?").bind(expiry,input.id,input.reference,input.id,expiry,account.paid_until,account.trial_until)
+    ]);
+    return results[1].meta.changes===1?json({message:"Manual payment recorded",paid_until:expiry}):json({error:"Account changed; reload and retry"},409);
    }
    if(path==="/v1/admin/status"&&req.method==="POST"){
     const input=await readJson(req,1024);
@@ -116,6 +129,7 @@ export default {async fetch(req,env){
    if(await limited(env.DB,"email:"+email,8,900))return json({error:"Try again later"},429);
    if(path==="/v1/register"){
     if(env.REGISTRATION_ENABLED!=="true")return json({error:"Registration not enabled"},503);
+    if(!env.MAILER)return json({error:"Email service unavailable"},503);
     if(input.termsAccepted!==true||input.privacyAcknowledged!==true||input.pricingAccepted!==true||input.policyVersion!=="review-1")return json({error:"Current terms, privacy and pricing acceptance required"},400);
     const name=typeof input.name==="string"?input.name.trim():"";
     if(!name||name.length>100)return json({error:"Valid name required"},400);
