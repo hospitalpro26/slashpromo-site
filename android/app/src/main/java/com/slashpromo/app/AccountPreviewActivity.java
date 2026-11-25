@@ -20,7 +20,7 @@ public class AccountPreviewActivity extends Activity {
  if(mode.equals("Register")){field("Confirm password",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);label("Administrator approval and email verification required. Three-month trial starts after approval.",16);}
  Button submit=new Button(this);submit.setText("Unavailable in preview");submit.setEnabled(false);body.addView(submit);
  Button google=new Button(this);google.setText("Continue with Google (setup pending)");google.setAllCaps(false);google.setEnabled(false);body.addView(google);
- button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Forgot password",()->screen("Reset password"));button("Return to library",this::finish);
+ button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Forgot password",()->screen("Reset password"));button("Help & Support",()->startActivity(new android.content.Intent(this,SupportActivity.class)));button("Return to library",this::finish);
  }
  @Override public void onCreate(Bundle b){super.onCreate(b);getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);screen("Sign in");}
 }
