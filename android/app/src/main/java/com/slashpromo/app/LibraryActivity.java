@@ -375,7 +375,14 @@ public final class LibraryActivity extends Activity {
     }
     private void releaseBitmap(){if(displayedBitmap!=null){displayedBitmap=null;}}
     private void layout(){setFullscreen(false);releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
-    private void home(){generation++;layout();button("Check for updates",()->startActivity(new Intent(this,UpdateActivity.class)));body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
+    private void brandHeader(){
+        ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);logo.setContentDescription("Slashview open book logo");body.addView(logo,new LinearLayout.LayoutParams(-1,dp(96)));
+        TextView brand=label("Slashview",32);brand.setGravity(Gravity.CENTER);brand.setTypeface(null,android.graphics.Typeface.BOLD);
+        android.text.SpannableString word=new android.text.SpannableString("Slashview");
+        word.setSpan(new android.text.style.ForegroundColorSpan(0xff0038c8),0,5,0);word.setSpan(new android.text.style.ForegroundColorSpan(0xffed001c),5,9,0);brand.setText(word);body.addView(brand);
+        TextView tagline=label("Read. Learn. Explore.",16);tagline.setGravity(Gravity.CENTER);body.addView(tagline);
+    }
+    private void home(){generation++;layout();brandHeader();button("Check for updates",()->startActivity(new Intent(this,UpdateActivity.class)));body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
         if(busy){status.setText("Preparing library…");return;}
         boolean ready=book.isFile()&&index.isFile();
         libraryOverview();
