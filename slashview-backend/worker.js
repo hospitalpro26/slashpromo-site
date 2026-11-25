@@ -18,6 +18,17 @@ function entitlement(account, now=Date.now()) {
  const active = value => typeof value === "string" && Number.isFinite(Date.parse(value)) && Date.parse(value)>now;
  return active(account.paid_until) ? "paid" : active(account.trial_until) ? "trial" : "expired";
 }
+async function createSession(env,account,deviceId){
+ if(typeof deviceId!=="string"||!/^[a-f0-9]{64}$/.test(deviceId))return json({error:"Installation identifier required"},400);
+ const device=await digest(deviceId), token=random(32), hash=await digest(token), expires=Math.floor(Date.now()/1000)+86400;
+ const results=await env.DB.batch([
+  env.DB.prepare("INSERT INTO devices(account_id,device_hash,created_at) SELECT ?,?,? WHERE EXISTS(SELECT 1 FROM accounts WHERE id=? AND status='approved') AND ((SELECT COUNT(*) FROM devices WHERE account_id=?)<2 OR EXISTS(SELECT 1 FROM devices WHERE account_id=? AND device_hash=?)) ON CONFLICT(account_id,device_hash) DO NOTHING").bind(account.id,device,new Date().toISOString(),account.id,account.id,account.id,device),
+  env.DB.prepare("DELETE FROM sessions WHERE account_id=? AND device_hash=?").bind(account.id,device),
+  env.DB.prepare("INSERT INTO sessions(token_hash,account_id,expires_at,device_hash) SELECT ?,?,?,? WHERE EXISTS(SELECT 1 FROM devices WHERE account_id=? AND device_hash=?) AND EXISTS(SELECT 1 FROM accounts WHERE id=? AND status='approved' AND email_verified_at IS NOT NULL)").bind(hash,account.id,expires,device,account.id,device,account.id)
+ ]);
+ if(results[2].meta.changes!==1)return json({error:"Device limit reached or account unavailable"},403);
+ return json({token,expires_at:expires});
+}
 async function readJson(req,max=4096){
  if(!req.headers.get("Content-Type")?.startsWith("application/json"))return null;
  const reader=req.body?.getReader();if(!reader)return null;
@@ -86,9 +97,7 @@ export default {
    }
    if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval required"},403);
    if(entitlement(account)==="expired")return json({error:"Membership expired",membership:"expired"},403);
-   const token=random(32),expires=now+86400;
-   await env.DB.prepare("INSERT INTO sessions(token_hash,account_id,expires_at) VALUES (?,?,?)").bind(await digest(token),account.id,expires).run();
-   return json({token,expires_at:expires});
+   return createSession(env,account,input.deviceId);
   }
   if(req.method==="POST" && ["/v1/verification/request","/v1/verification/confirm","/v1/recovery/request","/v1/recovery/confirm"].includes(path)){
    if(await limited(env.DB,"mail-ip:"+ip,15,900))return json({error:"Try again later"},429);
@@ -151,6 +160,11 @@ export default {
     ]);
     return results[1].meta.changes===1?json({message:"Manual payment recorded",paid_until:expiry}):json({error:"Account changed; reload and retry"},409);
    }
+   if(path==="/v1/admin/devices/reset"&&req.method==="POST"){
+    const input=await readJson(req,1024);if(typeof input?.id!=="string"||!/^[a-f0-9]{32}$/.test(input.id))return json({error:"Invalid account"},400);
+    await env.DB.batch([env.DB.prepare("DELETE FROM sessions WHERE account_id=?").bind(input.id),env.DB.prepare("DELETE FROM devices WHERE account_id=?").bind(input.id)]);
+    return json({message:"Device authorizations reset"});
+   }
    if(path==="/v1/admin/status"&&req.method==="POST"){
     const input=await readJson(req,1024);
     if(!input||typeof input.id!=="string"||!/^[a-f0-9]{32}$/.test(input.id)||!["suspended","rejected"].includes(input.status))return json({error:"Invalid request"},400);
@@ -187,9 +201,7 @@ export default {
    if(!account||!equal(hash,account.password_hash))return json({error:"Invalid credentials"},401);
    if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval and email verification required"},403);
    if(entitlement(account)==="expired")return json({error:"Membership expired",membership:"expired"},403);
-   const token=random(32), expires=Math.floor(Date.now()/1000)+86400;
-   await env.DB.prepare("INSERT INTO sessions(token_hash,account_id,expires_at) VALUES (?,?,?)").bind(await digest(token),account.id,expires).run();
-   return json({token,expires_at:expires});
+   return createSession(env,account,input.deviceId);
   }
   if(["/v1/me","/v1/logout"].includes(path)){
    const auth=req.headers.get("Authorization")||"";
@@ -197,7 +209,7 @@ export default {
    const hash=await digest(auth.slice(7));
    if(path==="/v1/logout"&&req.method==="POST"){await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(hash).run();return json({message:"Signed out"});}
    if(path!=="/v1/me"||req.method!=="GET")return json({error:"Not found"},404);
-   const account=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.trial_until,a.paid_until FROM accounts a JOIN sessions s ON s.account_id=a.id WHERE s.token_hash=? AND s.expires_at>?").bind(hash,Math.floor(Date.now()/1000)).first();
+   const account=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.trial_until,a.paid_until FROM accounts a JOIN sessions s ON s.account_id=a.id WHERE s.token_hash=? AND s.expires_at>? AND EXISTS(SELECT 1 FROM devices d WHERE d.account_id=a.id AND d.device_hash=s.device_hash)").bind(hash,Math.floor(Date.now()/1000)).first();
    if(!account||account.status!=="approved"||!account.email_verified_at)return json({error:"Unauthorized"},401);
    const membership=entitlement(account);
    if(membership==="expired")return json({error:"Membership expired",membership},403);
