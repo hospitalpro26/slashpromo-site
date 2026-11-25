@@ -59,8 +59,8 @@ for(const marker of ["getDocumentOutline()","findDestinationPage(doc)","getFirst
 console.log("PASS offline chapter navigation structural checks");
 
 for(const marker of ['pageKey("highlights",currentPage)',"transform.invert(inverse)","saveHighlights()","studyNote(number)","savedNotes","rememberPage(number)","SYSTEM_UI_FLAG_IMMERSIVE_STICKY","Exit full screen","Main chapters only","activeChapter(all,currentPage)"])assert(library.includes(marker),marker);
-assert(app.includes("versionName '0.6.2'"));
-assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 17);
+assert(app.includes("versionName '0.7.0'"));
+assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 18);
 console.log("PASS Smart Study Reader structural safeguards");
 
 for(const marker of ["private void revisionHub()","Search saved notes or page number","All saved pages","key(\"highlights.\")","this::revisionHub"])assert(library.includes(marker),marker);
@@ -79,3 +79,6 @@ console.log("PASS separate library menu structural checks");
 
 for(const marker of ["availableBooks()","Uploaded books: ","Active book: ","Select book for search","Select book for revision","getDocumentInformation().getTitle()","Change active book","indexed pages • "])assert(library.includes(marker),marker);
 console.log("PASS library inventory and explicit active book selection checks");
+
+for(const marker of ["AI Medical Study Assistant","Find supporting book excerpts","cb.setChecked(false)","allowed.size()<4","Exact text to be sent:","if(!consent.isChecked())","x-goog-api-key","keyInput.setText","maxOutputTokens","setInstanceFollowRedirects(false)","Verify PDF page","No automatic retry"])assert(library.includes(marker),marker);
+console.log("PASS AI study assistant consent and request structural checks");
