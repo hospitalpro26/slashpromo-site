@@ -13,7 +13,7 @@ public class AccountPreviewActivity extends Activity {
  private AccountClient client;
  private final ExecutorService worker=Executors.newSingleThreadExecutor();
  private int generation=0;
- private static final String GOOGLE_CLIENT_ID=""; // public web OAuth client ID, provision before enabling
+ private static final String GOOGLE_CLIENT_ID="166627999058-jhqsuk4urhlalnlcrhh98djdoh0lui5l.apps.googleusercontent.com"; // public web OAuth client ID, provision before enabling
  private android.os.CancellationSignal googleCancel;
  private int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
  private void label(String s,int size){TextView t=new TextView(this);t.setText(s);t.setTextSize(size);body.addView(t);}
