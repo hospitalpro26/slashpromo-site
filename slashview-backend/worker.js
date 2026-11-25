@@ -35,7 +35,16 @@ async function issueCode(env,account,purpose){
  await env.DB.prepare("INSERT INTO account_tokens(account_id,purpose,token_hash,expires_at) VALUES (?,?,?,?) ON CONFLICT(account_id,purpose) DO UPDATE SET token_hash=excluded.token_hash,expires_at=excluded.expires_at").bind(account.id,purpose,hash,expires).run();
  try{await sendCode(env,account.email,code,purpose)}catch(e){await env.DB.prepare("DELETE FROM account_tokens WHERE token_hash=?").bind(hash).run();throw e}
 }
-export default {async fetch(req,env){
+export default {
+ async scheduled(event,env,ctx){
+  const now=Math.floor(Date.now()/1000);
+  await env.DB.batch([
+   env.DB.prepare("DELETE FROM sessions WHERE expires_at<=?").bind(now),
+   env.DB.prepare("DELETE FROM rate_limits WHERE expires_at<=?").bind(now),
+   env.DB.prepare("DELETE FROM account_tokens WHERE expires_at<=?").bind(now)
+  ]);
+ },
+ async fetch(req,env){
  try {
   const path=new URL(req.url).pathname;
   if(!env.DB)return json({error:"Service unavailable"},503);
