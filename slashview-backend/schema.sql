@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS accounts (
  password_hash TEXT NOT NULL, salt TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'pending'
  CHECK(status IN ('pending','approved','rejected','suspended')),
  email_verified_at TEXT, approved_at TEXT, trial_until TEXT, paid_until TEXT,
+ terms_version TEXT NOT NULL, privacy_version TEXT NOT NULL, pricing_version TEXT NOT NULL, consent_at TEXT NOT NULL,
  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE IF NOT EXISTS sessions (
