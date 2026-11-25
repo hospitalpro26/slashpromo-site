@@ -13,10 +13,19 @@ async function limited(db,key,max,window) {
  const row=await db.prepare("INSERT INTO rate_limits(bucket,hits,expires_at) VALUES (?,1,?) ON CONFLICT(bucket) DO UPDATE SET hits=hits+1 RETURNING hits").bind(bucket,now+window).first();
  return row.hits>max;
 }
+function entitlement(account, now=Date.now()) {
+ const active = value => typeof value === "string" && Number.isFinite(Date.parse(value)) && Date.parse(value)>now;
+ return active(account.paid_until) ? "paid" : active(account.trial_until) ? "trial" : "expired";
+}
 export default {async fetch(req,env){
  try {
   const path=new URL(req.url).pathname;
   if(!env.DB)return json({error:"Service unavailable"},503);
+  if(req.method==="GET" && (path==="/" || path==="/health")) {
+   await env.DB.prepare("SELECT 1").first();
+   return json({application:"Slashview",service:"Authentication API",status:"online",database:"connected"});
+  }
+  if(env.AUTH_ENABLED!=="true")return json({error:"Authentication not enabled"},503);
   const ip=req.headers.get("CF-Connecting-IP")||"unknown";
   // Operator-only approval API. Secret provisioned out of band; never bundled in APK.
   if(path==="/v1/admin/accounts"||path==="/v1/admin/approve"){
@@ -57,6 +66,7 @@ export default {async fetch(req,env){
    const hash=await passwordHash(pass,account?.salt||"0".repeat(64));
    if(!account||!equal(hash,account.password_hash))return json({error:"Invalid credentials"},401);
    if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval and email verification required"},403);
+   if(entitlement(account)==="expired")return json({error:"Membership expired",membership:"expired"},403);
    const token=random(32), expires=Math.floor(Date.now()/1000)+86400;
    await env.DB.prepare("INSERT INTO sessions(token_hash,account_id,expires_at) VALUES (?,?,?)").bind(await digest(token),account.id,expires).run();
    return json({token,expires_at:expires});
@@ -69,7 +79,9 @@ export default {async fetch(req,env){
    if(path!=="/v1/me"||req.method!=="GET")return json({error:"Not found"},404);
    const account=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.trial_until,a.paid_until FROM accounts a JOIN sessions s ON s.account_id=a.id WHERE s.token_hash=? AND s.expires_at>?").bind(hash,Math.floor(Date.now()/1000)).first();
    if(!account||account.status!=="approved"||!account.email_verified_at)return json({error:"Unauthorized"},401);
-   return json({account});
+   const membership=entitlement(account);
+   if(membership==="expired")return json({error:"Membership expired",membership},403);
+   return json({account,membership});
   }
   return json({error:"Not found"},404);
  }catch{return json({error:"Service unavailable"},503)}
