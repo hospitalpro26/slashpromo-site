@@ -52,6 +52,7 @@ public final class LibraryActivity extends Activity {
     private void revisionHub(){
         final String id=bookId;final String prefix=key("highlights.");
         java.util.TreeSet<Integer> pages=new java.util.TreeSet<>(bookmarks());
+        pages.removeIf(p->p<0);
         java.util.Set<Integer> marked=new java.util.HashSet<>(),noted=new java.util.HashSet<>();
         for(java.util.Map.Entry<String,?> e:prefs().getAll().entrySet()){
             if(!(e.getValue() instanceof String))continue;
@@ -67,7 +68,8 @@ public final class LibraryActivity extends Activity {
         panel.addView(label(all.size()+" revision pages • "+marked.size()+" highlighted • "+noted.size()+" with notes",15));
         EditText filter=new EditText(this);filter.setHint("Search saved notes or page number");filter.setSingleLine(true);panel.addView(filter);
         Spinner mode=new Spinner(this);mode.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"All saved pages","Highlights","Notes","Bookmarks"}));panel.addView(mode);
-        ListView list=new ListView(this);panel.addView(list,new LinearLayout.LayoutParams(-1,dp(320)));
+        TextView empty=label("",14);panel.addView(empty);
+        ListView list=new ListView(this);panel.addView(list,new LinearLayout.LayoutParams(-1,dp(240)));
         java.util.ArrayList<Integer> visible=new java.util.ArrayList<>();
         ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,new java.util.ArrayList<String>());list.setAdapter(adapter);
         java.util.Set<Integer> saved=bookmarks();
@@ -76,7 +78,7 @@ public final class LibraryActivity extends Activity {
             String note=prefs().getString(pageKey("note",p),"");String row="PDF page "+(p+1)+(marked.contains(p)?" • Highlighted":"")+(saved.contains(p)?" • Bookmarked":"")+(noted.contains(p)?" • Note":"");
             if(!q.isEmpty()&&!row.toLowerCase(java.util.Locale.ROOT).contains(q)&&!note.toLowerCase(java.util.Locale.ROOT).contains(q))continue;
             visible.add(p);adapter.add(row+(note.trim().isEmpty()?"":"\n"+note.substring(0,Math.min(160,note.length()))));
-        }adapter.notifyDataSetChanged();};
+        }adapter.notifyDataSetChanged();empty.setText(all.isEmpty()?"No saved revision pages yet":visible.isEmpty()?"No matching revision pages":"");empty.setVisibility(visible.isEmpty()?View.VISIBLE:View.GONE);};
         AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Revision centre").setView(panel).setNegativeButton("Close",null).create();
         filter.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence x,int a,int c,int f){}public void onTextChanged(CharSequence x,int a,int b,int c){refresh.run();}public void afterTextChanged(android.text.Editable e){}});
         mode.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener(){public void onItemSelected(android.widget.AdapterView<?> parent,View v,int pos,long row){refresh.run();}public void onNothingSelected(android.widget.AdapterView<?> parent){}});
@@ -142,7 +144,7 @@ public final class LibraryActivity extends Activity {
     private String key(String suffix){return "study."+bookId+"."+suffix;}
     private void selectBook(String id){bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
     private String titleFor(String id){return prefs().getString(id.equals("legacy")?"bookTitle":"study."+id+".title","").trim();}
-    private java.util.TreeSet<Integer> bookmarks(){java.util.TreeSet<Integer> out=new java.util.TreeSet<>();for(String n:prefs().getString(key("bookmarks"),"").split(",")){try{out.add(Integer.parseInt(n));}catch(NumberFormatException ignored){}}return out;}
+    private java.util.TreeSet<Integer> bookmarks(){java.util.TreeSet<Integer> out=new java.util.TreeSet<>();for(String n:prefs().getString(key("bookmarks"),"").split(",")){try{int p=Integer.parseInt(n);if(p>=0)out.add(p);}catch(NumberFormatException ignored){}}return out;}
     private void toggleBookmark(int number){java.util.TreeSet<Integer> set=bookmarks();if(!set.add(number))set.remove(number);StringBuilder b=new StringBuilder();for(int n:set){if(b.length()>0)b.append(",");b.append(n);}prefs().edit().putString(key("bookmarks"),b.toString()).apply();}
     private void bookmarkDialog(){java.util.ArrayList<Integer> pages=new java.util.ArrayList<>(bookmarks());if(pages.isEmpty()){Toast.makeText(this,"No bookmarks yet",Toast.LENGTH_SHORT).show();return;}String[] labels=new String[pages.size()];for(int i=0;i<labels.length;i++)labels[i]="PDF page "+(pages.get(i)+1);new AlertDialog.Builder(this).setTitle("Bookmarks").setItems(labels,(d,w)->page(pages.get(w))).setNegativeButton("Close",null).show();}
     private void goToPage(int total){EditText input=new EditText(this);input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);input.setHint("1–"+total);AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Go to PDF page").setView(input).setPositiveButton("Go",null).setNegativeButton("Cancel",null).create();dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{try{int n=Integer.parseInt(input.getText().toString());if(n<1||n>total)throw new NumberFormatException();dialog.dismiss();page(n-1);}catch(NumberFormatException e){input.setError("Enter a page from 1 to "+total);}}));dialog.show();}
