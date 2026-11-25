@@ -96,4 +96,4 @@ jobs:
             echo "Release already exists; refusing to overwrite a signed version."
             exit 1
           fi
-          gh release create "$tag" candidate/slashpromo-release.apk --target "$GITHUB_SHA" --title "Slashpromo $version_name" --notes "Signed Android update. Install over the existing production application. Private library files are not included." --latest
+          gh release create "$tag" candidate/slashpromo-release.apk --target "$GITHUB_SHA" --title "Slashview $version_name" --notes "Signed Android update. Install over the existing production application. Private library files are not included." --latest
