@@ -6,3 +6,6 @@ Standalone Cloudflare Worker and dedicated D1 database. Never bind the Slashprom
 - Do not enable mandatory login until owner access, verification, recovery, data-preserving offline access and subscription expiry are tested.
 - Add scheduled cleanup of expired sessions/rate-limit buckets, email verification and password reset, admin MFA and audit log before public access. Existing Android application ID and library files must remain unchanged.
 - Approved policy: three calendar months from approval, $1 monthly, two devices, manual payment initially; no deletion of personal books on expiry.
+
+## Google sign-in
+Use Android Credential Manager with Google ID tokens and a dedicated Slashview OAuth configuration. Validate signature, issuer, audience, expiration and one-time nonce server-side. Use Google subject as stable identity; never automatically merge existing password accounts based only on matching email. Require explicit authenticated linking. Verified Google email can satisfy email verification, but new accounts remain pending administrator approval. Existing approval, trial, entitlement and device restrictions apply identically. No OAuth client secrets in the APK. Configure production signing certificate and client IDs before enabling the preview control. Google sign-in is not active yet.
