@@ -144,6 +144,57 @@ public final class LibraryActivity extends Activity {
     private String key(String suffix){return "study."+bookId+"."+suffix;}
     private void selectBook(String id){bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
     private String titleFor(String id){return prefs().getString(id.equals("legacy")?"bookTitle":"study."+id+".title","").trim();}
+    private File bookDir(String id){return id.equals("legacy")?libraryRoot:new File(libraryRoot,id);}
+    private java.util.ArrayList<String> availableBooks(){
+        java.util.ArrayList<String> ids=new java.util.ArrayList<>();
+        if(new File(libraryRoot,"book.pdf").isFile()&&new File(libraryRoot,"book.sqlite").isFile())ids.add("legacy");
+        File[] volumes=libraryRoot.listFiles(f->f.isDirectory()&&f.getName().matches("volume-[a-f0-9-]+")&&new File(f,"book.pdf").isFile()&&new File(f,"book.sqlite").isFile());
+        if(volumes!=null){java.util.Arrays.sort(volumes,java.util.Comparator.comparingLong(File::lastModified).reversed());for(File volume:volumes)ids.add(volume.getName());}
+        return ids;
+    }
+    private String displayBookTitle(String id){
+        String title=titleFor(id);return title.isEmpty()?(id.equals("legacy")?"Original medical book (rename to identify)":"Medical PDF (rename to identify)"):title;
+    }
+    private void chooseActiveBook(Runnable destination){
+        java.util.ArrayList<String> ids=availableBooks();if(ids.isEmpty()){Toast.makeText(this,"Add a book first",Toast.LENGTH_SHORT).show();return;}
+        String[] names=new String[ids.size()];for(int i=0;i<ids.size();i++)names[i]=displayBookTitle(ids.get(i));
+        new AlertDialog.Builder(this).setTitle("Select active book").setSingleChoiceItems(names,ids.indexOf(bookId),(dialog,pos)->{selectBook(ids.get(pos));dialog.dismiss();destination.run();}).setNegativeButton("Cancel",null).show();
+    }
+    private void libraryOverview(){
+        java.util.ArrayList<String> ids=availableBooks();
+        body.addView(label("Uploaded books: "+ids.size(),20));
+        if(ids.isEmpty()){body.addView(label("No uploaded books yet. Add a PDF or scan hard copies.",14));return;}
+        body.addView(label("Active book: "+displayBookTitle(bookId),17));
+        button("Change active book",()->chooseActiveBook(this::home));
+        int token=generation;LinearLayout list=new LinearLayout(this);list.setOrientation(1);body.addView(list);
+        for(String id:ids){
+            TextView row=label((id.equals(bookId)?"✓ Active • ":"")+displayBookTitle(id)+" • Loading details…",15);list.addView(row);
+            row.setOnClickListener(v->{selectBook(id);booksMenu();});row.setFocusable(true);
+            File dir=bookDir(id);
+            worker.execute(()->{
+                if(generation!=token)return;
+                String info;
+                try(SQLiteDatabase db=SQLiteDatabase.openDatabase(new File(dir,"book.sqlite").getPath(),null,SQLiteDatabase.OPEN_READONLY);
+                    Cursor c=db.rawQuery("SELECT count(*),sum(CASE WHEN length(trim(content))>0 THEN 1 ELSE 0 END) FROM pages",null)){
+                    c.moveToFirst();long total=c.getLong(0),searchable=c.getLong(1);
+                    info=total+" indexed pages • "+searchable+" searchable";
+                }catch(Exception e){info="Page information unavailable";}
+                String title=titleFor(id);
+                if(title.isEmpty()){
+                    try(PDDocument doc=PDDocument.load(new File(dir,"book.pdf"),com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){
+                        String embedded=doc.getDocumentInformation().getTitle();
+                        if(embedded!=null&&!embedded.trim().isEmpty()){
+                            String candidate=embedded.trim();
+                            // Only recover an actual embedded title, never assume the book identity.
+                            if(titleFor(id).isEmpty())prefs().edit().putString(id.equals("legacy")?"bookTitle":"study."+id+".title",candidate).apply();
+                        }
+                    }catch(Exception ignored){}
+                }
+                final String details=info;
+                runOnUiThread(()->{if(!isDestroyed()&&generation==token)row.setText((id.equals(bookId)?"✓ Active • ":"")+displayBookTitle(id)+"\n"+details);});
+            });
+        }
+    }
     private java.util.TreeSet<Integer> bookmarks(){java.util.TreeSet<Integer> out=new java.util.TreeSet<>();for(String n:prefs().getString(key("bookmarks"),"").split(",")){try{int p=Integer.parseInt(n);if(p>=0)out.add(p);}catch(NumberFormatException ignored){}}return out;}
     private void toggleBookmark(int number){java.util.TreeSet<Integer> set=bookmarks();if(!set.add(number))set.remove(number);StringBuilder b=new StringBuilder();for(int n:set){if(b.length()>0)b.append(",");b.append(n);}prefs().edit().putString(key("bookmarks"),b.toString()).apply();}
     private void bookmarkDialog(){java.util.ArrayList<Integer> pages=new java.util.ArrayList<>(bookmarks());if(pages.isEmpty()){Toast.makeText(this,"No bookmarks yet",Toast.LENGTH_SHORT).show();return;}String[] labels=new String[pages.size()];for(int i=0;i<labels.length;i++)labels[i]="PDF page "+(pages.get(i)+1);new AlertDialog.Builder(this).setTitle("Bookmarks").setItems(labels,(d,w)->page(pages.get(w))).setNegativeButton("Close",null).show();}
@@ -192,7 +243,7 @@ public final class LibraryActivity extends Activity {
     private void init(){
         PDFBoxResourceLoader.init(getApplicationContext());
         File dir=new File(getNoBackupFilesDir(),"medical-library");dir.mkdirs();
-        libraryRoot=dir;String selected=prefs().getString("selectedBook","legacy");if(!selected.equals("legacy")&&(!selected.matches("volume-[a-f0-9-]+")||!new File(new File(dir,selected),"book.pdf").isFile()))selected="legacy";selectBook(selected);night=prefs().getBoolean("study.night",false);
+        libraryRoot=dir;String selected=prefs().getString("selectedBook","legacy");if(!selected.equals("legacy")&&(!selected.matches("volume-[a-f0-9-]+")||!new File(new File(dir,selected),"book.pdf").isFile()))selected="legacy";java.util.ArrayList<String> ids=availableBooks();if(!ids.contains(selected)&&!ids.isEmpty())selected=ids.get(0);selectBook(selected);night=prefs().getBoolean("study.night",false);
         home();
     }
     private int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
@@ -212,7 +263,8 @@ public final class LibraryActivity extends Activity {
     private void menuScreen(String title){generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
     private void readingMenu(){
         menuScreen("Read & search");
-        body.addView(label("Selected: "+(titleFor(bookId).isEmpty()?"Medical PDF":titleFor(bookId)),15));
+        body.addView(label("Searching in: "+displayBookTitle(bookId),17));
+        button("Select book for search",()->chooseActiveBook(this::readingMenu));
         search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);
         button("Search whole book",()->find(search.getText().toString()));
         button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));
@@ -220,7 +272,8 @@ public final class LibraryActivity extends Activity {
     }
     private void revisionMenu(){
         menuScreen("Study & revision");
-        body.addView(label("Selected: "+(titleFor(bookId).isEmpty()?"Medical PDF":titleFor(bookId)),15));
+        body.addView(label("Studying: "+displayBookTitle(bookId),17));
+        button("Select book for revision",()->chooseActiveBook(this::revisionMenu));
         button("Revision centre",this::revisionHub);button("Bookmarks",this::bookmarkDialog);button("Saved study notes",this::savedNotes);button("Reading history",this::history);
         body.addView(label("Highlights are also available in the revision centre and PDF reader.",14));
     }
@@ -229,15 +282,17 @@ public final class LibraryActivity extends Activity {
     private void home(){generation++;layout();button("← Back to Slashpromo Home",()->{startActivity(new Intent(this,DirectoryActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));finish();});body.addView(label("My Medical Library",26));body.addView(label("Private • Offline • No search uploads",14));status=label(index.isFile()&&book.isFile()?"Book ready for offline search":"Add your personal PDF once to enable offline search.",16);body.addView(status);
         if(busy){status.setText("Preparing library…");return;}
         boolean ready=book.isFile()&&index.isFile();
+        libraryOverview();
         menuCard("Add new book","Import an existing PDF from your phone",this::pickBook,true);
         menuCard("Scan hard copies","Camera or gallery • up to 50 pages • automatic PDF and OCR",this::scanBook,true);
         menuCard("My books","Choose a saved book, view details or rename it",this::booksMenu,true);
         menuCard("Read & search",ready?"Resume reading, find topics and browse chapters":"Add or select a book first",this::readingMenu,ready);
         menuCard("Study & revision",ready?"Notes, highlights, bookmarks and reading history":"Add or select a book first",this::revisionMenu,ready);
-        if(ready)body.addView(label("Selected book: "+(titleFor(bookId).isEmpty()?"Medical PDF":titleFor(bookId)),15));
+
     }
     private void booksMenu(){
         menuScreen("My books");body.addView(label("Choose a book to manage or read.",14));
+        body.addView(label("Uploaded books: "+availableBooks().size(),18));
         File[] volumes=libraryRoot.listFiles(f->f.isDirectory()&&f.getName().matches("volume-[a-f0-9-]+")&&new File(f,"book.pdf").isFile()&&new File(f,"book.sqlite").isFile());
         if(new File(libraryRoot,"book.pdf").isFile()&&new File(libraryRoot,"book.sqlite").isFile()){String title=titleFor("legacy");button((bookId.equals("legacy")?"✓ ":"")+(title.isEmpty()?"Original medical book":title),()->{selectBook("legacy");booksMenu();});}
         if(volumes!=null){java.util.Arrays.sort(volumes,java.util.Comparator.comparingLong(File::lastModified).reversed());for(File volume:volumes){String id=volume.getName(),title=titleFor(id);button((bookId.equals(id)?"✓ ":"")+(title.isEmpty()?"Medical PDF":title),()->{selectBook(id);booksMenu();});}}
@@ -270,6 +325,7 @@ public final class LibraryActivity extends Activity {
             });
             button("Rename selected book",this::renameBook);
             button("Read selected book",this::readingMenu);
+            button("Search selected book",this::readingMenu);
             button("Study & revision",this::revisionMenu);
         }
     }
@@ -321,7 +377,7 @@ public final class LibraryActivity extends Activity {
     }
     private void find(String q){
         String clean=q.trim().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty())return;
-        lastQuery=q;int token=++generation;layout();body.addView(label("Search: "+q,22));button("Back to library",this::home);body.addView(label("Finding topic headings and related pages…",14));
+        lastQuery=q;int token=++generation;layout();body.addView(label("Search: "+q,22));body.addView(label("Book: "+displayBookTitle(bookId),15));button("Change book or search again",this::readingMenu);button("Back to library",this::home);body.addView(label("Finding topic headings and related pages…",14));
         worker.execute(()->{
             java.util.ArrayList<Hit> hits=new java.util.ArrayList<>();String wanted=normalized(clean);
             try(SQLiteDatabase db=SQLiteDatabase.openDatabase(index.getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24),content FROM pages WHERE pages MATCH ? ORDER BY docid",new String[]{"\""+clean+"\""})){
