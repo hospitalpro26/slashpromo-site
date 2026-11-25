@@ -11,3 +11,6 @@ AUTH_ENABLED = "false"
 REGISTRATION_ENABLED = "false"
 REVIEW_ADMIN_ENABLED = "false"
 # MAILER service binding must be provisioned separately before testing delivery.
+
+GOOGLE_ENABLED = "false"
+GOOGLE_CLIENT_ID = ""
