@@ -57,7 +57,7 @@ test('Google verifies signature/audience and nonce; new accounts receive automat
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,aud:'wrong'})})).status,401);
  const login=await call(env,'/v1/google/login',{...profile,idToken:token,deviceId:'c'.repeat(64)});assert.equal(login.status,200);assert.ok(login.body.token);
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:token})).status,401);
- const account=db.prepare('SELECT status,approved_at,trial_until FROM accounts').get();assert.equal(account.status,'approved');assert.ok(Date.parse(account.trial_until)>Date.now()+89*86400000);assert.ok(account.approved_at);
+ const account=db.prepare('SELECT status,approved_at,trial_until FROM accounts').get();assert.equal(account.status,'approved');const expected=new Date(account.approved_at), day=expected.getUTCDate();expected.setUTCDate(1);expected.setUTCMonth(expected.getUTCMonth()+3);expected.setUTCDate(Math.min(day,new Date(Date.UTC(expected.getUTCFullYear(),expected.getUTCMonth()+1,0)).getUTCDate()));assert.equal(account.trial_until,expected.toISOString());assert.ok(account.approved_at);
  const next=(await call(env,'/v1/google/nonce',{})).body.nonce;
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,nonce:next}),deviceId:'c'.repeat(64)})).status,200);
  const third=(await call(env,'/v1/google/nonce',{})).body.nonce;
