@@ -627,6 +627,26 @@ public final class LibraryActivity extends Activity {
     }
     private LinearLayout dashboardRow(){LinearLayout row=new LinearLayout(this);row.setOrientation(0);body.addView(row,new LinearLayout.LayoutParams(-1,-2));return row;}
     private void dashboardNav(LinearLayout nav,String symbol,String title,Runnable action,boolean enabled){TextView t=dashboardText(symbol+"\n"+title,14,0xff1744b6,true);t.setGravity(Gravity.CENTER);t.setPadding(0,dp(8),0,dp(8));nav.addView(t,new LinearLayout.LayoutParams(0,-2,1));t.setEnabled(enabled);t.setAlpha(enabled?1f:0.5f);t.setFocusable(enabled);t.setContentDescription(title);if(enabled)t.setOnClickListener(v->action.run());}
+    private EditText accountField(String title,String key,int type){
+        body.addView(label(title,15));EditText e=new EditText(this);e.setSingleLine(true);e.setInputType(type);e.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(160)});e.setText(prefs().getString("localAccount."+key,""));body.addView(e);return e;
+    }
+    private void localAccount(){
+        menuScreen("My account");
+        body.addView(label("Offline profile only. Your details are saved on this device, not sent to Slashview. Online registration and membership are not active yet.",15));
+        EditText name=accountField("Full name *","name",1),city=accountField("City *","city",1),country=accountField("Country","country",1),email=accountField("Email *","email",33),phone=accountField("WhatsApp (optional)","phone",3),profession=accountField("Profession (optional)","profession",1);
+        if(country.getText().length()==0)country.setText("Pakistan");
+        CheckBox consent=new CheckBox(this);consent.setText("I agree to save these profile details locally on this device. Any future online submission will require separate consent.");consent.setChecked(prefs().getBoolean("localAccount.saved",false));body.addView(consent);
+        button("Save local profile",()->{
+            if(name.getText().toString().trim().isEmpty()){name.setError("Enter your name");return;}
+            if(city.getText().toString().trim().isEmpty()){city.setError("Enter your city");return;}
+            if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email.getText().toString().trim()).matches()){email.setError("Enter a valid email");return;}
+            if(!consent.isChecked()){consent.setError("Consent required");return;}
+            prefs().edit().putString("localAccount.name",name.getText().toString().trim()).putString("localAccount.city",city.getText().toString().trim()).putString("localAccount.country",country.getText().toString().trim()).putString("localAccount.email",email.getText().toString().trim()).putString("localAccount.phone",phone.getText().toString().trim()).putString("localAccount.profession",profession.getText().toString().trim()).putBoolean("localAccount.saved",true).apply();
+            Toast.makeText(this,"Profile saved locally — not registered online",Toast.LENGTH_LONG).show();home();
+        });
+        button("Delete local profile",()->new AlertDialog.Builder(this).setTitle("Delete local profile?").setMessage("Only account details will be removed. Books and study data will remain.").setNegativeButton("Cancel",null).setPositiveButton("Delete",(d,w)->{android.content.SharedPreferences.Editor edit=prefs().edit();for(String k:prefs().getAll().keySet())if(k.startsWith("localAccount."))edit.remove(k);edit.apply();home();}).show());
+        body.addView(label("Support: slashviewofficial@gmail.com",14));
+    }
     private void home(){
         endReading();generation++;applyReaderBrightness(false);setFullscreen(false);releaseBitmap();
         LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setBackgroundColor(0xffeef2f8);ScrollView sc=new ScrollView(this);sc.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(18),dp(16),dp(12));sc.addView(body);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);
@@ -635,6 +655,7 @@ public final class LibraryActivity extends Activity {
         boolean ready=book.isFile()&&index.isFile();LinearLayout hero=new LinearLayout(this);hero.setOrientation(1);hero.setPadding(dp(20),dp(18),dp(20),dp(18));hero.setBackground(dashboardShape(0xff142d58,24));body.addView(hero,new LinearLayout.LayoutParams(-1,-2));hero.addView(dashboardText(ready?"CONTINUE READING":"START YOUR LIBRARY",12,0xffa8c8ef,true));
         LinearLayout bookRow=new LinearLayout(this);bookRow.setGravity(Gravity.CENTER_VERTICAL);hero.addView(bookRow);TextView cover=dashboardText("✚\nMEDICAL\nLIBRARY",14,0xffffffff,true);cover.setGravity(Gravity.CENTER);cover.setBackground(dashboardShape(0xff287c82,12));LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(dp(84),dp(112));cp.setMargins(0,dp(12),dp(14),dp(12));bookRow.addView(cover,cp);LinearLayout details=new LinearLayout(this);details.setOrientation(1);bookRow.addView(details,new LinearLayout.LayoutParams(0,-2,1));details.addView(dashboardText(ready?displayBookTitle(bookId):"Your books, one place",20,0xffffffff,true));int last=prefs().getInt(key("lastPage"),0),total=prefs().getInt(key("readerTotal"),0);details.addView(dashboardText(ready?"Page "+(last+1)+(total>0?" of "+total:""):"Import a PDF to begin",13,0xffc4d8ee,false));if(ready&&total>0){ProgressBar progress=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);progress.setMax(total);progress.setProgress(Math.min(total,last+1));details.addView(progress,new LinearLayout.LayoutParams(-1,dp(12)));}
         TextView resume=dashboardText(ready?"Continue reading  →":"Add your first book  +",16,0xff142d58,true);resume.setGravity(Gravity.CENTER);resume.setBackground(dashboardShape(0xffffffff,12));hero.addView(resume,new LinearLayout.LayoutParams(-1,dp(46)));resume.setOnClickListener(v->{if(ready)page(last);else pickBook();});resume.setFocusable(true);
+        menuCard("My account",prefs().getBoolean("localAccount.saved",false)?"Local profile • not synced":"Register your local profile",this::localAccount,true);
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
         menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
         menuCard("Study timer","Set a focused offline session",this::studyTimer,true);
