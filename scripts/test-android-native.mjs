@@ -62,7 +62,7 @@ for(const marker of ["getDocumentOutline()","findDestinationPage(doc)","getFirst
 console.log("PASS offline chapter navigation structural checks");
 
 for(const marker of ['pageKey("highlights",currentPage)',"transform.invert(inverse)","saveHighlights()","studyNote(number)","savedNotes","rememberPage(number)","SYSTEM_UI_FLAG_IMMERSIVE_STICKY","Exit full screen","Main chapters only","activeChapter(all,currentPage)"])assert(library.includes(marker),marker);
-assert(app.includes("versionName '0.8.0'"));
+assert(app.includes("versionName '0.9.0'"));
 assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 21);
 console.log("PASS Smart Study Reader structural safeguards");
 
