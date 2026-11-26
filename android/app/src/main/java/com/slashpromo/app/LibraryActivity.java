@@ -46,7 +46,23 @@ public final class LibraryActivity extends Activity {
     private void startReadingClock(){
         if(readingForeground&&readingGeneration==generation&&readingBook!=null&&readingSince==0){readingDay=studyDay();readingSince=android.os.SystemClock.elapsedRealtime();}
     }
-    @Override protected void onResume(){super.onResume();readingForeground=true;startReadingClock();}
+    private boolean updateNoticeChecked=false;
+    private void checkUpdateNotice(){
+        if(updateNoticeChecked||!getPackageName().equals("com.slashpromo.app"))return;
+        updateNoticeChecked=true;
+        new Thread(()->{try{
+            org.json.JSONObject release=UpdateActivity.latest();
+            long next=UpdateActivity.releaseCode(release);
+            if(next<=UpdateActivity.code(getPackageManager().getPackageInfo(getPackageName(),0)))return;
+            org.json.JSONArray assets=release.getJSONArray("assets");boolean verified=false;
+            for(int i=0;i<assets.length();i++){org.json.JSONObject asset=assets.getJSONObject(i);if("slashpromo-release.apk".equals(asset.optString("name"))&&asset.optString("digest").matches("sha256:[a-fA-F0-9]{64}"))verified=true;}
+            if(!verified)return;
+            runOnUiThread(()->{if(isFinishing()||isDestroyed()||!readingForeground||fullscreen)return;
+                new AlertDialog.Builder(this).setTitle("Slashview update available").setMessage(release.optString("name","New version")+" is ready. Your study library stays on this device.").setPositiveButton("Update now",(d,w)->startActivity(new Intent(this,UpdateActivity.class))).setNegativeButton("Later",null).show();
+            });
+        }catch(Exception ignored){}}).start();
+    }
+    @Override protected void onResume(){super.onResume();readingForeground=true;startReadingClock();checkUpdateNotice();}
     @Override protected void onPause(){stopReadingClock();readingForeground=false;super.onPause();}
     private void endReading(){stopReadingClock();readingBook=null;readingGeneration=-1;}
     private void chapterAnalytics(String id,java.util.TreeSet<Integer> pages){

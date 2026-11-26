@@ -74,7 +74,7 @@ public class AccountPreviewActivity extends Activity {
     button.setEnabled(false);int version=generation;status.setText("Connecting…");
     worker.execute(()->{try{
      AccountClient.Result r=client.request("/v1/google/nonce",data(),"");
-     if(!r.ok())throw new Exception();String nonce=r.body.getString("nonce");
+     if(!r.ok()){final String message="Google service: "+r.body.optString("error","Request failed")+" (HTTP "+r.status+")";runOnUiThread(()->{if(!isDestroyed()&&generation==version){status.setText(message);button.setEnabled(true);}});return;}String nonce=r.body.getString("nonce");
      runOnUiThread(()->{if(isDestroyed()||isFinishing()||generation!=version)return;
       try{
        googleCancel=new android.os.CancellationSignal();
@@ -91,7 +91,7 @@ public class AccountPreviewActivity extends Activity {
           call(button,status,"/v1/google/login",data("idToken",idToken,"deviceId",client.deviceId(),"termsAccepted",true,"privacyAcknowledged",true,"pricingAccepted",true,"policyVersion","review-1"),false);
          }catch(Exception e){status.setText("Google credential unavailable.");button.setEnabled(true);}
         }
-        public void onError(androidx.credentials.exceptions.GetCredentialException error){if(!isDestroyed()&&generation==version){status.setText("Google sign-in cancelled or unavailable.");button.setEnabled(true);}}
+        public void onError(androidx.credentials.exceptions.GetCredentialException error){if(!isDestroyed()&&generation==version){status.setText(error instanceof androidx.credentials.exceptions.GetCredentialCancellationException?"Google sign-in cancelled.":error instanceof androidx.credentials.exceptions.NoCredentialException?"No eligible Google account found. Check Google Play services and your Google account.":"Google sign-in provider error: "+error.getClass().getSimpleName());button.setEnabled(true);}}
        });
       }catch(Exception e){status.setText("Google sign-in unavailable.");button.setEnabled(true);}
      });
