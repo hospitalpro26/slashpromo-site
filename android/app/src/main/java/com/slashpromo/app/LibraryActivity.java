@@ -37,6 +37,29 @@ public final class LibraryActivity extends Activity {
         java.util.Set<String> seen=todayPages();
         if(seen.add(bookId+":"+number))prefs().edit().putString("offlineStudy.day",day).putStringSet("offlineStudy.pages",seen).apply();
     }
+    private void offlineFlashcards(){
+        menuScreen("Offline flashcards");
+        final String storage="offlineStudy.flashcards";
+        org.json.JSONArray cards;
+        try{cards=new org.json.JSONArray(prefs().getString(storage,"[]"));}catch(org.json.JSONException e){body.addView(label("Saved cards could not be read. No data was changed.",15));return;}
+        final org.json.JSONArray deck=cards;
+        body.addView(label(deck.length()+" saved cards • private to this device",16));
+        button("Create flashcard",()->{
+            LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(8),dp(16),dp(8));
+            EditText front=new EditText(this),back=new EditText(this);front.setHint("Question");back.setHint("Answer");front.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(2000)});back.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(8000)});panel.addView(front);panel.addView(back);
+            AlertDialog d=new AlertDialog.Builder(this).setTitle("New flashcard").setView(panel).setPositiveButton("Save",null).setNegativeButton("Cancel",null).create();
+            d.setOnShowListener(x->d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
+                String q=front.getText().toString().trim(),answer=back.getText().toString().trim();
+                if(q.isEmpty()){front.setError("Enter a question");return;}if(answer.isEmpty()){back.setError("Enter an answer");return;}
+                try{org.json.JSONObject card=new org.json.JSONObject();card.put("question",q);card.put("answer",answer);deck.put(card);prefs().edit().putString(storage,deck.toString()).apply();d.dismiss();offlineFlashcards();}catch(org.json.JSONException e){Toast.makeText(this,"Unable to save card",Toast.LENGTH_SHORT).show();}
+            }));d.show();
+        });
+        for(int i=0;i<deck.length();i++){
+            org.json.JSONObject card=deck.optJSONObject(i);if(card==null)continue;
+            String q=card.optString("question"),answer=card.optString("answer");
+            menuCard(q,"Tap to reveal answer",()->new AlertDialog.Builder(this).setTitle(q).setMessage(answer).setPositiveButton("Close",null).show(),true);
+        }
+    }
     private void studyProgress(){
         int count=todayPages().size(),goal=prefs().getInt("offlineStudy.goal",10);
         LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(12),dp(16),dp(12));
@@ -422,6 +445,7 @@ public final class LibraryActivity extends Activity {
         LinearLayout bookRow=new LinearLayout(this);bookRow.setGravity(Gravity.CENTER_VERTICAL);hero.addView(bookRow);TextView cover=dashboardText("✚\nMEDICAL\nLIBRARY",14,0xffffffff,true);cover.setGravity(Gravity.CENTER);cover.setBackground(dashboardShape(0xff287c82,12));LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(dp(84),dp(112));cp.setMargins(0,dp(12),dp(14),dp(12));bookRow.addView(cover,cp);LinearLayout details=new LinearLayout(this);details.setOrientation(1);bookRow.addView(details,new LinearLayout.LayoutParams(0,-2,1));details.addView(dashboardText(ready?displayBookTitle(bookId):"Your books, one place",20,0xffffffff,true));int last=prefs().getInt(key("lastPage"),0),total=prefs().getInt(key("readerTotal"),0);details.addView(dashboardText(ready?"Page "+(last+1)+(total>0?" of "+total:""):"Import a PDF to begin",13,0xffc4d8ee,false));if(ready&&total>0){ProgressBar progress=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);progress.setMax(total);progress.setProgress(Math.min(total,last+1));details.addView(progress,new LinearLayout.LayoutParams(-1,dp(12)));}
         TextView resume=dashboardText(ready?"Continue reading  →":"Add your first book  +",16,0xff142d58,true);resume.setGravity(Gravity.CENTER);resume.setBackground(dashboardShape(0xffffffff,12));hero.addView(resume,new LinearLayout.LayoutParams(-1,dp(46)));resume.setOnClickListener(v->{if(ready)page(last);else pickBook();});resume.setFocusable(true);
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
+        menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
         TextView section=dashboardText("Your study tools",22,0xff142d58,true);section.setPadding(0,dp(20),0,dp(6));body.addView(section);
         LinearLayout row=dashboardRow();dashboardTile(row,"▤","My library",availableBooks().size()+" saved books",0xff1744b6,this::smartLibrary,true);dashboardTile(row,"＋","Import PDF","Add a new book",0xff17866e,this::pickBook,true);
         row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::scanBook,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
