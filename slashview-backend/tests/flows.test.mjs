@@ -52,7 +52,7 @@ test('email registration, duplicate protection, verification, approval, recovery
 test('Google verifies signature/audience and nonce; new accounts stay pending; replay and email linking rejected',()=>withKeys(async()=>{
  const {db,env}=setup();const now=Math.floor(Date.now()/1000);
  const nonce=(await call(env,'/v1/google/nonce',{})).body.nonce;
- const claims={iss:'https://accounts.google.com',aud:env.GOOGLE_CLIENT_ID,iat:now,exp:now+600,sub:'google-test',email:'member@gmail.com',email_verified:true,nonce};
+ const claims={iss:'https://accounts.google.com',aud:env.GOOGLE_CLIENT_ID,azp:'android-client.apps.googleusercontent.com',iat:now,exp:now+600,sub:'google-test',email:'member@gmail.com',email_verified:true,nonce};
  const token=await jwt(claims);
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,aud:'wrong'})})).status,401);
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:token})).status,202);
@@ -62,6 +62,13 @@ test('Google verifies signature/audience and nonce; new accounts stay pending; r
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,nonce:next}),deviceId:'c'.repeat(64)})).status,403);
  const third=(await call(env,'/v1/google/nonce',{})).body.nonce;
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,nonce:third,sub:'different-sub'})})).status,409);
+ const account=db.prepare('SELECT id FROM accounts').get();
+ assert.equal((await call(env,'/v1/admin/approve',{id:account.id},await owner())).status,200);
+ const fourth=(await call(env,'/v1/google/nonce',{})).body.nonce;
+ const login=await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,nonce:fourth}),deviceId:'c'.repeat(64)});
+ assert.equal(login.status,200);
+ assert.equal((await call(env,'/v1/me',null,{Authorization:'Bearer '+login.body.token})).status,200);
+
  db.close();
 }));
 test('missing mailer fails closed and additive profile migration preserves existing account',async()=>{

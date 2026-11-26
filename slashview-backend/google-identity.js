@@ -19,7 +19,9 @@ export async function verifyGoogle(token,audience){
  if(!jwk)throw Error("Unknown signing key");
  const key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]);
  if(!await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,bytes(s),new TextEncoder().encode(h+"."+p)))throw Error("Invalid signature");
+ // Android and web OAuth clients have different IDs. Validate the intended web audience,
+ // not equality with azp (the Android presenter). Google signature and nonce remain mandatory.
  const now=Math.floor(Date.now()/1000);
- if(!["accounts.google.com","https://accounts.google.com"].includes(claims.iss)||claims.aud!==audience||(claims.azp&&claims.azp!==audience)||!Number.isInteger(claims.exp)||claims.exp<=now||!Number.isInteger(claims.iat)||claims.iat>now+60||claims.iat<now-600||typeof claims.sub!=="string"||!claims.sub||claims.sub.length>255||typeof claims.nonce!=="string"||!/^[a-f0-9]{64}$/.test(claims.nonce))throw Error("Invalid claims");
+ if(!["accounts.google.com","https://accounts.google.com"].includes(claims.iss)||claims.aud!==audience||!Number.isInteger(claims.exp)||claims.exp<=now||!Number.isInteger(claims.iat)||claims.iat>now+60||claims.iat<now-600||typeof claims.sub!=="string"||!claims.sub||claims.sub.length>255||typeof claims.nonce!=="string"||!/^[a-f0-9]{64}$/.test(claims.nonce))throw Error("Invalid claims");
  return claims;
 }
