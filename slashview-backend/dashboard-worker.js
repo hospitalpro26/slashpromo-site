@@ -58,7 +58,7 @@ const decode=s=>JSON.parse(new TextDecoder().decode(bytes(s)));
 let cached=null,expires=0;
 async function keys(){
  if(cached&&Date.now()<expires)return cached;
- const r=await fetch("https://www.googleapis.com/oauth2/v3/certs",{redirect:"error"});
+ let r;try{r=await fetch("https://www.googleapis.com/oauth2/v3/certs",{redirect:"error"});}catch{throw Error("Google keys unavailable");}
  if(!r.ok)throw Error("Google keys unavailable");
  const data=await r.json();if(!Array.isArray(data.keys))throw Error("Invalid keys");
  const age=Number(r.headers.get("cache-control")?.match(/max-age=(\d+)/)?.[1]||60);
@@ -74,7 +74,9 @@ async function verifyGoogle(token,audience){
  const key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"]);
  if(!await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,bytes(s),new TextEncoder().encode(h+"."+p)))throw Error("Invalid signature");
  const now=Math.floor(Date.now()/1000);
- if(!["accounts.google.com","https://accounts.google.com"].includes(claims.iss)||claims.aud!==audience||(claims.azp&&claims.azp!==audience)||!Number.isInteger(claims.exp)||claims.exp<=now||!Number.isInteger(claims.iat)||claims.iat>now+60||claims.iat<now-600||typeof claims.sub!=="string"||!claims.sub||claims.sub.length>255||typeof claims.nonce!=="string"||!/^[a-f0-9]{64}$/.test(claims.nonce))throw Error("Invalid claims");
+ if(claims.aud!==audience)throw Error("Google audience mismatch");
+ if(claims.azp&&claims.azp!==audience)throw Error("Google authorized party mismatch");
+ if(!["accounts.google.com","https://accounts.google.com"].includes(claims.iss)||!Number.isInteger(claims.exp)||claims.exp<=now||!Number.isInteger(claims.iat)||claims.iat>now+60||claims.iat<now-600||typeof claims.sub!=="string"||!claims.sub||claims.sub.length>255||typeof claims.nonce!=="string"||!/^[a-f0-9]{64}$/.test(claims.nonce))throw Error("Invalid claims");
  return claims;
 }
 
@@ -158,7 +160,7 @@ export default {
     return json({nonce});
    }
    const input=await readJson(req,12000);if(!input)return json({error:"Invalid request"},400);
-   let claims;try{claims=await verifyGoogle(input.idToken,env.GOOGLE_CLIENT_ID)}catch{return json({error:"Invalid Google credential"},401)}
+   let claims;try{claims=await verifyGoogle(input.idToken,env.GOOGLE_CLIENT_ID)}catch(e){const reason=["Google keys unavailable","Invalid keys","Unknown signing key","Google audience mismatch","Google authorized party mismatch","Invalid claims","Invalid signature"].includes(e.message)?e.message:"Invalid token";console.log(JSON.stringify({evt:"google_verification_failed",reason}));return json({error:"Google sign-in: "+reason},reason==="Google keys unavailable"?503:401)}
    const consumed=await env.DB.prepare("DELETE FROM google_nonces WHERE nonce_hash=? AND expires_at>?").bind(await digest(claims.nonce),now).run();
    if(consumed.meta.changes!==1)return json({error:"Invalid or expired challenge"},401);
    let account=await env.DB.prepare("SELECT a.* FROM accounts a JOIN google_identities g ON g.account_id=a.id WHERE g.subject=?").bind(claims.sub).first();
