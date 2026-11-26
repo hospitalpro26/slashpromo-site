@@ -360,10 +360,22 @@ public final class LibraryActivity extends Activity {
         if(auth==null){finish();return;}startActivityForResult(auth,32);
     }
     private File scanDraft(){return new File(libraryRoot,"scan-draft");}
+    private String scanDraftId(){
+        String id=prefs().getString("offlineScan.draftId","");
+        if(id.isEmpty()){id="volume-"+java.util.UUID.randomUUID();prefs().edit().putString("offlineScan.draftId",id).commit();}
+        return id;
+    }
+    private boolean scanDraftImported(){String id=prefs().getString("offlineScan.draftId","");return !id.isEmpty()&&availableBooks().contains(id);}
+    private void archiveScanDraft(){
+        if(!scanDraftImported())return;
+        File dir=scanDraft(),archive=new File(libraryRoot,"scan-archive-"+scanDraftId());
+        if(dir.exists()&&!dir.renameTo(archive)){Toast.makeText(this,"Cannot archive draft; originals retained.",Toast.LENGTH_LONG).show();return;}
+        prefs().edit().remove("offlineScan.draftId").remove("offlineScan.batchMode").commit();batchScanner();
+    }
     private File[] scanBatches(){File[] files=scanDraft().listFiles(f->f.isFile()&&f.getName().matches("batch-[0-9]+[.]pdf"));if(files==null)return new File[0];java.util.Arrays.sort(files,java.util.Comparator.comparing(File::getName));return files;}
     private void batchScanner(){
         if(busy||scannerOpening)return;
-        menuScreen("Scan a textbook");File[] files=scanBatches();body.addView(label(files.length+" saved scanning batches",20));
+        menuScreen("Scan a textbook");if(scanDraftImported()){body.addView(label("Textbook imported successfully. Original batches are retained.",18));button("Open imported textbook",()->{selectBook(scanDraftId());page(0);});button("Archive draft and start another textbook",this::archiveScanDraft);return;}File[] files=scanBatches();body.addView(label(files.length+" saved scanning batches",20));
         body.addView(label("Scan up to 50 pages at a time. Batches stay on this device until you finish the book.",15));
         button("Scan next batch",()->{prefs().edit().putBoolean("offlineScan.batchMode",true).apply();scanBook();});
         if(files.length>0)button("Combine and index textbook",this::finishScanBatches);
@@ -381,12 +393,12 @@ public final class LibraryActivity extends Activity {
         });
     }
     private void finishScanBatches(){
-        if(busy)return;File[] files=scanBatches();if(files.length==0)return;
+        if(busy||scanDraftImported())return;File[] files=scanBatches();if(files.length==0)return;scanDraftId();
         busy=true;menuScreen("Combining textbook");body.addView(label("Preparing "+files.length+" batches for OCR. Keep Slashview open.",16));
         worker.execute(()->{
             File combined=new File(scanDraft(),"combined.pdf");try{
                 com.tom_roush.pdfbox.multipdf.PDFMergerUtility merger=new com.tom_roush.pdfbox.multipdf.PDFMergerUtility();for(File f:files)merger.addSource(f);merger.setDestinationFileName(combined.getPath());merger.mergeDocuments(com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly());
-                runOnUiThread(()->{busy=false;if(!isDestroyed())importBook(android.net.Uri.fromFile(combined),true);});
+                runOnUiThread(()->{busy=false;if(!isDestroyed())importBook(android.net.Uri.fromFile(combined),true,scanDraftId());});
             }catch(Exception e){runOnUiThread(()->{busy=false;if(!isDestroyed()){batchScanner();Toast.makeText(this,"Could not combine batches. Originals retained.",Toast.LENGTH_LONG).show();}});}
         });
     }
@@ -651,14 +663,15 @@ public final class LibraryActivity extends Activity {
         }
     }
     @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){if(prefs().getBoolean("offlineScan.batchMode",false))saveScanBatch(scanned.getPdf().getUri());else importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
-    private void importBook(android.net.Uri uri,boolean scanned){
+    private void importBook(android.net.Uri uri,boolean scanned){importBook(uri,scanned,null);}
+    private void importBook(android.net.Uri uri,boolean scanned,String draftId){
         busy=true;home();worker.execute(()->{
             String importedName="";
             try(Cursor c=getContentResolver().query(uri,new String[]{android.provider.OpenableColumns.DISPLAY_NAME},null,null,null)){if(c!=null&&c.moveToFirst())importedName=c.getString(0);}catch(Exception ignored){}
             if(importedName==null)importedName="";if(scanned)importedName="Scanned book "+new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm",java.util.Locale.ROOT).format(new java.util.Date());
-            String id="volume-"+java.util.UUID.randomUUID().toString();File staging=new File(libraryRoot,"pending-"+id),volume=new File(libraryRoot,id);File pending=new File(staging,"book.pdf"), dbFile=new File(staging,"book.sqlite");
+            String id=draftId==null?"volume-"+java.util.UUID.randomUUID().toString():draftId;File staging=new File(libraryRoot,"pending-"+id),volume=new File(libraryRoot,id);File pending=new File(staging,"book.pdf"), dbFile=new File(staging,"book.sqlite");
             try{
-                if(!staging.mkdir())throw new IOException("Cannot prepare new book");
+                if(volume.exists())throw new IOException("Book already exists");if(draftId!=null&&staging.isDirectory()){pending.delete();dbFile.delete();new File(staging,"book.sqlite-journal").delete();staging.delete();}if(!staging.mkdir())throw new IOException("Cannot prepare new book");
                 try(InputStream in=getContentResolver().openInputStream(uri);OutputStream out=new FileOutputStream(pending)){
                     if(in==null)throw new IOException("Cannot read PDF");byte[] buf=new byte[65536];int n;long bytes=0;while((n=in.read(buf))!=-1){bytes+=n;if(bytes>1024L*1024*1024)throw new IOException("PDF exceeds 1 GB");out.write(buf,0,n);}
                 }
@@ -673,7 +686,7 @@ public final class LibraryActivity extends Activity {
                 }
                 // Publish a new independent volume only after PDF and index are complete.
                 if(!staging.renameTo(volume))throw new IOException("Cannot activate new book");
-                prefs().edit().putString("study."+id+".title",importedName).apply();runOnUiThread(()->{busy=false;if(!isDestroyed()){selectBook(id);home();}});
+                prefs().edit().putString("study."+id+".title",importedName).apply();runOnUiThread(()->{busy=false;if(!isDestroyed()){selectBook(id);if(draftId!=null)batchScanner();else home();}});
             }catch(Exception e){pending.delete();dbFile.delete();staging.delete();runOnUiThread(()->{busy=false;if(!isDestroyed()){home();status.setText("Import failed. Check file and free storage, then retry.");}});}
         });
     }
