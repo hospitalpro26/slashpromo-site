@@ -83,7 +83,7 @@ export default {
    if(consumed.meta.changes!==1)return json({error:"Invalid or expired challenge"},401);
    let account=await env.DB.prepare("SELECT a.* FROM accounts a JOIN google_identities g ON g.account_id=a.id WHERE g.subject=?").bind(claims.sub).first();
    if(!account){
-    if(env.REGISTRATION_ENABLED!=="true")return json({error:"Registration not enabled"},503);
+    if(env.GOOGLE_REGISTRATION_ENABLED!=="true")return json({error:"Google registration not enabled"},503);
     if(input.termsAccepted!==true||input.privacyAcknowledged!==true||input.pricingAccepted!==true||input.policyVersion!=="review-1")return json({error:"Consent required"},400);
     const email=typeof claims.email==="string"?claims.email.trim().toLowerCase():"";
     if(claims.email_verified!==true||email.length>254||!/^\S+@\S+\.\S+$/.test(email)||!(email.endsWith("@gmail.com")||(typeof claims.hd==="string"&&claims.hd)))return json({error:"Additional email verification required"},403);
