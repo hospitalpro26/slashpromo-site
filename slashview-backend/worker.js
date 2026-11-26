@@ -230,7 +230,8 @@ export default {
     if(membership!=="owner"||env.REVIEW_ADMIN_ENABLED!=="true")return json({error:"Forbidden"},403);
     const stamp=new Date().toISOString();
     const counts=await env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) AS pending, SUM(CASE WHEN status='approved' AND paid_until>? THEN 1 ELSE 0 END) AS paid, SUM(CASE WHEN status='approved' AND trial_until>? AND (paid_until IS NULL OR paid_until<=?) THEN 1 ELSE 0 END) AS trial FROM accounts").bind(stamp,stamp,stamp).first();
-    return json({counts});
+    const recent=await env.DB.prepare("SELECT id,name,status,trial_until,paid_until FROM accounts ORDER BY created_at DESC LIMIT 50").all();
+    return json({counts,recent:recent.results});
    }
    return json({account,membership});
   }
