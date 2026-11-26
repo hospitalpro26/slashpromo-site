@@ -37,7 +37,7 @@ public class AccountPreviewActivity extends Activity {
   });
  }
  private void screen(String mode){
-  generation++;ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(20),dp(24),dp(20),dp(24));sc.addView(body);setContentView(sc);
+  generation++;ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(20),dp(24),dp(20),dp(24));sc.addView(body);setContentView(sc);sc.setOnApplyWindowInsetsListener((view,insets)->{view.setPadding(insets.getSystemWindowInsetLeft(),insets.getSystemWindowInsetTop(),insets.getSystemWindowInsetRight(),insets.getSystemWindowInsetBottom());return insets;});sc.requestApplyInsets();
   label("Slashview",32);label("Read. Learn. Explore.",16);label(mode,24);
   if(!AccountClient.ENABLED)label("Design preview only. Do not enter real credentials. Nothing is submitted.",16);
   label("Your books, notes and highlights remain on this device.",14);
@@ -54,7 +54,7 @@ public class AccountPreviewActivity extends Activity {
    label("Email verification and administrator approval are required. Three calendar months free after approval, then USD $1 per month. No automatic payment.",16);
    CheckBox[] consent=new CheckBox[3];String[] labels={"I accept the Terms of Service","I acknowledge the Privacy Policy","I accept the trial and monthly renewal terms"};
    for(int i=0;i<3;i++){consent[i]=new CheckBox(this);consent[i].setText(labels[i]);consent[i].setSaveEnabled(false);body.addView(consent[i]);}
-   Button b=button("Request registration",()->{});b.setEnabled(AccountClient.ENABLED);b.setOnClickListener(v->{String p=value(password);if(p.length()<12||p.length()>128||!p.equals(value(confirm))||!consent[0].isChecked()||!consent[1].isChecked()||!consent[2].isChecked()){status.setText("Confirm password and accept all required terms.");return;}call(b,status,"/v1/register",data("name",value(name),"email",value(email),"password",p,"city",value(city),"address",value(address),"whatsapp",value(whatsapp),"termsAccepted",true,"privacyAcknowledged",true,"pricingAccepted",true,"policyVersion","review-1"),false);password.setText("");confirm.setText("");});
+   Button b=button("Request registration",()->{});b.setEnabled(AccountClient.ENABLED);b.setOnClickListener(v->{String p=value(password);if(value(name).trim().isEmpty()||value(city).trim().isEmpty()){status.setText("Enter your full name and city.");return;}if(p.length()<12||p.length()>128||!p.equals(value(confirm))||!consent[0].isChecked()||!consent[1].isChecked()||!consent[2].isChecked()){status.setText("Confirm password and accept all required terms.");return;}call(b,status,"/v1/register",data("name",value(name),"email",value(email),"password",p,"city",value(city),"address",value(address),"whatsapp",value(whatsapp),"termsAccepted",true,"privacyAcknowledged",true,"pricingAccepted",true,"policyVersion","review-1"),false);password.setText("");confirm.setText("");});
   }else if(mode.equals("Verify email")||mode.equals("Reset password")){
    boolean reset=mode.equals("Reset password");String prefix=reset?"/v1/recovery":"/v1/verification";
    EditText email=field("Email address",emailType);Button send=button("Request email code",()->{});send.setEnabled(AccountClient.ENABLED);send.setOnClickListener(v->call(send,status,prefix+"/request",data("email",value(email)),false));
