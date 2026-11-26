@@ -22,7 +22,20 @@ export async function accessOwner(req,env){
   if(!Number.isInteger(claims.iat)||claims.iat>now+60)return fail("invalid_iat");
   if(claims.nbf!==undefined&&(!Number.isInteger(claims.nbf)||claims.nbf>now+60))return fail("not_before");
   if(typeof claims.email!=="string"||claims.email.toLowerCase()!==owner)return fail("email_mismatch");
-  let r;try{r=await fetch(team+"/cdn-cgi/access/certs",{redirect:"error"})}catch{return fail("jwks_fetch_failed")}
+  let r;try{
+   const endpoint=team+"/cdn-cgi/access/certs";
+   r=await fetch(endpoint,{redirect:"manual",headers:{"Accept":"application/json"}});
+   if(r.status>=300&&r.status<400){
+    const location=r.headers.get("Location");
+    if(!location)return fail("jwks_redirect_missing");
+    const target=new URL(location,endpoint);
+    if(target.origin!==team||target.pathname!=="/cdn-cgi/access/certs"||target.username||target.password)return fail("jwks_redirect_rejected");
+    r=await fetch(target.href,{redirect:"manual",headers:{"Accept":"application/json"}});
+   }
+  }catch(e){
+   const message=String(e?.message||"");
+   return fail(/loop/i.test(message)?"jwks_fetch_loop":/redirect/i.test(message)?"jwks_fetch_redirect":/timeout/i.test(message)?"jwks_fetch_timeout":/dns/i.test(message)?"jwks_fetch_dns":"jwks_fetch_failed");
+  }
   if(!r.ok)return fail("jwks_http_"+r.status);
   let data;try{data=await r.json()}catch{return fail("jwks_bad_json")}
   const jwk=data.keys?.find(k=>k.kid===header.kid&&k.kty==="RSA");
