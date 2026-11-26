@@ -404,12 +404,24 @@ public final class LibraryActivity extends Activity {
     }
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
     private void menuScreen(String title){endReading();generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
+    private void searchAllBooks(){
+        menuScreen("Search all books");EditText query=new EditText(this);query.setSingleLine(true);query.setHint("Medical topic or phrase");body.addView(query);
+        button("Search library",()->{
+            String clean=query.getText().toString().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty()){query.setError("Enter a topic");return;}
+            final java.util.ArrayList<String> ids=availableBooks();menuScreen("Library search results");final int token=generation;TextView progress=label("Searching local indexes…",15);body.addView(progress);
+            worker.execute(()->{
+                java.util.ArrayList<String> resultIds=new java.util.ArrayList<>(),snippets=new java.util.ArrayList<>();java.util.ArrayList<Integer> numbers=new java.util.ArrayList<>();int failed=0;
+                for(String id:ids){if(generation!=token)return;try(SQLiteDatabase db=SQLiteDatabase.openDatabase(new File(bookDir(id),"book.sqlite").getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24) FROM pages WHERE pages MATCH ? ORDER BY docid LIMIT 100",new String[]{"\\\""+clean+"\\\""})){while(c.moveToNext()){resultIds.add(id);numbers.add(c.getInt(0)-1);snippets.add(c.getString(1));}}catch(Exception e){failed++;}}
+                final int errors=failed;runOnUiThread(()->{if(isDestroyed()||generation!=token)return;progress.setText(resultIds.size()+" matching pages (up to 100 per book)"+(errors>0?" • "+errors+" indexes unavailable":""));for(int i=0;i<resultIds.size();i++){String id=resultIds.get(i);int p=numbers.get(i);button(displayBookTitle(id)+" • PDF page "+(p+1)+"\\n"+snippets.get(i),()->{selectBook(id);page(p);});}});
+            });
+        });
+    }
     private void readingMenu(){
         menuScreen("Read & search");
         body.addView(label("Searching in: "+displayBookTitle(bookId),17));
         button("Select book for search",()->chooseActiveBook(this::readingMenu));
         search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);
-        button("Search whole book",()->find(search.getText().toString()));
+        button("Search whole book",()->find(search.getText().toString()));button("Search all books",this::searchAllBooks);
         button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));
         button("Open first page",()->page(0));button("Chapter index",this::chapters);
     }
@@ -622,9 +634,9 @@ public final class LibraryActivity extends Activity {
                 try(PDDocument doc=PDDocument.load(pending,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){
                     SQLiteDatabase db=SQLiteDatabase.openOrCreateDatabase(dbFile,null);
                     try{db.execSQL("CREATE VIRTUAL TABLE pages USING fts4(content, tokenize=unicode61)");PDFTextStripper stripper=new PDFTextStripper();stripper.setSortByPosition(true);int total=doc.getNumberOfPages();if(total<=0)throw new IOException("Empty PDF");int readable=0;
-                    int ocrPages=0;boolean ocrAvailable=true;
+                    int ocrPages=0,ocrFailures=0;
                     try(com.google.mlkit.vision.text.TextRecognizer recognizer=com.google.mlkit.vision.text.TextRecognition.getClient(com.google.mlkit.vision.text.latin.TextRecognizerOptions.DEFAULT_OPTIONS)){
-                        db.beginTransaction();try{for(int p=1;p<=total;p++){stripper.setStartPage(p);stripper.setEndPage(p);String text=stripper.getText(doc).replaceAll("[\\u00ad\\u200b]","").replaceAll("\\s+"," ").trim();if(text.isEmpty()&&ocrAvailable&&ocrPages<100){ocrPages++;try{text=recognizePage(pending,p-1,recognizer);}catch(Exception e){ocrAvailable=false;}}if(!text.isEmpty())readable++;db.execSQL("INSERT INTO pages(docid,content) VALUES(?,?)",new Object[]{p,text});if(p%25==0){final int done=p;runOnUiThread(()->{if(!isDestroyed())status.setText("Indexing "+done+" / "+total+" pages");});}}db.setTransactionSuccessful();}finally{db.endTransaction();}
+                        db.beginTransaction();try{for(int p=1;p<=total;p++){stripper.setStartPage(p);stripper.setEndPage(p);String text=stripper.getText(doc).replaceAll("[\\u00ad\\u200b]","").replaceAll("\\s+"," ").trim();if(text.isEmpty()){ocrPages++;try{text=recognizePage(pending,p-1,recognizer);}catch(Exception e){ocrFailures++;}}if(!text.isEmpty())readable++;db.execSQL("INSERT INTO pages(docid,content) VALUES(?,?)",new Object[]{p,text});if(p%5==0||p==total){final int done=p,searchable=readable,failed=ocrFailures;runOnUiThread(()->{if(!isDestroyed())status.setText("Indexing "+done+" / "+total+" pages • "+searchable+" searchable • "+failed+" OCR errors");});}}db.setTransactionSuccessful();}finally{db.endTransaction();}
                     }
                     }finally{db.close();}
                 }
