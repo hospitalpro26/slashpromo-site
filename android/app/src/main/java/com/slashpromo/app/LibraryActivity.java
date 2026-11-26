@@ -31,9 +31,63 @@ public final class LibraryActivity extends Activity {
         if(!studyDay().equals(prefs().getString("offlineStudy.day","")))return new java.util.HashSet<>();
         return new java.util.HashSet<>(prefs().getStringSet("offlineStudy.pages",java.util.Collections.emptySet()));
     }
+    private long readingSince=0;
+    private String readingBook=null,readingDay=null;
+    private int readingGeneration=-1;
+    private boolean readingForeground=false;
+    private void stopReadingClock(){
+        if(readingSince!=0&&readingBook!=null){
+            long elapsed=Math.max(0,android.os.SystemClock.elapsedRealtime()-readingSince);
+            String k="offlineStudy.readMillis."+readingDay+"."+readingBook;
+            prefs().edit().putLong(k,prefs().getLong(k,0)+elapsed).apply();
+        }
+        readingSince=0;
+    }
+    private void startReadingClock(){
+        if(readingForeground&&readingGeneration==generation&&readingBook!=null&&readingSince==0){readingDay=studyDay();readingSince=android.os.SystemClock.elapsedRealtime();}
+    }
+    @Override protected void onResume(){super.onResume();readingForeground=true;startReadingClock();}
+    @Override protected void onPause(){stopReadingClock();readingForeground=false;super.onPause();}
+    private void endReading(){stopReadingClock();readingBook=null;readingGeneration=-1;}
+    private void analytics(){
+        endReading();menuScreen("Study analytics");
+        Spinner period=new Spinner(this);period.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"Today","Last 7 days","Last 30 days"}));body.addView(period);
+        LinearLayout report=new LinearLayout(this);report.setOrientation(1);body.addView(report);
+        Runnable refresh=()->{
+            report.removeAllViews();int days=new int[]{1,7,30}[Math.max(0,period.getSelectedItemPosition())];
+            java.util.Map<String,?> data=prefs().getAll();
+            java.util.Map<String,Long> times=new java.util.HashMap<>();
+            java.util.Map<String,java.util.TreeSet<Integer>> pages=new java.util.HashMap<>();
+            java.util.Calendar cal=java.util.Calendar.getInstance();java.text.SimpleDateFormat fmt=new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT);
+            long total=0,timer=0;StringBuilder daily=new StringBuilder();
+            for(int i=0;i<days;i++){
+                String date=fmt.format(cal.getTime()),prefix="offlineStudy.readMillis."+date+".";long dayMs=0;
+                for(java.util.Map.Entry<String,?> e:data.entrySet()){
+                    if(e.getKey().startsWith(prefix)&&e.getValue() instanceof Long){String id=e.getKey().substring(prefix.length());long ms=(Long)e.getValue();dayMs+=ms;times.put(id,times.getOrDefault(id,0L)+ms);}
+                }
+                for(String entry:prefs().getStringSet("offlineStudy.pageLog."+date,java.util.Collections.emptySet())){
+                    int split=entry.lastIndexOf(':');if(split<1)continue;try{int n=Integer.parseInt(entry.substring(split+1));if(n>=0)pages.computeIfAbsent(entry.substring(0,split),k->new java.util.TreeSet<>()).add(n);}catch(NumberFormatException ignored){}
+                }
+                long tm=prefs().getLong("offlineStudy.minutes."+date,0);timer+=tm;total+=dayMs;daily.append(date).append(" • ").append(dayMs/60000).append(" reading min • ").append(tm).append(" timer min\n");cal.add(java.util.Calendar.DATE,-1);
+            }
+            report.addView(label("PDF reading: "+total/60000+" min "+(total/1000)%60+" sec",22));
+            report.addView(label("Completed timer sessions: "+timer+" min (separate, not added)",15));
+            java.util.Set<String> ids=new java.util.HashSet<>(times.keySet());ids.addAll(pages.keySet());java.util.ArrayList<String> sorted=new java.util.ArrayList<>(ids);
+            sorted.sort((x,y)->Long.compare(times.getOrDefault(y,0L),times.getOrDefault(x,0L)));
+            if(!sorted.isEmpty()&&times.getOrDefault(sorted.get(0),0L)>0)report.addView(label("Most read by time: "+displayBookTitle(sorted.get(0)),18));
+            for(String id:sorted){
+                java.util.TreeSet<Integer> set=pages.getOrDefault(id,new java.util.TreeSet<>());
+                Button item=new Button(this);item.setAllCaps(false);item.setText(displayBookTitle(id)+" • "+times.getOrDefault(id,0L)/60000+" min • "+set.size()+" distinct pages");report.addView(item);
+                item.setOnClickListener(v->{java.util.ArrayList<Integer> nums=new java.util.ArrayList<>(set);String[] labels=new String[nums.size()];for(int j=0;j<nums.size();j++)labels[j]="PDF page "+(nums.get(j)+1);new AlertDialog.Builder(this).setTitle(displayBookTitle(id)+" — page index").setItems(labels,(d,w)->{if(availableBooks().contains(id)){selectBook(id);page(nums.get(w));}else Toast.makeText(this,"Book no longer available",Toast.LENGTH_SHORT).show();}).setNegativeButton("Close",null).show();});
+            }
+            report.addView(label("Daily breakdown",18));report.addView(label(daily.toString(),14));report.addView(label("Reading time estimates foreground PDF viewing, not attention. Page counts are distinct opened pages, not proof of completion. History begins with this update.",13));
+        };
+        period.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener(){public void onItemSelected(android.widget.AdapterView<?> parent,View v,int pos,long id){refresh.run();}public void onNothingSelected(android.widget.AdapterView<?> parent){}});refresh.run();
+    }
     private void recordStudyPage(int number){
         if(number<0)return;
         String day=studyDay();
+        String log="offlineStudy.pageLog."+day;java.util.Set<String> logged=new java.util.HashSet<>(prefs().getStringSet(log,java.util.Collections.emptySet()));if(logged.add(bookId+":"+number))prefs().edit().putStringSet(log,logged).apply();
         java.util.Set<String> seen=todayPages();
         if(seen.add(bookId+":"+number))prefs().edit().putString("offlineStudy.day",day).putStringSet("offlineStudy.pages",seen).apply();
     }
@@ -212,7 +266,7 @@ public final class LibraryActivity extends Activity {
     }
     private android.content.SharedPreferences prefs(){return getPreferences(MODE_PRIVATE);}
     private String key(String suffix){return "study."+bookId+"."+suffix;}
-    private void selectBook(String id){bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
+    private void selectBook(String id){endReading();bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
     private String titleFor(String id){return prefs().getString(id.equals("legacy")?"bookTitle":"study."+id+".title","").trim();}
     private File bookDir(String id){return id.equals("legacy")?libraryRoot:new File(libraryRoot,id);}
     private java.util.ArrayList<String> availableBooks(){
@@ -330,7 +384,7 @@ public final class LibraryActivity extends Activity {
         if(enabled)tile.setOnClickListener(v->action.run());
     }
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
-    private void menuScreen(String title){generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
+    private void menuScreen(String title){endReading();generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
     private void readingMenu(){
         menuScreen("Read & search");
         body.addView(label("Searching in: "+displayBookTitle(bookId),17));
@@ -461,7 +515,7 @@ public final class LibraryActivity extends Activity {
     private LinearLayout dashboardRow(){LinearLayout row=new LinearLayout(this);row.setOrientation(0);body.addView(row,new LinearLayout.LayoutParams(-1,-2));return row;}
     private void dashboardNav(LinearLayout nav,String symbol,String title,Runnable action,boolean enabled){TextView t=dashboardText(symbol+"\n"+title,14,0xff1744b6,true);t.setGravity(Gravity.CENTER);t.setPadding(0,dp(8),0,dp(8));nav.addView(t,new LinearLayout.LayoutParams(0,-2,1));t.setEnabled(enabled);t.setAlpha(enabled?1f:0.5f);t.setFocusable(enabled);t.setContentDescription(title);if(enabled)t.setOnClickListener(v->action.run());}
     private void home(){
-        generation++;applyReaderBrightness(false);setFullscreen(false);releaseBitmap();
+        endReading();generation++;applyReaderBrightness(false);setFullscreen(false);releaseBitmap();
         LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setBackgroundColor(0xffeef2f8);ScrollView sc=new ScrollView(this);sc.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(18),dp(16),dp(12));sc.addView(body);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);
         LinearLayout header=dashboardRow();ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);header.addView(logo,new LinearLayout.LayoutParams(dp(48),dp(48)));TextView brand=dashboardText("Slashview",30,0xff1744b6,true);brand.setGravity(Gravity.CENTER_VERTICAL);header.addView(brand,new LinearLayout.LayoutParams(0,dp(48),1));TextView update=dashboardText("↑ Update",14,0xff1744b6,true);update.setGravity(Gravity.CENTER);header.addView(update,new LinearLayout.LayoutParams(dp(76),dp(48)));update.setOnClickListener(v->startActivity(new Intent(this,UpdateActivity.class)));update.setFocusable(true);
         body.addView(dashboardText("Read. Learn. Explore.",15,0xff53647d,false));status=dashboardText(busy?"Preparing library…":"YOUR PERSONAL STUDY SPACE",12,0xff53647d,true);status.setPadding(0,dp(16),0,dp(8));body.addView(status);if(busy)return;
@@ -471,7 +525,7 @@ public final class LibraryActivity extends Activity {
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
         menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
         menuCard("Study timer","Set a focused offline session",this::studyTimer,true);
-        menuCard("Weekly study statistics","Review completed timer sessions",this::weeklyStudy,true);
+        menuCard("Study analytics","Daily, weekly and monthly reading history",this::analytics,true);
         TextView section=dashboardText("Your study tools",22,0xff142d58,true);section.setPadding(0,dp(20),0,dp(6));body.addView(section);
         LinearLayout row=dashboardRow();dashboardTile(row,"▤","My library",availableBooks().size()+" saved books",0xff1744b6,this::smartLibrary,true);dashboardTile(row,"＋","Import PDF","Add a new book",0xff17866e,this::pickBook,true);
         row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::scanBook,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
@@ -638,7 +692,7 @@ public final class LibraryActivity extends Activity {
         private void apply(){float w=bitmap.getWidth()*base*zoom,h=bitmap.getHeight()*base*zoom;x=w<=getWidth()?(getWidth()-w)/2f:Math.max(getWidth()-w,Math.min(0,x));y=h<=getHeight()?(getHeight()-h)/2f:Math.max(getHeight()-h,Math.min(0,y));transform.setScale(base*zoom,base*zoom);transform.postTranslate(x,y);setImageMatrix(transform);}
         @Override public boolean onTouchEvent(android.view.MotionEvent e){if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;boolean vertical=prefs().getBoolean("reader.vertical",false);float primary=vertical?dy:dx,secondary=vertical?dx:dy;if(Math.abs(primary)>dp(70)&&Math.abs(primary)>Math.abs(secondary)*1.5f){int next=currentPage+(primary<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
     }
-    private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
+    private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;endReading();int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
         body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);
         LinearLayout bar=new LinearLayout(this);body.addView(bar);
         Button back=new Button(this);back.setText(lastQuery.isEmpty()?"Library":"Results");back.setOnClickListener(v->{if(lastQuery.isEmpty())home();else find(lastQuery);});bar.addView(back,new LinearLayout.LayoutParams(0,-2,1));
@@ -648,7 +702,7 @@ public final class LibraryActivity extends Activity {
             int total=renderer.getPageCount();if(number<0||number>=total){runOnUiThread(()->{if(!isDestroyed()&&generation==token){pageCount=total;pageLabel.setText("Saved page is outside this PDF. Return to library or open page 1.");}});return;}
             Bitmap bitmap;try(PdfRenderer.Page p=renderer.openPage(number)){int width=2200;int height=Math.max(1,(int)((long)width*p.getHeight()/p.getWidth()));if(height>3400){width=Math.max(1,(int)((long)width*3400/height));height=3400;}bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE);p.render(bitmap,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
             runOnUiThread(()->{if(isDestroyed()||generation!=token){bitmap.recycle();return;}
-                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("readerTotal"),total).apply();rememberPage(number);pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
+                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("readerTotal"),total).apply();rememberPage(number);readingBook=bookId;readingGeneration=generation;startReadingClock();pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
                 ZoomPage img=new ZoomPage(bitmap);if(prefs().getInt("reader.theme",night?1:0)==2)img.setColorFilter(new ColorMatrixColorFilter(new float[]{0.92f,0,0,0,12,0,0.85f,0,0,10,0,0,0.70f,0,8,0,0,0,1,0}));else if(night)img.setColorFilter(new ColorMatrixColorFilter(new float[]{-1,0,0,0,255,0,-1,0,0,255,0,0,-1,0,255,0,0,0,1,0}));body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
                 LinearLayout tools=new LinearLayout(this);body.addView(tools);
                 String[] labels={"−","Fit","+","Go to","Settings"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->readerSettings(number)};
@@ -661,5 +715,5 @@ public final class LibraryActivity extends Activity {
         }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==token)body.addView(label("Unable to open page",16));});}});
     }
     @Override public void onBackPressed(){if(fullscreen){setFullscreen(false);page(currentPage);return;}if(!busy&&book!=null)home();else super.onBackPressed();}
-    @Override protected void onDestroy(){generation++;releaseBitmap();worker.shutdown();super.onDestroy();}
+    @Override protected void onDestroy(){endReading();generation++;releaseBitmap();worker.shutdown();super.onDestroy();}
 }
