@@ -71,3 +71,24 @@ test('missing mailer fails closed and additive profile migration preserves exist
  db.exec(readFileSync(new URL('migrations/0006_account_profiles.sql',root),'utf8'));
  assert.equal(db.prepare('PRAGMA integrity_check').get().integrity_check,'ok');db.close();
 });
+
+test('owner summary fails closed and lifetime exemption requires configured Google identity',()=>withKeys(async()=>{
+ const {db,env}=setup();const now=Math.floor(Date.now()/1000);
+ env.ACCESS_OWNER_EMAIL='owner@gmail.com';env.OWNER_GOOGLE_SUBJECT='owner-test';
+ const nonce=(await call(env,'/v1/google/nonce',{})).body.nonce;
+ const claims={iss:'https://accounts.google.com',aud:env.GOOGLE_CLIENT_ID,iat:now,exp:now+600,sub:'owner-test',email:'owner@gmail.com',email_verified:true,nonce};
+ const login=await call(env,'/v1/google/login',{...profile,idToken:await jwt(claims),deviceId:'d'.repeat(64)});
+ assert.equal(login.status,200);
+ const auth={Authorization:'Bearer '+login.body.token};
+ assert.equal((await call(env,'/v1/owner/summary')).status,401);
+ db.prepare("UPDATE accounts SET trial_until=?").run('2000-01-01T00:00:00.000Z');
+ assert.equal((await call(env,'/v1/me',null,auth)).body.membership,'owner');
+ const summary=await call(env,'/v1/owner/summary',null,auth);
+ assert.equal(summary.status,200);assert.equal(summary.body.counts.total,1);
+ assert.equal(summary.body.recent[0].email,undefined);
+ env.OWNER_GOOGLE_SUBJECT='wrong-subject';
+ assert.equal((await call(env,'/v1/owner/summary',null,auth)).status,403);
+ delete env.OWNER_GOOGLE_SUBJECT;
+ assert.equal((await call(env,'/v1/me',null,auth)).status,403);
+ db.close();
+}));
