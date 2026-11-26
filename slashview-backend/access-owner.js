@@ -22,23 +22,24 @@ export async function accessOwner(req,env){
   if(!Number.isInteger(claims.iat)||claims.iat>now+60)return fail("invalid_iat");
   if(claims.nbf!==undefined&&(!Number.isInteger(claims.nbf)||claims.nbf>now+60))return fail("not_before");
   if(typeof claims.email!=="string"||claims.email.toLowerCase()!==owner)return fail("email_mismatch");
-  let r;try{
+  let data;
+  try {
    const endpoint=team+"/cdn-cgi/access/certs";
-   r=await fetch(endpoint,{redirect:"manual",headers:{"Accept":"application/json"}});
-   if(r.status>=300&&r.status<400){
-    const location=r.headers.get("Location");
-    if(!location)return fail("jwks_redirect_missing");
-    const target=new URL(location,endpoint);
-    if(target.origin!==team||target.pathname!=="/cdn-cgi/access/certs"||target.username||target.password)return fail("jwks_redirect_rejected");
-    r=await fetch(target.href,{redirect:"manual",headers:{"Accept":"application/json"}});
-   }
-  }catch(e){
-   const message=String(e?.message||"");
-   return fail(/loop/i.test(message)?"jwks_fetch_loop":/redirect/i.test(message)?"jwks_fetch_redirect":/timeout/i.test(message)?"jwks_fetch_timeout":/dns/i.test(message)?"jwks_fetch_dns":"jwks_fetch_failed");
+   const r=await fetch(endpoint,{redirect:"error",headers:{"Accept":"application/json"}});
+   if(!r.ok)throw new Error("jwks_http");
+   data=await r.json();
+   if(!Array.isArray(data.keys))throw new Error("jwks_shape");
+  }catch{
+   // Operator-provisioned public keys, never supplied by the requester.
+   // Explicit expiry prevents indefinite trust in a stale key snapshot.
+   try{
+    const backup=JSON.parse(String(env.ACCESS_JWKS_BACKUP||""));
+    if(backup.issuer!==team||!Number.isInteger(backup.expires)||backup.expires<=now||backup.expires>now+86400||!Array.isArray(backup.keys))return fail("jwks_backup_invalid");
+    data=backup;
+    console.log(JSON.stringify({evt:"admin_access_jwks_backup"}));
+   }catch{return fail("jwks_fetch_failed")}
   }
-  if(!r.ok)return fail("jwks_http_"+r.status);
-  let data;try{data=await r.json()}catch{return fail("jwks_bad_json")}
-  const jwk=data.keys?.find(k=>k.kid===header.kid&&k.kty==="RSA");
+  const jwk=data.keys.find(k=>k.kid===header.kid&&k.kty==="RSA");
   if(!jwk)return fail("kid_not_found");
   let key;try{key=await crypto.subtle.importKey("jwk",jwk,{name:"RSASSA-PKCS1-v1_5",hash:"SHA-256"},false,["verify"])}catch{return fail("jwk_import_failed")}
   const valid=await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,bytes(s),new TextEncoder().encode(h+"."+p));
