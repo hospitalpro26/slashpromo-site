@@ -359,6 +359,37 @@ public final class LibraryActivity extends Activity {
         Intent auth=kg.createConfirmDeviceCredentialIntent("Private medical library","Unlock with your device credential");
         if(auth==null){finish();return;}startActivityForResult(auth,32);
     }
+    private File scanDraft(){return new File(libraryRoot,"scan-draft");}
+    private File[] scanBatches(){File[] files=scanDraft().listFiles(f->f.isFile()&&f.getName().matches("batch-[0-9]+[.]pdf"));if(files==null)return new File[0];java.util.Arrays.sort(files,java.util.Comparator.comparing(File::getName));return files;}
+    private void batchScanner(){
+        if(busy||scannerOpening)return;
+        menuScreen("Scan a textbook");File[] files=scanBatches();body.addView(label(files.length+" saved scanning batches",20));
+        body.addView(label("Scan up to 50 pages at a time. Batches stay on this device until you finish the book.",15));
+        button("Scan next batch",()->{prefs().edit().putBoolean("offlineScan.batchMode",true).apply();scanBook();});
+        if(files.length>0)button("Combine and index textbook",this::finishScanBatches);
+        button("Scan a separate book",()->{prefs().edit().putBoolean("offlineScan.batchMode",false).apply();scanBook();});
+    }
+    private void saveScanBatch(android.net.Uri uri){
+        busy=true;menuScreen("Saving scan batch");worker.execute(()->{
+            File dir=scanDraft();File tmp=new File(dir,"incoming.tmp");boolean ok=false;
+            try{if(!dir.isDirectory()&&!dir.mkdirs())throw new IOException("Cannot create draft");
+                try(InputStream in=getContentResolver().openInputStream(uri);OutputStream out=new FileOutputStream(tmp)){if(in==null)throw new IOException("Missing scan");byte[] buf=new byte[65536];int n;while((n=in.read(buf))!=-1)out.write(buf,0,n);}
+                try(PDDocument doc=PDDocument.load(tmp,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){if(doc.getNumberOfPages()<1)throw new IOException("Empty scan");}
+                File target=new File(dir,String.format(java.util.Locale.ROOT,"batch-%08d.pdf",scanBatches().length+1));if(target.exists()||!tmp.renameTo(target))throw new IOException("Cannot save batch");ok=true;
+            }catch(Exception ignored){}finally{tmp.delete();}
+            final boolean saved=ok;runOnUiThread(()->{busy=false;if(!isDestroyed()){batchScanner();if(!saved)Toast.makeText(this,"Batch not saved. Previous batches are safe.",Toast.LENGTH_LONG).show();}});
+        });
+    }
+    private void finishScanBatches(){
+        if(busy)return;File[] files=scanBatches();if(files.length==0)return;
+        busy=true;menuScreen("Combining textbook");body.addView(label("Preparing "+files.length+" batches for OCR. Keep Slashview open.",16));
+        worker.execute(()->{
+            File combined=new File(scanDraft(),"combined.pdf");try{
+                com.tom_roush.pdfbox.multipdf.PDFMergerUtility merger=new com.tom_roush.pdfbox.multipdf.PDFMergerUtility();for(File f:files)merger.addSource(f);merger.setDestinationFileName(combined.getPath());merger.mergeDocuments(com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly());
+                runOnUiThread(()->{busy=false;if(!isDestroyed())importBook(android.net.Uri.fromFile(combined),true);});
+            }catch(Exception e){runOnUiThread(()->{busy=false;if(!isDestroyed()){batchScanner();Toast.makeText(this,"Could not combine batches. Originals retained.",Toast.LENGTH_LONG).show();}});}
+        });
+    }
     private void scanBook(){
         if(busy||scannerOpening)return;
         scannerOpening=true;
@@ -411,7 +442,7 @@ public final class LibraryActivity extends Activity {
             final java.util.ArrayList<String> ids=availableBooks();menuScreen("Library search results");final int token=generation;TextView progress=label("Searching local indexes…",15);body.addView(progress);
             worker.execute(()->{
                 java.util.ArrayList<String> resultIds=new java.util.ArrayList<>(),snippets=new java.util.ArrayList<>();java.util.ArrayList<Integer> numbers=new java.util.ArrayList<>();int failed=0;
-                for(String id:ids){if(generation!=token)return;try(SQLiteDatabase db=SQLiteDatabase.openDatabase(new File(bookDir(id),"book.sqlite").getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24) FROM pages WHERE pages MATCH ? ORDER BY docid LIMIT 100",new String[]{"\\\""+clean+"\\\""})){while(c.moveToNext()){resultIds.add(id);numbers.add(c.getInt(0)-1);snippets.add(c.getString(1));}}catch(Exception e){failed++;}}
+                for(String id:ids){if(generation!=token)return;try(SQLiteDatabase db=SQLiteDatabase.openDatabase(new File(bookDir(id),"book.sqlite").getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24) FROM pages WHERE pages MATCH ? ORDER BY docid LIMIT 100",new String[]{"\""+clean+"\""})){while(c.moveToNext()){resultIds.add(id);numbers.add(c.getInt(0)-1);snippets.add(c.getString(1));}}catch(Exception e){failed++;}}
                 final int errors=failed;runOnUiThread(()->{if(isDestroyed()||generation!=token)return;progress.setText(resultIds.size()+" matching pages (up to 100 per book)"+(errors>0?" • "+errors+" indexes unavailable":""));for(int i=0;i<resultIds.size();i++){String id=resultIds.get(i);int p=numbers.get(i);button(displayBookTitle(id)+" • PDF page "+(p+1)+"\\n"+snippets.get(i),()->{selectBook(id);page(p);});}});
             });
         });
@@ -559,7 +590,7 @@ public final class LibraryActivity extends Activity {
         menuCard("Study analytics","Daily, weekly and monthly reading history",this::analytics,true);
         TextView section=dashboardText("Your study tools",22,0xff142d58,true);section.setPadding(0,dp(20),0,dp(6));body.addView(section);
         LinearLayout row=dashboardRow();dashboardTile(row,"▤","My library",availableBooks().size()+" saved books",0xff1744b6,this::smartLibrary,true);dashboardTile(row,"＋","Import PDF","Add a new book",0xff17866e,this::pickBook,true);
-        row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::scanBook,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
+        row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::batchScanner,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
         row=dashboardRow();dashboardTile(row,"⌕","Read & search","Topics & chapters",0xff1744b6,this::readingMenu,ready);dashboardTile(row,"★","Revision","Notes & highlights",0xffb67524,this::revisionMenu,ready);
         row=dashboardRow();dashboardTile(row,"▥","Manage books","Details & rename",0xff1744b6,this::booksMenu,true);dashboardTile(row,"↻","Updates","Check new version",0xff17866e,()->startActivity(new Intent(this,UpdateActivity.class)),true);
         row=dashboardRow();dashboardTile(row,"?","Help & Support","Contact and privacy",0xff1744b6,()->startActivity(new Intent(this,SupportActivity.class)),true);if((getApplicationInfo().flags & android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE)!=0)dashboardTile(row,"◎","Account screens (preview)","Debug testing only",0xff7949bb,()->startActivity(new Intent(this,AccountPreviewActivity.class)),true);
@@ -619,7 +650,7 @@ public final class LibraryActivity extends Activity {
             button("Study & revision",this::revisionMenu);
         }
     }
-    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
+    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){if(prefs().getBoolean("offlineScan.batchMode",false))saveScanBatch(scanned.getPdf().getUri());else importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
     private void importBook(android.net.Uri uri,boolean scanned){
         busy=true;home();worker.execute(()->{
             String importedName="";
