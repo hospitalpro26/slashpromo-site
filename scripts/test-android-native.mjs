@@ -77,7 +77,7 @@ assert(app.includes("com.google.mlkit:text-recognition:16.0.1"));
 assert(app.includes("play-services-mlkit-document-scanner:16.0.0"));
 console.log("PASS cumulative reader and local scanner structural checks");
 
-for(const marker of ['menuCard("Add new book"','menuCard("Scan hard copies"','menuCard("My books"','menuCard("Read & search"','menuCard("Study & revision"',"private void booksMenu()","private void readingMenu()","private void revisionMenu()"])assert(library.includes(marker),marker);
+for(const marker of ['"Import PDF"','"Scan book"','"My library"','"Read & search"','"Revision"',"private void booksMenu()","private void readingMenu()","private void revisionMenu()"])assert(library.includes(marker),marker);
 console.log("PASS separate library menu structural checks");
 
 for(const marker of ["availableBooks()","Uploaded books: ","Active book: ","Select book for search","Select book for revision","getDocumentInformation().getTitle()","Change active book","indexed pages • "])assert(library.includes(marker),marker);
@@ -87,11 +87,13 @@ for(const marker of ["AI Medical Study Assistant","Find supporting book excerpts
 console.log("PASS AI study assistant consent and request structural checks");
 
 assert(!library.includes("Back to Slashpromo Home"));
-assert(library.includes('button("Check for updates"'));
+assert(library.includes('"Check new version"'));
 for(const source of [library,directory,activity,strings,manifest])assert(!source.includes("https://slashpromo.com"));
 console.log("PASS standalone medical study app navigation");
 
-assert(strings.includes(">Slashview<"));assert(library.includes("brandHeader()"));assert(library.includes("Read. Learn. Explore."));assert(updater.includes("Slashview • App updates"));
+assert(strings.includes(">Slashview<"));assert(library.includes("dashboardTile("));assert(library.includes("Read. Learn. Explore."));assert(updater.includes("Slashview • App updates"));
 
 for(const marker of ["private void smartLibrary()","private void readerSettings(int number)","reader.systemBrightness","reader.vertical","reader.theme","lastOpened","readerTotal","favourite","Set subject folder","applyReaderBrightness(false)"])assert(library.includes(marker),marker);
 console.log("PASS smart library and reader settings structural checks");
+
+for(const marker of ["dashboardNav(","dashboardRow(","CONTINUE READING","Your study tools","setFillViewport(true)"])assert(library.includes(marker),marker);
