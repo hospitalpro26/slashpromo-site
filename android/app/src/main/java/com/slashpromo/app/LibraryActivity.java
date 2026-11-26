@@ -46,7 +46,32 @@ public final class LibraryActivity extends Activity {
     private void startReadingClock(){
         if(readingForeground&&readingGeneration==generation&&readingBook!=null&&readingSince==0){readingDay=studyDay();readingSince=android.os.SystemClock.elapsedRealtime();}
     }
-    @Override protected void onResume(){super.onResume();readingForeground=true;startReadingClock();}
+    private boolean updateNoticeChecked=false, updateNoticeRunning=false;
+    private org.json.JSONObject pendingUpdateNotice;
+    private long updateNoticeAttempt=0;
+    private void showUpdateNotice(){
+        if(pendingUpdateNotice==null||isFinishing()||isDestroyed()||!readingForeground||fullscreen)return;
+        org.json.JSONObject release=pendingUpdateNotice;pendingUpdateNotice=null;updateNoticeChecked=true;
+        new AlertDialog.Builder(this).setTitle("Slashview update available").setMessage(release.optString("name","New version")+" is ready. Your study library stays on this device.").setPositiveButton("Update now",(d,w)->startActivity(new Intent(this,UpdateActivity.class))).setNegativeButton("Later",null).show();
+    }
+    private void checkUpdateNotice(){
+        showUpdateNotice();
+        if(updateNoticeChecked||updateNoticeRunning||pendingUpdateNotice!=null||!getPackageName().equals("com.slashpromo.app"))return;
+        long now=android.os.SystemClock.elapsedRealtime();
+        if(updateNoticeAttempt!=0&&now-updateNoticeAttempt<60000)return;
+        updateNoticeAttempt=now;updateNoticeRunning=true;
+        new Thread(()->{try{
+            org.json.JSONObject release=UpdateActivity.latest();
+            long next=UpdateActivity.releaseCode(release);
+            if(next<=UpdateActivity.code(getPackageManager().getPackageInfo(getPackageName(),0)))return;
+            if(release.optBoolean("draft")||release.optBoolean("prerelease"))return;
+            org.json.JSONArray assets=release.getJSONArray("assets");boolean verified=false;
+            for(int i=0;i<assets.length();i++){org.json.JSONObject asset=assets.getJSONObject(i);if("slashpromo-release.apk".equals(asset.optString("name"))&&asset.optString("browser_download_url").equals("https://github.com/hospitalpro26/slashpromo-site/releases/download/"+release.getString("tag_name")+"/slashpromo-release.apk")&&asset.optString("digest").matches("sha256:[a-fA-F0-9]{64}"))verified=true;}
+            if(!verified)return;
+            runOnUiThread(()->{if(isFinishing()||isDestroyed())return;pendingUpdateNotice=release;showUpdateNotice();});
+        }catch(Exception ignored){}finally{runOnUiThread(()->updateNoticeRunning=false);}}).start();
+    }
+    @Override protected void onResume(){super.onResume();readingForeground=true;startReadingClock();checkUpdateNotice();}
     @Override protected void onPause(){stopReadingClock();readingForeground=false;super.onPause();}
     private void endReading(){stopReadingClock();readingBook=null;readingGeneration=-1;}
     private void chapterAnalytics(String id,java.util.TreeSet<Integer> pages){
@@ -267,7 +292,7 @@ public final class LibraryActivity extends Activity {
         dialog.show();refresh.run();
     }
     private void setFullscreen(boolean enabled){
-        fullscreen=enabled;getWindow().getDecorView().setSystemUiVisibility(enabled?(View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY):0);
+        fullscreen=enabled;if(!enabled)showUpdateNotice();getWindow().getDecorView().setSystemUiVisibility(enabled?(View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY):0);
     }
     private static final class Chapter {
         final String title; final int page,depth;

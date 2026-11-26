@@ -111,3 +111,5 @@ assert(library.includes('"Online account"'));
 assert(read("android/app/src/main/java/com/slashpromo/app/AccountClient.java").includes("ENABLED = true"));
 
 for(const marker of ["applySafeArea(root)","applySafeArea(body)","applySafeArea(sc)","WindowInsets.Type.systemBars()","setMinHeight(dp(56))"])assert(library.includes(marker),marker);
+
+assert(library.includes("checkUpdateNotice()"));assert(library.includes("Slashview update available"));
