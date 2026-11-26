@@ -49,17 +49,17 @@ test('email registration, duplicate protection, verification, approval, recovery
  assert.equal((await call(env,'/v1/admin/accounts')).status,401);
  db.close();
 }));
-test('Google verifies signature/audience and nonce; new accounts stay pending; replay and email linking rejected',()=>withKeys(async()=>{
+test('Google verifies signature/audience and nonce; new accounts receive automatic trials; replay and email linking rejected',()=>withKeys(async()=>{
  const {db,env}=setup();const now=Math.floor(Date.now()/1000);
  const nonce=(await call(env,'/v1/google/nonce',{})).body.nonce;
  const claims={iss:'https://accounts.google.com',aud:env.GOOGLE_CLIENT_ID,iat:now,exp:now+600,sub:'google-test',email:'member@gmail.com',email_verified:true,nonce};
  const token=await jwt(claims);
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,aud:'wrong'})})).status,401);
- assert.equal((await call(env,'/v1/google/login',{...profile,idToken:token})).status,202);
+ const login=await call(env,'/v1/google/login',{...profile,idToken:token,deviceId:'c'.repeat(64)});assert.equal(login.status,200);assert.ok(login.body.token);
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:token})).status,401);
- assert.equal(db.prepare('SELECT status FROM accounts').get().status,'pending');
+ const account=db.prepare('SELECT status,approved_at,trial_until FROM accounts').get();assert.equal(account.status,'approved');assert.ok(Date.parse(account.trial_until)>Date.now()+89*86400000);assert.ok(account.approved_at);
  const next=(await call(env,'/v1/google/nonce',{})).body.nonce;
- assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,nonce:next}),deviceId:'c'.repeat(64)})).status,403);
+ assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,nonce:next}),deviceId:'c'.repeat(64)})).status,200);
  const third=(await call(env,'/v1/google/nonce',{})).body.nonce;
  assert.equal((await call(env,'/v1/google/login',{...profile,idToken:await jwt({...claims,nonce:third,sub:'different-sub'})})).status,409);
  db.close();

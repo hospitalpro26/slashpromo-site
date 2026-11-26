@@ -103,7 +103,7 @@ assert(!library.includes("ocrPages<100"),"OCR must cover all image-only pages");
 assert(library.includes("readerSearch(number)"),"Reader toolbar search");
 assert(library.includes("Return to PDF page"),"Return to reading position");
 
-assert(library.includes("localAccount.promptSeen"),"Optional account prompt");
+assert(library.includes("onlineAccount.promptSeen")&&library.includes("Register with Google")&&library.includes('setNegativeButton("Later",null)'),"Optional Google onboarding");
 assert(library.includes("Save local profile"),"Local account profile");
 assert(library.includes("Online registration pending"),"Explicit offline account status");
 
