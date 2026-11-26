@@ -139,7 +139,7 @@ export default {
    if(!await accessOwner(req,env))return json({error:"Administrator identity required"},401);
    if(!env.ADMIN_TOKEN||env.ADMIN_TOKEN.length<32||!equal(req.headers.get("Authorization")||"","Bearer "+env.ADMIN_TOKEN))return json({error:"Unauthorized"},401);
    if(path.endsWith("/accounts")&&req.method==="GET"){
-    const rows=await env.DB.prepare("SELECT id,name,email,status,email_verified_at,approved_at,trial_until,paid_until FROM accounts ORDER BY created_at DESC LIMIT 100").all();
+    const rows=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.approved_at,a.trial_until,a.paid_until,p.city,p.address,p.whatsapp FROM accounts a LEFT JOIN account_profiles p ON p.account_id=a.id ORDER BY a.created_at DESC LIMIT 100").all();
     return json({accounts:rows.results});
    }
    if(path==="/v1/admin/approve"&&req.method==="POST"){
