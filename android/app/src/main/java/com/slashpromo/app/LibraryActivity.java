@@ -26,7 +26,29 @@ public final class LibraryActivity extends Activity {
     private boolean night=false, fullscreen=false;
     private String libraryFilter="All books";
     private String pageKey(String type,int number){return key(type+"."+number);}
+    private String studyDay(){return new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT).format(new java.util.Date());}
+    private java.util.Set<String> todayPages(){
+        if(!studyDay().equals(prefs().getString("offlineStudy.day","")))return new java.util.HashSet<>();
+        return new java.util.HashSet<>(prefs().getStringSet("offlineStudy.pages",java.util.Collections.emptySet()));
+    }
+    private void recordStudyPage(int number){
+        if(number<0)return;
+        String day=studyDay();
+        java.util.Set<String> seen=todayPages();
+        if(seen.add(bookId+":"+number))prefs().edit().putString("offlineStudy.day",day).putStringSet("offlineStudy.pages",seen).apply();
+    }
+    private void studyProgress(){
+        int count=todayPages().size(),goal=prefs().getInt("offlineStudy.goal",10);
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(12),dp(16),dp(12));
+        panel.addView(label(count+" distinct PDF pages opened today",16));
+        ProgressBar bar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);bar.setMax(goal);bar.setProgress(Math.min(count,goal));panel.addView(bar);
+        panel.addView(label("Daily page goal (1–500)",14));
+        EditText input=new EditText(this);input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);input.setText(String.valueOf(goal));panel.addView(input);
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Offline study progress").setView(panel).setPositiveButton("Save goal",null).setNegativeButton("Close",null).create();
+        dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{try{int n=Integer.parseInt(input.getText().toString());if(n<1||n>500)throw new NumberFormatException();prefs().edit().putInt("offlineStudy.goal",n).apply();dialog.dismiss();home();}catch(NumberFormatException e){input.setError("Enter 1–500");}}));dialog.show();
+    }
     private void rememberPage(int number){
+        recordStudyPage(number);
         java.util.LinkedHashSet<Integer> pages=new java.util.LinkedHashSet<>();pages.add(number);
         for(String value:prefs().getString(key("history"),"").split(",")){try{int p=Integer.parseInt(value);if(p>=0)pages.add(p);}catch(NumberFormatException ignored){}}
         StringBuilder out=new StringBuilder();int count=0;for(int p:pages){if(count++>=100)break;if(out.length()>0)out.append(",");out.append(p);}
@@ -399,6 +421,7 @@ public final class LibraryActivity extends Activity {
         boolean ready=book.isFile()&&index.isFile();LinearLayout hero=new LinearLayout(this);hero.setOrientation(1);hero.setPadding(dp(20),dp(18),dp(20),dp(18));hero.setBackground(dashboardShape(0xff142d58,24));body.addView(hero,new LinearLayout.LayoutParams(-1,-2));hero.addView(dashboardText(ready?"CONTINUE READING":"START YOUR LIBRARY",12,0xffa8c8ef,true));
         LinearLayout bookRow=new LinearLayout(this);bookRow.setGravity(Gravity.CENTER_VERTICAL);hero.addView(bookRow);TextView cover=dashboardText("✚\nMEDICAL\nLIBRARY",14,0xffffffff,true);cover.setGravity(Gravity.CENTER);cover.setBackground(dashboardShape(0xff287c82,12));LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(dp(84),dp(112));cp.setMargins(0,dp(12),dp(14),dp(12));bookRow.addView(cover,cp);LinearLayout details=new LinearLayout(this);details.setOrientation(1);bookRow.addView(details,new LinearLayout.LayoutParams(0,-2,1));details.addView(dashboardText(ready?displayBookTitle(bookId):"Your books, one place",20,0xffffffff,true));int last=prefs().getInt(key("lastPage"),0),total=prefs().getInt(key("readerTotal"),0);details.addView(dashboardText(ready?"Page "+(last+1)+(total>0?" of "+total:""):"Import a PDF to begin",13,0xffc4d8ee,false));if(ready&&total>0){ProgressBar progress=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);progress.setMax(total);progress.setProgress(Math.min(total,last+1));details.addView(progress,new LinearLayout.LayoutParams(-1,dp(12)));}
         TextView resume=dashboardText(ready?"Continue reading  →":"Add your first book  +",16,0xff142d58,true);resume.setGravity(Gravity.CENTER);resume.setBackground(dashboardShape(0xffffffff,12));hero.addView(resume,new LinearLayout.LayoutParams(-1,dp(46)));resume.setOnClickListener(v->{if(ready)page(last);else pickBook();});resume.setFocusable(true);
+        menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
         TextView section=dashboardText("Your study tools",22,0xff142d58,true);section.setPadding(0,dp(20),0,dp(6));body.addView(section);
         LinearLayout row=dashboardRow();dashboardTile(row,"▤","My library",availableBooks().size()+" saved books",0xff1744b6,this::smartLibrary,true);dashboardTile(row,"＋","Import PDF","Add a new book",0xff17866e,this::pickBook,true);
         row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::scanBook,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
