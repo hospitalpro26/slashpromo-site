@@ -5,8 +5,8 @@ let cached=null,expires=0;
 async function keys(){
  if(cached&&Date.now()<expires)return cached;
  let r,data;
- for(const endpoint of ["https://www.googleapis.com/oauth2/v3/certs","https://www.googleapis.com/oauth2/v3/certs?format=json","https://www.googleapis.com/oauth2/v3/certs?alt=json"]){
-  try{const response=await fetch(endpoint,{redirect:"error",headers:{"Accept":"application/json"}});if(!response.ok)continue;const candidate=await response.json();if(!Array.isArray(candidate.keys)||!candidate.keys.length)continue;r=response;data=candidate;break;}catch{}
+ for(const endpoint of ["https://www.googleapis.com/oauth2/v3/certs","https://oauth2.googleapis.com/certs"]){
+  try{const response=await fetch(endpoint,{redirect:"follow",headers:{"Accept":"application/json"}});if(!response.ok){console.log(JSON.stringify({evt:"google_jwks_http",status:response.status,host:new URL(endpoint).hostname}));continue;}const candidate=await response.json();if(!Array.isArray(candidate.keys)||!candidate.keys.length)continue;r=response;data=candidate;break;}catch(e){console.log(JSON.stringify({evt:"google_jwks_fetch_error",host:new URL(endpoint).hostname,kind:e?.name||"Error"}));}
  }
  if(!data)throw Error("Google keys unavailable");
  const age=Number(r.headers.get("cache-control")?.match(/max-age=(\d+)/)?.[1]||60);
