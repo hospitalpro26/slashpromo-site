@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 final class AccountClient {
  // Review build only. Never turn on before staging, policy publication and security tests.
- static final boolean ENABLED = false;
+ static final boolean ENABLED = true;
  private static final String BASE = "https://slashview-api.slashview.workers.dev";
  private static final String ALIAS = "slashview.account.session.v1";
  private final SharedPreferences prefs;
