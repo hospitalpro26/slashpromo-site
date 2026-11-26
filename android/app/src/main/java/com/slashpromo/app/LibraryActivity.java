@@ -167,8 +167,46 @@ public final class LibraryActivity extends Activity {
         AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Offline study progress").setView(panel).setPositiveButton("Save goal",null).setNegativeButton("Close",null).create();
         dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{try{int n=Integer.parseInt(input.getText().toString());if(n<1||n>500)throw new NumberFormatException();prefs().edit().putInt("offlineStudy.goal",n).apply();dialog.dismiss();home();}catch(NumberFormatException e){input.setError("Enter 1–500");}}));dialog.show();
     }
+    private org.json.JSONArray recentEntries(String type){
+        try{return new org.json.JSONArray(prefs().getString("offlineRecent."+type,"[]"));}catch(org.json.JSONException e){return new org.json.JSONArray();}
+    }
+    private void recordRecent(String type,String id,String query,int page){
+        try{
+            org.json.JSONArray old=recentEntries(type),next=new org.json.JSONArray();org.json.JSONObject item=new org.json.JSONObject();
+            item.put("book",id);item.put("query",query);item.put("page",page);item.put("time",System.currentTimeMillis());next.put(item);
+            for(int i=0;i<old.length()&&next.length()<100;i++){org.json.JSONObject row=old.optJSONObject(i);if(row==null)continue;if(id.equals(row.optString("book"))&&query.equalsIgnoreCase(row.optString("query"))&&page==row.optInt("page",-1))continue;next.put(row);}
+            prefs().edit().putString("offlineRecent."+type,next.toString()).apply();
+        }catch(org.json.JSONException ignored){}
+    }
+    private void recentActivity(){
+        menuScreen("Recent activity");
+        button("Recent searches",()->recentList("search"));
+        button("Recently explored pages",()->recentList("page"));
+        button("Recently read books",()->recentList("book"));
+        body.addView(label("History is private to this device. Up to 100 distinct recent entries per category.",14));
+        button("Clear recent activity",()->new AlertDialog.Builder(this).setTitle("Clear recent activity?").setMessage("Only the new recent activity lists will be cleared. Books, notes, bookmarks, highlights and study statistics will remain.").setNegativeButton("Cancel",null).setPositiveButton("Clear",(d,w)->{prefs().edit().remove("offlineRecent.search").remove("offlineRecent.page").remove("offlineRecent.book").apply();recentActivity();}).show());
+    }
+    private void recentList(String type){
+        menuScreen(type.equals("search")?"Recent searches":type.equals("page")?"Recently explored pages":"Recently read books");
+        button("All recent activity",this::recentActivity);
+        org.json.JSONArray entries=recentEntries(type);
+        if(entries.length()==0)body.addView(label("No recent activity yet.",16));
+        java.text.DateFormat date=java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM,java.text.DateFormat.SHORT);
+        for(int i=0;i<entries.length();i++){
+            org.json.JSONObject row=entries.optJSONObject(i);if(row==null)continue;
+            String id=row.optString("book"),q=row.optString("query");int p=row.optInt("page",-1);
+            String when=date.format(new java.util.Date(row.optLong("time")));
+            String name=id.isEmpty()?"All books":displayBookTitle(id);
+            String title=type.equals("search")?q+" • "+name:type.equals("page")?name+" • PDF page "+(p+1):name;
+            button(title+"\n"+when,()->{
+                if(type.equals("search")&&id.isEmpty()){searchAllBooks(q);return;}
+                if(!availableBooks().contains(id)){Toast.makeText(this,"Book unavailable",Toast.LENGTH_SHORT).show();return;}
+                selectBook(id);if(type.equals("search"))find(q);else page(type.equals("book")?prefs().getInt(key("lastPage"),0):p);
+            });
+        }
+    }
     private void rememberPage(int number){
-        recordStudyPage(number);
+        recordStudyPage(number);recordRecent("page",bookId,"",number);recordRecent("book",bookId,"",-1);
         java.util.LinkedHashSet<Integer> pages=new java.util.LinkedHashSet<>();pages.add(number);
         for(String value:prefs().getString(key("history"),"").split(",")){try{int p=Integer.parseInt(value);if(p>=0)pages.add(p);}catch(NumberFormatException ignored){}}
         StringBuilder out=new StringBuilder();int count=0;for(int p:pages){if(count++>=100)break;if(out.length()>0)out.append(",");out.append(p);}
@@ -447,11 +485,12 @@ public final class LibraryActivity extends Activity {
     }
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
     private void menuScreen(String title){endReading();generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
-    private void searchAllBooks(){
-        menuScreen("Search all books");EditText query=new EditText(this);query.setSingleLine(true);query.setHint("Medical topic or phrase");body.addView(query);
+    private void searchAllBooks(){searchAllBooks("");}
+    private void searchAllBooks(String initial){
+        menuScreen("Search all books");EditText query=new EditText(this);query.setSingleLine(true);query.setHint("Medical topic or phrase");query.setText(initial);body.addView(query);
         button("Search library",()->{
             String clean=query.getText().toString().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty()){query.setError("Enter a topic");return;}
-            final java.util.ArrayList<String> ids=availableBooks();menuScreen("Library search results");final int token=generation;TextView progress=label("Searching local indexes…",15);body.addView(progress);
+            recordRecent("search","",query.getText().toString().trim(),-1);final java.util.ArrayList<String> ids=availableBooks();menuScreen("Library search results");final int token=generation;TextView progress=label("Searching local indexes…",15);body.addView(progress);
             worker.execute(()->{
                 java.util.ArrayList<String> resultIds=new java.util.ArrayList<>(),snippets=new java.util.ArrayList<>();java.util.ArrayList<Integer> numbers=new java.util.ArrayList<>();int failed=0;
                 for(String id:ids){if(generation!=token)return;try(SQLiteDatabase db=SQLiteDatabase.openDatabase(new File(bookDir(id),"book.sqlite").getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24) FROM pages WHERE pages MATCH ? ORDER BY docid LIMIT 100",new String[]{"\""+clean+"\""})){while(c.moveToNext()){resultIds.add(id);numbers.add(c.getInt(0)-1);snippets.add(c.getString(1));}}catch(Exception e){failed++;}}
@@ -599,6 +638,7 @@ public final class LibraryActivity extends Activity {
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
         menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
         menuCard("Study timer","Set a focused offline session",this::studyTimer,true);
+        menuCard("Recent activity","Search history, explored pages and recently read books",this::recentActivity,true);
         menuCard("Study analytics","Daily, weekly and monthly reading history",this::analytics,true);
         TextView section=dashboardText("Your study tools",22,0xff142d58,true);section.setPadding(0,dp(20),0,dp(6));body.addView(section);
         LinearLayout row=dashboardRow();dashboardTile(row,"▤","My library",availableBooks().size()+" saved books",0xff1744b6,this::smartLibrary,true);dashboardTile(row,"＋","Import PDF","Add a new book",0xff17866e,this::pickBook,true);
@@ -711,7 +751,7 @@ public final class LibraryActivity extends Activity {
     }
     private void find(String q){
         String clean=q.trim().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty())return;
-        lastQuery=q;int token=++generation;layout();body.addView(label("Search: "+q,22));body.addView(label("Book: "+displayBookTitle(bookId),15));button("Change book or search again",this::readingMenu);button("Back to library",this::home);body.addView(label("Finding topic headings and related pages…",14));
+        recordRecent("search",bookId,q.trim(),-1);lastQuery=q;int token=++generation;layout();body.addView(label("Search: "+q,22));body.addView(label("Book: "+displayBookTitle(bookId),15));button("Change book or search again",this::readingMenu);button("Back to library",this::home);body.addView(label("Finding topic headings and related pages…",14));
         worker.execute(()->{
             java.util.ArrayList<Hit> hits=new java.util.ArrayList<>();String wanted=normalized(clean);
             try(SQLiteDatabase db=SQLiteDatabase.openDatabase(index.getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24),content FROM pages WHERE pages MATCH ? ORDER BY docid",new String[]{"\""+clean+"\""})){
