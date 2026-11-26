@@ -49,6 +49,16 @@ public final class LibraryActivity extends Activity {
     @Override protected void onResume(){super.onResume();readingForeground=true;startReadingClock();}
     @Override protected void onPause(){stopReadingClock();readingForeground=false;super.onPause();}
     private void endReading(){stopReadingClock();readingBook=null;readingGeneration=-1;}
+    private void chapterAnalytics(String id,java.util.TreeSet<Integer> pages){
+        final int token=generation;final File source=new File(bookDir(id),"book.pdf");
+        worker.execute(()->{
+            java.util.List<Chapter> rows=chapterCache.get(id);
+            if(rows==null){rows=new java.util.ArrayList<>();try(PDDocument doc=PDDocument.load(source,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){com.tom_roush.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline outline=doc.getDocumentCatalog().getDocumentOutline();if(outline!=null)collectChapters(doc,outline.getFirstChild(),0,rows,java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<Object,Boolean>()),new int[]{0});chapterCache.put(id,rows);}catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==token)Toast.makeText(this,"Unable to read chapter index",Toast.LENGTH_SHORT).show();});return;}}
+            java.util.Map<String,Integer> counts=new java.util.LinkedHashMap<>();for(int p:pages){Chapter c=activeChapter(rows,p);String title=c==null?"Unassigned PDF pages":c.title+" (starts p. "+(c.page+1)+")";counts.put(title,counts.getOrDefault(title,0)+1);}
+            StringBuilder out=new StringBuilder();for(java.util.Map.Entry<String,Integer> e:counts.entrySet())out.append(e.getKey()).append(" • ").append(e.getValue()).append(" distinct pages\n");
+            final String result=out.toString();runOnUiThread(()->{if(!isDestroyed()&&generation==token)new AlertDialog.Builder(this).setTitle("Chapter activity • "+displayBookTitle(id)).setMessage(result+"\nBased on embedded PDF chapter links, not chapter completion.").setPositiveButton("Close",null).show();});
+        });
+    }
     private void analytics(){
         endReading();menuScreen("Study analytics");
         Spinner period=new Spinner(this);period.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"Today","Last 7 days","Last 30 days"}));body.addView(period);
@@ -80,6 +90,15 @@ public final class LibraryActivity extends Activity {
                 Button item=new Button(this);item.setAllCaps(false);item.setText(displayBookTitle(id)+" • "+times.getOrDefault(id,0L)/60000+" min • "+set.size()+" distinct pages");report.addView(item);
                 item.setOnClickListener(v->{java.util.ArrayList<Integer> nums=new java.util.ArrayList<>(set);String[] labels=new String[nums.size()];for(int j=0;j<nums.size();j++)labels[j]="PDF page "+(nums.get(j)+1);new AlertDialog.Builder(this).setTitle(displayBookTitle(id)+" — page index").setItems(labels,(d,w)->{if(availableBooks().contains(id)){selectBook(id);page(nums.get(w));}else Toast.makeText(this,"Book no longer available",Toast.LENGTH_SHORT).show();}).setNegativeButton("Close",null).show();});
             }
+            int streak=0;java.util.Calendar streakDay=java.util.Calendar.getInstance();
+            for(int i=0;i<3660;i++){String date=fmt.format(streakDay.getTime());boolean active=!prefs().getStringSet("offlineStudy.pageLog."+date,java.util.Collections.emptySet()).isEmpty()||prefs().getLong("offlineStudy.minutes."+date,0)>0;if(!active&&i!=0)break;if(active)streak++;streakDay.add(java.util.Calendar.DATE,-1);}
+            report.addView(label("Study streak: "+streak+" days",20));
+            report.addView(label("Reading activity by day",18));
+            java.util.Calendar graphDay=java.util.Calendar.getInstance();graphDay.add(java.util.Calendar.DATE,1-days);
+            long[] values=new long[days];String[] dates=new String[days];long peak=1;
+            for(int i=0;i<days;i++){dates[i]=fmt.format(graphDay.getTime());String prefix="offlineStudy.readMillis."+dates[i]+".";for(java.util.Map.Entry<String,?> e:data.entrySet())if(e.getKey().startsWith(prefix)&&e.getValue() instanceof Long)values[i]+=(Long)e.getValue();peak=Math.max(peak,values[i]);graphDay.add(java.util.Calendar.DATE,1);}
+            for(int i=0;i<days;i++){report.addView(label(dates[i]+" • "+values[i]/60000+" min",12));ProgressBar bar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);bar.setMax(1000);bar.setProgress((int)(1000.0*values[i]/peak));report.addView(bar,new LinearLayout.LayoutParams(-1,dp(10)));}
+            for(String id:sorted){java.util.TreeSet<Integer> set=pages.get(id);if(set==null||set.isEmpty()||!availableBooks().contains(id))continue;Button chapters=new Button(this);chapters.setAllCaps(false);chapters.setText("Chapter activity • "+displayBookTitle(id));report.addView(chapters);chapters.setOnClickListener(v->chapterAnalytics(id,new java.util.TreeSet<>(set)));}
             report.addView(label("Daily breakdown",18));report.addView(label(daily.toString(),14));report.addView(label("Reading time estimates foreground PDF viewing, not attention. Page counts are distinct opened pages, not proof of completion. History begins with this update.",13));
         };
         period.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener(){public void onItemSelected(android.widget.AdapterView<?> parent,View v,int pos,long id){refresh.run();}public void onNothingSelected(android.widget.AdapterView<?> parent){}});refresh.run();
