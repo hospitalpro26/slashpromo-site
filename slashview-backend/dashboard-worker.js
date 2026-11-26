@@ -100,8 +100,16 @@ async function limited(db,key,max,window) {
  return row.hits>max;
 }
 function entitlement(account, now=Date.now()) {
+ if(account.owner_lifetime===1)return "owner";
  const active = value => typeof value === "string" && Number.isFinite(Date.parse(value)) && Date.parse(value)>now;
  return active(account.paid_until) ? "paid" : active(account.trial_until) ? "trial" : "expired";
+}
+async function ownerMembership(env,account){
+ const owner=String(env.ACCESS_OWNER_EMAIL||"").trim().toLowerCase();
+ if(!owner||!account?.email_verified_at||String(account.email||"").toLowerCase()!==owner)return account;
+ const identity=await env.DB.prepare("SELECT subject FROM google_identities WHERE account_id=?").bind(account.id).first();
+ if(identity&&env.OWNER_GOOGLE_SUBJECT&&identity.subject===env.OWNER_GOOGLE_SUBJECT)return {...account,owner_lifetime:1};
+ return account;
 }
 async function createSession(env,account,deviceId){
  if(typeof deviceId!=="string"||!/^[a-f0-9]{64}$/.test(deviceId))return json({error:"Installation identifier required"},400);
@@ -183,7 +191,7 @@ export default {
     return createSession(env,{id},input.deviceId);
    }
    if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval required"},403);
-   if(entitlement(account)==="expired")return json({error:"Membership expired",membership:"expired"},403);
+   if(entitlement(await ownerMembership(env,account))==="expired")return json({error:"Membership expired",membership:"expired"},403);
    return createSession(env,account,input.deviceId);
   }
   if(req.method==="POST" && ["/v1/verification/request","/v1/verification/confirm","/v1/recovery/request","/v1/recovery/confirm"].includes(path)){
@@ -289,7 +297,7 @@ export default {
    const hash=await passwordHash(pass,account?.salt||"0".repeat(64));
    if(!account||!equal(hash,account.password_hash))return json({error:"Invalid credentials"},401);
    if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval and email verification required"},403);
-   if(entitlement(account)==="expired")return json({error:"Membership expired",membership:"expired"},403);
+   if(entitlement(await ownerMembership(env,account))==="expired")return json({error:"Membership expired",membership:"expired"},403);
    return createSession(env,account,input.deviceId);
   }
   if(["/v1/me","/v1/logout"].includes(path)){
@@ -300,7 +308,7 @@ export default {
    if(path!=="/v1/me"||req.method!=="GET")return json({error:"Not found"},404);
    const account=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.trial_until,a.paid_until FROM accounts a JOIN sessions s ON s.account_id=a.id WHERE s.token_hash=? AND s.expires_at>? AND EXISTS(SELECT 1 FROM devices d WHERE d.account_id=a.id AND d.device_hash=s.device_hash)").bind(hash,Math.floor(Date.now()/1000)).first();
    if(!account||account.status!=="approved"||!account.email_verified_at)return json({error:"Unauthorized"},401);
-   const membership=entitlement(account);
+   const membership=entitlement(await ownerMembership(env,account));
    if(membership==="expired")return json({error:"Membership expired",membership},403);
    return json({account,membership});
   }
