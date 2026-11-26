@@ -58,9 +58,11 @@ const decode=s=>JSON.parse(new TextDecoder().decode(bytes(s)));
 let cached=null,expires=0;
 async function keys(){
  if(cached&&Date.now()<expires)return cached;
- let r;try{r=await fetch("https://www.googleapis.com/oauth2/v3/certs",{redirect:"error"});}catch{throw Error("Google keys unavailable");}
- if(!r.ok)throw Error("Google keys unavailable");
- const data=await r.json();if(!Array.isArray(data.keys))throw Error("Invalid keys");
+ let r,data;
+ for(const endpoint of ["https://www.googleapis.com/oauth2/v3/certs","https://www.googleapis.com/oauth2/v3/certs?format=json","https://www.googleapis.com/oauth2/v3/certs?alt=json"]){
+  try{const response=await fetch(endpoint,{redirect:"error",headers:{"Accept":"application/json"}});if(!response.ok)continue;const candidate=await response.json();if(!Array.isArray(candidate.keys)||!candidate.keys.length)continue;r=response;data=candidate;break;}catch{}
+ }
+ if(!data)throw Error("Google keys unavailable");
  const age=Number(r.headers.get("cache-control")?.match(/max-age=(\d+)/)?.[1]||60);
  cached=data.keys;expires=Date.now()+Math.min(age,3600)*1000;return cached;
 }
