@@ -170,6 +170,7 @@ export default {
     return json({nonce});
    }
    const input=await readJson(req,12000);if(!input)return json({error:"Invalid request"},400);
+   if(typeof input.deviceId!=="string"||!/^[a-f0-9]{64}$/.test(input.deviceId))return json({error:"Installation identifier required"},400);
    let claims;try{claims=await verifyGoogle(input.idToken,env.GOOGLE_CLIENT_ID)}catch(e){const reason=["Google keys unavailable","Invalid keys","Unknown signing key","Google audience mismatch","Google authorized party mismatch","Invalid claims","Invalid signature"].includes(e.message)?e.message:"Invalid token";console.log(JSON.stringify({evt:"google_verification_failed",reason}));return json({error:"Google sign-in: "+reason},reason==="Google keys unavailable"?503:401)}
    const consumed=await env.DB.prepare("DELETE FROM google_nonces WHERE nonce_hash=? AND expires_at>?").bind(await digest(claims.nonce),now).run();
    if(consumed.meta.changes!==1)return json({error:"Invalid or expired challenge"},401);
@@ -295,6 +296,7 @@ export default {
    }
    const account=await env.DB.prepare("SELECT * FROM accounts WHERE email=?").bind(email).first();
    const hash=await passwordHash(pass,account?.salt||"0".repeat(64));
+   if(account&&String(account.email||"").toLowerCase()===String(env.ACCESS_OWNER_EMAIL||"").trim().toLowerCase())return json({error:"Use Google sign-in for the owner account"},403);
    if(!account||!equal(hash,account.password_hash))return json({error:"Invalid credentials"},401);
    if(account.status!=="approved"||!account.email_verified_at)return json({status:account.status,error:"Account approval and email verification required"},403);
    if(entitlement(await ownerMembership(env,account))==="expired")return json({error:"Membership expired",membership:"expired"},403);
