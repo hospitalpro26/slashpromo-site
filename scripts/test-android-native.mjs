@@ -62,7 +62,7 @@ for(const marker of ["getDocumentOutline()","findDestinationPage(doc)","getFirst
 console.log("PASS offline chapter navigation structural checks");
 
 for(const marker of ['pageKey("highlights",currentPage)',"transform.invert(inverse)","saveHighlights()","studyNote(number)","savedNotes","rememberPage(number)","SYSTEM_UI_FLAG_IMMERSIVE_STICKY","Exit full screen","Main chapters only","activeChapter(all,currentPage)"])assert(library.includes(marker),marker);
-assert(app.includes("versionName '0.8.0'"));
+assert(app.includes("versionName '0.9.0'"));
 assert(Number(app.match(/versionCode\s+(\d+)/)?.[1]) >= 21);
 console.log("PASS Smart Study Reader structural safeguards");
 
@@ -72,7 +72,7 @@ console.log("PASS revision centre structural checks");
 for(const marker of ["No saved revision pages yet","No matching revision pages","pages.removeIf(p->p<0)"])assert(library.includes(marker),marker);
 console.log("PASS revision centre stability structural checks");
 
-for(const marker of ["setPageLimit(50)","SCANNER_MODE_FULL","getStartScanIntent(this)","scanned.getPdf().getUri()","recognizePage(pending,p-1,recognizer)","ocrPages<100","Image-only PDF","Rename selected book","final File source=book","Last reading position"])assert(library.includes(marker),marker);
+for(const marker of ["setPageLimit(50)","SCANNER_MODE_FULL","getStartScanIntent(this)","scanned.getPdf().getUri()","recognizePage(pending,p-1,recognizer)","ocrFailures++","Image-only PDF","Rename selected book","final File source=book","Last reading position"])assert(library.includes(marker),marker);
 assert(app.includes("com.google.mlkit:text-recognition:16.0.1"));
 assert(app.includes("play-services-mlkit-document-scanner:16.0.0"));
 console.log("PASS cumulative reader and local scanner structural checks");
@@ -97,3 +97,5 @@ for(const marker of ["private void smartLibrary()","private void readerSettings(
 console.log("PASS smart library and reader settings structural checks");
 
 for(const marker of ["dashboardNav(","dashboardRow(","CONTINUE READING","Your study tools","setFillViewport(true)"])assert(library.includes(marker),marker);
+
+assert(!library.includes("ocrPages<100"),"OCR must cover all image-only pages");

@@ -26,7 +26,187 @@ public final class LibraryActivity extends Activity {
     private boolean night=false, fullscreen=false;
     private String libraryFilter="All books";
     private String pageKey(String type,int number){return key(type+"."+number);}
+    private String studyDay(){return new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT).format(new java.util.Date());}
+    private java.util.Set<String> todayPages(){
+        if(!studyDay().equals(prefs().getString("offlineStudy.day","")))return new java.util.HashSet<>();
+        return new java.util.HashSet<>(prefs().getStringSet("offlineStudy.pages",java.util.Collections.emptySet()));
+    }
+    private long readingSince=0;
+    private String readingBook=null,readingDay=null;
+    private int readingGeneration=-1;
+    private boolean readingForeground=false;
+    private void stopReadingClock(){
+        if(readingSince!=0&&readingBook!=null){
+            long elapsed=Math.max(0,android.os.SystemClock.elapsedRealtime()-readingSince);
+            String k="offlineStudy.readMillis."+readingDay+"."+readingBook;
+            prefs().edit().putLong(k,prefs().getLong(k,0)+elapsed).apply();
+        }
+        readingSince=0;
+    }
+    private void startReadingClock(){
+        if(readingForeground&&readingGeneration==generation&&readingBook!=null&&readingSince==0){readingDay=studyDay();readingSince=android.os.SystemClock.elapsedRealtime();}
+    }
+    @Override protected void onResume(){super.onResume();readingForeground=true;startReadingClock();}
+    @Override protected void onPause(){stopReadingClock();readingForeground=false;super.onPause();}
+    private void endReading(){stopReadingClock();readingBook=null;readingGeneration=-1;}
+    private void chapterAnalytics(String id,java.util.TreeSet<Integer> pages){
+        final int token=generation;final File source=new File(bookDir(id),"book.pdf");
+        worker.execute(()->{
+            java.util.List<Chapter> rows=chapterCache.get(id);
+            if(rows==null){rows=new java.util.ArrayList<>();try(PDDocument doc=PDDocument.load(source,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){com.tom_roush.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline outline=doc.getDocumentCatalog().getDocumentOutline();if(outline!=null)collectChapters(doc,outline.getFirstChild(),0,rows,java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<Object,Boolean>()),new int[]{0});chapterCache.put(id,rows);}catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==token)Toast.makeText(this,"Unable to read chapter index",Toast.LENGTH_SHORT).show();});return;}}
+            java.util.Map<String,Integer> counts=new java.util.LinkedHashMap<>();for(int p:pages){Chapter c=activeChapter(rows,p);String title=c==null?"Unassigned PDF pages":c.title+" (starts p. "+(c.page+1)+")";counts.put(title,counts.getOrDefault(title,0)+1);}
+            StringBuilder out=new StringBuilder();for(java.util.Map.Entry<String,Integer> e:counts.entrySet())out.append(e.getKey()).append(" • ").append(e.getValue()).append(" distinct pages\n");
+            final String result=out.toString();runOnUiThread(()->{if(!isDestroyed()&&generation==token)new AlertDialog.Builder(this).setTitle("Chapter activity • "+displayBookTitle(id)).setMessage(result+"\nBased on embedded PDF chapter links, not chapter completion.").setPositiveButton("Close",null).show();});
+        });
+    }
+    private void analytics(){
+        endReading();menuScreen("Study analytics");
+        Spinner period=new Spinner(this);period.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"Today","Last 7 days","Last 30 days"}));body.addView(period);
+        LinearLayout report=new LinearLayout(this);report.setOrientation(1);body.addView(report);
+        Runnable refresh=()->{
+            report.removeAllViews();int days=new int[]{1,7,30}[Math.max(0,period.getSelectedItemPosition())];
+            java.util.Map<String,?> data=prefs().getAll();
+            java.util.Map<String,Long> times=new java.util.HashMap<>();
+            java.util.Map<String,java.util.TreeSet<Integer>> pages=new java.util.HashMap<>();
+            java.util.Calendar cal=java.util.Calendar.getInstance();java.text.SimpleDateFormat fmt=new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT);
+            long total=0,timer=0;StringBuilder daily=new StringBuilder();
+            for(int i=0;i<days;i++){
+                String date=fmt.format(cal.getTime()),prefix="offlineStudy.readMillis."+date+".";long dayMs=0;
+                for(java.util.Map.Entry<String,?> e:data.entrySet()){
+                    if(e.getKey().startsWith(prefix)&&e.getValue() instanceof Long){String id=e.getKey().substring(prefix.length());long ms=(Long)e.getValue();dayMs+=ms;times.put(id,times.getOrDefault(id,0L)+ms);}
+                }
+                for(String entry:prefs().getStringSet("offlineStudy.pageLog."+date,java.util.Collections.emptySet())){
+                    int split=entry.lastIndexOf(':');if(split<1)continue;try{int n=Integer.parseInt(entry.substring(split+1));if(n>=0)pages.computeIfAbsent(entry.substring(0,split),k->new java.util.TreeSet<>()).add(n);}catch(NumberFormatException ignored){}
+                }
+                long tm=prefs().getLong("offlineStudy.minutes."+date,0);timer+=tm;total+=dayMs;daily.append(date).append(" • ").append(dayMs/60000).append(" reading min • ").append(tm).append(" timer min\n");cal.add(java.util.Calendar.DATE,-1);
+            }
+            report.addView(label("PDF reading: "+total/60000+" min "+(total/1000)%60+" sec",22));
+            report.addView(label("Completed timer sessions: "+timer+" min (separate, not added)",15));
+            java.util.Set<String> ids=new java.util.HashSet<>(times.keySet());ids.addAll(pages.keySet());java.util.ArrayList<String> sorted=new java.util.ArrayList<>(ids);
+            sorted.sort((x,y)->Long.compare(times.getOrDefault(y,0L),times.getOrDefault(x,0L)));
+            if(!sorted.isEmpty()&&times.getOrDefault(sorted.get(0),0L)>0)report.addView(label("Most read by time: "+displayBookTitle(sorted.get(0)),18));
+            for(String id:sorted){
+                java.util.TreeSet<Integer> set=pages.getOrDefault(id,new java.util.TreeSet<>());
+                Button item=new Button(this);item.setAllCaps(false);item.setText(displayBookTitle(id)+" • "+times.getOrDefault(id,0L)/60000+" min • "+set.size()+" distinct pages");report.addView(item);
+                item.setOnClickListener(v->{java.util.ArrayList<Integer> nums=new java.util.ArrayList<>(set);String[] labels=new String[nums.size()];for(int j=0;j<nums.size();j++)labels[j]="PDF page "+(nums.get(j)+1);new AlertDialog.Builder(this).setTitle(displayBookTitle(id)+" — page index").setItems(labels,(d,w)->{if(availableBooks().contains(id)){selectBook(id);page(nums.get(w));}else Toast.makeText(this,"Book no longer available",Toast.LENGTH_SHORT).show();}).setNegativeButton("Close",null).show();});
+            }
+            int streak=0;java.util.Calendar streakDay=java.util.Calendar.getInstance();
+            for(int i=0;i<3660;i++){String date=fmt.format(streakDay.getTime());boolean active=!prefs().getStringSet("offlineStudy.pageLog."+date,java.util.Collections.emptySet()).isEmpty()||prefs().getLong("offlineStudy.minutes."+date,0)>0;if(!active&&i!=0)break;if(active)streak++;streakDay.add(java.util.Calendar.DATE,-1);}
+            report.addView(label("Study streak: "+streak+" days",20));
+            report.addView(label("Reading activity by day",18));
+            java.util.Calendar graphDay=java.util.Calendar.getInstance();graphDay.add(java.util.Calendar.DATE,1-days);
+            long[] values=new long[days];String[] dates=new String[days];long peak=1;
+            for(int i=0;i<days;i++){dates[i]=fmt.format(graphDay.getTime());String prefix="offlineStudy.readMillis."+dates[i]+".";for(java.util.Map.Entry<String,?> e:data.entrySet())if(e.getKey().startsWith(prefix)&&e.getValue() instanceof Long)values[i]+=(Long)e.getValue();peak=Math.max(peak,values[i]);graphDay.add(java.util.Calendar.DATE,1);}
+            for(int i=0;i<days;i++){report.addView(label(dates[i]+" • "+values[i]/60000+" min",12));ProgressBar bar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);bar.setMax(1000);bar.setProgress((int)(1000.0*values[i]/peak));report.addView(bar,new LinearLayout.LayoutParams(-1,dp(10)));}
+            for(String id:sorted){java.util.TreeSet<Integer> set=pages.get(id);if(set==null||set.isEmpty()||!availableBooks().contains(id))continue;Button chapters=new Button(this);chapters.setAllCaps(false);chapters.setText("Chapter activity • "+displayBookTitle(id));report.addView(chapters);chapters.setOnClickListener(v->chapterAnalytics(id,new java.util.TreeSet<>(set)));}
+            report.addView(label("Daily breakdown",18));report.addView(label(daily.toString(),14));report.addView(label("Reading time estimates foreground PDF viewing, not attention. Page counts are distinct opened pages, not proof of completion. History begins with this update.",13));
+        };
+        period.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener(){public void onItemSelected(android.widget.AdapterView<?> parent,View v,int pos,long id){refresh.run();}public void onNothingSelected(android.widget.AdapterView<?> parent){}});refresh.run();
+    }
+    private void recordStudyPage(int number){
+        if(number<0)return;
+        String day=studyDay();
+        String log="offlineStudy.pageLog."+day;java.util.Set<String> logged=new java.util.HashSet<>(prefs().getStringSet(log,java.util.Collections.emptySet()));if(logged.add(bookId+":"+number))prefs().edit().putStringSet(log,logged).apply();
+        java.util.Set<String> seen=todayPages();
+        if(seen.add(bookId+":"+number))prefs().edit().putString("offlineStudy.day",day).putStringSet("offlineStudy.pages",seen).apply();
+    }
+    private void studyTimer(){
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(12),dp(16),dp(12));
+        panel.addView(label("Set a focused study session. The timer runs while this dialog is open.",15));
+        EditText minutes=new EditText(this);minutes.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);minutes.setText("25");panel.addView(minutes);
+        TextView clock=label("Ready",30);clock.setGravity(Gravity.CENTER);panel.addView(clock);
+        Button start=new Button(this);start.setText("Start session");panel.addView(start);
+        final CountDownTimer[] timer={null};
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Offline study timer").setView(panel).setNegativeButton("Close",null).create();
+        start.setOnClickListener(v->{
+            int n;try{n=Integer.parseInt(minutes.getText().toString());if(n<1||n>180)throw new NumberFormatException();}catch(NumberFormatException e){minutes.setError("Enter 1–180 minutes");return;}
+            final int duration=n;minutes.setEnabled(false);start.setEnabled(false);
+            timer[0]=new CountDownTimer(duration*60000L,1000L){
+                public void onTick(long ms){long sec=(ms+999)/1000;clock.setText(String.format(java.util.Locale.ROOT,"%02d:%02d",sec/60,sec%60));}
+                public void onFinish(){clock.setText("Session complete");String k="offlineStudy.minutes."+studyDay();prefs().edit().putLong(k,prefs().getLong(k,0)+duration).apply();minutes.setEnabled(true);start.setEnabled(true);}
+            }.start();
+        });
+        dialog.setOnDismissListener(d->{if(timer[0]!=null)timer[0].cancel();});dialog.show();
+    }
+    private void weeklyStudy(){
+        java.util.Calendar day=java.util.Calendar.getInstance();java.text.SimpleDateFormat format=new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT);
+        StringBuilder rows=new StringBuilder();long total=0;
+        for(int i=0;i<7;i++){String date=format.format(day.getTime());long minutes=prefs().getLong("offlineStudy.minutes."+date,0);total+=minutes;rows.append(date).append("  •  ").append(minutes).append(" min\\n");day.add(java.util.Calendar.DATE,-1);}
+        new AlertDialog.Builder(this).setTitle("Last 7 days • "+total+" minutes").setMessage(rows.toString()+"Only completed timer sessions are counted.").setPositiveButton("Close",null).show();
+    }
+    private void offlineFlashcards(){
+        menuScreen("Offline flashcards");
+        final String storage="offlineStudy.flashcards";
+        org.json.JSONArray cards;
+        try{cards=new org.json.JSONArray(prefs().getString(storage,"[]"));}catch(org.json.JSONException e){body.addView(label("Saved cards could not be read. No data was changed.",15));return;}
+        final org.json.JSONArray deck=cards;
+        body.addView(label(deck.length()+" saved cards • private to this device",16));
+        button("Create flashcard",()->{
+            LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(8),dp(16),dp(8));
+            EditText front=new EditText(this),back=new EditText(this);front.setHint("Question");back.setHint("Answer");front.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(2000)});back.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(8000)});panel.addView(front);panel.addView(back);
+            AlertDialog d=new AlertDialog.Builder(this).setTitle("New flashcard").setView(panel).setPositiveButton("Save",null).setNegativeButton("Cancel",null).create();
+            d.setOnShowListener(x->d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
+                String q=front.getText().toString().trim(),answer=back.getText().toString().trim();
+                if(q.isEmpty()){front.setError("Enter a question");return;}if(answer.isEmpty()){back.setError("Enter an answer");return;}
+                try{org.json.JSONObject card=new org.json.JSONObject();card.put("question",q);card.put("answer",answer);deck.put(card);prefs().edit().putString(storage,deck.toString()).apply();d.dismiss();offlineFlashcards();}catch(org.json.JSONException e){Toast.makeText(this,"Unable to save card",Toast.LENGTH_SHORT).show();}
+            }));d.show();
+        });
+        for(int i=0;i<deck.length();i++){
+            org.json.JSONObject card=deck.optJSONObject(i);if(card==null)continue;
+            String q=card.optString("question"),answer=card.optString("answer");
+            menuCard(q,"Tap to reveal answer",()->new AlertDialog.Builder(this).setTitle(q).setMessage(answer).setPositiveButton("Close",null).show(),true);
+        }
+    }
+    private void studyProgress(){
+        int count=todayPages().size(),goal=prefs().getInt("offlineStudy.goal",10);
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(12),dp(16),dp(12));
+        panel.addView(label(count+" distinct PDF pages opened today",16));
+        ProgressBar bar=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);bar.setMax(goal);bar.setProgress(Math.min(count,goal));panel.addView(bar);
+        panel.addView(label("Daily page goal (1–500)",14));
+        EditText input=new EditText(this);input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);input.setText(String.valueOf(goal));panel.addView(input);
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Offline study progress").setView(panel).setPositiveButton("Save goal",null).setNegativeButton("Close",null).create();
+        dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{try{int n=Integer.parseInt(input.getText().toString());if(n<1||n>500)throw new NumberFormatException();prefs().edit().putInt("offlineStudy.goal",n).apply();dialog.dismiss();home();}catch(NumberFormatException e){input.setError("Enter 1–500");}}));dialog.show();
+    }
+    private org.json.JSONArray recentEntries(String type){
+        try{return new org.json.JSONArray(prefs().getString("offlineRecent."+type,"[]"));}catch(org.json.JSONException e){return new org.json.JSONArray();}
+    }
+    private void recordRecent(String type,String id,String query,int page){
+        try{
+            org.json.JSONArray old=recentEntries(type),next=new org.json.JSONArray();org.json.JSONObject item=new org.json.JSONObject();
+            item.put("book",id);item.put("query",query);item.put("page",page);item.put("time",System.currentTimeMillis());next.put(item);
+            for(int i=0;i<old.length()&&next.length()<100;i++){org.json.JSONObject row=old.optJSONObject(i);if(row==null)continue;if(id.equals(row.optString("book"))&&query.equalsIgnoreCase(row.optString("query"))&&page==row.optInt("page",-1))continue;next.put(row);}
+            prefs().edit().putString("offlineRecent."+type,next.toString()).apply();
+        }catch(org.json.JSONException ignored){}
+    }
+    private void recentActivity(){
+        menuScreen("Recent activity");
+        button("Recent searches",()->recentList("search"));
+        button("Recently explored pages",()->recentList("page"));
+        button("Recently read books",()->recentList("book"));
+        body.addView(label("History is private to this device. Up to 100 distinct recent entries per category.",14));
+        button("Clear recent activity",()->new AlertDialog.Builder(this).setTitle("Clear recent activity?").setMessage("Only the new recent activity lists will be cleared. Books, notes, bookmarks, highlights and study statistics will remain.").setNegativeButton("Cancel",null).setPositiveButton("Clear",(d,w)->{prefs().edit().remove("offlineRecent.search").remove("offlineRecent.page").remove("offlineRecent.book").apply();recentActivity();}).show());
+    }
+    private void recentList(String type){
+        menuScreen(type.equals("search")?"Recent searches":type.equals("page")?"Recently explored pages":"Recently read books");
+        button("All recent activity",this::recentActivity);
+        org.json.JSONArray entries=recentEntries(type);
+        if(entries.length()==0)body.addView(label("No recent activity yet.",16));
+        java.text.DateFormat date=java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM,java.text.DateFormat.SHORT);
+        for(int i=0;i<entries.length();i++){
+            org.json.JSONObject row=entries.optJSONObject(i);if(row==null)continue;
+            String id=row.optString("book"),q=row.optString("query");int p=row.optInt("page",-1);
+            String when=date.format(new java.util.Date(row.optLong("time")));
+            String name=id.isEmpty()?"All books":displayBookTitle(id);
+            String title=type.equals("search")?q+" • "+name:type.equals("page")?name+" • PDF page "+(p+1):name;
+            button(title+"\n"+when,()->{
+                if(type.equals("search")&&id.isEmpty()){searchAllBooks(q);return;}
+                if(!availableBooks().contains(id)){Toast.makeText(this,"Book unavailable",Toast.LENGTH_SHORT).show();return;}
+                selectBook(id);if(type.equals("search"))find(q);else page(type.equals("book")?prefs().getInt(key("lastPage"),0):p);
+            });
+        }
+    }
     private void rememberPage(int number){
+        recordStudyPage(number);recordRecent("page",bookId,"",number);recordRecent("book",bookId,"",-1);
         java.util.LinkedHashSet<Integer> pages=new java.util.LinkedHashSet<>();pages.add(number);
         for(String value:prefs().getString(key("history"),"").split(",")){try{int p=Integer.parseInt(value);if(p>=0)pages.add(p);}catch(NumberFormatException ignored){}}
         StringBuilder out=new StringBuilder();int count=0;for(int p:pages){if(count++>=100)break;if(out.length()>0)out.append(",");out.append(p);}
@@ -143,7 +323,7 @@ public final class LibraryActivity extends Activity {
     }
     private android.content.SharedPreferences prefs(){return getPreferences(MODE_PRIVATE);}
     private String key(String suffix){return "study."+bookId+"."+suffix;}
-    private void selectBook(String id){bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
+    private void selectBook(String id){endReading();bookId=id;File dir=id.equals("legacy")?libraryRoot:new File(libraryRoot,id);book=new File(dir,"book.pdf");index=new File(dir,"book.sqlite");pageCount=0;currentPage=0;lastQuery="";prefs().edit().putString("selectedBook",id).apply();}
     private String titleFor(String id){return prefs().getString(id.equals("legacy")?"bookTitle":"study."+id+".title","").trim();}
     private File bookDir(String id){return id.equals("legacy")?libraryRoot:new File(libraryRoot,id);}
     private java.util.ArrayList<String> availableBooks(){
@@ -217,6 +397,49 @@ public final class LibraryActivity extends Activity {
         Intent auth=kg.createConfirmDeviceCredentialIntent("Private medical library","Unlock with your device credential");
         if(auth==null){finish();return;}startActivityForResult(auth,32);
     }
+    private File scanDraft(){return new File(libraryRoot,"scan-draft");}
+    private String scanDraftId(){
+        String id=prefs().getString("offlineScan.draftId","");
+        if(id.isEmpty()){id="volume-"+java.util.UUID.randomUUID();prefs().edit().putString("offlineScan.draftId",id).commit();}
+        return id;
+    }
+    private boolean scanDraftImported(){String id=prefs().getString("offlineScan.draftId","");return !id.isEmpty()&&availableBooks().contains(id);}
+    private void archiveScanDraft(){
+        if(!scanDraftImported())return;
+        File dir=scanDraft(),archive=new File(libraryRoot,"scan-archive-"+scanDraftId());
+        if(dir.exists()&&!dir.renameTo(archive)){Toast.makeText(this,"Cannot archive draft; originals retained.",Toast.LENGTH_LONG).show();return;}
+        prefs().edit().remove("offlineScan.draftId").remove("offlineScan.batchMode").commit();batchScanner();
+    }
+    private File[] scanBatches(){File[] files=scanDraft().listFiles(f->f.isFile()&&f.getName().matches("batch-[0-9]+[.]pdf"));if(files==null)return new File[0];java.util.Arrays.sort(files,java.util.Comparator.comparing(File::getName));return files;}
+    private void batchScanner(){
+        if(busy||scannerOpening)return;
+        menuScreen("Scan a textbook");if(scanDraftImported()){body.addView(label("Textbook imported successfully. Original batches are retained.",18));button("Open imported textbook",()->{selectBook(scanDraftId());page(0);});button("Archive draft and start another textbook",this::archiveScanDraft);return;}File[] files=scanBatches();body.addView(label(files.length+" saved scanning batches",20));
+        body.addView(label("Scan up to 50 pages at a time. Batches stay on this device until you finish the book.",15));
+        button("Scan next batch",()->{prefs().edit().putBoolean("offlineScan.batchMode",true).apply();scanBook();});
+        if(files.length>0)button("Combine and index textbook",this::finishScanBatches);
+        button("Scan a separate book",()->{prefs().edit().putBoolean("offlineScan.batchMode",false).apply();scanBook();});
+    }
+    private void saveScanBatch(android.net.Uri uri){
+        busy=true;menuScreen("Saving scan batch");worker.execute(()->{
+            File dir=scanDraft();File tmp=new File(dir,"incoming.tmp");boolean ok=false;
+            try{if(!dir.isDirectory()&&!dir.mkdirs())throw new IOException("Cannot create draft");
+                try(InputStream in=getContentResolver().openInputStream(uri);OutputStream out=new FileOutputStream(tmp)){if(in==null)throw new IOException("Missing scan");byte[] buf=new byte[65536];int n;while((n=in.read(buf))!=-1)out.write(buf,0,n);}
+                try(PDDocument doc=PDDocument.load(tmp,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){if(doc.getNumberOfPages()<1)throw new IOException("Empty scan");}
+                File target=new File(dir,String.format(java.util.Locale.ROOT,"batch-%08d.pdf",scanBatches().length+1));if(target.exists()||!tmp.renameTo(target))throw new IOException("Cannot save batch");ok=true;
+            }catch(Exception ignored){}finally{tmp.delete();}
+            final boolean saved=ok;runOnUiThread(()->{busy=false;if(!isDestroyed()){batchScanner();if(!saved)Toast.makeText(this,"Batch not saved. Previous batches are safe.",Toast.LENGTH_LONG).show();}});
+        });
+    }
+    private void finishScanBatches(){
+        if(busy||scanDraftImported())return;File[] files=scanBatches();if(files.length==0)return;scanDraftId();
+        busy=true;menuScreen("Combining textbook");body.addView(label("Preparing "+files.length+" batches for OCR. Keep Slashview open.",16));
+        worker.execute(()->{
+            File combined=new File(scanDraft(),"combined.pdf");try{
+                com.tom_roush.pdfbox.multipdf.PDFMergerUtility merger=new com.tom_roush.pdfbox.multipdf.PDFMergerUtility();for(File f:files)merger.addSource(f);merger.setDestinationFileName(combined.getPath());merger.mergeDocuments(com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly());
+                runOnUiThread(()->{busy=false;if(!isDestroyed())importBook(android.net.Uri.fromFile(combined),true,scanDraftId());});
+            }catch(Exception e){runOnUiThread(()->{busy=false;if(!isDestroyed()){batchScanner();Toast.makeText(this,"Could not combine batches. Originals retained.",Toast.LENGTH_LONG).show();}});}
+        });
+    }
     private void scanBook(){
         if(busy||scannerOpening)return;
         scannerOpening=true;
@@ -261,13 +484,26 @@ public final class LibraryActivity extends Activity {
         if(enabled)tile.setOnClickListener(v->action.run());
     }
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
-    private void menuScreen(String title){generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
+    private void menuScreen(String title){endReading();generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
+    private void searchAllBooks(){searchAllBooks("");}
+    private void searchAllBooks(String initial){
+        menuScreen("Search all books");EditText query=new EditText(this);query.setSingleLine(true);query.setHint("Medical topic or phrase");query.setText(initial);body.addView(query);
+        button("Search library",()->{
+            String clean=query.getText().toString().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty()){query.setError("Enter a topic");return;}
+            recordRecent("search","",query.getText().toString().trim(),-1);final java.util.ArrayList<String> ids=availableBooks();menuScreen("Library search results");final int token=generation;TextView progress=label("Searching local indexes…",15);body.addView(progress);
+            worker.execute(()->{
+                java.util.ArrayList<String> resultIds=new java.util.ArrayList<>(),snippets=new java.util.ArrayList<>();java.util.ArrayList<Integer> numbers=new java.util.ArrayList<>();int failed=0;
+                for(String id:ids){if(generation!=token)return;try(SQLiteDatabase db=SQLiteDatabase.openDatabase(new File(bookDir(id),"book.sqlite").getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24) FROM pages WHERE pages MATCH ? ORDER BY docid LIMIT 100",new String[]{"\""+clean+"\""})){while(c.moveToNext()){resultIds.add(id);numbers.add(c.getInt(0)-1);snippets.add(c.getString(1));}}catch(Exception e){failed++;}}
+                final int errors=failed;runOnUiThread(()->{if(isDestroyed()||generation!=token)return;progress.setText(resultIds.size()+" matching pages (up to 100 per book)"+(errors>0?" • "+errors+" indexes unavailable":""));for(int i=0;i<resultIds.size();i++){String id=resultIds.get(i);int p=numbers.get(i);button(displayBookTitle(id)+" • PDF page "+(p+1)+"\\n"+snippets.get(i),()->{selectBook(id);page(p);});}});
+            });
+        });
+    }
     private void readingMenu(){
         menuScreen("Read & search");
         body.addView(label("Searching in: "+displayBookTitle(bookId),17));
         button("Select book for search",()->chooseActiveBook(this::readingMenu));
         search=new EditText(this);search.setSingleLine(true);search.setHint("Search any medical topic");search.setText(lastQuery);body.addView(search);
-        button("Search whole book",()->find(search.getText().toString()));
+        button("Search whole book",()->find(search.getText().toString()));button("Search all books",this::searchAllBooks);
         button("Resume reading • page "+(prefs().getInt(key("lastPage"),0)+1),()->page(prefs().getInt(key("lastPage"),0)));
         button("Open first page",()->page(0));button("Chapter index",this::chapters);
     }
@@ -392,16 +628,21 @@ public final class LibraryActivity extends Activity {
     private LinearLayout dashboardRow(){LinearLayout row=new LinearLayout(this);row.setOrientation(0);body.addView(row,new LinearLayout.LayoutParams(-1,-2));return row;}
     private void dashboardNav(LinearLayout nav,String symbol,String title,Runnable action,boolean enabled){TextView t=dashboardText(symbol+"\n"+title,14,0xff1744b6,true);t.setGravity(Gravity.CENTER);t.setPadding(0,dp(8),0,dp(8));nav.addView(t,new LinearLayout.LayoutParams(0,-2,1));t.setEnabled(enabled);t.setAlpha(enabled?1f:0.5f);t.setFocusable(enabled);t.setContentDescription(title);if(enabled)t.setOnClickListener(v->action.run());}
     private void home(){
-        generation++;applyReaderBrightness(false);setFullscreen(false);releaseBitmap();
+        endReading();generation++;applyReaderBrightness(false);setFullscreen(false);releaseBitmap();
         LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setBackgroundColor(0xffeef2f8);ScrollView sc=new ScrollView(this);sc.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(18),dp(16),dp(12));sc.addView(body);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);
         LinearLayout header=dashboardRow();ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);header.addView(logo,new LinearLayout.LayoutParams(dp(48),dp(48)));TextView brand=dashboardText("Slashview",30,0xff1744b6,true);brand.setGravity(Gravity.CENTER_VERTICAL);header.addView(brand,new LinearLayout.LayoutParams(0,dp(48),1));TextView update=dashboardText("↑ Update",14,0xff1744b6,true);update.setGravity(Gravity.CENTER);header.addView(update,new LinearLayout.LayoutParams(dp(76),dp(48)));update.setOnClickListener(v->startActivity(new Intent(this,UpdateActivity.class)));update.setFocusable(true);
         body.addView(dashboardText("Read. Learn. Explore.",15,0xff53647d,false));status=dashboardText(busy?"Preparing library…":"YOUR PERSONAL STUDY SPACE",12,0xff53647d,true);status.setPadding(0,dp(16),0,dp(8));body.addView(status);if(busy)return;
         boolean ready=book.isFile()&&index.isFile();LinearLayout hero=new LinearLayout(this);hero.setOrientation(1);hero.setPadding(dp(20),dp(18),dp(20),dp(18));hero.setBackground(dashboardShape(0xff142d58,24));body.addView(hero,new LinearLayout.LayoutParams(-1,-2));hero.addView(dashboardText(ready?"CONTINUE READING":"START YOUR LIBRARY",12,0xffa8c8ef,true));
         LinearLayout bookRow=new LinearLayout(this);bookRow.setGravity(Gravity.CENTER_VERTICAL);hero.addView(bookRow);TextView cover=dashboardText("✚\nMEDICAL\nLIBRARY",14,0xffffffff,true);cover.setGravity(Gravity.CENTER);cover.setBackground(dashboardShape(0xff287c82,12));LinearLayout.LayoutParams cp=new LinearLayout.LayoutParams(dp(84),dp(112));cp.setMargins(0,dp(12),dp(14),dp(12));bookRow.addView(cover,cp);LinearLayout details=new LinearLayout(this);details.setOrientation(1);bookRow.addView(details,new LinearLayout.LayoutParams(0,-2,1));details.addView(dashboardText(ready?displayBookTitle(bookId):"Your books, one place",20,0xffffffff,true));int last=prefs().getInt(key("lastPage"),0),total=prefs().getInt(key("readerTotal"),0);details.addView(dashboardText(ready?"Page "+(last+1)+(total>0?" of "+total:""):"Import a PDF to begin",13,0xffc4d8ee,false));if(ready&&total>0){ProgressBar progress=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);progress.setMax(total);progress.setProgress(Math.min(total,last+1));details.addView(progress,new LinearLayout.LayoutParams(-1,dp(12)));}
         TextView resume=dashboardText(ready?"Continue reading  →":"Add your first book  +",16,0xff142d58,true);resume.setGravity(Gravity.CENTER);resume.setBackground(dashboardShape(0xffffffff,12));hero.addView(resume,new LinearLayout.LayoutParams(-1,dp(46)));resume.setOnClickListener(v->{if(ready)page(last);else pickBook();});resume.setFocusable(true);
+        menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
+        menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
+        menuCard("Study timer","Set a focused offline session",this::studyTimer,true);
+        menuCard("Recent activity","Search history, explored pages and recently read books",this::recentActivity,true);
+        menuCard("Study analytics","Daily, weekly and monthly reading history",this::analytics,true);
         TextView section=dashboardText("Your study tools",22,0xff142d58,true);section.setPadding(0,dp(20),0,dp(6));body.addView(section);
         LinearLayout row=dashboardRow();dashboardTile(row,"▤","My library",availableBooks().size()+" saved books",0xff1744b6,this::smartLibrary,true);dashboardTile(row,"＋","Import PDF","Add a new book",0xff17866e,this::pickBook,true);
-        row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::scanBook,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
+        row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::batchScanner,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
         row=dashboardRow();dashboardTile(row,"⌕","Read & search","Topics & chapters",0xff1744b6,this::readingMenu,ready);dashboardTile(row,"★","Revision","Notes & highlights",0xffb67524,this::revisionMenu,ready);
         row=dashboardRow();dashboardTile(row,"▥","Manage books","Details & rename",0xff1744b6,this::booksMenu,true);dashboardTile(row,"↻","Updates","Check new version",0xff17866e,()->startActivity(new Intent(this,UpdateActivity.class)),true);
         row=dashboardRow();dashboardTile(row,"?","Help & Support","Contact and privacy",0xff1744b6,()->startActivity(new Intent(this,SupportActivity.class)),true);if((getApplicationInfo().flags & android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE)!=0)dashboardTile(row,"◎","Account screens (preview)","Debug testing only",0xff7949bb,()->startActivity(new Intent(this,AccountPreviewActivity.class)),true);
@@ -461,30 +702,31 @@ public final class LibraryActivity extends Activity {
             button("Study & revision",this::revisionMenu);
         }
     }
-    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
-    private void importBook(android.net.Uri uri,boolean scanned){
+    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){if(prefs().getBoolean("offlineScan.batchMode",false))saveScanBatch(scanned.getPdf().getUri());else importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
+    private void importBook(android.net.Uri uri,boolean scanned){importBook(uri,scanned,null);}
+    private void importBook(android.net.Uri uri,boolean scanned,String draftId){
         busy=true;home();worker.execute(()->{
             String importedName="";
             try(Cursor c=getContentResolver().query(uri,new String[]{android.provider.OpenableColumns.DISPLAY_NAME},null,null,null)){if(c!=null&&c.moveToFirst())importedName=c.getString(0);}catch(Exception ignored){}
             if(importedName==null)importedName="";if(scanned)importedName="Scanned book "+new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm",java.util.Locale.ROOT).format(new java.util.Date());
-            String id="volume-"+java.util.UUID.randomUUID().toString();File staging=new File(libraryRoot,"pending-"+id),volume=new File(libraryRoot,id);File pending=new File(staging,"book.pdf"), dbFile=new File(staging,"book.sqlite");
+            String id=draftId==null?"volume-"+java.util.UUID.randomUUID().toString():draftId;File staging=new File(libraryRoot,"pending-"+id),volume=new File(libraryRoot,id);File pending=new File(staging,"book.pdf"), dbFile=new File(staging,"book.sqlite");
             try{
-                if(!staging.mkdir())throw new IOException("Cannot prepare new book");
+                if(volume.exists())throw new IOException("Book already exists");if(draftId!=null&&staging.isDirectory()){pending.delete();dbFile.delete();new File(staging,"book.sqlite-journal").delete();staging.delete();}if(!staging.mkdir())throw new IOException("Cannot prepare new book");
                 try(InputStream in=getContentResolver().openInputStream(uri);OutputStream out=new FileOutputStream(pending)){
                     if(in==null)throw new IOException("Cannot read PDF");byte[] buf=new byte[65536];int n;long bytes=0;while((n=in.read(buf))!=-1){bytes+=n;if(bytes>1024L*1024*1024)throw new IOException("PDF exceeds 1 GB");out.write(buf,0,n);}
                 }
                 try(PDDocument doc=PDDocument.load(pending,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){
                     SQLiteDatabase db=SQLiteDatabase.openOrCreateDatabase(dbFile,null);
                     try{db.execSQL("CREATE VIRTUAL TABLE pages USING fts4(content, tokenize=unicode61)");PDFTextStripper stripper=new PDFTextStripper();stripper.setSortByPosition(true);int total=doc.getNumberOfPages();if(total<=0)throw new IOException("Empty PDF");int readable=0;
-                    int ocrPages=0;boolean ocrAvailable=true;
+                    int ocrPages=0,ocrFailures=0;
                     try(com.google.mlkit.vision.text.TextRecognizer recognizer=com.google.mlkit.vision.text.TextRecognition.getClient(com.google.mlkit.vision.text.latin.TextRecognizerOptions.DEFAULT_OPTIONS)){
-                        db.beginTransaction();try{for(int p=1;p<=total;p++){stripper.setStartPage(p);stripper.setEndPage(p);String text=stripper.getText(doc).replaceAll("[\\u00ad\\u200b]","").replaceAll("\\s+"," ").trim();if(text.isEmpty()&&ocrAvailable&&ocrPages<100){ocrPages++;try{text=recognizePage(pending,p-1,recognizer);}catch(Exception e){ocrAvailable=false;}}if(!text.isEmpty())readable++;db.execSQL("INSERT INTO pages(docid,content) VALUES(?,?)",new Object[]{p,text});if(p%25==0){final int done=p;runOnUiThread(()->{if(!isDestroyed())status.setText("Indexing "+done+" / "+total+" pages");});}}db.setTransactionSuccessful();}finally{db.endTransaction();}
+                        db.beginTransaction();try{for(int p=1;p<=total;p++){stripper.setStartPage(p);stripper.setEndPage(p);String text=stripper.getText(doc).replaceAll("[\\u00ad\\u200b]","").replaceAll("\\s+"," ").trim();if(text.isEmpty()){ocrPages++;try{text=recognizePage(pending,p-1,recognizer);}catch(Exception e){ocrFailures++;}}if(!text.isEmpty())readable++;db.execSQL("INSERT INTO pages(docid,content) VALUES(?,?)",new Object[]{p,text});if(p%5==0||p==total){final int done=p,searchable=readable,failed=ocrFailures;runOnUiThread(()->{if(!isDestroyed())status.setText("Indexing "+done+" / "+total+" pages • "+searchable+" searchable • "+failed+" OCR errors");});}}db.setTransactionSuccessful();}finally{db.endTransaction();}
                     }
                     }finally{db.close();}
                 }
                 // Publish a new independent volume only after PDF and index are complete.
                 if(!staging.renameTo(volume))throw new IOException("Cannot activate new book");
-                prefs().edit().putString("study."+id+".title",importedName).apply();runOnUiThread(()->{busy=false;if(!isDestroyed()){selectBook(id);home();}});
+                prefs().edit().putString("study."+id+".title",importedName).apply();runOnUiThread(()->{busy=false;if(!isDestroyed()){selectBook(id);if(draftId!=null)batchScanner();else home();}});
             }catch(Exception e){pending.delete();dbFile.delete();staging.delete();runOnUiThread(()->{busy=false;if(!isDestroyed()){home();status.setText("Import failed. Check file and free storage, then retry.");}});}
         });
     }
@@ -509,7 +751,7 @@ public final class LibraryActivity extends Activity {
     }
     private void find(String q){
         String clean=q.trim().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty())return;
-        lastQuery=q;int token=++generation;layout();body.addView(label("Search: "+q,22));body.addView(label("Book: "+displayBookTitle(bookId),15));button("Change book or search again",this::readingMenu);button("Back to library",this::home);body.addView(label("Finding topic headings and related pages…",14));
+        recordRecent("search",bookId,q.trim(),-1);lastQuery=q;int token=++generation;layout();body.addView(label("Search: "+q,22));body.addView(label("Book: "+displayBookTitle(bookId),15));button("Change book or search again",this::readingMenu);button("Back to library",this::home);body.addView(label("Finding topic headings and related pages…",14));
         worker.execute(()->{
             java.util.ArrayList<Hit> hits=new java.util.ArrayList<>();String wanted=normalized(clean);
             try(SQLiteDatabase db=SQLiteDatabase.openDatabase(index.getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24),content FROM pages WHERE pages MATCH ? ORDER BY docid",new String[]{"\""+clean+"\""})){
@@ -565,7 +807,7 @@ public final class LibraryActivity extends Activity {
         private void apply(){float w=bitmap.getWidth()*base*zoom,h=bitmap.getHeight()*base*zoom;x=w<=getWidth()?(getWidth()-w)/2f:Math.max(getWidth()-w,Math.min(0,x));y=h<=getHeight()?(getHeight()-h)/2f:Math.max(getHeight()-h,Math.min(0,y));transform.setScale(base*zoom,base*zoom);transform.postTranslate(x,y);setImageMatrix(transform);}
         @Override public boolean onTouchEvent(android.view.MotionEvent e){if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;boolean vertical=prefs().getBoolean("reader.vertical",false);float primary=vertical?dy:dx,secondary=vertical?dx:dy;if(Math.abs(primary)>dp(70)&&Math.abs(primary)>Math.abs(secondary)*1.5f){int next=currentPage+(primary<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
     }
-    private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
+    private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;endReading();int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
         body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);
         LinearLayout bar=new LinearLayout(this);body.addView(bar);
         Button back=new Button(this);back.setText(lastQuery.isEmpty()?"Library":"Results");back.setOnClickListener(v->{if(lastQuery.isEmpty())home();else find(lastQuery);});bar.addView(back,new LinearLayout.LayoutParams(0,-2,1));
@@ -575,7 +817,7 @@ public final class LibraryActivity extends Activity {
             int total=renderer.getPageCount();if(number<0||number>=total){runOnUiThread(()->{if(!isDestroyed()&&generation==token){pageCount=total;pageLabel.setText("Saved page is outside this PDF. Return to library or open page 1.");}});return;}
             Bitmap bitmap;try(PdfRenderer.Page p=renderer.openPage(number)){int width=2200;int height=Math.max(1,(int)((long)width*p.getHeight()/p.getWidth()));if(height>3400){width=Math.max(1,(int)((long)width*3400/height));height=3400;}bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE);p.render(bitmap,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
             runOnUiThread(()->{if(isDestroyed()||generation!=token){bitmap.recycle();return;}
-                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("readerTotal"),total).apply();rememberPage(number);pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
+                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("readerTotal"),total).apply();rememberPage(number);readingBook=bookId;readingGeneration=generation;startReadingClock();pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
                 ZoomPage img=new ZoomPage(bitmap);if(prefs().getInt("reader.theme",night?1:0)==2)img.setColorFilter(new ColorMatrixColorFilter(new float[]{0.92f,0,0,0,12,0,0.85f,0,0,10,0,0,0.70f,0,8,0,0,0,1,0}));else if(night)img.setColorFilter(new ColorMatrixColorFilter(new float[]{-1,0,0,0,255,0,-1,0,0,255,0,0,-1,0,255,0,0,0,1,0}));body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
                 LinearLayout tools=new LinearLayout(this);body.addView(tools);
                 String[] labels={"−","Fit","+","Go to","Settings"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->readerSettings(number)};
@@ -588,5 +830,5 @@ public final class LibraryActivity extends Activity {
         }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==token)body.addView(label("Unable to open page",16));});}});
     }
     @Override public void onBackPressed(){if(fullscreen){setFullscreen(false);page(currentPage);return;}if(!busy&&book!=null)home();else super.onBackPressed();}
-    @Override protected void onDestroy(){generation++;releaseBitmap();worker.shutdown();super.onDestroy();}
+    @Override protected void onDestroy(){endReading();generation++;releaseBitmap();worker.shutdown();super.onDestroy();}
 }
