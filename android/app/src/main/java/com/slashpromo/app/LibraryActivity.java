@@ -37,6 +37,30 @@ public final class LibraryActivity extends Activity {
         java.util.Set<String> seen=todayPages();
         if(seen.add(bookId+":"+number))prefs().edit().putString("offlineStudy.day",day).putStringSet("offlineStudy.pages",seen).apply();
     }
+    private void studyTimer(){
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(12),dp(16),dp(12));
+        panel.addView(label("Set a focused study session. The timer runs while this dialog is open.",15));
+        EditText minutes=new EditText(this);minutes.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);minutes.setText("25");panel.addView(minutes);
+        TextView clock=label("Ready",30);clock.setGravity(Gravity.CENTER);panel.addView(clock);
+        Button start=new Button(this);start.setText("Start session");panel.addView(start);
+        final CountDownTimer[] timer={null};
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Offline study timer").setView(panel).setNegativeButton("Close",null).create();
+        start.setOnClickListener(v->{
+            int n;try{n=Integer.parseInt(minutes.getText().toString());if(n<1||n>180)throw new NumberFormatException();}catch(NumberFormatException e){minutes.setError("Enter 1–180 minutes");return;}
+            final int duration=n;minutes.setEnabled(false);start.setEnabled(false);
+            timer[0]=new CountDownTimer(duration*60000L,1000L){
+                public void onTick(long ms){long sec=(ms+999)/1000;clock.setText(String.format(java.util.Locale.ROOT,"%02d:%02d",sec/60,sec%60));}
+                public void onFinish(){clock.setText("Session complete");String k="offlineStudy.minutes."+studyDay();prefs().edit().putLong(k,prefs().getLong(k,0)+duration).apply();minutes.setEnabled(true);start.setEnabled(true);}
+            }.start();
+        });
+        dialog.setOnDismissListener(d->{if(timer[0]!=null)timer[0].cancel();});dialog.show();
+    }
+    private void weeklyStudy(){
+        java.util.Calendar day=java.util.Calendar.getInstance();java.text.SimpleDateFormat format=new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT);
+        StringBuilder rows=new StringBuilder();long total=0;
+        for(int i=0;i<7;i++){String date=format.format(day.getTime());long minutes=prefs().getLong("offlineStudy.minutes."+date,0);total+=minutes;rows.append(date).append("  •  ").append(minutes).append(" min\\n");day.add(java.util.Calendar.DATE,-1);}
+        new AlertDialog.Builder(this).setTitle("Last 7 days • "+total+" minutes").setMessage(rows.toString()+"Only completed timer sessions are counted.").setPositiveButton("Close",null).show();
+    }
     private void offlineFlashcards(){
         menuScreen("Offline flashcards");
         final String storage="offlineStudy.flashcards";
@@ -446,6 +470,8 @@ public final class LibraryActivity extends Activity {
         TextView resume=dashboardText(ready?"Continue reading  →":"Add your first book  +",16,0xff142d58,true);resume.setGravity(Gravity.CENTER);resume.setBackground(dashboardShape(0xffffffff,12));hero.addView(resume,new LinearLayout.LayoutParams(-1,dp(46)));resume.setOnClickListener(v->{if(ready)page(last);else pickBook();});resume.setFocusable(true);
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
         menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
+        menuCard("Study timer","Set a focused offline session",this::studyTimer,true);
+        menuCard("Weekly study statistics","Review completed timer sessions",this::weeklyStudy,true);
         TextView section=dashboardText("Your study tools",22,0xff142d58,true);section.setPadding(0,dp(20),0,dp(6));body.addView(section);
         LinearLayout row=dashboardRow();dashboardTile(row,"▤","My library",availableBooks().size()+" saved books",0xff1744b6,this::smartLibrary,true);dashboardTile(row,"＋","Import PDF","Add a new book",0xff17866e,this::pickBook,true);
         row=dashboardRow();dashboardTile(row,"▣","Scan book","Camera & OCR",0xff17866e,this::scanBook,true);dashboardTile(row,"✦","AI assistant","Learn & explore",0xff7949bb,this::aiStudyMenu,ready);
