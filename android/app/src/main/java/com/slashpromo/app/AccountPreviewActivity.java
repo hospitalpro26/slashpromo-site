@@ -64,7 +64,7 @@ public class AccountPreviewActivity extends Activity {
    EditText email=field("Email address",emailType),password=field("Password",passType);
    Button b=button("Sign in",()->{});b.setEnabled(AccountClient.ENABLED);b.setOnClickListener(v->{call(b,status,"/v1/login",data("email",value(email),"password",value(password),"deviceId",client.deviceId()),false);password.setText("");});
    Button google=button("Continue with Google",()->{});google.setEnabled(AccountClient.ENABLED&&!GOOGLE_CLIENT_ID.isEmpty());google.setOnClickListener(v->googleSignIn(google,status));
-   label("Google sign-in testing is available. New online registrations and email verification are not yet open.",14);
+   label("Register with Google for automatic approval and three months free. Email/password registration is not yet available.",14);
   }
   body.addView(status);button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Verify email",()->screen("Verify email"));button("Forgot password",()->screen("Reset password"));button("Membership",()->screen("Membership"));button("Help & Support",()->startActivity(new android.content.Intent(this,SupportActivity.class)));button("Return to library",this::finish);
  }
