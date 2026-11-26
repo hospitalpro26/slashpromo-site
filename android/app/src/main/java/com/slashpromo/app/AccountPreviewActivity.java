@@ -13,6 +13,7 @@ public class AccountPreviewActivity extends Activity {
  private AccountClient client;
  private final ExecutorService worker=Executors.newSingleThreadExecutor();
  private int generation=0;
+ private Button ownerButton;
  private static final String GOOGLE_CLIENT_ID="166627999058-jhqsuk4urhlalnlcrhh98djdoh0lui5l.apps.googleusercontent.com"; // public web OAuth client ID, provision before enabling
  private android.os.CancellationSignal googleCancel;
  private int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
@@ -24,28 +25,32 @@ public class AccountPreviewActivity extends Activity {
  private void call(Button b,TextView status,String path,JSONObject payload,boolean authenticated){
   b.setEnabled(false);status.setText("Connecting…");int version=generation;
   worker.execute(()->{
-   String message;
+   String message;boolean owner=false;
    try{
     String token=authenticated?client.session():"";
     AccountClient.Result r=client.request(path,payload,token);
     if(r.ok()&&(path.equals("/v1/login")||path.equals("/v1/google/login"))&&r.body.has("token")){client.saveSession(r.body.getString("token"));message="Signed in. Open Membership to check your status.";}
-    else if(r.ok()&&path.equals("/v1/me")){JSONObject a=r.body.getJSONObject("account");message="Membership: "+r.body.optString("membership")+"\nTrial ends: "+a.optString("trial_until")+"\nPaid until: "+a.optString("paid_until");}
+    else if(r.ok()&&path.equals("/v1/me")){JSONObject a=r.body.getJSONObject("account");owner="owner".equals(r.body.optString("membership"));message="Membership: "+r.body.optString("membership")+"\nTrial ends: "+a.optString("trial_until")+"\nPaid until: "+a.optString("paid_until");}
+    else if(r.ok()&&path.equals("/v1/owner/summary")){JSONObject c=r.body.getJSONObject("counts");message="Registered: "+c.optInt("total")+"\nPending: "+c.optInt("pending")+"\nFree trials: "+c.optInt("trial")+"\nPaid: "+c.optInt("paid");org.json.JSONArray recent=r.body.optJSONArray("recent");if(recent!=null){StringBuilder list=new StringBuilder(message).append("\n\nRecent members");for(int i=0;i<recent.length();i++){JSONObject member=recent.optJSONObject(i);if(member==null)continue;list.append("\n\n").append(member.optString("name")).append(" — ").append(member.optString("status"));if(!member.isNull("trial_until"))list.append("\nTrial: ").append(member.optString("trial_until"));if(!member.isNull("paid_until"))list.append("\nPaid until: ").append(member.optString("paid_until"));}message=list.toString();}}
     else if(r.ok()&&path.equals("/v1/logout")){client.clearSession();message="Signed out.";}
     else{if(authenticated&&r.status==401)client.clearSession();message=r.body.optString(r.ok()?"message":"error",r.ok()?"Request completed":"Request failed");}
    }catch(Exception e){message="Account service unavailable. Your library is unchanged.";}
-   final String result=message;runOnUiThread(()->{if(!isFinishing()&&!isDestroyed()&&generation==version){status.setText(result);b.setEnabled(AccountClient.ENABLED);}});
+   final String result=message;final boolean showOwner=owner;runOnUiThread(()->{if(!isFinishing()&&!isDestroyed()&&generation==version){status.setText(result);b.setEnabled(AccountClient.ENABLED);if(ownerButton!=null)ownerButton.setVisibility(showOwner?android.view.View.VISIBLE:android.view.View.GONE);}});
   });
  }
  private void screen(String mode){
-  generation++;ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(20),dp(24),dp(20),dp(24));sc.addView(body);setContentView(sc);sc.setOnApplyWindowInsetsListener((view,insets)->{view.setPadding(insets.getSystemWindowInsetLeft(),insets.getSystemWindowInsetTop(),insets.getSystemWindowInsetRight(),insets.getSystemWindowInsetBottom());return insets;});sc.requestApplyInsets();
+  generation++;ownerButton=null;ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(20),dp(24),dp(20),dp(24));sc.addView(body);setContentView(sc);sc.setOnApplyWindowInsetsListener((view,insets)->{view.setPadding(insets.getSystemWindowInsetLeft(),insets.getSystemWindowInsetTop(),insets.getSystemWindowInsetRight(),insets.getSystemWindowInsetBottom());return insets;});sc.requestApplyInsets();
   label("Slashview",32);label("Read. Learn. Explore.",16);label(mode,24);
   if(!AccountClient.ENABLED)label("Design preview only. Do not enter real credentials. Nothing is submitted.",16);
   label("Your books, notes and highlights remain on this device.",14);
   int emailType=InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;
   int passType=InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD;
   TextView status=new TextView(this);
-  if(mode.equals("Membership")){
+  if(mode.equals("Owner Centre")){
+   label("Private account statistics",18);Button refresh=button("Refresh statistics",()->{});refresh.setOnClickListener(v->call(refresh,status,"/v1/owner/summary",null,true));refresh.setEnabled(AccountClient.ENABLED);call(refresh,status,"/v1/owner/summary",null,true);
+  }else if(mode.equals("Membership")){
    Button check=button("Check membership",()->{});check.setOnClickListener(v->call(check,status,"/v1/me",null,true));check.setEnabled(AccountClient.ENABLED);
+   ownerButton=button("Owner Centre",()->screen("Owner Centre"));ownerButton.setVisibility(android.view.View.GONE);
    Button logout=button("Sign out",()->{});logout.setOnClickListener(v->call(logout,status,"/v1/logout",data(),true));logout.setEnabled(AccountClient.ENABLED);
   }else if(mode.equals("Register")){
    EditText name=field("Full name",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PERSON_NAME),email=field("Email address",emailType),password=field("Password (12–128 characters)",passType),confirm=field("Confirm password",passType);
@@ -64,7 +69,7 @@ public class AccountPreviewActivity extends Activity {
    EditText email=field("Email address",emailType),password=field("Password",passType);
    Button b=button("Sign in",()->{});b.setEnabled(AccountClient.ENABLED);b.setOnClickListener(v->{call(b,status,"/v1/login",data("email",value(email),"password",value(password),"deviceId",client.deviceId()),false);password.setText("");});
    Button google=button("Continue with Google",()->{});google.setEnabled(AccountClient.ENABLED&&!GOOGLE_CLIENT_ID.isEmpty());google.setOnClickListener(v->googleSignIn(google,status));
-   label("Google sign-in testing is available. New online registrations and email verification are not yet open.",14);
+   label("Register with Google for automatic approval and three months free. Email/password registration is not yet available.",14);
   }
   body.addView(status);button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Verify email",()->screen("Verify email"));button("Forgot password",()->screen("Reset password"));button("Membership",()->screen("Membership"));button("Help & Support",()->startActivity(new android.content.Intent(this,SupportActivity.class)));button("Return to library",this::finish);
  }
