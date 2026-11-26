@@ -611,7 +611,20 @@ public final class LibraryActivity extends Activity {
         });
     }
     private void releaseBitmap(){if(displayedBitmap!=null){displayedBitmap=null;}}
-    private void layout(){applyReaderBrightness(false);setFullscreen(false);releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
+    private void applySafeArea(View root){
+        final int left=root.getPaddingLeft(),top=root.getPaddingTop(),right=root.getPaddingRight(),bottom=root.getPaddingBottom();
+        root.setOnApplyWindowInsetsListener((v,insets)->{
+            int l=insets.getSystemWindowInsetLeft(),t=insets.getSystemWindowInsetTop(),r=insets.getSystemWindowInsetRight(),b=insets.getSystemWindowInsetBottom();
+            if(android.os.Build.VERSION.SDK_INT>=30){
+                android.graphics.Insets bars=insets.getInsets(android.view.WindowInsets.Type.systemBars()|android.view.WindowInsets.Type.displayCutout()|android.view.WindowInsets.Type.ime());
+                l=bars.left;t=bars.top;r=bars.right;b=bars.bottom;
+            }
+            v.setPadding(left+l,top+t,right+r,bottom+b);
+            return insets;
+        });
+        root.requestApplyInsets();
+    }
+    private void layout(){applyReaderBrightness(false);setFullscreen(false);releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);applySafeArea(sc);}
     private void brandHeader(){
         ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);logo.setContentDescription("Slashview open book logo");body.addView(logo,new LinearLayout.LayoutParams(-1,dp(96)));
         TextView brand=label("Slashview",32);brand.setGravity(Gravity.CENTER);brand.setTypeface(null,android.graphics.Typeface.BOLD);
@@ -626,7 +639,7 @@ public final class LibraryActivity extends Activity {
         TextView glyph=dashboardText(symbol,25,tint,true);glyph.setGravity(Gravity.CENTER);glyph.setBackground(dashboardShape(0xffeef2f8,12));tile.addView(glyph,new LinearLayout.LayoutParams(dp(42),dp(42)));TextView heading=dashboardText(title,17,0xff142d58,true);heading.setPadding(0,dp(8),0,0);tile.addView(heading);tile.addView(dashboardText(subtitle,12,0xff53647d,false));tile.setAlpha(enabled?1f:0.5f);tile.setEnabled(enabled);tile.setFocusable(enabled);tile.setContentDescription(title+". "+subtitle);if(enabled)tile.setOnClickListener(v->action.run());
     }
     private LinearLayout dashboardRow(){LinearLayout row=new LinearLayout(this);row.setOrientation(0);body.addView(row,new LinearLayout.LayoutParams(-1,-2));return row;}
-    private void dashboardNav(LinearLayout nav,String symbol,String title,Runnable action,boolean enabled){TextView t=dashboardText(symbol+"\n"+title,14,0xff1744b6,true);t.setGravity(Gravity.CENTER);t.setPadding(0,dp(8),0,dp(8));nav.addView(t,new LinearLayout.LayoutParams(0,-2,1));t.setEnabled(enabled);t.setAlpha(enabled?1f:0.5f);t.setFocusable(enabled);t.setContentDescription(title);if(enabled)t.setOnClickListener(v->action.run());}
+    private void dashboardNav(LinearLayout nav,String symbol,String title,Runnable action,boolean enabled){TextView t=dashboardText(symbol+"\n"+title,14,0xff1744b6,true);t.setGravity(Gravity.CENTER);t.setPadding(0,dp(10),0,dp(10));t.setMinHeight(dp(56));nav.addView(t,new LinearLayout.LayoutParams(0,-2,1));t.setEnabled(enabled);t.setAlpha(enabled?1f:0.5f);t.setFocusable(enabled);t.setContentDescription(title);if(enabled)t.setOnClickListener(v->action.run());}
     private EditText accountField(String title,String key,int type){
         body.addView(label(title,15));EditText e=new EditText(this);e.setSingleLine(true);e.setInputType(type);e.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(160)});e.setText(prefs().getString("localAccount."+key,""));body.addView(e);return e;
     }
@@ -650,7 +663,7 @@ public final class LibraryActivity extends Activity {
     }
     private void home(){
         endReading();generation++;applyReaderBrightness(false);setFullscreen(false);releaseBitmap();
-        LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setBackgroundColor(0xffeef2f8);ScrollView sc=new ScrollView(this);sc.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(18),dp(16),dp(12));sc.addView(body);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);
+        LinearLayout root=new LinearLayout(this);root.setOrientation(1);root.setBackgroundColor(0xffeef2f8);ScrollView sc=new ScrollView(this);sc.setFillViewport(true);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(18),dp(16),dp(12));sc.addView(body);root.addView(sc,new LinearLayout.LayoutParams(-1,0,1));setContentView(root);applySafeArea(root);
         LinearLayout header=dashboardRow();ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);header.addView(logo,new LinearLayout.LayoutParams(dp(48),dp(48)));TextView brand=dashboardText("Slashview",30,0xff1744b6,true);brand.setGravity(Gravity.CENTER_VERTICAL);header.addView(brand,new LinearLayout.LayoutParams(0,dp(48),1));TextView update=dashboardText("↑ Update",14,0xff1744b6,true);update.setGravity(Gravity.CENTER);header.addView(update,new LinearLayout.LayoutParams(dp(76),dp(48)));update.setOnClickListener(v->startActivity(new Intent(this,UpdateActivity.class)));update.setFocusable(true);
         body.addView(dashboardText("Read. Learn. Explore.",15,0xff53647d,false));status=dashboardText(busy?"Preparing library…":"YOUR PERSONAL STUDY SPACE",12,0xff53647d,true);status.setPadding(0,dp(16),0,dp(8));body.addView(status);if(busy)return;
         boolean ready=book.isFile()&&index.isFile();LinearLayout hero=new LinearLayout(this);hero.setOrientation(1);hero.setPadding(dp(20),dp(18),dp(20),dp(18));hero.setBackground(dashboardShape(0xff142d58,24));body.addView(hero,new LinearLayout.LayoutParams(-1,-2));hero.addView(dashboardText(ready?"CONTINUE READING":"START YOUR LIBRARY",12,0xffa8c8ef,true));
@@ -672,7 +685,7 @@ public final class LibraryActivity extends Activity {
         row=dashboardRow();dashboardTile(row,"⌕","Read & search","Topics & chapters",0xff1744b6,this::readingMenu,ready);dashboardTile(row,"★","Revision","Notes & highlights",0xffb67524,this::revisionMenu,ready);
         row=dashboardRow();dashboardTile(row,"▥","Manage books","Details & rename",0xff1744b6,this::booksMenu,true);dashboardTile(row,"↻","Updates","Check new version",0xff17866e,()->startActivity(new Intent(this,UpdateActivity.class)),true);
         row=dashboardRow();dashboardTile(row,"?","Help & Support","Contact and privacy",0xff1744b6,()->startActivity(new Intent(this,SupportActivity.class)),true);dashboardTile(row,"◎","Online account","Google sign-in testing",0xff7949bb,()->startActivity(new Intent(this,AccountPreviewActivity.class)),true);
-        LinearLayout nav=new LinearLayout(this);nav.setBackgroundColor(0xffffffff);nav.setElevation(dp(6));root.addView(nav,new LinearLayout.LayoutParams(-1,-2));dashboardNav(nav,"⌂","Home",this::home,true);dashboardNav(nav,"▤","Library",this::smartLibrary,true);dashboardNav(nav,"★","Study",this::revisionMenu,ready);dashboardNav(nav,"✦","AI",this::aiStudyMenu,ready);
+        LinearLayout nav=new LinearLayout(this);nav.setBackgroundColor(0xffffffff);nav.setElevation(dp(6));nav.setPadding(0,0,0,dp(8));root.addView(nav,new LinearLayout.LayoutParams(-1,-2));dashboardNav(nav,"⌂","Home",this::home,true);dashboardNav(nav,"▤","Library",this::smartLibrary,true);dashboardNav(nav,"★","Study",this::revisionMenu,ready);dashboardNav(nav,"✦","AI",this::aiStudyMenu,ready);
     }
     private void readerSettings(int number){
         LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(8),dp(16),dp(8));
@@ -841,7 +854,7 @@ public final class LibraryActivity extends Activity {
         @Override public boolean onTouchEvent(android.view.MotionEvent e){if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;boolean vertical=prefs().getBoolean("reader.vertical",false);float primary=vertical?dy:dx,secondary=vertical?dx:dy;if(Math.abs(primary)>dp(70)&&Math.abs(primary)>Math.abs(secondary)*1.5f){int next=currentPage+(primary<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
     }
     private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;endReading();int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
-        body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);
+        body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);applySafeArea(body);
         LinearLayout bar=new LinearLayout(this);body.addView(bar);
         Button back=new Button(this);back.setText(lastQuery.isEmpty()?"Library":"Results");back.setOnClickListener(v->{if(lastQuery.isEmpty())home();else find(lastQuery);});bar.addView(back,new LinearLayout.LayoutParams(0,-2,1));
         Button lib=new Button(this);lib.setText("Library");lib.setOnClickListener(v->home());bar.addView(lib,new LinearLayout.LayoutParams(0,-2,1));Button chapter=new Button(this);chapter.setText("☰ Chapters");chapter.setAllCaps(false);chapter.setOnClickListener(v->chapters());bar.addView(chapter,new LinearLayout.LayoutParams(0,-2,1));
