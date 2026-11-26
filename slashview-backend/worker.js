@@ -89,10 +89,11 @@ export default {
     if(claims.email_verified!==true||email.length>254||!/^\S+@\S+\.\S+$/.test(email)||!(email.endsWith("@gmail.com")||(typeof claims.hd==="string"&&claims.hd)))return json({error:"Additional email verification required"},403);
     const existing=await env.DB.prepare("SELECT id FROM accounts WHERE email=?").bind(email).first();
     if(existing)return json({error:"Use your existing sign-in method; automatic linking is not supported"},409);
+    const profile=registrationProfile(input);if(!profile)return json({error:"City and valid profile details required"},400);
     const id=random(16), stamp=new Date().toISOString(),name=typeof claims.name==="string"?claims.name.trim().slice(0,100)||"Slashview member":"Slashview member";
     await env.DB.batch([
      env.DB.prepare("INSERT INTO accounts(id,email,name,password_hash,salt,email_verified_at,terms_version,privacy_version,pricing_version,consent_at) VALUES (?,?,?,?,?,?,?,?,?,?)").bind(id,email,name,random(32),random(32),stamp,"review-1","review-1","review-1",stamp),
-     env.DB.prepare("INSERT INTO google_identities(subject,account_id) VALUES (?,?)").bind(claims.sub,id)
+     env.DB.prepare("INSERT INTO google_identities(subject,account_id) VALUES (?,?)").bind(claims.sub,id),env.DB.prepare("INSERT INTO account_profiles(account_id,city,address,whatsapp) VALUES (?,?,?,?)").bind(id,...profile)
     ]);
     return json({status:"pending",message:"Registration received; administrator approval required"},202);
    }
@@ -194,8 +195,9 @@ export default {
     if(input.termsAccepted!==true||input.privacyAcknowledged!==true||input.pricingAccepted!==true||input.policyVersion!=="review-1")return json({error:"Current terms, privacy and pricing acceptance required"},400);
     const name=typeof input.name==="string"?input.name.trim():"";
     if(!name||name.length>100)return json({error:"Valid name required"},400);
-    const salt=random(32), hash=await passwordHash(pass,salt);
-    await env.DB.prepare("INSERT INTO accounts(id,email,name,password_hash,salt,terms_version,privacy_version,pricing_version,consent_at) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(email) DO NOTHING").bind(random(16),email,name,hash,salt,"review-1","review-1","review-1",new Date().toISOString()).run();
+    const profile=registrationProfile(input);if(!profile)return json({error:"City and valid profile details required"},400);
+    const salt=random(32), hash=await passwordHash(pass,salt), id=random(16);
+    await env.DB.batch([env.DB.prepare("INSERT INTO accounts(id,email,name,password_hash,salt,terms_version,privacy_version,pricing_version,consent_at) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(email) DO NOTHING").bind(id,email,name,hash,salt,"review-1","review-1","review-1",new Date().toISOString()),env.DB.prepare("INSERT INTO account_profiles(account_id,city,address,whatsapp) SELECT id,?,?,? FROM accounts WHERE id=?").bind(...profile,id)]);
     return json({message:"Registration request received. Account approval and verification are required."},202);
    }
    const account=await env.DB.prepare("SELECT * FROM accounts WHERE email=?").bind(email).first();
@@ -220,3 +222,5 @@ export default {
   return json({error:"Not found"},404);
  }catch{return json({error:"Service unavailable"},503)}
 }};
+
+function registrationProfile(input){const fields=["city","address","whatsapp"].map(k=>typeof input[k]==="string"?input[k].trim():"");return fields[0]&&fields[0].length<=100&&fields[1].length<=200&&fields[2].length<=32&&(!fields[2]||/^[+0-9 ()-]+$/.test(fields[2]))?fields:null;}
