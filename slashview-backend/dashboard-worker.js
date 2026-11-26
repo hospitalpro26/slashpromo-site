@@ -300,16 +300,22 @@ export default {
    if(entitlement(await ownerMembership(env,account))==="expired")return json({error:"Membership expired",membership:"expired"},403);
    return createSession(env,account,input.deviceId);
   }
-  if(["/v1/me","/v1/logout"].includes(path)){
+  if(["/v1/me","/v1/logout","/v1/owner/summary"].includes(path)){
    const auth=req.headers.get("Authorization")||"";
    if(!/^Bearer [a-f0-9]{64}$/.test(auth))return json({error:"Unauthorized"},401);
    const hash=await digest(auth.slice(7));
    if(path==="/v1/logout"&&req.method==="POST"){await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(hash).run();return json({message:"Signed out"});}
-   if(path!=="/v1/me"||req.method!=="GET")return json({error:"Not found"},404);
+   if(!["/v1/me","/v1/owner/summary"].includes(path)||req.method!=="GET")return json({error:"Not found"},404);
    const account=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.trial_until,a.paid_until FROM accounts a JOIN sessions s ON s.account_id=a.id WHERE s.token_hash=? AND s.expires_at>? AND EXISTS(SELECT 1 FROM devices d WHERE d.account_id=a.id AND d.device_hash=s.device_hash)").bind(hash,Math.floor(Date.now()/1000)).first();
    if(!account||account.status!=="approved"||!account.email_verified_at)return json({error:"Unauthorized"},401);
    const membership=entitlement(await ownerMembership(env,account));
    if(membership==="expired")return json({error:"Membership expired",membership},403);
+   if(path==="/v1/owner/summary"){
+    if(membership!=="owner"||env.REVIEW_ADMIN_ENABLED!=="true")return json({error:"Forbidden"},403);
+    const stamp=new Date().toISOString();
+    const counts=await env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) AS pending, SUM(CASE WHEN status='approved' AND paid_until>? THEN 1 ELSE 0 END) AS paid, SUM(CASE WHEN status='approved' AND trial_until>? AND (paid_until IS NULL OR paid_until<=?) THEN 1 ELSE 0 END) AS trial FROM accounts").bind(stamp,stamp,stamp).first();
+    return json({counts});
+   }
    return json({account,membership});
   }
   return json({error:"Not found"},404);
