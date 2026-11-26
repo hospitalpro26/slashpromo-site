@@ -24,12 +24,13 @@ public final class LibraryActivity extends Activity {
     private File book,index,libraryRoot;
     private String bookId="legacy";
     private boolean night=false, fullscreen=false;
+    private String libraryFilter="All books";
     private String pageKey(String type,int number){return key(type+"."+number);}
     private void rememberPage(int number){
         java.util.LinkedHashSet<Integer> pages=new java.util.LinkedHashSet<>();pages.add(number);
         for(String value:prefs().getString(key("history"),"").split(",")){try{int p=Integer.parseInt(value);if(p>=0)pages.add(p);}catch(NumberFormatException ignored){}}
         StringBuilder out=new StringBuilder();int count=0;for(int p:pages){if(count++>=100)break;if(out.length()>0)out.append(",");out.append(p);}
-        prefs().edit().putInt(key("lastPage"),number).putString(key("history"),out.toString()).apply();
+        prefs().edit().putInt(key("lastPage"),number).putLong(key("lastOpened"),System.currentTimeMillis()).putString(key("history"),out.toString()).apply();
     }
     private void history(){
         java.util.ArrayList<Integer> pages=new java.util.ArrayList<>();for(String n:prefs().getString(key("history"),"").split(",")){try{int p=Integer.parseInt(n);if(p>=0)pages.add(p);}catch(NumberFormatException ignored){}}
@@ -374,7 +375,7 @@ public final class LibraryActivity extends Activity {
         });
     }
     private void releaseBitmap(){if(displayedBitmap!=null){displayedBitmap=null;}}
-    private void layout(){setFullscreen(false);releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
+    private void layout(){applyReaderBrightness(false);setFullscreen(false);releaseBitmap();ScrollView sc=new ScrollView(this);body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(16),dp(16),dp(16),dp(16));sc.addView(body);setContentView(sc);}
     private void brandHeader(){
         ImageView logo=new ImageView(this);logo.setImageResource(R.drawable.ic_launcher);logo.setContentDescription("Slashview open book logo");body.addView(logo,new LinearLayout.LayoutParams(-1,dp(96)));
         TextView brand=label("Slashview",32);brand.setGravity(Gravity.CENTER);brand.setTypeface(null,android.graphics.Typeface.BOLD);
@@ -388,11 +389,27 @@ public final class LibraryActivity extends Activity {
         libraryOverview();
         menuCard("Add new book","Import an existing PDF from your phone",this::pickBook,true);
         menuCard("Scan hard copies","Camera or gallery • up to 50 pages • automatic PDF and OCR",this::scanBook,true);
+        menuCard("Smart library","Favourites, subjects and recent reading",this::smartLibrary,true);
         menuCard("My books","Choose a saved book, view details or rename it",this::booksMenu,true);
         menuCard("Read & search",ready?"Resume reading, find topics and browse chapters":"Add or select a book first",this::readingMenu,ready);
         menuCard("Study & revision",ready?"Notes, highlights, bookmarks and reading history":"Add or select a book first",this::revisionMenu,ready);
         menuCard("AI Medical Study Assistant",ready?"Book-based explanations, MCQs, TOACS and flashcards":"Add or select a book first",this::aiStudyMenu,ready);
 
+    }
+    private void readerSettings(int number){
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(8),dp(16),dp(8));
+        Spinner theme=new Spinner(this);theme.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"Light","Dark","Sepia"}));theme.setSelection(Math.max(0,Math.min(2,prefs().getInt("reader.theme",night?1:0))));panel.addView(label("Reading theme",16));panel.addView(theme);
+        CheckBox vertical=new CheckBox(this);vertical.setText("Vertical page swipes");vertical.setChecked(prefs().getBoolean("reader.vertical",false));panel.addView(vertical);
+        CheckBox system=new CheckBox(this);system.setText("Use system brightness");system.setChecked(prefs().getBoolean("reader.systemBrightness",true));panel.addView(system);
+        SeekBar brightness=new SeekBar(this);brightness.setMax(90);brightness.setProgress(prefs().getInt("reader.brightness",70)-10);panel.addView(label("Reader brightness",16));panel.addView(brightness);
+        new AlertDialog.Builder(this).setTitle("Reader settings").setView(panel).setPositiveButton("Apply",(d,w)->{night=theme.getSelectedItemPosition()==1;prefs().edit().putInt("reader.theme",theme.getSelectedItemPosition()).putBoolean("study.night",night).putBoolean("reader.vertical",vertical.isChecked()).putBoolean("reader.systemBrightness",system.isChecked()).putInt("reader.brightness",brightness.getProgress()+10).apply();page(number);}).setNegativeButton("Cancel",null).show();
+    }
+    private void applyReaderBrightness(boolean reading){WindowManager.LayoutParams a=getWindow().getAttributes();a.screenBrightness=reading&&!prefs().getBoolean("reader.systemBrightness",true)?Math.max(0.1f,Math.min(1f,prefs().getInt("reader.brightness",70)/100f)):-1f;getWindow().setAttributes(a);}
+    private void smartLibrary(){
+        menuScreen("Smart library");java.util.ArrayList<String> ids=availableBooks();ids.sort((a,b)->Long.compare(prefs().getLong("study."+b+".lastOpened",0),prefs().getLong("study."+a+".lastOpened",0)));
+        java.util.ArrayList<String> filters=new java.util.ArrayList<>(java.util.Arrays.asList("All books","Favourites","Recently read"));java.util.TreeSet<String> subjects=new java.util.TreeSet<>();for(String id:ids){String subject=prefs().getString("study."+id+".subject","");if(!subject.isEmpty())subjects.add(subject);}for(String subject:subjects)filters.add("Subject: "+subject);
+        if(!filters.contains(libraryFilter))libraryFilter="All books";button("Filter: "+libraryFilter,()->new AlertDialog.Builder(this).setTitle("Library filter").setItems(filters.toArray(new String[0]),(d,w)->{libraryFilter=filters.get(w);smartLibrary();}).show());
+        int shown=0;for(String id:ids){String prefix="study."+id+".";boolean fav=prefs().getBoolean(prefix+"favourite",false);String subject=prefs().getString(prefix+"subject","");if(libraryFilter.equals("Favourites")&&!fav||libraryFilter.equals("Recently read")&&prefs().getLong(prefix+"lastOpened",0)==0||libraryFilter.startsWith("Subject: ")&&!libraryFilter.equals("Subject: "+subject))continue;shown++;int last=prefs().getInt(prefix+"lastPage",0);int total=prefs().getInt(prefix+"readerTotal",0);body.addView(label((fav?"★ ":"")+displayBookTitle(id)+(subject.isEmpty()?"":" • "+subject),18));body.addView(label("Last page "+(last+1)+(total>0?" / "+total+" • "+Math.min(100,Math.round(100f*(last+1)/total))+"% position":""),14));button("Continue reading",()->{selectBook(id);page(last);});button(fav?"Remove favourite":"Add favourite",()->{prefs().edit().putBoolean(prefix+"favourite",!fav).apply();smartLibrary();});button("Set subject folder",()->{EditText input=new EditText(this);input.setSingleLine(true);input.setText(subject);input.setFilters(new android.text.InputFilter[]{new android.text.InputFilter.LengthFilter(80)});new AlertDialog.Builder(this).setTitle("Subject (blank removes folder)").setView(input).setPositiveButton("Save",(d,w)->{prefs().edit().putString(prefix+"subject",input.getText().toString().trim()).apply();smartLibrary();}).setNegativeButton("Cancel",null).show();});}if(shown==0)body.addView(label("No books in this view.",15));
     }
     private void booksMenu(){
         menuScreen("My books");body.addView(label("Choose a book to manage or read.",14));
@@ -535,9 +552,9 @@ public final class LibraryActivity extends Activity {
         void change(float f){scaleTo(zoom*f,getWidth()/2f,getHeight()/2f);}
         void reset(){scaleTo(1,getWidth()/2f,getHeight()/2f);}
         private void apply(){float w=bitmap.getWidth()*base*zoom,h=bitmap.getHeight()*base*zoom;x=w<=getWidth()?(getWidth()-w)/2f:Math.max(getWidth()-w,Math.min(0,x));y=h<=getHeight()?(getHeight()-h)/2f:Math.max(getHeight()-h,Math.min(0,y));transform.setScale(base*zoom,base*zoom);transform.postTranslate(x,y);setImageMatrix(transform);}
-        @Override public boolean onTouchEvent(android.view.MotionEvent e){if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;if(Math.abs(dx)>dp(70)&&Math.abs(dx)>Math.abs(dy)*1.5f){int next=currentPage+(dx<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
+        @Override public boolean onTouchEvent(android.view.MotionEvent e){if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;boolean vertical=prefs().getBoolean("reader.vertical",false);float primary=vertical?dy:dx,secondary=vertical?dx:dy;if(Math.abs(primary)>dp(70)&&Math.abs(primary)>Math.abs(secondary)*1.5f){int next=currentPage+(primary<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
     }
-    private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;int token=++generation;final File source=book;currentPage=number;releaseBitmap();
+    private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
         body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);
         LinearLayout bar=new LinearLayout(this);body.addView(bar);
         Button back=new Button(this);back.setText(lastQuery.isEmpty()?"Library":"Results");back.setOnClickListener(v->{if(lastQuery.isEmpty())home();else find(lastQuery);});bar.addView(back,new LinearLayout.LayoutParams(0,-2,1));
@@ -547,10 +564,10 @@ public final class LibraryActivity extends Activity {
             int total=renderer.getPageCount();if(number<0||number>=total){runOnUiThread(()->{if(!isDestroyed()&&generation==token){pageCount=total;pageLabel.setText("Saved page is outside this PDF. Return to library or open page 1.");}});return;}
             Bitmap bitmap;try(PdfRenderer.Page p=renderer.openPage(number)){int width=2200;int height=Math.max(1,(int)((long)width*p.getHeight()/p.getWidth()));if(height>3400){width=Math.max(1,(int)((long)width*3400/height));height=3400;}bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE);p.render(bitmap,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
             runOnUiThread(()->{if(isDestroyed()||generation!=token){bitmap.recycle();return;}
-                pageCount=total;displayedBitmap=bitmap;rememberPage(number);pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
-                ZoomPage img=new ZoomPage(bitmap);if(night)img.setColorFilter(new ColorMatrixColorFilter(new float[]{-1,0,0,0,255,0,-1,0,0,255,0,0,-1,0,255,0,0,0,1,0}));body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
+                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("readerTotal"),total).apply();rememberPage(number);pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
+                ZoomPage img=new ZoomPage(bitmap);if(prefs().getInt("reader.theme",night?1:0)==2)img.setColorFilter(new ColorMatrixColorFilter(new float[]{0.92f,0,0,0,12,0,0.85f,0,0,10,0,0,0.70f,0,8,0,0,0,1,0}));else if(night)img.setColorFilter(new ColorMatrixColorFilter(new float[]{-1,0,0,0,255,0,-1,0,0,255,0,0,-1,0,255,0,0,0,1,0}));body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
                 LinearLayout tools=new LinearLayout(this);body.addView(tools);
-                String[] labels={"−","Fit","+","Go to","Night"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->{night=!night;prefs().edit().putBoolean("study.night",night).apply();page(number);}};
+                String[] labels={"−","Fit","+","Go to","Settings"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->readerSettings(number)};
                 for(int i=0;i<labels.length;i++){final int k=i;Button btn=new Button(this);btn.setText(labels[i]);btn.setMinWidth(0);btn.setMinimumWidth(0);btn.setPadding(0,0,0,0);btn.setOnClickListener(v->actions[k].run());tools.addView(btn,new LinearLayout.LayoutParams(0,-2,1));}
                 LinearLayout marks=new LinearLayout(this);body.addView(marks);Button mark=new Button(this);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");mark.setOnClickListener(v->{toggleBookmark(number);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");});marks.addView(mark,new LinearLayout.LayoutParams(0,-2,1));Button list=new Button(this);list.setText("Bookmarks");list.setOnClickListener(v->bookmarkDialog());marks.addView(list,new LinearLayout.LayoutParams(0,-2,1));
                 LinearLayout study=new LinearLayout(this);body.addView(study);Button highlight=new Button(this);highlight.setText("Highlight");highlight.setOnClickListener(v->img.toggleMarking(highlight));study.addView(highlight,new LinearLayout.LayoutParams(0,-2,1));Button undo=new Button(this);undo.setText("Undo mark");undo.setOnClickListener(v->img.undoHighlight());study.addView(undo,new LinearLayout.LayoutParams(0,-2,1));Button noteButton=new Button(this);noteButton.setText("Notes");noteButton.setOnClickListener(v->studyNote(number));study.addView(noteButton,new LinearLayout.LayoutParams(0,-2,1));Button revision=new Button(this);revision.setText("Revise");revision.setOnClickListener(v->revisionHub());study.addView(revision,new LinearLayout.LayoutParams(0,-2,1));
