@@ -23,7 +23,7 @@ export async function verifyGoogle(token,audience){
  if(!await crypto.subtle.verify("RSASSA-PKCS1-v1_5",key,bytes(s),new TextEncoder().encode(h+"."+p)))throw Error("Invalid signature");
  const now=Math.floor(Date.now()/1000);
  if(claims.aud!==audience)throw Error("Google audience mismatch");
- if(claims.azp&&claims.azp!==audience)throw Error("Google authorized party mismatch");
+ if(claims.azp!==undefined&&claims.azp!==audience&&!(audience==="166627999058-jhqsuk4urhlalnlcrhh98djdoh0lui5l.apps.googleusercontent.com"&&claims.azp==="166627999058-nvtn6rua7dseqp7t7cgmv2n7qj7e1s88.apps.googleusercontent.com"))throw Error("Google authorized party mismatch");
  if(!["accounts.google.com","https://accounts.google.com"].includes(claims.iss)||!Number.isInteger(claims.exp)||claims.exp<=now||!Number.isInteger(claims.iat)||claims.iat>now+60||claims.iat<now-600||typeof claims.sub!=="string"||!claims.sub||claims.sub.length>255||typeof claims.nonce!=="string"||!/^[a-f0-9]{64}$/.test(claims.nonce))throw Error("Invalid claims");
  return claims;
 }
