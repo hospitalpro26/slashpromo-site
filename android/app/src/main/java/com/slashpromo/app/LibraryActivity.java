@@ -511,6 +511,46 @@ public final class LibraryActivity extends Activity {
         tile.setEnabled(enabled);tile.setAlpha(enabled?1f:0.55f);tile.setFocusable(enabled);tile.setContentDescription(title+". "+subtitle);
         if(enabled)tile.setOnClickListener(v->action.run());
     }
+    private static final int BACKUP_EXPORT=81,BACKUP_RESTORE=82;
+    private void backupMenu(){
+        if(busy)return;
+        menuScreen("Private backup & restore");
+        body.addView(label("Password-protected backup of imported books, notes, highlights, bookmarks, flashcards and reading history. Account credentials and unfinished scans are excluded. Maximum 8 GB total, 1 GB per file. Restore needs temporary storage for the archive and extracted books. Restore only into an empty library.",15));
+        if(Build.VERSION.SDK_INT<26){body.addView(label("Backup requires Android 8 or newer.",15));return;}
+        button("Create encrypted backup",()->chooseBackupFile(false));
+        button("Restore encrypted backup",()->new AlertDialog.Builder(this).setTitle("Restore a backup").setMessage("Restore is allowed only into an empty study library. Existing study records will never be replaced.").setNegativeButton("Cancel",null).setPositiveButton("Choose backup",(d,w)->chooseBackupFile(true)).show());
+    }
+    private void chooseBackupFile(boolean restore){
+        if(busy)return;
+        Intent i=new Intent(restore?Intent.ACTION_OPEN_DOCUMENT:Intent.ACTION_CREATE_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("application/octet-stream");
+        if(!restore)i.putExtra(Intent.EXTRA_TITLE,"Slashview-"+studyDay()+".svbackup");
+        try{startActivityForResult(i,restore?BACKUP_RESTORE:BACKUP_EXPORT);}
+        catch(Exception e){Toast.makeText(this,"No document provider available",Toast.LENGTH_LONG).show();}
+    }
+    private void backupPassword(android.net.Uri uri,boolean restore){
+        EditText field=new EditText(this);field.setHint("Backup password (12+ characters)");field.setInputType(android.text.InputType.TYPE_CLASS_TEXT|android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);field.setSaveEnabled(false);
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle(restore?"Unlock backup":"Protect your backup").setMessage("Remember this password. It is not saved and cannot be recovered.").setView(field).setNegativeButton("Cancel",null).setPositiveButton(restore?"Restore":"Export",null).create();
+        dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
+            if(field.length()<12){field.setError("Use at least 12 characters");return;}
+            char[] password=new char[field.length()];field.getText().getChars(0,field.length(),password,0);field.setText("");dialog.dismiss();runBackup(uri,restore,password);
+        }));dialog.show();
+    }
+    private void runBackup(android.net.Uri uri,boolean restore,char[] password){
+        if(busy){java.util.Arrays.fill(password,'\0');return;}
+        busy=true;home();final java.util.ArrayList<String> ids=availableBooks();
+        status.setText(restore?"Authenticating backup…":"Creating encrypted backup…");
+        worker.execute(()->{
+            String message;
+            try{
+                if(restore){try(InputStream in=getContentResolver().openInputStream(uri)){if(in==null)throw new IOException("Cannot open backup");int count=StudyBackup.restore(in,libraryRoot,prefs(),password);message="Restored "+count+" books and saved study records.";}}
+                else{try(OutputStream out=getContentResolver().openOutputStream(uri,"wt")){if(out==null)throw new IOException("Cannot create backup");StudyBackup.exportTo(out,libraryRoot,ids,prefs(),password);message="Encrypted backup saved. Keep the file and password safe.";}}
+            }catch(Exception e){message=restore?"Restore failed. Check password, file, storage and that the study library is empty.":"Backup failed. Check available storage and the backup size limits. Delete any incomplete export file.";}
+            finally{java.util.Arrays.fill(password,'\0');}
+            final String result=message;runOnUiThread(()->{busy=false;if(!isDestroyed()){if(restore)init();else home();new AlertDialog.Builder(this).setTitle("Study backup").setMessage(result).setPositiveButton("Close",null).show();}});
+        });
+    }
+
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
     private void menuScreen(String title){endReading();generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
     private void searchAllBooks(){searchAllBooks("");}
@@ -701,6 +741,7 @@ public final class LibraryActivity extends Activity {
             prefs().edit().putBoolean("onlineAccount.promptSeen",true).apply();
             new AlertDialog.Builder(this).setTitle("Welcome to Slashview").setMessage("Register with Google for three months free, then $1 per month. Your existing books and notes remain on this device.").setPositiveButton("Register with Google",(d,w)->startActivity(new Intent(this,AccountPreviewActivity.class))).setNegativeButton("Later",null).show();
         }
+        menuCard("Backup & restore","Password-protected local study archive",this::backupMenu,true);
         menuCard("My account",prefs().getBoolean("localAccount.saved",false)?"Local profile • not synced":"Register your local profile",this::localAccount,true);
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
         menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
@@ -769,7 +810,7 @@ public final class LibraryActivity extends Activity {
             button("Study & revision",this::revisionMenu);
         }
     }
-    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){if(prefs().getBoolean("offlineScan.batchMode",false))saveScanBatch(scanned.getPdf().getUri());else importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
+    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==BACKUP_EXPORT||req==BACKUP_RESTORE){if(result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null&&Build.VERSION.SDK_INT>=26)backupPassword(data.getData(),req==BACKUP_RESTORE);return;}if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){if(prefs().getBoolean("offlineScan.batchMode",false))saveScanBatch(scanned.getPdf().getUri());else importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
     private void importBook(android.net.Uri uri,boolean scanned){importBook(uri,scanned,null);}
     private void importBook(android.net.Uri uri,boolean scanned,String draftId){
         busy=true;home();worker.execute(()->{
@@ -877,16 +918,30 @@ public final class LibraryActivity extends Activity {
         private final String highlightKey;
         private final java.util.ArrayList<RectF> highlights=new java.util.ArrayList<>();
         private final Paint highlightPaint=new Paint();
-        private boolean marking=false;private PointF start;private RectF preview;
+        private boolean marking=false,underlining=false,inking=false;private PointF start;private RectF preview;
+        private final String inkKey=pageKey("ink",currentPage);
+        private final java.util.ArrayList<java.util.ArrayList<PointF>> ink=new java.util.ArrayList<>();
+        private java.util.ArrayList<PointF> activeInk;
         private void loadHighlights(){try{org.json.JSONArray arr=new org.json.JSONArray(prefs().getString(highlightKey,"[]"));for(int i=0;i<Math.min(arr.length(),500);i++){org.json.JSONArray a=arr.getJSONArray(i);RectF r=new RectF((float)a.getDouble(0),(float)a.getDouble(1),(float)a.getDouble(2),(float)a.getDouble(3));if(r.left>=0&&r.top>=0&&r.right<=1&&r.bottom<=1&&r.width()>0&&r.height()>0)highlights.add(r);}}catch(Exception ignored){}}
         private void saveHighlights(){org.json.JSONArray arr=new org.json.JSONArray();try{for(RectF r:highlights){org.json.JSONArray a=new org.json.JSONArray();a.put((double)r.left);a.put((double)r.top);a.put((double)r.right);a.put((double)r.bottom);arr.put(a);}prefs().edit().putString(highlightKey,arr.toString()).apply();}catch(org.json.JSONException ignored){}}
-        void toggleMarking(Button button){marking=!marking;start=null;preview=null;button.setText(marking?"Done marking":"Highlight");if(marking)Toast.makeText(LibraryActivity.this,"Drag over a passage to highlight",Toast.LENGTH_SHORT).show();invalidate();}
+        void toggleMarking(Button button){marking=!marking;underlining=false;inking=false;activeInk=null;start=null;preview=null;button.setText(marking?"Done marking":"Highlight");if(marking)Toast.makeText(LibraryActivity.this,"Drag over a passage to highlight",Toast.LENGTH_SHORT).show();invalidate();}
+        void annotationMenu(Button button){
+            new AlertDialog.Builder(LibraryActivity.this).setTitle("Annotation tool").setItems(new String[]{"Highlight","Underline","Freehand pen","Undo last pen stroke","Reading mode"},(d,which)->{if(which==3){if(!ink.isEmpty()){ink.remove(ink.size()-1);saveInk();invalidate();}return;}marking=which<3;underlining=which==1;inking=which==2;activeInk=null;start=null;preview=null;button.setText(which==0?"Done marking":which==1?"Underlining":which==2?"Pen mode":"Highlight");invalidate();}).show();
+        }
         void undoHighlight(){if(!highlights.isEmpty()){highlights.remove(highlights.size()-1);saveHighlights();invalidate();}}
         private PointF normalizedPoint(float sx,float sy){Matrix inverse=new Matrix();if(!transform.invert(inverse))return null;float[] xy={sx,sy};inverse.mapPoints(xy);return new PointF(Math.max(0,Math.min(1,xy[0]/bitmap.getWidth())),Math.max(0,Math.min(1,xy[1]/bitmap.getHeight())));}
         private void drawMark(Canvas canvas,RectF r){RectF b=new RectF(r.left*bitmap.getWidth(),r.top*bitmap.getHeight(),r.right*bitmap.getWidth(),r.bottom*bitmap.getHeight());transform.mapRect(b);canvas.drawRect(b,highlightPaint);}
-        @Override protected void onDraw(Canvas canvas){super.onDraw(canvas);highlightPaint.setColor(night?0x809b7c16:0x70ffd600);for(RectF r:highlights)drawMark(canvas,r);if(preview!=null)drawMark(canvas,preview);}
-        private boolean markTouch(MotionEvent e){int action=e.getActionMasked();if(e.getPointerCount()>1||action==MotionEvent.ACTION_CANCEL){start=null;preview=null;invalidate();return true;}PointF p=normalizedPoint(e.getX(),e.getY());if(p==null)return true;if(action==MotionEvent.ACTION_DOWN){start=p;preview=null;}else if(start!=null&&(action==MotionEvent.ACTION_MOVE||action==MotionEvent.ACTION_UP)){preview=new RectF(Math.min(start.x,p.x),Math.min(start.y,p.y),Math.max(start.x,p.x),Math.max(start.y,p.y));if(action==MotionEvent.ACTION_UP){if(preview.width()>0.002f&&preview.height()>0.002f){if(highlights.size()<500){highlights.add(preview);saveHighlights();}else Toast.makeText(LibraryActivity.this,"Page highlight limit reached",Toast.LENGTH_SHORT).show();}preview=null;start=null;}}invalidate();return true;}
-        ZoomPage(Bitmap image){super(LibraryActivity.this);highlightKey=pageKey("highlights",currentPage);bitmap=image;loadHighlights();setImageBitmap(image);setScaleType(ScaleType.MATRIX);setBackgroundColor(Color.WHITE);
+        @Override protected void onDraw(Canvas canvas){super.onDraw(canvas);highlightPaint.setColor(night?0x809b7c16:0x70ffd600);for(RectF r:highlights)drawMark(canvas,r);if(preview!=null)drawMark(canvas,preview);for(java.util.ArrayList<PointF> stroke:ink)drawInk(canvas,stroke);if(activeInk!=null)drawInk(canvas,activeInk);}
+        private void loadInk(){
+            try{org.json.JSONArray all=new org.json.JSONArray(prefs().getString(inkKey,"[]"));
+                for(int i=0;i<Math.min(100,all.length());i++){org.json.JSONArray a=all.getJSONArray(i);java.util.ArrayList<PointF> stroke=new java.util.ArrayList<>();for(int j=0;j<Math.min(512,a.length());j++){org.json.JSONArray p=a.getJSONArray(j);float x=(float)p.getDouble(0),y=(float)p.getDouble(1);if(Float.isFinite(x)&&Float.isFinite(y)&&x>=0&&x<=1&&y>=0&&y<=1)stroke.add(new PointF(x,y));}if(stroke.size()>1)ink.add(stroke);}
+            }catch(Exception ignored){}
+        }
+        private void saveInk(){try{org.json.JSONArray all=new org.json.JSONArray();for(java.util.ArrayList<PointF> stroke:ink){org.json.JSONArray a=new org.json.JSONArray();for(PointF p:stroke)a.put(new org.json.JSONArray().put((double)p.x).put((double)p.y));all.put(a);}prefs().edit().putString(inkKey,all.toString()).apply();}catch(org.json.JSONException ignored){}}
+        private void drawInk(Canvas canvas,java.util.ArrayList<PointF> stroke){if(stroke.size()<2)return;Path path=new Path();for(int i=0;i<stroke.size();i++){PointF p=stroke.get(i);float[] xy={p.x*bitmap.getWidth(),p.y*bitmap.getHeight()};transform.mapPoints(xy);if(i==0)path.moveTo(xy[0],xy[1]);else path.lineTo(xy[0],xy[1]);}Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);paint.setColor(night?0xff80cbc4:0xff1557b0);paint.setStyle(Paint.Style.STROKE);paint.setStrokeWidth(dp(2));paint.setStrokeCap(Paint.Cap.ROUND);paint.setStrokeJoin(Paint.Join.ROUND);canvas.drawPath(path,paint);}
+        private boolean inkTouch(MotionEvent e){int a=e.getActionMasked();if(e.getPointerCount()>1||a==MotionEvent.ACTION_CANCEL){activeInk=null;invalidate();return true;}PointF p=normalizedPoint(e.getX(),e.getY());if(p==null)return true;if(a==MotionEvent.ACTION_DOWN){if(ink.size()>=100){Toast.makeText(LibraryActivity.this,"Page pen stroke limit reached",Toast.LENGTH_SHORT).show();return true;}activeInk=new java.util.ArrayList<>();activeInk.add(p);}else if(activeInk!=null&&(a==MotionEvent.ACTION_MOVE||a==MotionEvent.ACTION_UP)){if(activeInk.size()<512)activeInk.add(p);if(a==MotionEvent.ACTION_UP){if(activeInk.size()>1){ink.add(activeInk);saveInk();}activeInk=null;}}invalidate();return true;}
+        private boolean markTouch(MotionEvent e){int action=e.getActionMasked();if(e.getPointerCount()>1||action==MotionEvent.ACTION_CANCEL){start=null;preview=null;invalidate();return true;}PointF p=normalizedPoint(e.getX(),e.getY());if(p==null)return true;if(action==MotionEvent.ACTION_DOWN){start=p;preview=null;}else if(start!=null&&(action==MotionEvent.ACTION_MOVE||action==MotionEvent.ACTION_UP)){preview=new RectF(Math.min(start.x,p.x),Math.min(start.y,p.y),Math.max(start.x,p.x),Math.max(start.y,p.y));if(action==MotionEvent.ACTION_UP){if(underlining&&preview.width()>0.002f){float bottom=Math.max(0.003f,preview.bottom);preview.top=Math.max(0,bottom-0.003f);preview.bottom=bottom;}if(preview.width()>0.002f&&preview.height()>0.002f){if(highlights.size()<500){highlights.add(preview);saveHighlights();}else Toast.makeText(LibraryActivity.this,"Page highlight limit reached",Toast.LENGTH_SHORT).show();}preview=null;start=null;}}invalidate();return true;}
+        ZoomPage(Bitmap image){super(LibraryActivity.this);highlightKey=pageKey("highlights",currentPage);bitmap=image;loadHighlights();loadInk();setImageBitmap(image);setScaleType(ScaleType.MATRIX);setBackgroundColor(Color.WHITE);
             pinch=new ScaleGestureDetector(LibraryActivity.this,new ScaleGestureDetector.SimpleOnScaleGestureListener(){@Override public boolean onScale(ScaleGestureDetector d){scaleTo(zoom*d.getScaleFactor(),d.getFocusX(),d.getFocusY());return true;}});
             gestures=new GestureDetector(LibraryActivity.this,new GestureDetector.SimpleOnGestureListener(){@Override public boolean onDown(android.view.MotionEvent e){return true;}@Override public boolean onDoubleTap(android.view.MotionEvent e){scaleTo(zoom>1.1f?1:2.5f,e.getX(),e.getY());return true;}@Override public boolean onScroll(android.view.MotionEvent a,android.view.MotionEvent b,float dx,float dy){if(!pinch.isInProgress()&&zoom>1.05f){x-=dx;y-=dy;apply();}return true;}});
         }
@@ -895,7 +950,33 @@ public final class LibraryActivity extends Activity {
         void change(float f){scaleTo(zoom*f,getWidth()/2f,getHeight()/2f);}
         void reset(){scaleTo(1,getWidth()/2f,getHeight()/2f);}
         private void apply(){float w=bitmap.getWidth()*base*zoom,h=bitmap.getHeight()*base*zoom;x=w<=getWidth()?(getWidth()-w)/2f:Math.max(getWidth()-w,Math.min(0,x));y=h<=getHeight()?(getHeight()-h)/2f:Math.max(getHeight()-h,Math.min(0,y));transform.setScale(base*zoom,base*zoom);transform.postTranslate(x,y);setImageMatrix(transform);}
-        @Override public boolean onTouchEvent(android.view.MotionEvent e){if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;boolean vertical=prefs().getBoolean("reader.vertical",false);float primary=vertical?dy:dx,secondary=vertical?dx:dy;if(Math.abs(primary)>dp(70)&&Math.abs(primary)>Math.abs(secondary)*1.5f){int next=currentPage+(primary<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
+        @Override public boolean onTouchEvent(android.view.MotionEvent e){if(inking)return inkTouch(e);if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;boolean vertical=prefs().getBoolean("reader.vertical",false);float primary=vertical?dy:dx,secondary=vertical?dx:dy;if(Math.abs(primary)>dp(70)&&Math.abs(primary)>Math.abs(secondary)*1.5f){int next=currentPage+(primary<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
+    }
+    private void pageThumbnails(int current,int total){
+        final File source=book;final int token=generation;
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(12),dp(8),dp(12),dp(8));
+        TextView range=label("",15);panel.addView(range);
+        LinearLayout row=new LinearLayout(this);panel.addView(row);
+        Button previous=new Button(this),next=new Button(this);previous.setText("Previous 6");next.setText("Next 6");row.addView(previous,new LinearLayout.LayoutParams(0,-2,1));row.addView(next,new LinearLayout.LayoutParams(0,-2,1));
+        ScrollView scroll=new ScrollView(this);LinearLayout tiles=new LinearLayout(this);tiles.setOrientation(1);scroll.addView(tiles);panel.addView(scroll,new LinearLayout.LayoutParams(-1,dp(360)));
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Page thumbnails").setView(panel).setNegativeButton("Close",null).create();
+        final int[] start={current/6*6},request={0};
+        Runnable refresh=()->{int serial=++request[0],first=start[0],end=Math.min(total,first+6);tiles.removeAllViews();range.setText("PDF pages "+(first+1)+"–"+end+" / "+total);previous.setEnabled(first>0);next.setEnabled(end<total);
+            worker.execute(()->{try(ParcelFileDescriptor fd=ParcelFileDescriptor.open(source,ParcelFileDescriptor.MODE_READ_ONLY);PdfRenderer renderer=new PdfRenderer(ParcelFileDescriptor.dup(fd.getFileDescriptor()))){
+                for(int p=first;p<end;p++){final int target=p;Bitmap thumb;try(PdfRenderer.Page pdf=renderer.openPage(p)){int w=220,h=Math.max(1,(int)((long)w*pdf.getHeight()/pdf.getWidth()));if(h>320){w=Math.max(1,w*320/h);h=320;}thumb=Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);thumb.eraseColor(Color.WHITE);pdf.render(thumb,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
+                    runOnUiThread(()->{if(isDestroyed()||generation!=token||!dialog.isShowing()||request[0]!=serial){thumb.recycle();return;}LinearLayout tile=new LinearLayout(this);tile.setGravity(Gravity.CENTER_VERTICAL);ImageView image=new ImageView(this);image.setImageBitmap(thumb);image.setScaleType(ImageView.ScaleType.FIT_CENTER);tile.addView(image,new LinearLayout.LayoutParams(dp(94),dp(128)));TextView title=label("PDF page "+(target+1)+(target==current?" • Current":""),16);tile.addView(title,new LinearLayout.LayoutParams(0,-2,1));tile.setContentDescription("Open PDF page "+(target+1));tile.setFocusable(true);tile.setOnClickListener(v->{dialog.dismiss();page(target);});tiles.addView(tile);});
+                }
+            }catch(Exception e){runOnUiThread(()->{if(dialog.isShowing()&&request[0]==serial&&generation==token)range.setText("Preview unavailable. Use numeric page navigation.");});}});
+        };
+        previous.setOnClickListener(v->{start[0]=Math.max(0,start[0]-6);refresh.run();});next.setOnClickListener(v->{if(start[0]+6<total){start[0]+=6;refresh.run();}});dialog.setOnDismissListener(d->{request[0]++;tiles.removeAllViews();});dialog.show();refresh.run();
+    }
+    private void pageNavigator(int current,int total){
+        if(total<=0)return;
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(8),dp(16),dp(8));
+        TextView position=label("PDF page "+(current+1)+" / "+total,18);panel.addView(position);
+        SeekBar slider=new SeekBar(this);slider.setMax(total-1);slider.setProgress(current);slider.setContentDescription("Choose PDF page");panel.addView(slider);Button thumbnails=new Button(this);thumbnails.setText("Browse page thumbnails");panel.addView(thumbnails);
+        slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int p,boolean fromUser){position.setText("PDF page "+(p+1)+" / "+total);}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});
+        AlertDialog navigator=new AlertDialog.Builder(this).setTitle("Quick page navigation").setView(panel).setPositiveButton("Open page",(d,w)->page(slider.getProgress())).setNeutralButton("Enter page number",(d,w)->goToPage(total)).setNegativeButton("Cancel",null).create();thumbnails.setOnClickListener(v->{navigator.dismiss();pageThumbnails(current,total);});navigator.show();
     }
     private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;endReading();int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
         body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);applySafeArea(body);
@@ -907,13 +988,13 @@ public final class LibraryActivity extends Activity {
             int total=renderer.getPageCount();if(number<0||number>=total){runOnUiThread(()->{if(!isDestroyed()&&generation==token){pageCount=total;pageLabel.setText("Saved page is outside this PDF. Return to library or open page 1.");}});return;}
             Bitmap bitmap;try(PdfRenderer.Page p=renderer.openPage(number)){int width=2200;int height=Math.max(1,(int)((long)width*p.getHeight()/p.getWidth()));if(height>3400){width=Math.max(1,(int)((long)width*3400/height));height=3400;}bitmap=Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888);bitmap.eraseColor(Color.WHITE);p.render(bitmap,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
             runOnUiThread(()->{if(isDestroyed()||generation!=token){bitmap.recycle();return;}
-                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("readerTotal"),total).apply();rememberPage(number);readingBook=bookId;readingGeneration=generation;startReadingClock();pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position");
+                pageCount=total;displayedBitmap=bitmap;prefs().edit().putInt(key("readerTotal"),total).apply();rememberPage(number);readingBook=bookId;readingGeneration=generation;startReadingClock();pageLabel.setText("PDF page "+(number+1)+" / "+total+" • "+Math.round(100.0*(number+1)/total)+"% position • tap to jump");pageLabel.setOnClickListener(v->pageNavigator(number,total));pageLabel.setFocusable(true);
                 ZoomPage img=new ZoomPage(bitmap);if(prefs().getInt("reader.theme",night?1:0)==2)img.setColorFilter(new ColorMatrixColorFilter(new float[]{0.92f,0,0,0,12,0,0.85f,0,0,10,0,0,0.70f,0,8,0,0,0,1,0}));else if(night)img.setColorFilter(new ColorMatrixColorFilter(new float[]{-1,0,0,0,255,0,-1,0,0,255,0,0,-1,0,255,0,0,0,1,0}));body.addView(img,new LinearLayout.LayoutParams(-1,0,1));
                 LinearLayout tools=new LinearLayout(this);body.addView(tools);
-                String[] labels={"−","Fit","+","Go to","Settings"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->goToPage(total),()->readerSettings(number)};
+                String[] labels={"−","Fit","+","Go to","Settings"};Runnable[] actions={()->img.change(0.7f),img::reset,()->img.change(1.5f),()->pageNavigator(number,total),()->readerSettings(number)};
                 for(int i=0;i<labels.length;i++){final int k=i;Button btn=new Button(this);btn.setText(labels[i]);btn.setMinWidth(0);btn.setMinimumWidth(0);btn.setPadding(0,0,0,0);btn.setOnClickListener(v->actions[k].run());tools.addView(btn,new LinearLayout.LayoutParams(0,-2,1));}
                 LinearLayout marks=new LinearLayout(this);body.addView(marks);Button mark=new Button(this);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");mark.setOnClickListener(v->{toggleBookmark(number);mark.setText(bookmarks().contains(number)?"★ Saved":"☆ Bookmark");});marks.addView(mark,new LinearLayout.LayoutParams(0,-2,1));Button list=new Button(this);list.setText("Bookmarks");list.setOnClickListener(v->bookmarkDialog());marks.addView(list,new LinearLayout.LayoutParams(0,-2,1));
-                LinearLayout study=new LinearLayout(this);body.addView(study);Button highlight=new Button(this);highlight.setText("Highlight");highlight.setOnClickListener(v->img.toggleMarking(highlight));study.addView(highlight,new LinearLayout.LayoutParams(0,-2,1));Button undo=new Button(this);undo.setText("Undo mark");undo.setOnClickListener(v->img.undoHighlight());study.addView(undo,new LinearLayout.LayoutParams(0,-2,1));Button noteButton=new Button(this);noteButton.setText("Notes");noteButton.setOnClickListener(v->studyNote(number));study.addView(noteButton,new LinearLayout.LayoutParams(0,-2,1));Button revision=new Button(this);revision.setText("Revise");revision.setOnClickListener(v->revisionHub());study.addView(revision,new LinearLayout.LayoutParams(0,-2,1));
+                LinearLayout study=new LinearLayout(this);body.addView(study);Button highlight=new Button(this);highlight.setText("Highlight");highlight.setOnClickListener(v->img.toggleMarking(highlight));highlight.setOnLongClickListener(v->{img.annotationMenu(highlight);return true;});highlight.setContentDescription("Highlight; long press for underline, pen and reading mode");study.addView(highlight,new LinearLayout.LayoutParams(0,-2,1));Button undo=new Button(this);undo.setText("Undo mark");undo.setOnClickListener(v->img.undoHighlight());study.addView(undo,new LinearLayout.LayoutParams(0,-2,1));Button noteButton=new Button(this);noteButton.setText("Notes");noteButton.setOnClickListener(v->studyNote(number));study.addView(noteButton,new LinearLayout.LayoutParams(0,-2,1));Button revision=new Button(this);revision.setText("Revise");revision.setOnClickListener(v->revisionHub());study.addView(revision,new LinearLayout.LayoutParams(0,-2,1));
                 LinearLayout nav=new LinearLayout(this);body.addView(nav);Button prev=new Button(this);prev.setText("← Previous");prev.setEnabled(number>0);prev.setOnClickListener(v->page(number-1));nav.addView(prev,new LinearLayout.LayoutParams(0,dp(52),1));Button searchHere=new Button(this);searchHere.setText("Search");searchHere.setContentDescription("Search in this book");searchHere.setOnClickListener(v->readerSearch(number));nav.addView(searchHere,new LinearLayout.LayoutParams(0,dp(52),1));Button next=new Button(this);next.setText("Next →");next.setEnabled(number+1<total);next.setOnClickListener(v->page(number+1));nav.addView(next,new LinearLayout.LayoutParams(0,dp(52),1));
                 Button focus=new Button(this);focus.setAllCaps(false);body.addView(focus);Runnable applyFocus=()->{int visibility=fullscreen?View.GONE:View.VISIBLE;for(View view:new View[]{bar,pageLabel,tools,marks,study,nav})view.setVisibility(visibility);focus.setText(fullscreen?"Exit full screen":"Full-screen reading");};focus.setOnClickListener(v->{setFullscreen(!fullscreen);applyFocus.run();});applyFocus.run();
             });
