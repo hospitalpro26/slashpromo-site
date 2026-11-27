@@ -113,3 +113,8 @@ assert(read("android/app/src/main/java/com/slashpromo/app/AccountClient.java").i
 for(const marker of ["applySafeArea(root)","applySafeArea(body)","applySafeArea(sc)","WindowInsets.Type.systemBars()","setMinHeight(dp(56))"])assert(library.includes(marker),marker);
 
 assert(library.includes("checkUpdateNotice()"));assert(library.includes("Slashview update available"));
+
+// Phase 1: verified installer permission continuation.
+for(const marker of ['pendingInstall=apk','awaitingPermission=true','if(busy||awaitingPermission)return','if(busy||awaitingPermission||url==null)return','protected void onResume()','apk.isFile()','j.optBoolean("draft")||j.optBoolean("prerelease")'])assert(updater.includes(marker),marker);
+assert(updater.indexOf('Checksum mismatch")') < updater.indexOf('install(apk);'));
+console.log("PASS update permission continuation structural checks");
