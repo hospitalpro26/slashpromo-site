@@ -113,3 +113,9 @@ assert(read("android/app/src/main/java/com/slashpromo/app/AccountClient.java").i
 for(const marker of ["applySafeArea(root)","applySafeArea(body)","applySafeArea(sc)","WindowInsets.Type.systemBars()","setMinHeight(dp(56))"])assert(library.includes(marker),marker);
 
 assert(library.includes("checkUpdateNotice()"));assert(library.includes("Slashview update available"));
+
+const backup=read("android/app/src/main/java/com/slashpromo/app/StudyBackup.java");
+for(const marker of ["PBKDF2WithHmacSHA256","AES/GCM/NoPadding","600000","emit(0)","Trailing backup data","emptyLibrary(root,prefs)","Unexpected archive entry","Restore conflict","Arrays.fill(key"])assert(backup.includes(marker),marker);
+for(const marker of ["Private backup & restore","StudyBackup.exportTo","StudyBackup.restore","BACKUP_EXPORT","BACKUP_RESTORE","ACTION_CREATE_DOCUMENT"])assert(library.includes(marker),marker);
+assert(!backup.includes("localAccount."));
+console.log("PASS encrypted study backup structural checks");
