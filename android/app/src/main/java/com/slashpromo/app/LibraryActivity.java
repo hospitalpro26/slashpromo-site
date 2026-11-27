@@ -516,7 +516,7 @@ public final class LibraryActivity extends Activity {
     private void backupMenu(){
         if(busy)return;
         menuScreen("Private backup & restore");
-        body.addView(label("Password-protected backup of imported books, notes, highlights, bookmarks, flashcards and reading history. Account credentials and unfinished scans are excluded. Current limit: 60 MB of study data. Restore only into an empty library.",15));
+        body.addView(label("Password-protected backup of imported books, notes, highlights, bookmarks, flashcards and reading history. Account credentials and unfinished scans are excluded. Maximum 8 GB total, 1 GB per file. Restore needs temporary storage for the archive and extracted books. Restore only into an empty library.",15));
         if(Build.VERSION.SDK_INT<26){body.addView(label("Backup requires Android 8 or newer.",15));return;}
         button("Create encrypted backup",()->chooseBackupFile(false));
         button("Restore encrypted backup",()->new AlertDialog.Builder(this).setTitle("Restore a backup").setMessage("Restore is allowed only into an empty study library. Existing study records will never be replaced.").setNegativeButton("Cancel",null).setPositiveButton("Choose backup",(d,w)->chooseBackupFile(true)).show());
@@ -546,7 +546,7 @@ public final class LibraryActivity extends Activity {
             try{
                 if(restore){try(InputStream in=getContentResolver().openInputStream(uri)){if(in==null)throw new IOException("Cannot open backup");int count=StudyBackup.restore(in,libraryRoot,prefs(),password);message="Restored "+count+" books and saved study records.";}}
                 else{try(OutputStream out=getContentResolver().openOutputStream(uri,"wt")){if(out==null)throw new IOException("Cannot create backup");StudyBackup.exportTo(out,libraryRoot,ids,prefs(),password);message="Encrypted backup saved. Keep the file and password safe.";}}
-            }catch(Exception e){message=restore?"Restore failed. Check password, file, storage and that the study library is empty.":"Backup failed. Check available storage and the 60 MB limit. Delete any incomplete export file.";}
+            }catch(Exception e){message=restore?"Restore failed. Check password, file, storage and that the study library is empty.":"Backup failed. Check available storage and the backup size limits. Delete any incomplete export file.";}
             finally{java.util.Arrays.fill(password,'\0');}
             final String result=message;runOnUiThread(()->{busy=false;if(!isDestroyed()){if(restore)init();else home();new AlertDialog.Builder(this).setTitle("Study backup").setMessage(result).setPositiveButton("Close",null).show();}});
         });
