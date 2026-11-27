@@ -61,6 +61,7 @@ final class AccountClient {
  Result request(String path,JSONObject payload,String token) throws Exception {
   if(!ENABLED)throw new IllegalStateException("Account service is not enabled");
   if(!path.matches("/v1/(register|login|me|logout|verification/request|verification/confirm|recovery/request|recovery/confirm|google/nonce|google/login|owner/summary|messages(?:/[0-9a-f-]{36}|/members)?)(?:\\?(?:before=[0-9]{1,16}|q=[A-Za-z0-9%+_.~*\\-]{1,1200}))?"))throw new IllegalArgumentException("Invalid endpoint");
+  int responseLimit=path.startsWith("/v1/messages")?262144:65536;
   HttpsURLConnection c=(HttpsURLConnection)new URL(BASE+path).openConnection();
   try{
    c.setInstanceFollowRedirects(false);c.setConnectTimeout(10000);c.setReadTimeout(15000);c.setUseCaches(false);
@@ -69,7 +70,7 @@ final class AccountClient {
    if(payload!=null){c.setRequestMethod("POST");c.setDoOutput(true);c.setRequestProperty("Content-Type","application/json");byte[] data=payload.toString().getBytes(StandardCharsets.UTF_8);c.setFixedLengthStreamingMode(data.length);try(java.io.OutputStream out=c.getOutputStream()){out.write(data);}}
    int status=c.getResponseCode();if(status>=300&&status<400)throw new Exception("Unexpected redirect");
    InputStream raw=status>=400?c.getErrorStream():c.getInputStream();if(raw==null)throw new Exception("Empty response");
-   try(InputStream in=raw;ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] buffer=new byte[4096];int n;while((n=in.read(buffer))!=-1){if(out.size()+n>65536)throw new Exception("Response too large");out.write(buffer,0,n);}return new Result(status,new JSONObject(out.toString("UTF-8")));}
+   try(InputStream in=raw;ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] buffer=new byte[4096];int n;while((n=in.read(buffer))!=-1){if(out.size()+n>responseLimit)throw new Exception("Response too large");out.write(buffer,0,n);}return new Result(status,new JSONObject(out.toString("UTF-8")));}
   }finally{c.disconnect();}
  }
 }
