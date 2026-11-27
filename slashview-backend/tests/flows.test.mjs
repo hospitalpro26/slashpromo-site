@@ -94,3 +94,52 @@ test('owner summary fails closed and lifetime exemption requires configured Goog
  assert.equal((await call(env,'/v1/me',null,auth)).status,403);
  db.close();
 }));
+
+test('Message Centre isolates member conversations and authorizes the verified owner', async () => {
+ const {db,env}=setup();
+ env.OWNER_GOOGLE_SUBJECT='owner-subject';
+ async function member(email) {
+  const id=crypto.randomUUID().replaceAll('-','');
+  const token=crypto.randomUUID().replaceAll('-','').repeat(2);
+  const hash=Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token))).toString('hex');
+  db.prepare("INSERT INTO accounts(id,email,name,password_hash,salt,status,email_verified_at,terms_version,privacy_version,pricing_version,consent_at) VALUES (?,?,?,'hash','salt','approved','verified','1','1','1','now')").run(id,email,email);
+  db.prepare("INSERT INTO devices(account_id,device_hash,created_at) VALUES (?,'device','now')").run(id);
+  db.prepare("INSERT INTO sessions(token_hash,account_id,expires_at,device_hash) VALUES (?,?,?,'device')").run(hash,id,Math.floor(Date.now()/1000)+600);
+  return {id,auth:{Authorization:'Bearer '+token}};
+ }
+ const admin=await member('owner@example.test');
+ const first=await member('first@example.test');
+ const second=await member('second@example.test');
+ db.prepare("INSERT INTO google_identities(subject,account_id) VALUES ('owner-subject',?)").run(admin.id);
+ const api='/v1/messages';
+ const id=crypto.randomUUID();
+ const newMessage={id,subject:'Renewal',body:'How do I renew?',recipient:second.id};
+ assert.equal((await call(env,api)).status,401);
+ assert.equal((await call(env,api+'/members?q=first',null,first.auth)).status,403);
+ assert.equal((await call(env,api+'/members?q=first',null,admin.auth)).body.members[0].id,first.id);
+ assert.equal((await call(env,api,newMessage,first.auth)).status,201);
+ assert.equal((await call(env,api,newMessage,first.auth)).status,201);
+ assert.equal((await call(env,api,{...newMessage,body:'Changed'},first.auth)).status,409);
+ assert.equal((await call(env,api,null,second.auth)).body.threads.length,0);
+ assert.equal((await call(env,api+'/'+id,null,second.auth)).status,404);
+ assert.equal((await call(env,api+'/'+id,{id:crypto.randomUUID(),body:'Not mine'},second.auth)).status,404);
+ const inbox=await call(env,api,null,admin.auth);
+ assert.equal(inbox.body.owner,true);
+ assert.equal(inbox.body.threads[0].unread,1);
+ const conversation=await call(env,api+'/'+id,null,admin.auth);
+ assert.equal(conversation.body.messages.length,1);
+ assert.equal(conversation.body.messages[0].author,'member');
+ const sequence=conversation.body.messages[0].sequence;
+ assert.equal((await call(env,api+'/'+id,{readThrough:sequence},admin.auth)).status,200);
+ assert.equal((await call(env,api,null,admin.auth)).body.threads[0].unread,0);
+ assert.equal((await call(env,api+'/'+id,{id:crypto.randomUUID(),body:'I can help.'},admin.auth)).status,201);
+ assert.equal((await call(env,api,null,first.auth)).body.threads[0].unread,1);
+ assert.equal((await call(env,api+'/'+id+'?before='+sequence,null,first.auth)).body.messages.length,0);
+ assert.equal((await call(env,api,{id:crypto.randomUUID(),subject:'Feedback',body:'Welcome!',recipient:second.id},admin.auth)).status,201);
+ assert.equal((await call(env,api,null,second.auth)).body.threads[0].unread,1);
+ env.OWNER_GOOGLE_SUBJECT='different';
+ assert.equal((await call(env,api+'/'+id,null,admin.auth)).status,404);
+ db.prepare("UPDATE accounts SET status='suspended' WHERE id=?").run(first.id);
+ assert.equal((await call(env,api,null,first.auth)).status,401);
+ db.close();
+});
