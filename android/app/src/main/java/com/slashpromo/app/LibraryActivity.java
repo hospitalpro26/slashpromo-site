@@ -271,6 +271,7 @@ public final class LibraryActivity extends Activity {
         }
         java.util.ArrayList<Integer> all=new java.util.ArrayList<>(pages);
         LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(12),dp(8),dp(12),dp(8));
+        panel.addView(label(displayBookTitle(id),20));
         panel.addView(label(all.size()+" revision pages • "+marked.size()+" highlighted • "+noted.size()+" with notes",15));
         EditText filter=new EditText(this);filter.setHint("Search saved notes or page number");filter.setSingleLine(true);panel.addView(filter);
         Spinner mode=new Spinner(this);mode.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"All saved pages","Highlights","Notes","Bookmarks"}));panel.addView(mode);
@@ -281,14 +282,16 @@ public final class LibraryActivity extends Activity {
         java.util.Set<Integer> saved=bookmarks();
         Runnable refresh=()->{visible.clear();adapter.clear();String q=filter.getText().toString().trim().toLowerCase(java.util.Locale.ROOT);int m=mode.getSelectedItemPosition();for(int p:all){
             if((m==1&&!marked.contains(p))||(m==2&&!noted.contains(p))||(m==3&&!saved.contains(p)))continue;
-            String note=prefs().getString(pageKey("note",p),"");String row="PDF page "+(p+1)+(marked.contains(p)?" • Highlighted":"")+(saved.contains(p)?" • Bookmarked":"")+(noted.contains(p)?" • Note":"");
-            if(!q.isEmpty()&&!row.toLowerCase(java.util.Locale.ROOT).contains(q)&&!note.toLowerCase(java.util.Locale.ROOT).contains(q))continue;
-            visible.add(p);adapter.add(row+(note.trim().isEmpty()?"":"\n"+note.substring(0,Math.min(160,note.length()))));
+            String note=prefs().getString(pageKey("note",p),"");Chapter section=activeChapter(chapterCache.get(id),p);String chapterTitle=section==null?"":section.title;String row="PDF page "+(p+1)+(marked.contains(p)?" • Highlighted":"")+(saved.contains(p)?" • Bookmarked":"")+(noted.contains(p)?" • Note":"");
+            if(!q.isEmpty()&&!row.toLowerCase(java.util.Locale.ROOT).contains(q)&&!note.toLowerCase(java.util.Locale.ROOT).contains(q)&&!chapterTitle.toLowerCase(java.util.Locale.ROOT).contains(q))continue;
+            visible.add(p);adapter.add(row+(chapterTitle.isEmpty()?"":"\n"+chapterTitle)+(note.trim().isEmpty()?"":"\n"+note.substring(0,Math.min(160,note.length()))));
         }adapter.notifyDataSetChanged();empty.setText(all.isEmpty()?"No saved revision pages yet":visible.isEmpty()?"No matching revision pages":"");empty.setVisibility(visible.isEmpty()?View.VISIBLE:View.GONE);};
         AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Revision centre").setView(panel).setNegativeButton("Close",null).create();
         filter.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence x,int a,int c,int f){}public void onTextChanged(CharSequence x,int a,int b,int c){refresh.run();}public void afterTextChanged(android.text.Editable e){}});
         mode.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener(){public void onItemSelected(android.widget.AdapterView<?> parent,View v,int pos,long row){refresh.run();}public void onNothingSelected(android.widget.AdapterView<?> parent){}});
         list.setOnItemClickListener((parent,v,pos,row)->{if(bookId.equals(id)&&pos>=0&&pos<visible.size()){int p=visible.get(pos);dialog.dismiss();page(p);}});
+        list.setOnItemLongClickListener((parent,v,pos,row)->{if(!bookId.equals(id)||pos<0||pos>=visible.size())return false;int p=visible.get(pos);String note=prefs().getString(pageKey("note",p),"");new AlertDialog.Builder(this).setTitle("PDF page "+(p+1)+" • Study note").setMessage(note.isEmpty()?"No note saved on this page. Open the page to add one.":note).setPositiveButton("Open page",(d,w)->{dialog.dismiss();page(p);}).setNegativeButton("Close",null).show();return true;});
+        panel.addView(label("Tap a page to read. Hold a row to preview its full note.",13));
         dialog.show();refresh.run();
     }
     private void setFullscreen(boolean enabled){
@@ -819,23 +822,39 @@ public final class LibraryActivity extends Activity {
         dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{String q=query.getText().toString().trim();if(q.replaceAll("[^\\p{L}\\p{N}]","").isEmpty()){query.setError("Enter a search topic");return;}dialog.dismiss();find(q,origin);}));
         dialog.show();
     }
+    private void renderSearchHits(java.util.List<Hit> hits,int origin,int offset){
+        layout();body.addView(label("Search: "+lastQuery,22));body.addView(label("Book: "+displayBookTitle(bookId),15));
+        button("Search again in this book",()->readerSearch(origin));if(origin>=0)button("Return to PDF page "+(origin+1),()->page(origin));button("Back to library",this::home);
+        if(hits.isEmpty()){body.addView(label("No matching pages. Try a shorter phrase or check that this PDF has searchable text or completed OCR.",16));return;}
+        int end=Math.min(offset+30,hits.size());body.addView(label(hits.size()+" matching pages • showing "+(offset+1)+"–"+end,16));
+        if(offset>0)button("← Previous results",()->renderSearchHits(hits,origin,Math.max(0,offset-30)));
+        for(int i=offset;i<end;i++){Hit h=hits.get(i);Button result=new Button(this);result.setAllCaps(false);result.setGravity(Gravity.START);result.setPadding(dp(12),dp(12),dp(12),dp(12));
+            String text=(h.heading?"Topic heading • ":"PDF page • ")+(h.page+1)+"\n"+h.snippet;android.text.SpannableString styled=new android.text.SpannableString(text);
+            java.util.regex.Matcher matches=java.util.regex.Pattern.compile("\\[([^\\]]+)\\]").matcher(text);while(matches.find())styled.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),matches.start(),matches.end(),android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            result.setText(styled);result.setOnClickListener(v->page(h.page));body.addView(result);
+        }
+        if(end<hits.size())button("Next results →",()->renderSearchHits(hits,origin,end));
+    }
     private void find(String q){find(q,-1);}
     private void find(String q,int origin){
-        String clean=q.trim().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty())return;
+        endReading();String clean=q.trim().replaceAll("[^\\p{L}\\p{N}]+"," ").trim();if(clean.isEmpty())return;
         recordRecent("search",bookId,q.trim(),-1);lastQuery=q;int token=++generation;layout();body.addView(label("Search: "+q,22));body.addView(label("Book: "+displayBookTitle(bookId),15));if(origin>=0){button("Return to PDF page "+(origin+1),()->page(origin));button("Search again in this book",()->readerSearch(origin));}else button("Change book or search again",this::readingMenu);button("Back to library",this::home);body.addView(label("Finding topic headings and related pages…",14));
+        final File searchIndex=index,searchBook=book;
         worker.execute(()->{
             java.util.ArrayList<Hit> hits=new java.util.ArrayList<>();String wanted=normalized(clean);
-            try(SQLiteDatabase db=SQLiteDatabase.openDatabase(index.getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24),content FROM pages WHERE pages MATCH ? ORDER BY docid",new String[]{"\""+clean+"\""})){
+            try(SQLiteDatabase db=SQLiteDatabase.openDatabase(searchIndex.getPath(),null,SQLiteDatabase.OPEN_READONLY);Cursor c=db.rawQuery("SELECT docid,snippet(pages, '[', ']', ' … ', 0, 24),content FROM pages WHERE pages MATCH ? ORDER BY docid",new String[]{"\""+clean+"\""})){
                 while(c.moveToNext()){
+                    if(isDestroyed()||generation!=token)return;
                     String content=normalized(c.getString(2));int count=0,offset=0;
                     while((offset=content.indexOf(wanted,offset))>=0){count++;offset+=wanted.length();}
                     hits.add(new Hit(c.getInt(0)-1,c.getString(1),Math.min(count,20)));
                 }
                 // Inspect original line boundaries and font information from the saved PDF,
                 // including on existing installations whose FTS index flattened whitespace.
-                try(PDDocument doc=PDDocument.load(book,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){
+                try(PDDocument doc=PDDocument.load(searchBook,com.tom_roush.pdfbox.io.MemoryUsageSetting.setupTempFileOnly())){
                     PDFTextStripper stripper=new PDFTextStripper();stripper.setSortByPosition(true);
-                    for(Hit h:hits){
+                    int inspected=0;for(Hit h:hits){
+                        if(isDestroyed()||generation!=token)return;if(inspected++>=40)break;
                         stripper.setStartPage(h.page+1);stripper.setEndPage(h.page+1);
                         String raw=stripper.getText(doc);String[] lines=raw.split("\\R");
                         boolean toc=raw.matches("(?is).*\\b(contents|index)\\b.*") && raw.matches("(?s).*(?:\\d{2,4}\\s*\\R){1}.*");
@@ -848,7 +867,7 @@ public final class LibraryActivity extends Activity {
                     }
                 }catch(IOException ignored){/* Preserve full-text results if heading analysis fails. */}
                 hits.sort((x,y)->{int cmp=Integer.compare(y.score,x.score);return cmp!=0?cmp:Integer.compare(x.page,y.page);});
-                runOnUiThread(()->{if(isDestroyed()||generation!=token)return;body.removeViewAt(body.getChildCount()-1);body.addView(label(hits.size()+" matching pages • topic headings first",16));for(int i=0;i<Math.min(200,hits.size());i++){Hit h=hits.get(i);button((h.heading?"Topic heading • ":"Related page • ")+"PDF page "+(h.page+1)+" — "+h.snippet,()->page(h.page));}});
+                runOnUiThread(()->{if(isDestroyed()||generation!=token)return;renderSearchHits(hits,origin,0);});
             }catch(Exception e){runOnUiThread(()->{if(!isDestroyed()&&generation==token)body.addView(label("Search unavailable. Reopen the library.",16));});}
         });
     }
