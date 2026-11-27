@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Slashview TOACS Practice",
+  "short_name": "Slashview",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#122545",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
