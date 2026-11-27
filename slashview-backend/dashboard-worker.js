@@ -3,13 +3,21 @@ const accessOwner = (() => {
 // Cloudflare Access assertion verification. Never trust unsigned identity headers.
 const bytes=s=>{const b=s.replace(/-/g,"+").replace(/_/g,"/");return Uint8Array.from(atob(b+"=".repeat((4-b.length%4)%4)),c=>c.charCodeAt(0))};
 const decode=s=>JSON.parse(new TextDecoder().decode(bytes(s)));
-async function accessOwner(req,env){
+async function accessOwner(req,env,ctx){
  const fail=reason=>{console.log(JSON.stringify({evt:"admin_access_denied",reason}));return false};
  try{
   const team=String(env.ACCESS_TEAM_DOMAIN||"").trim().replace(/\/+$/,""),aud=String(env.ACCESS_AUD||"").trim(),owner=String(env.ACCESS_OWNER_EMAIL||"").trim().toLowerCase();
   if(!/^https:\/\/[a-z0-9-]+\.cloudflareaccess\.com$/.test(team))return fail("config_team");
   if(!aud)return fail("config_aud");
   if(!owner)return fail("config_owner");
+  if(ctx?.access){
+   const audience=ctx.access.aud;
+   if(!(Array.isArray(audience)?audience.includes(aud):audience===aud))return fail("audience_mismatch");
+   const identity=await ctx.access.getIdentity();
+   if(typeof identity?.email!=="string"||identity.email.toLowerCase()!==owner)return fail("email_mismatch");
+   console.log(JSON.stringify({evt:"admin_access_native_verified"}));
+   return true;
+  }
   const token=req.headers.get("Cf-Access-Jwt-Assertion");
   if(!token)return fail("header_missing");
   if(token.length>12000)return fail("token_too_long");
@@ -238,7 +246,7 @@ export default {
    env.DB.prepare("DELETE FROM google_nonces WHERE expires_at<=?").bind(now)
   ]);
  },
- async fetch(req,env){
+ async fetch(req,env,ctx){
  try {
   const path=new URL(req.url).pathname;
   if(!env.DB)return json({error:"Service unavailable"},503);
@@ -318,7 +326,7 @@ export default {
   // Operator-only approval API. Secret provisioned out of band; never bundled in APK.
   if(path.startsWith("/v1/admin/")){
    if(env.REVIEW_ADMIN_ENABLED!=="true")return json({error:"Admin access unavailable"},503);
-   if(!await accessOwner(req,env))return json({error:"Administrator identity required"},401);
+   if(!await accessOwner(req,env,ctx))return json({error:"Administrator identity required"},401);
    if(path==="/v1/admin/dashboard"&&req.method==="GET"){const nonce=crypto.randomUUID();return new Response("<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Slashview Admin</title><style nonce=\"NONCE\">*{box-sizing:border-box}body{font:16px system-ui;max-width:1080px;margin:24px auto;padding:20px;color:#183654;background:#eef3fc}h1{color:#fff;background:linear-gradient(120deg,#173a91,#6337b9);padding:28px;border-radius:20px;box-shadow:0 8px 24px #173a9122}button,input{font:inherit;padding:12px;margin:5px;border-radius:10px;border:1px solid #c8d4e8}button{cursor:pointer;background:#2455b7;color:white;border:0;font-weight:600}button:hover{background:#173a91}#lock{background:#475569}article{background:white;border:1px solid #dbe5f3;border-left:6px solid #6366f1;border-radius:16px;padding:18px;margin:12px 0;box-shadow:0 4px 16px #1836540d;overflow-wrap:anywhere}article button:last-child{background:#a33148}label{display:block}#status{white-space:pre-wrap;background:#e0e7ff;padding:14px;border-radius:12px;font-weight:600}#summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:16px 0}#summary div{background:#fff;border-radius:14px;padding:18px;border-top:5px solid #2563eb;font-weight:700}#summary div:nth-child(2){border-color:#16a34a}#summary div:nth-child(3){border-color:#d97706}#summary div:nth-child(4){border-color:#9333ea}</style><h1>Slash<span style=\"color:#ed001c\">view</span> Admin Centre</h1><p>Private administrator dashboard. No credentials are persisted.</p><label>Administrator token <input id=\"token\" type=\"password\" autocomplete=\"off\"></label><button id=\"load\">Load accounts</button><button id=\"lock\">Lock dashboard</button><p id=\"status\" role=\"status\"></p><section id=\"accounts\"></section><script nonce=\"NONCE\">\nconst token=document.querySelector('#token'), status=document.querySelector('#status'), accounts=document.querySelector('#accounts');\nasync function api(path,body){if(location.protocol!=='https:')throw Error('HTTPS required');const t=token.value;if(t.length<32)throw Error('Administrator token required');const r=await fetch(path,{method:body?'POST':'GET',headers:{Authorization:'Bearer '+t,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,cache:'no-store',redirect:'error'});const data=await r.json();if(!r.ok)throw Error(data.error||'Request failed');return data;}\nasync function load(){accounts.replaceChildren();try{const data=await api('/v1/admin/accounts');status.textContent='Recent accounts: '+data.accounts.length+' | Approved: '+data.accounts.filter(a=>a.status==='approved').length+' | Pending: '+data.accounts.filter(a=>a.status==='pending').length+' | Active trials: '+data.accounts.filter(a=>a.status==='approved'&&Date.parse(a.trial_until)>Date.now()).length;for(const a of data.accounts){const card=document.createElement('article');const line=document.createElement('p');line.textContent=a.name+' | '+a.email+' | '+a.status+' | '+(a.email_verified_at?'Verified':'Unverified')+' | Trial ends: '+(a.trial_until||'Not started');card.append(line);const profile=document.createElement('p');profile.textContent='City: '+(a.city||'Not provided')+' | Address: '+(a.address||'Not provided')+' | WhatsApp: '+(a.whatsapp||'Not provided');card.append(profile);if(a.status==='pending'&&a.email_verified_at){const b=document.createElement('button');b.textContent='Approve and start trial';b.onclick=async()=>{if(!confirm('Approve this account and begin its trial?'))return;b.disabled=true;try{await api('/v1/admin/approve',{id:a.id});await load()}catch(e){status.textContent=e.message;b.disabled=false}};card.append(b)}if(a.status==='approved'&&a.email_verified_at){const b=document.createElement('button');b.textContent='Record $1 payment';b.onclick=async()=>{const reference=prompt('Enter the unique reference of an independently verified $1 payment.');if(!reference||!confirm('Confirm payment received and extend membership by one month?'))return;b.disabled=true;try{await api('/v1/admin/renew',{id:a.id,reference});await load()}catch(e){status.textContent=e.message;b.disabled=false}};card.append(b)}if(['pending','approved'].includes(a.status)){const b=document.createElement('button');b.textContent=a.status==='pending'?'Reject':'Suspend';b.onclick=async()=>{if(!confirm('Revoke account access? Local study files will not be deleted.'))return;b.disabled=true;try{await api('/v1/admin/status',{id:a.id,status:a.status==='pending'?'rejected':'suspended'});await load()}catch(e){status.textContent=e.message;b.disabled=false}};card.append(b)}accounts.append(card)}}catch(e){status.textContent=e.message}}\ndocument.querySelector('#load').onclick=load;document.querySelector('#lock').onclick=()=>{token.value='';accounts.replaceChildren();status.textContent='Locked'};\n</script></html>".replaceAll("NONCE",nonce),{headers:{"Content-Type":"text/html; charset=utf-8","Cache-Control":"no-store","X-Content-Type-Options":"nosniff","Referrer-Policy":"no-referrer","Content-Security-Policy":"default-src 'none'; script-src 'nonce-"+nonce+"'; style-src 'nonce-"+nonce+"'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'"}});}
    if(!env.ADMIN_TOKEN||env.ADMIN_TOKEN.length<32||!equal(req.headers.get("Authorization")||"","Bearer "+env.ADMIN_TOKEN))return json({error:"Unauthorized"},401);
    if(path.endsWith("/accounts")&&req.method==="GET"){
