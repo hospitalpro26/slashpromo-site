@@ -113,3 +113,19 @@ assert(read("android/app/src/main/java/com/slashpromo/app/AccountClient.java").i
 for(const marker of ["applySafeArea(root)","applySafeArea(body)","applySafeArea(sc)","WindowInsets.Type.systemBars()","setMinHeight(dp(56))"])assert(library.includes(marker),marker);
 
 assert(library.includes("checkUpdateNotice()"));assert(library.includes("Slashview update available"));
+
+// Phase 1: verified installer permission continuation.
+for(const marker of ['pendingInstall=apk','awaitingPermission=true','if(busy||awaitingPermission)return','if(busy||awaitingPermission||url==null)return','protected void onResume()','apk.isFile()','j.optBoolean("draft")||j.optBoolean("prerelease")'])assert(updater.includes(marker),marker);
+assert(updater.indexOf('Checksum mismatch")') < updater.indexOf('install(apk);'));
+console.log("PASS update permission continuation structural checks");
+
+const backup=read("android/app/src/main/java/com/slashpromo/app/StudyBackup.java");
+for(const marker of ["PBKDF2WithHmacSHA256","AES/GCM/NoPadding","600000","emit(0)","Trailing backup data","emptyLibrary(root,prefs)","Unexpected archive entry","Restore conflict","Arrays.fill(key"])assert(backup.includes(marker),marker);
+for(const marker of ["Private backup & restore","StudyBackup.exportTo","StudyBackup.restore","BACKUP_EXPORT","BACKUP_RESTORE","ACTION_CREATE_DOCUMENT"])assert(library.includes(marker),marker);
+assert(!backup.includes("localAccount."));
+console.log("PASS encrypted study backup structural checks");
+
+for(const marker of ["private void pageNavigator","Quick page navigation","slider.setMax(total-1)","Enter page number","annotationMenu(highlight)","underlining","Reading mode","saveHighlights()"])assert(library.includes(marker),marker);
+console.log("PASS reader navigation and annotation structural checks");
+
+for(const marker of ["Freehand pen","saveInk()","pageThumbnails","Browse page thumbnails"])assert(library.includes(marker),marker);
