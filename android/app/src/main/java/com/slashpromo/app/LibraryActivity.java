@@ -511,6 +511,47 @@ public final class LibraryActivity extends Activity {
         tile.setEnabled(enabled);tile.setAlpha(enabled?1f:0.55f);tile.setFocusable(enabled);tile.setContentDescription(title+". "+subtitle);
         if(enabled)tile.setOnClickListener(v->action.run());
     }
+
+    private static final int BACKUP_EXPORT=81,BACKUP_RESTORE=82;
+    private void backupMenu(){
+        if(busy)return;
+        menuScreen("Private backup & restore");
+        body.addView(label("Password-protected backup of imported books, notes, highlights, bookmarks, flashcards and reading history. Account credentials and unfinished scans are excluded. Maximum 8 GB total, 1 GB per file. Restore needs temporary storage for the archive and extracted books. Restore only into an empty library.",15));
+        if(Build.VERSION.SDK_INT<26){body.addView(label("Backup requires Android 8 or newer.",15));return;}
+        button("Create encrypted backup",()->chooseBackupFile(false));
+        button("Restore encrypted backup",()->new AlertDialog.Builder(this).setTitle("Restore a backup").setMessage("Restore is allowed only into an empty study library. Existing study records will never be replaced.").setNegativeButton("Cancel",null).setPositiveButton("Choose backup",(d,w)->chooseBackupFile(true)).show());
+    }
+    private void chooseBackupFile(boolean restore){
+        if(busy)return;
+        Intent i=new Intent(restore?Intent.ACTION_OPEN_DOCUMENT:Intent.ACTION_CREATE_DOCUMENT);
+        i.addCategory(Intent.CATEGORY_OPENABLE);i.setType("application/octet-stream");
+        if(!restore)i.putExtra(Intent.EXTRA_TITLE,"Slashview-"+studyDay()+".svbackup");
+        try{startActivityForResult(i,restore?BACKUP_RESTORE:BACKUP_EXPORT);}
+        catch(Exception e){Toast.makeText(this,"No document provider available",Toast.LENGTH_LONG).show();}
+    }
+    private void backupPassword(android.net.Uri uri,boolean restore){
+        EditText field=new EditText(this);field.setHint("Backup password (12+ characters)");field.setInputType(android.text.InputType.TYPE_CLASS_TEXT|android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);field.setSaveEnabled(false);
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle(restore?"Unlock backup":"Protect your backup").setMessage("Remember this password. It is not saved and cannot be recovered.").setView(field).setNegativeButton("Cancel",null).setPositiveButton(restore?"Restore":"Export",null).create();
+        dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
+            if(field.length()<12){field.setError("Use at least 12 characters");return;}
+            char[] password=new char[field.length()];field.getText().getChars(0,field.length(),password,0);field.setText("");dialog.dismiss();runBackup(uri,restore,password);
+        }));dialog.show();
+    }
+    private void runBackup(android.net.Uri uri,boolean restore,char[] password){
+        if(busy){java.util.Arrays.fill(password,'\0');return;}
+        busy=true;home();final java.util.ArrayList<String> ids=availableBooks();
+        status.setText(restore?"Authenticating backup…":"Creating encrypted backup…");
+        worker.execute(()->{
+            String message;
+            try{
+                if(restore){try(InputStream in=getContentResolver().openInputStream(uri)){if(in==null)throw new IOException("Cannot open backup");int count=StudyBackup.restore(in,libraryRoot,prefs(),password);message="Restored "+count+" books and saved study records.";}}
+                else{try(OutputStream out=getContentResolver().openOutputStream(uri,"wt")){if(out==null)throw new IOException("Cannot create backup");StudyBackup.exportTo(out,libraryRoot,ids,prefs(),password);message="Encrypted backup saved. Keep the file and password safe.";}}
+            }catch(Exception e){message=restore?"Restore failed. Check password, file, storage and that the study library is empty.":"Backup failed. Check available storage and the backup size limits. Delete any incomplete export file.";}
+            finally{java.util.Arrays.fill(password,'\0');}
+            final String result=message;runOnUiThread(()->{busy=false;if(!isDestroyed()){if(restore)init();else home();new AlertDialog.Builder(this).setTitle("Study backup").setMessage(result).setPositiveButton("Close",null).show();}});
+        });
+    }
+
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
     private void menuScreen(String title){endReading();generation++;layout();button("← Library menu",this::home);body.addView(label(title,24));}
     private void searchAllBooks(){searchAllBooks("");}
@@ -701,6 +742,7 @@ public final class LibraryActivity extends Activity {
             prefs().edit().putBoolean("onlineAccount.promptSeen",true).apply();
             new AlertDialog.Builder(this).setTitle("Welcome to Slashview").setMessage("Register with Google for three months free, then $1 per month. Your existing books and notes remain on this device.").setPositiveButton("Register with Google",(d,w)->startActivity(new Intent(this,AccountPreviewActivity.class))).setNegativeButton("Later",null).show();
         }
+        menuCard("Backup & restore","Password-protected local study archive",this::backupMenu,true);
         menuCard("My account",prefs().getBoolean("localAccount.saved",false)?"Local profile • not synced":"Register your local profile",this::localAccount,true);
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
         menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
@@ -769,7 +811,7 @@ public final class LibraryActivity extends Activity {
             button("Study & revision",this::revisionMenu);
         }
     }
-    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){if(prefs().getBoolean("offlineScan.batchMode",false))saveScanBatch(scanned.getPdf().getUri());else importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
+    @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==BACKUP_EXPORT||req==BACKUP_RESTORE){if(result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null&&Build.VERSION.SDK_INT>=26)backupPassword(data.getData(),req==BACKUP_RESTORE);return;}if(req==32){if(result==RESULT_OK)init();else finish();return;}if(req==SCAN&&result==RESULT_OK&&data!=null&&!busy&&libraryRoot!=null){com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult scanned=com.google.mlkit.vision.documentscanner.GmsDocumentScanningResult.fromActivityResultIntent(data);if(scanned!=null&&scanned.getPdf()!=null){if(prefs().getBoolean("offlineScan.batchMode",false))saveScanBatch(scanned.getPdf().getUri());else importBook(scanned.getPdf().getUri(),true);}return;}if(req==PICK&&result==RESULT_OK&&data!=null&&data.getData()!=null&&!busy&&libraryRoot!=null){importBook(data.getData(),false);}}
     private void importBook(android.net.Uri uri,boolean scanned){importBook(uri,scanned,null);}
     private void importBook(android.net.Uri uri,boolean scanned,String draftId){
         busy=true;home();worker.execute(()->{
