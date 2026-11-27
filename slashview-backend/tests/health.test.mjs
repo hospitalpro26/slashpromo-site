@@ -48,3 +48,16 @@ test("Access backup verifies real RSA signatures and fails closed",async()=>{
  assert.equal(await accessOwner(req(token),{...env,ACCESS_JWKS_BACKUP:""}),true);
  }finally{globalThis.fetch=original}
 });
+
+test("native Access verifies the configured audience and owner without a key fetch", async () => {
+ const {readFileSync} = await import("node:fs");
+ const source = readFileSync(new URL("../access-owner.js", import.meta.url), "utf8");
+ const { accessOwner } = await import("data:text/javascript;base64," + Buffer.from(source).toString("base64"));
+ const request = new Request("https://example.test/v1/admin/dashboard");
+ const env = {ACCESS_TEAM_DOMAIN:"https://test.cloudflareaccess.com", ACCESS_AUD:"admin", ACCESS_OWNER_EMAIL:"owner@example.test"};
+ const context = (aud, email) => ({access:{aud, getIdentity:async () => ({email})}});
+ assert.equal(await accessOwner(request,env,context("admin","Owner@example.test")),true);
+ assert.equal(await accessOwner(request,env,context("wrong","owner@example.test")),false);
+ assert.equal(await accessOwner(request,env,context("admin","other@example.test")),false);
+ assert.equal(await accessOwner(request,env,{access:{aud:"admin",getIdentity:async()=>null}}),false);
+});

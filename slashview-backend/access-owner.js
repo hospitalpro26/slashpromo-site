@@ -1,13 +1,21 @@
 // Cloudflare Access assertion verification. Never trust unsigned identity headers.
 const bytes=s=>{const b=s.replace(/-/g,"+").replace(/_/g,"/");return Uint8Array.from(atob(b+"=".repeat((4-b.length%4)%4)),c=>c.charCodeAt(0))};
 const decode=s=>JSON.parse(new TextDecoder().decode(bytes(s)));
-export async function accessOwner(req,env){
+export async function accessOwner(req,env,ctx){
  const fail=reason=>{console.log(JSON.stringify({evt:"admin_access_denied",reason}));return false};
  try{
   const team=String(env.ACCESS_TEAM_DOMAIN||"").trim().replace(/\/+$/,""),aud=String(env.ACCESS_AUD||"").trim(),owner=String(env.ACCESS_OWNER_EMAIL||"").trim().toLowerCase();
   if(!/^https:\/\/[a-z0-9-]+\.cloudflareaccess\.com$/.test(team))return fail("config_team");
   if(!aud)return fail("config_aud");
   if(!owner)return fail("config_owner");
+  if(ctx?.access){
+   const audience=ctx.access.aud;
+   if(!(Array.isArray(audience)?audience.includes(aud):audience===aud))return fail("audience_mismatch");
+   const identity=await ctx.access.getIdentity();
+   if(typeof identity?.email!=="string"||identity.email.toLowerCase()!==owner)return fail("email_mismatch");
+   console.log(JSON.stringify({evt:"admin_access_native_verified"}));
+   return true;
+  }
   const token=req.headers.get("Cf-Access-Jwt-Assertion");
   if(!token)return fail("header_missing");
   if(token.length>12000)return fail("token_too_long");
