@@ -1,0 +1,212 @@
+[
+  {
+    "id": "SV-TOACS-HEM-007",
+    "topic": "Tumor lysis syndrome",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 61-year-old man becomes oliguric and nauseated 36 hours after starting treatment for Burkitt lymphoma. Potassium is 6.3 mmol/L, phosphate 2.2 mmol/L, corrected calcium 1.7 mmol/L and urate 0.75 mmol/L. Creatinine has risen sharply from baseline.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Clinical tumor lysis syndrome with acute kidney injury and dangerous electrolyte abnormalities.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Immediate ECG and cardiac monitoring; serial potassium, phosphate, calcium, urate, creatinine and LDH. Monitor urine output and fluid balance closely. Assess for arrhythmia, seizures, fluid overload and indications for renal replacement therapy.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Urgent hematology, renal and critical-care management. Treat hyperkalemia immediately. Give carefully monitored IV hydration and prompt specialist-directed rasburicase when appropriate; known G6PD deficiency is a contraindication. Avoid routine urine alkalinization and routine correction of asymptomatic hypocalcemia. Consider dialysis for refractory electrolyte disturbance, fluid overload or severe renal failure.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Rasburicase decisions are time critical. If G6PD status is unknown in a critically ill patient, the responsible consultant must weigh risks without avoidable delay.",
+      "Reference: https://www.england.nhs.uk/long-read/harm-from-delayed-administration-of-rasburicase-for-tumour-lysis-syndrome-natpsa-2025-005-nhsps/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded hematology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-HEM-004",
+    "topic": "Lead-related anemia",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 47-year-old worker who removes paint from old buildings reports fatigue, constipation and intermittent abdominal discomfort. Hemoglobin is 10.2 g/dL, MCV 70 fL and ferritin is normal. The blood film shows coarse basophilic stippling.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected lead poisoning causing microcytic anemia; impaired heme synthesis may produce sideroblastic changes. Basophilic stippling alone is not diagnostic.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Confirm with a venous blood lead concentration. Review occupational and household exposure, CBC/film, iron studies, renal function and neurological findings. Consider other causes of microcytosis and sideroblastic anemia if lead testing does not explain the findings.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stop lead exposure and arrange occupational health and toxicology assessment. Correct documented nutritional deficiencies. Chelation depends on blood lead concentration, symptoms and individual circumstances, under specialist supervision. Repeat lead levels to assess response and rebound; severe neurological toxicity requires urgent hospital care.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Do not give iron or lifelong pyridoxine automatically when deficiency or a responsive disorder has not been established.",
+      "Reference: https://www.ncbi.nlm.nih.gov/sites/books/NBK575289/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded hematology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-HEM-005",
+    "topic": "Waldenstrom macroglobulinemia",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 74-year-old man with weight loss and enlarged lymph nodes develops blurred vision, headache and gum bleeding. He is drowsy. Blood tests identify a substantial monoclonal IgM paraprotein.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Symptomatic hyperviscosity, strongly suggesting Waldenström macroglobulinemia. Confirm the underlying lymphoplasmacytic lymphoma; CLL is a separate diagnosis.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Urgent fundoscopy, CBC/film, renal/liver tests, serum electrophoresis and immunofixation, quantitative IgM and serum viscosity. Bone marrow morphology, flow cytometry and MYD88 testing help classify the disease. Investigations must not delay emergency treatment when clinical suspicion is high.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Urgent hematology and critical-care assessment. Begin therapeutic plasma exchange for symptomatic hyperviscosity, followed by specialist disease-directed therapy. Plan rituximab carefully because an IgM flare can worsen hyperviscosity. Discuss nonessential red-cell transfusion with hematology because it may increase viscosity.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Plasma exchange treats the circulating paraprotein effect; it does not eradicate the underlying clone.",
+      "Reference: https://iwmf.com/wp-content/uploads/2022/02/Guidelines-on-the-diagnosis-and-management-of-Waldenstr-m-macroglobulinaemia-A-British.pdf"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded hematology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-HEM-001",
+    "topic": "Polycythemia vera",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 54-year-old man reports a resolved episode of right arm weakness, recurrent headaches and itching after bathing. He previously had an unprovoked DVT. Examination shows facial plethora and splenomegaly. Hematocrit is 58%, with leukocytosis and thrombocytosis.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Polycythemia vera with a possible transient ischemic attack. Assess urgently through the stroke pathway even though the weakness has resolved.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Repeat CBC and blood film; serum erythropoietin, JAK2 V617F and, if indicated, exon 12 testing; marrow examination under hematology guidance. Assess oxygenation and secondary causes of erythrocytosis. Urgent neurovascular assessment for the transient deficit.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Urgent stroke and hematology assessment. Venesection to maintain hematocrit below 45%; low-dose aspirin if appropriate after bleeding and antithrombotic review. Prior thrombosis warrants cytoreductive treatment, such as hydroxycarbamide or interferon, selected by hematology. Control cardiovascular risks and reassess anticoagulation for the previous DVT.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Smoking does not exclude a primary myeloproliferative neoplasm.",
+      "Reference: https://pmc.ncbi.nlm.nih.gov/articles/PMC6519221/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded hematology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-HEM-006",
+    "topic": "Multiple myeloma",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 69-year-old woman presents with persistent back pain, fatigue and weight loss. She has anemia, impaired renal function and an elevated calcium concentration. ESR is 115 mm/hour. There is focal lumbar tenderness.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected multiple myeloma with possible myeloma-related organ damage. Assess immediately for spinal cord compression symptoms.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "CBC, creatinine, calcium, albumin, serum electrophoresis, immunofixation and serum free light chains. Marrow aspirate/trephine with plasma-cell assessment and cytogenetics; whole-body MRI or low-dose CT as appropriate. A single negative paraprotein test cannot exclude myeloma.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Urgent hematology referral, careful hydration, management of hypercalcemia and renal impairment, and safe analgesia. New weakness, sensory loss or sphincter symptoms require an emergency spinal cord compression pathway. Select systemic therapy and transplant eligibility with the specialist team; plan bone protection with renal and dental assessment.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Diagnosis requires clonal plasma-cell disease plus a qualifying myeloma-defining event, not a high ESR alone.",
+      "Reference: https://www.nice.org.uk/guidance/ng35/chapter/Recommendations"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded hematology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-HEM-003",
+    "topic": "Acute chest syndrome",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 23-year-old man with recurrent painful limb episodes develops fever, chest pain and breathlessness. Oxygen saturation is 88% on air. A chest radiograph shows a new lower-zone infiltrate. His blood film shows sickled cells and Howell–Jolly bodies.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Acute chest syndrome in sickle cell disease. This is a potentially rapidly progressive respiratory emergency.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "CBC and reticulocytes, hemolysis markers, renal tests, blood group/crossmatch and cultures. Monitor oxygenation; obtain blood gases when clinically indicated. Chest radiography and targeted infection testing; confirm the hemoglobinopathy with hemoglobin analysis if not already established.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Admit urgently with hematology involvement. Give oxygen for hypoxemia, antibiotics covering typical and atypical organisms, adequate analgesia and incentive spirometry; treat bronchospasm and maintain careful fluid balance. Consider simple transfusion for appropriate moderate cases; severe or rapidly progressive disease requires urgent red-cell exchange assessment and critical-care support.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Avoid excessive IV fluids. Howell–Jolly bodies indicate impaired splenic function.",
+      "Reference: https://pmc.ncbi.nlm.nih.gov/articles/PMC6988392/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded hematology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-HEM-002",
+    "topic": "Aplastic anemia",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 26-year-old woman develops recurrent nosebleeds, fever and exertional dyspnea several weeks after hepatitis. She is pale with petechiae but has no palpable spleen or lymph nodes. CBC shows pancytopenia with a low reticulocyte count.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Acquired aplastic anemia, potentially hepatitis-associated; confirm marrow failure and exclude other causes of pancytopenia.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "CBC, film and reticulocytes; marrow aspirate and trephine with cytogenetic assessment; renal/liver tests, B12/folate, targeted viral testing and PNH flow cytometry. Consider inherited marrow failure in a young adult. HLA typing and specialist severity classification guide treatment.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Urgent hematology admission. Treat suspected neutropenic sepsis promptly, provide indicated red-cell/platelet support and remove possible offending drugs. Severe disease requires specialist selection of allogeneic stem-cell transplantation or immunosuppression with horse ATG, ciclosporin and eltrombopag, according to donor availability, fitness and current protocols.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "A hypocellular marrow supports the diagnosis; exclude hypoplastic MDS and inherited marrow disorders.",
+      "Reference: https://b-s-h.org.uk/guidelines/guidelines/guidelines-for-the-diagnosis-and-management-of-adult-aplastic-anaemia"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded hematology topic. Clinical details modified for clarity; clinician review pending."
+  }
+]
