@@ -552,8 +552,14 @@ public final class LibraryActivity extends Activity {
     }
 
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
-    private org.json.JSONArray toacsStations;
-    private org.json.JSONArray gastroStations;
+    private final java.util.Map<String, org.json.JSONArray> stationPacks = new java.util.HashMap<>();
+
+    private String stationSectionTitle(String section) {
+        if (section.equals("gastroenterology")) return "Gastroenterology";
+        if (section.equals("endocrinology")) return "Endocrinology";
+        if (section.equals("rheumatology")) return "Rheumatology";
+        return "Mixed Medicine";
+    }
 
     private void examMenu() {
         menuScreen("Exam");
@@ -563,46 +569,47 @@ public final class LibraryActivity extends Activity {
     private void toacsMenu() {
         menuScreen("TOACS Part-II");
         button("Back to Exam", this::examMenu);
-        menuCard("Gastroenterology", "13 practice stations", () -> examPractice(true), true);
-        menuCard("Mixed Medicine", "10 practice stations", () -> examPractice(false), true);
+        menuCard("Gastroenterology", "13 practice stations", () -> examPractice("gastroenterology"), true);
+        menuCard("Endocrinology", "9 practice stations", () -> examPractice("endocrinology"), true);
+        menuCard("Rheumatology", "10 practice stations", () -> examPractice("rheumatology"), true);
+        menuCard("Mixed Medicine", "10 practice stations", () -> examPractice("mixed"), true);
     }
     private static final String TOACS_SAVED = "offlineStudy.toacsSaved";
 
-    private void examPractice(boolean gastro) {
-        menuScreen(gastro ? "Gastroenterology" : "Mixed Medicine");
+    private void examPractice(String section) {
+        menuScreen(stationSectionTitle(section));
         button("Back to TOACS Part-II", this::toacsMenu);
-        org.json.JSONArray stations = gastro ? gastroStations : toacsStations;
+        org.json.JSONArray stations = stationPacks.get(section);
         if (stations == null) {
-            try (InputStream in = getAssets().open(gastro ? "toacs-gastroenterology.json" : "toacs.json");
+            try (InputStream in = getAssets().open(section.equals("mixed") ? "toacs.json" : "toacs-" + section + ".json");
                  ByteArrayOutputStream out = new ByteArrayOutputStream()) {
                 byte[] buffer = new byte[4096];
                 int count;
                 while ((count = in.read(buffer)) != -1) out.write(buffer, 0, count);
                 stations = new org.json.JSONArray(out.toString("UTF-8"));
-                if (gastro) gastroStations = stations;
-                else toacsStations = stations;
+                stationPacks.put(section, stations);
             } catch (IOException | org.json.JSONException error) {
                 body.addView(label("The station pack could not be opened.", 16));
                 return;
             }
         }
         body.addView(label(stations.length() + " offline practice stations. Answer each prompt before tapping Reveal.", 16));
-        if (gastro) body.addView(label("Draft stations for clinical review.", 15));
+        if (!section.equals("mixed")) body.addView(label("Draft stations for clinical review.", 15));
         java.util.Set<String> saved = prefs().getStringSet(TOACS_SAVED, java.util.Collections.emptySet());
         for (int i = 0; i < stations.length(); i++) {
             final int number = i;
             org.json.JSONObject station = stations.optJSONObject(i);
-            String title = "Station " + (i + 1) + (gastro ? "" : " · " + station.optString("specialty"));
+            String title = "Station " + (i + 1) + (!section.equals("mixed") ? "" : " · " + station.optString("specialty"));
             button(title + (saved.contains(station.optString("id")) ? " · Saved" : ""),
-                    () -> openStation(gastro, number));
+                    () -> openStation(section, number));
         }
     }
 
-    private void openStation(boolean gastro, int number) {
-        org.json.JSONArray stations = gastro ? gastroStations : toacsStations;
+    private void openStation(String section, int number) {
+        org.json.JSONArray stations = stationPacks.get(section);
         org.json.JSONObject station = stations.optJSONObject(number);
         menuScreen("Station " + (number + 1) + " of " + stations.length());
-        button("All stations", () -> examPractice(gastro));
+        button("All stations", () -> examPractice(section));
         String id = station.optString("id");
         Button bookmark = new Button(this);
         bookmark.setAllCaps(false);
@@ -618,35 +625,35 @@ public final class LibraryActivity extends Activity {
         });
         body.addView(bookmark);
         body.addView(label(station.optString("scenario"), 18));
-        if (gastro) {
+        if (!section.equals("mixed")) {
             org.json.JSONArray findings = station.optJSONArray("findings");
             for (int i = 0; i < findings.length(); i++) body.addView(label(findings.optString(i), 16));
             body.addView(label(station.optInt("totalMarks") + " marks", 15));
         }
-        stationPrompt(gastro, number, station, 0);
+        stationPrompt(section, number, station, 0);
     }
 
-    private void stationPrompt(boolean gastro, int number, org.json.JSONObject station, int stage) {
+    private void stationPrompt(String section, int number, org.json.JSONObject station, int stage) {
         String[] prompts = {"What is the most likely diagnosis and why?",
                 "Which investigations would you request?",
                 "How would you manage this patient?"};
         String[] keys = {"diagnosis", "investigations", "management"};
         org.json.JSONArray questions = station.optJSONArray("questions");
-        org.json.JSONObject question = gastro ? questions.optJSONObject(stage) : null;
-        int stageCount = gastro ? questions.length() : keys.length;
-        body.addView(label(gastro ? question.optString("question") + " (" + question.optInt("marks") + " marks)"
+        org.json.JSONObject question = !section.equals("mixed") ? questions.optJSONObject(stage) : null;
+        int stageCount = !section.equals("mixed") ? questions.length() : keys.length;
+        body.addView(label(!section.equals("mixed") ? question.optString("question") + " (" + question.optInt("marks") + " marks)"
                 : prompts[stage], 18));
         Button reveal = new Button(this);
         reveal.setAllCaps(false);
-        reveal.setText(gastro ? "Reveal answer" : "Reveal " + keys[stage]);
+        reveal.setText(!section.equals("mixed") ? "Reveal answer" : "Reveal " + keys[stage]);
         body.addView(reveal);
         reveal.setOnClickListener(view -> {
             body.removeView(reveal);
-            body.addView(label(gastro ? question.optString("answer") : station.optString(keys[stage]), 16));
+            body.addView(label(!section.equals("mixed") ? question.optString("answer") : station.optString(keys[stage]), 16));
             if (stage + 1 < stageCount) {
-                stationPrompt(gastro, number, station, stage + 1);
+                stationPrompt(section, number, station, stage + 1);
             } else {
-                if (gastro) {
+                if (!section.equals("mixed")) {
                     org.json.JSONArray points = station.optJSONArray("learningPoints");
                     if (points.length() > 0) body.addView(label("Learning points", 18));
                     for (int i = 0; i < points.length(); i++) body.addView(label("• " + points.optString(i), 16));
@@ -655,9 +662,9 @@ public final class LibraryActivity extends Activity {
                     android.text.util.Linkify.addLinks(reference, android.text.util.Linkify.WEB_URLS);
                     body.addView(reference);
                 }
-                int count = gastro ? gastroStations.length() : toacsStations.length();
-                if (number + 1 < count) button("Next station", () -> openStation(gastro, number + 1));
-                button("Back to all stations", () -> examPractice(gastro));
+                int count = stationPacks.get(section).length();
+                if (number + 1 < count) button("Next station", () -> openStation(section, number + 1));
+                button("Back to all stations", () -> examPractice(section));
             }
         });
     }

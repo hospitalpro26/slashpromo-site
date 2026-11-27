@@ -1,0 +1,293 @@
+[
+  {
+    "id": "SV-TOACS-ENDO-009",
+    "specialty": "Endocrinology",
+    "scenario": "A 69-year-old man with hypertension, ischemic heart disease and type 2 diabetes presents with progressive confusion, thirst and polyuria. He has dry mucosa, reduced skin turgor and GCS 13/15. BP 96/60, pulse 112/min, glucose 720 mg/dL, sodium 148 mmol/L, potassium 4.5 mmol/L, creatinine 2.4 mg/dL, pH 7.34, bicarbonate 19 mmol/L, beta-hydroxybutyrate 0.8 mmol/L, effective osmolality 336 mOsm/kg.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Hyperosmolar hyperglycemic state with severe dehydration and probable prerenal acute kidney injury."
+      },
+      {
+        "question": "How will you investigate?",
+        "marks": 3,
+        "answer": "Glucose, electrolytes, urea, creatinine, measured or calculated osmolality, beta-hydroxybutyrate, venous blood gas, CBC, HbA1c, ECG and targeted investigations for precipitants. Effective osmolality = 2 x sodium + glucose in mg/dL / 18."
+      },
+      {
+        "question": "How will you manage?",
+        "marks": 5,
+        "answer": "ABC, monitored admission, IV isotonic crystalloid with frequent reassessment; use small boluses such as 250 mL in older patients with cardiac or renal disease. Target osmolality decline 3–8 mOsm/kg/hour. Start IV insulin 0.05 units/kg/hour after initial fluids when appropriate; mixed DKA/HHS requires 0.1 units/kg/hour. Add dextrose below glucose 250 mg/dL. Replace potassium according to levels and renal function; delay insulin if potassium below 3.5 mmol/L. Monitor glucose, electrolytes, osmolality, neurological status and urine output. Treat precipitants and provide thromboprophylaxis unless contraindicated. Resolution: osmolality below 300, glucose below 250, improved cognition and urine output above 0.5 mL/kg/hour. Transition to subcutaneous insulin with overlap."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Fluid replacement is the initial priority.",
+      "Avoid rapid osmolar correction.",
+      "Monitor for thrombosis and acute kidney injury."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-006",
+    "specialty": "Endocrinology",
+    "scenario": "A 25-year-old woman has recurrent abdominal discomfort, progressive headaches, peripheral visual difficulty, recurrent renal stones, excessive thirst, weight loss and recurrent erythematous lesions involving the groin and lower abdomen. Corrected calcium 11.8 mg/dL, phosphate 2.1 mg/dL, random glucose 246 mg/dL, glycosuria positive.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "MEN1 with suspected primary hyperparathyroidism, pituitary adenoma and glucagonoma; necrolytic migratory erythema."
+      },
+      {
+        "question": "How will you investigate?",
+        "marks": 3,
+        "answer": "Corrected calcium, phosphate, PTH, fasting glucagon, prolactin, IGF-1, pituitary hormones, pituitary MRI, visual fields, pancreatic CT/MRI or EUS, selected somatostatin receptor PET, MEN1 genetic testing. Fasting gastrin with gastric pH or supervised fast with insulin/C-peptide/proinsulin when clinically indicated. Renal function, renal ultrasound and bone density."
+      },
+      {
+        "question": "How will you manage?",
+        "marks": 5,
+        "answer": "Multidisciplinary care. Hyperparathyroidism: subtotal parathyroidectomy or selected total parathyroidectomy with autotransplantation; cinacalcet if appropriate. Glucagonoma: resection if localized, somatostatin analogues, nutrition, diabetes care and VTE risk assessment. Gastrinoma: high-dose PPI and selected surgery. Insulinoma: surgery, diazoxide or selected somatostatin analogues. Prolactinoma: cabergoline; selected pituitary surgery or radiotherapy. Lifelong surveillance, genetic counselling and family screening."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Three Ps? Parathyroid, pancreatic/duodenal NETs, pituitary",
+      "Inheritance and gene? Autosomal dominant; MEN1 at 11q13, encoding menin",
+      "Most common manifestation? Primary hyperparathyroidism",
+      "Glucagonoma rash? Necrolytic migratory erythema"
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-001",
+    "specialty": "Endocrinology",
+    "scenario": "A 25-year-old woman with autoimmune hypothyroidism presents with vomiting, abdominal discomfort and severe weakness. She has lost 8 kg over five months and reports poor appetite and postural dizziness. Levothyroxine was recently increased. She is dehydrated with palmar crease and buccal pigmentation. BP 85/55 mmHg, pulse 116/min, glucose 58 mg/dL, sodium 126 mmol/L, potassium 5.8 mmol/L.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Acute adrenal crisis due to probable autoimmune primary adrenal insufficiency; associated autoimmune thyroid disease suggests APS-2."
+      },
+      {
+        "question": "How will you investigate this patient?",
+        "marks": 3,
+        "answer": "CBC, electrolytes, glucose, calcium, renal function, ECG, paired cortisol and ACTH before steroids if no delay, renin, aldosterone, 21-hydroxylase antibodies. After stabilization, 250 microgram Synacthen test with assay-specific cortisol interpretation. Thyroid function, cultures if infection suspected, adrenal CT if infiltrative disease suspected."
+      },
+      {
+        "question": "How will you manage this patient?",
+        "marks": 5,
+        "answer": "ABC, IV access, immediate hydrocortisone 100 mg IV/IM then 200 mg/24h infusion or 50 mg every 6h. Give 1 L normal saline in first hour, adjust subsequent fluids to clinical status; IV dextrose for hypoglycemia; monitor vitals, electrolytes, glucose and urine output; treat precipitant. After stabilization taper to oral hydrocortisone 15–25 mg/day in divided doses or prednisolone 3–5 mg/day. Fludrocortisone usually 0.05–0.2 mg/day when hydrocortisone below 50 mg/day, titrated to BP, electrolytes and renin. Selected women may benefit from DHEA. Provide sick-day rules, emergency injection kit and steroid alert card."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Never delay emergency hydrocortisone for testing.",
+      "Primary adrenal insufficiency: high ACTH, hyperpigmentation, possible hyperkalemia and low aldosterone; secondary disease generally preserves aldosterone.",
+      "APS-2: autoimmune adrenal insufficiency with autoimmune thyroid disease and/or type 1 diabetes.",
+      "Glucocorticoids before initiating or escalating thyroid hormone in suspected adrenal insufficiency.",
+      "Consider adrenal tuberculosis where epidemiologically relevant."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-008",
+    "specialty": "Endocrinology",
+    "scenario": "An 18-year-old woman presents with vomiting, abdominal discomfort and increasing drowsiness after four weeks of thirst, polyuria and weight loss. She is dehydrated with deep rapid breathing. BP 88/58 mmHg, pulse 124/min, RR 32/min, glucose 420 mg/dL, pH 7.18, bicarbonate 10 mmol/L, PaCO2 23 mmHg, potassium 4.8 mmol/L, beta-hydroxybutyrate 5.6 mmol/L.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Diabetic ketoacidosis, likely presenting type 1 diabetes."
+      },
+      {
+        "question": "How will you investigate?",
+        "marks": 3,
+        "answer": "Glucose, blood beta-hydroxybutyrate, venous blood gas, electrolytes, renal function, magnesium, phosphate, CBC, HbA1c, ECG and urinalysis. Cultures, chest imaging or lipase as clinically indicated. Diabetes autoantibodies after stabilization."
+      },
+      {
+        "question": "How will you manage?",
+        "marks": 5,
+        "answer": "ABC assessment, urgent monitored admission and IV isotonic crystalloid, with reassessment of shock. Adult protocol: 500–1000 mL/hour initially if no cardiac or renal compromise, individualized to response. IV regular insulin 0.1 units/kg/hour once potassium is at least 3.5 mmol/L. If potassium below 3.5, replace before insulin; at 3.5–5.0 usually add 20–30 mmol/L to fluids; above 5.0 initially withhold replacement. Add 5–10% dextrose and reduce insulin to 0.05 units/kg/hour when glucose below 250 mg/dL. Monitor glucose every 1–2 hours, electrolytes, pH and ketones about every four hours or more frequently as needed. Treat triggers; consider bicarbonate only if pH below 7.0. Resolution: ketones below 0.6 mmol/L and pH at least 7.3 or bicarbonate at least 18 mmol/L. Overlap basal subcutaneous insulin with IV insulin for at least 1–2 hours. Educate on sick-day rules and arrange follow-up."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Predominant ketone? Beta-hydroxybutyrate.",
+      "Breathing pattern? Kussmaul respiration.",
+      "Acid-base disturbance? High anion gap metabolic acidosis.",
+      "Total body potassium? Depleted.",
+      "Neurological complication? Cerebral edema.",
+      "Drug associated with euglycemic DKA? SGLT2 inhibitors."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-004",
+    "specialty": "Endocrinology",
+    "scenario": "A 30-year-old man is referred for hypertension requiring three antihypertensive medications. He describes recurrent episodes of pounding headaches, excessive sweating and palpitations lasting 15–20 minutes. Between episodes he feels relatively well. His mother recently underwent surgery for medullary thyroid carcinoma. BP 128/78 mmHg, pulse 118/min, respiratory rate 18/min; cardiovascular examination otherwise unremarkable.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Pheochromocytoma with suspected MEN2."
+      },
+      {
+        "question": "How will you investigate this patient?",
+        "marks": 3,
+        "answer": "Plasma free fractionated metanephrines after 30 minutes supine rest or 24-hour urinary fractionated metanephrines; selected clonidine suppression testing for borderline normetanephrine; CBC, renal function, electrolytes and glucose. CT/MRI after biochemical confirmation; selected Ga-68 DOTATATE PET/CT or I-123 MIBG imaging. RET germline testing with counseling, calcitonin, CEA, thyroid ultrasound, calcium and PTH."
+      },
+      {
+        "question": "How will you manage this patient?",
+        "marks": 5,
+        "answer": "Alpha blockade with phenoxybenzamine or doxazosin for 7–14 days, salt and fluid loading if appropriate, beta blockade only after adequate alpha blockade for persistent tachycardia. Calcium channel blockers or selected metyrosine. Laparoscopic adrenalectomy for suitable localized tumors; open surgery for selected invasive tumors; consider cortical-sparing surgery in hereditary disease. Monitor postoperative BP and glucose, repeat biochemical testing and arrange long-term surveillance. Metastatic disease requires specialist selection of radionuclide therapy, chemotherapy or targeted therapy."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Classic triad: headache, sweating, palpitations.",
+      "Chromaffin cell origin.",
+      "RET proto-oncogene in MEN2.",
+      "MEN2A: medullary thyroid carcinoma, pheochromocytoma, hyperparathyroidism.",
+      "MEN2B: medullary thyroid carcinoma, pheochromocytoma, mucosal neuromas and marfanoid habitus.",
+      "Never start beta blockade before adequate alpha blockade.",
+      "Treat pheochromocytoma before thyroid surgery in MEN2.",
+      "Avoid adrenal biopsy when pheochromocytoma is suspected."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-002",
+    "specialty": "Endocrinology",
+    "scenario": "A 48-year-old man reports two months of episodic watery diarrhea, facial flushing, abdominal cramps and wheezing. Examination reveals facial erythema, mild bilateral pedal edema and a pansystolic murmur at the lower left sternal border that increases with inspiration. Respiratory examination is normal between episodes.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Carcinoid syndrome with suspected carcinoid heart disease causing tricuspid regurgitation."
+      },
+      {
+        "question": "How will you investigate this patient?",
+        "marks": 3,
+        "answer": "24-hour urinary 5-HIAA with dietary and medication preparation; chromogranin A with awareness of limited specificity; contrast CT chest, abdomen and pelvis; Ga-68 DOTATATE PET/CT for receptor-positive disease; echocardiography and NT-proBNP; biopsy with differentiation and Ki-67 grading."
+      },
+      {
+        "question": "How will you manage this patient?",
+        "marks": 5,
+        "answer": "Octreotide or lanreotide; add telotristat for refractory carcinoid diarrhea. Replace fluids and electrolytes, assess nutrition and niacin. Consider resection, liver-directed therapy, Lu-177 DOTATATE PRRT or everolimus according to tumor characteristics; platinum-based chemotherapy for poorly differentiated neuroendocrine carcinoma. Diuretics and specialist valve assessment for cardiac disease. Crisis: urgent stabilization, IV octreotide, fluids and vasopressors as indicated."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Serotonin contributes to diarrhea and cardiac fibrosis; 5-HIAA is its urinary metabolite.",
+      "Tricuspid regurgitation and pulmonary stenosis are typical cardiac lesions.",
+      "GI primaries commonly cause syndrome after liver metastasis.",
+      "PPI use may elevate chromogranin A.",
+      "Niacin deficiency may cause pellagra.",
+      "Carcinoid crisis can cause hypotension, flushing and bronchospasm."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-005",
+    "specialty": "Endocrinology",
+    "scenario": "A 58-year-old woman presents with acute breathlessness and persistent palpitations. Over three months she has experienced unintentional weight loss despite good appetite, heat intolerance and anxiety. She is restless and tachypneic. Temperature 39°C, BP 155/85 mmHg, pulse 148/min, respiratory rate 30/min, SpO2 89% on room air. Fine hand tremor, S3 gallop and bilateral basal inspiratory crackles are present.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Thyroid storm (thyrotoxic crisis) complicated by acute heart failure. Clinical diagnosis; do not delay treatment for laboratory confirmation."
+      },
+      {
+        "question": "How will you investigate this patient?",
+        "marks": 3,
+        "answer": "TSH, free T4 and T3; CBC, LFTs, renal function, electrolytes, calcium, ABG, ECG, chest radiograph, echocardiography, TSH receptor antibodies and cultures as indicated. Burch–Wartofsky score ≥45 strongly supports thyroid storm; 25–44 suggests impending storm."
+      },
+      {
+        "question": "How will you manage this patient?",
+        "marks": 5,
+        "answer": "ICU, oxygen, cardiac monitoring, cooling, paracetamol, treat pulmonary edema and triggers. PTU 500–1000 mg loading then 250 mg every 4 hours, or methimazole 60–80 mg/day divided. Potassium iodide at least one hour after thionamide. Hydrocortisone 100 mg IV every 8 hours. Assess hemodynamics before beta blockade; avoid in shock or low-output decompensation, consider carefully titrated esmolol only when appropriate under intensive monitoring. Selected adjunct cholestyramine 4 g every 6 hours. Refractory cases may require plasma exchange or urgent thyroidectomy; organ support as indicated. Definitive therapy after stabilization according to etiology."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Graves disease is a common underlying cause; infection is a common trigger.",
+      "PTU inhibits peripheral T4-to-T3 conversion.",
+      "Give iodine at least one hour after thionamide.",
+      "Hydrocortisone reduces T4-to-T3 conversion and provides adrenal support.",
+      "Avoid aspirin because it can increase free thyroid hormone.",
+      "Cholestyramine reduces enterohepatic recycling.",
+      "Hormone concentrations alone do not distinguish thyroid storm from uncomplicated thyrotoxicosis."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-007",
+    "specialty": "Endocrinology",
+    "scenario": "A 30-year-old man presents with excessive thirst, polyuria and nocturia for two weeks, drinking six litres daily. Three weeks earlier he sustained a traumatic head injury in a motorcycle accident. Random glucose 116 mg/dL, creatinine 1.1 mg/dL, sodium 150 mmol/L, plasma osmolality 310 mOsm/kg, urine osmolality 120 mOsm/kg, 24-hour urine volume 5.8 L.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Central diabetes insipidus (arginine vasopressin deficiency) following head trauma."
+      },
+      {
+        "question": "How will you investigate?",
+        "marks": 3,
+        "answer": "Quantify urine volume; paired plasma and urine osmolality, electrolytes, calcium, potassium, glucose and renal function. Specialist-supervised desmopressin challenge; stimulated copeptin if uncertainty remains and appropriate. Avoid water deprivation in this hypernatremic patient. Pituitary MRI and anterior pituitary hormone assessment."
+      },
+      {
+        "question": "How will you manage?",
+        "marks": 5,
+        "answer": "Prompt assessment of hypernatremia and volume status, ensure access to water, carefully replace free-water deficit, monitor sodium and fluid balance. Desmopressin individualized by route and response; oral starting dose 0.05 mg once or twice daily or intranasal 10 micrograms daily, with specialist-directed parenteral treatment when needed. Monitor for hyponatremia and recovery, arrange endocrine follow-up."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Mechanism of central DI? AVP deficiency.",
+      "Response to desmopressin? Marked increase in urine osmolality in complete central DI; minimal response in complete nephrogenic DI.",
+      "Triphasic response? Initial DI, transient SIADH, recurrent DI."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-ENDO-003",
+    "specialty": "Endocrinology",
+    "scenario": "A 27-year-old woman develops severe generalized abdominal pain, vomiting and constipation after starting trimethoprim-sulfamethoxazole for a urinary tract infection. She is restless and confused with progressive bilateral leg weakness. BP 180/105 mmHg, pulse 122/min. Abdomen mildly tender without guarding or rigidity. Lower limb power 4/5 with absent reflexes.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Acute intermittent porphyria presenting with an acute neurovisceral attack."
+      },
+      {
+        "question": "How will you investigate?",
+        "marks": 3,
+        "answer": "Spot urinary PBG and ALA normalized to creatinine during symptoms; protect sample from light. Electrolytes, renal and liver function, serial forced vital capacity, HMBS genetic testing after biochemical confirmation."
+      },
+      {
+        "question": "How will you manage?",
+        "marks": 5,
+        "answer": "Admit, stop triggers, IV hemin 3–4 mg/kg once daily for four days according to formulation. Carbohydrates for mild attacks or while awaiting hemin. Carefully correct electrolytes, use porphyria-safe analgesics and antiemetics, control BP and pulse, monitor respiratory function and consider ICU. Long term: avoid triggers, genetic counseling, givosiran 2.5 mg/kg monthly for eligible recurrent attacks, exceptional liver transplantation."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Deficient enzyme? Hydroxymethylbilane synthase",
+      "Inheritance? Autosomal dominant",
+      "Initial diagnostic test? Spot urinary PBG",
+      "Common electrolyte abnormality? Hyponatremia",
+      "Photosensitivity? Absent in AIP",
+      "Givosiran mechanism? RNA interference targeting hepatic ALAS1"
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  }
+]
