@@ -113,3 +113,6 @@ assert(read("android/app/src/main/java/com/slashpromo/app/AccountClient.java").i
 for(const marker of ["applySafeArea(root)","applySafeArea(body)","applySafeArea(sc)","WindowInsets.Type.systemBars()","setMinHeight(dp(56))"])assert(library.includes(marker),marker);
 
 assert(library.includes("checkUpdateNotice()"));assert(library.includes("Slashview update available"));
+
+for(const marker of ["private void pageNavigator","Quick page navigation","slider.setMax(total-1)","Enter page number","annotationMenu(highlight)","underlining","Reading mode","saveHighlights()"])assert(library.includes(marker),marker);
+console.log("PASS reader navigation and annotation structural checks");
