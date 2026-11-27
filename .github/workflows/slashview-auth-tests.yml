@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'slashview-backend/**'
+      - 'android/**'
       - '.github/workflows/slashview-auth-tests.yml'
 permissions:
   contents: read
