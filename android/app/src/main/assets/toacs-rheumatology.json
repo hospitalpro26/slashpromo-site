@@ -1,0 +1,348 @@
+[
+  {
+    "id": "SV-TOACS-RHEUM-006",
+    "specialty": "Rheumatology",
+    "scenario": "A 48-year-old man has progressive right groin pain for three months, initially on walking and now limiting weight bearing. He has type 1 diabetes and underwent renal transplantation eight months ago. He takes prednisolone, tacrolimus and mycophenolate mofetil. Examination reveals an antalgic gait and painful restriction of internal rotation and abduction. No recent trauma or fever.",
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "marks": 2,
+        "answer": "Corticosteroid-associated osteonecrosis of the right femoral head."
+      },
+      {
+        "question": "Investigations?",
+        "marks": 3,
+        "answer": "X-ray pelvis and both hips; early films may be normal. Later sclerosis, cysts, crescent sign and collapse.\nMRI without contrast is preferred for early diagnosis; CT can characterize subchondral fracture. Bone scan is an alternative if MRI is unavailable or contraindicated.\nCBC, ESR, CRP and renal function to assess alternatives and transplant function. Bone biopsy rarely required."
+      },
+      {
+        "question": "Management?",
+        "marks": 5,
+        "answer": "Protected weight bearing, appropriate analgesia, physiotherapy, optimize diabetes and early orthopedic referral.\nReview steroids with transplant team; do not stop abruptly. Avoid nephrotoxic analgesics where possible.\nCore decompression with or without grafting in selected precollapse disease; total hip arthroplasty for advanced collapse.\nBisphosphonates, iloprost, shockwave and hyperbaric oxygen have variable evidence and are not routine standard treatment."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "ARCO I: normal X-ray, abnormal MRI; II: radiographic changes without subchondral fracture; III: subchondral fracture with or without depression; IV: secondary osteoarthritis.",
+      "Crescent sign indicates subchondral fracture; T2 double-line sign suggests osteonecrosis.",
+      "Consider septic arthritis urgently in immunosuppressed patients with acute severe hip pain even without fever.",
+      "Risk factors include corticosteroids, alcohol, sickle cell disease, trauma, transplantation, SLE and decompression sickness."
+    ],
+    "totalMarks": 10,
+    "status": "draft; independent guideline review and deployment pending"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-003",
+    "specialty": "Rheumatology",
+    "scenario": "A 28-year-old woman at 18 weeks of pregnancy presents with fatigue, exertional breathlessness and symmetrical small-joint pain for five weeks, intermittent oral ulcers and frothy urine. Examination reveals pallor and mild bilateral pedal edema.",
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "marks": 2,
+        "answer": "SLE with suspected active lupus nephritis during pregnancy."
+      },
+      {
+        "question": "Investigations?",
+        "marks": 4,
+        "answer": "CBC, blood film, direct Coombs test\nANA, anti-dsDNA, anti-Smith, C3/C4, ESR/CRP\nRenal function, albumin, urine microscopy, UPCR and urine culture\nAntiphospholipid antibodies, anti-Ro/SSA and anti-La/SSB\nConsider renal biopsy if management would change after multidisciplinary risk assessment\nObstetric ultrasound and fetal assessment"
+      },
+      {
+        "question": "Management during pregnancy?",
+        "marks": 4,
+        "answer": "Multidisciplinary rheumatology, nephrology and maternal–fetal medicine care\nHydroxychloroquine, prednisolone or IV methylprednisolone for severe disease\nAzathioprine up to 2 mg/kg/day or tacrolimus/cyclosporine when indicated\nLow-dose aspirin unless contraindicated; LMWH when indicated for APS; labetalol or nifedipine for hypertension\nAvoid mycophenolate, methotrexate, ACE inhibitors, ARBs and voclosporin; cyclophosphamide only in exceptional life-threatening circumstances under specialist supervision\nMonitor BP, renal function, proteinuria, sediment, anti-dsDNA, complement and fetal growth"
+      }
+    ],
+    "findings": [
+      "Hb: 8.9 g/dL",
+      "platelets: 105000/µL",
+      "creatinine: 1.4 mg/dL",
+      "urinary protein: 2+",
+      "urinary RBCs: 15–25/HPF",
+      "UPCR: 0.9 g/g"
+    ],
+    "learningPoints": [
+      "Active urinary sediment, falling complement and rising anti-dsDNA favor lupus nephritis over pre-eclampsia. Anti-Ro/SSA is associated with neonatal lupus and congenital heart block.",
+      "I: Minimal mesangial",
+      "II: Mesangial proliferative",
+      "III: Focal (<50% of glomeruli)",
+      "IV: Diffuse (≥50% of glomeruli)",
+      "V: Membranous",
+      "VI: Advanced sclerosing"
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-001",
+    "specialty": "Rheumatology",
+    "scenario": "A 25-year-old woman has daily fever spikes to 39.5°C for three weeks, painful wrists, knees and ankles, sore throat and a transient pink rash during fever. Examination reveals mild hepatosplenomegaly. Hb 10.5 g/dL, WBC 17800/µL, neutrophils 86%, ANA, RF and anti-CCP negative.",
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "marks": 2,
+        "answer": "Adult-onset Still disease."
+      },
+      {
+        "question": "Investigations?",
+        "marks": 4,
+        "answer": "CBC, ESR, CRP, ferritin, liver and renal function, ANA, RF, anti-CCP, blood cultures and targeted infection screening, abdominal ultrasound. If MAS suspected: triglycerides, fibrinogen and bone marrow examination when indicated."
+      },
+      {
+        "question": "Management?",
+        "marks": 4,
+        "answer": "NSAIDs in selected mild cases; systemic corticosteroids for significant inflammation; early IL-1 or IL-6 inhibition; methotrexate for persistent arthritis; urgent specialist management of MAS."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Yamaguchi: at least five criteria including two major, after excluding infection, malignancy and other rheumatic disease. Major: fever ≥39°C for ≥1 week, arthralgia ≥2 weeks, typical rash, WBC ≥10000/µL with ≥80% neutrophils. Minor: sore throat, lymphadenopathy and/or splenomegaly, liver dysfunction, negative ANA and RF.",
+      "MAS: persistent fever, rising ferritin, falling counts, hypertriglyceridemia, hypofibrinogenemia and liver dysfunction."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_review"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-010",
+    "specialty": "Rheumatology",
+    "scenario": "A 59-year-old woman presents with progressive solid-food dysphagia and persistent heartburn despite proton pump inhibitor therapy. She has lost 6 kg over five months and describes cold-induced finger discoloration. Examination shows shiny thickened skin of fingers extending to wrists, firm whitish fingertip deposits, reduced oral aperture, perioral puckering, facial telangiectasia and cool extremities.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Limited cutaneous systemic sclerosis (CREST syndrome) with esophageal involvement."
+      },
+      {
+        "question": "How will you investigate this patient?",
+        "marks": 3,
+        "answer": "CBC, ESR, CRP, creatinine, urinalysis, ANA, anticentromere, anti-Scl-70, anti-RNA polymerase III, nailfold capillaroscopy, prompt upper GI endoscopy, esophageal manometry and pH monitoring as indicated, HRCT, PFT with DLCO, echocardiography, NT-proBNP, ECG, hand radiographs. Right heart catheterization confirms suspected PAH."
+      },
+      {
+        "question": "How will you manage this patient?",
+        "marks": 5,
+        "answer": "Organ-directed treatment: optimize PPI and reflux lifestyle measures; selected prokinetics; investigate alarm symptoms promptly; antibiotics for bacterial overgrowth. Raynaud: cold avoidance, calcium channel blockers, PDE5 inhibitors or IV iloprost as indicated. ILD: mycophenolate, selected cyclophosphamide, nintedanib, rituximab or tocilizumab. Renal crisis: immediate ACE inhibitor, usually captopril, and close monitoring. PAH: specialist-directed endothelin receptor antagonists, PDE5 inhibitors and prostacyclin pathway therapy. Avoid unnecessary high-dose steroids."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "CREST: calcinosis, Raynaud phenomenon, esophageal dysmotility, sclerodactyly, telangiectasia.",
+      "Anticentromere: limited disease; anti-Scl-70: ILD; anti-RNA polymerase III: renal crisis risk.",
+      "Annual PAH screening; ACE inhibitors are not routinely used solely for renal crisis prevention."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_review"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-009",
+    "specialty": "Rheumatology",
+    "scenario": "A 34-year-old woman presents with four months of fatigue, morning stiffness and pain in the small joints of both hands and ankles, worse in cold weather. She has dry eyes and mouth. Examination reveals wrist synovitis and palpable non-blanching purpura on both lower limbs. Hb 10.8 g/dL, WBC 4600/µL, platelets 192000/µL, ESR 82 mm/h, CRP 12 mg/L, ANA and RF positive.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Mixed cryoglobulinemic vasculitis with suspected underlying Sjögren syndrome."
+      },
+      {
+        "question": "How will you investigate this patient?",
+        "marks": 3,
+        "answer": "CBC, ESR/CRP, renal and liver function, urinalysis and UPCR, serum cryoglobulins, C3/C4, RF, anti-Ro/SSA and anti-La/SSB, HCV antibody and RNA, HBV screening, serum electrophoresis and immunofixation, Schirmer test. Consider skin or renal biopsy as indicated."
+      },
+      {
+        "question": "How will you manage this patient?",
+        "marks": 5,
+        "answer": "Treat underlying cause and stratify by organ involvement. Avoid cold exposure, manage sicca symptoms and monitor renal function. HCV-associated disease requires direct-acting antivirals. Significant organ involvement may require glucocorticoids and rituximab; selected severe cases may require cyclophosphamide or plasma exchange. Screen for HBV before rituximab and arrange prophylaxis when indicated."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "Meltzer triad: purpura, arthralgia and weakness.",
+      "Low C4 is characteristic; renal involvement may manifest as membranoproliferative glomerulonephritis.",
+      "Keep blood at 37°C until serum separation for cryoglobulin testing.",
+      "Type I monoclonal; type II mixed monoclonal IgM and polyclonal IgG; type III polyclonal.",
+      "Sjögren syndrome with cryoglobulinemia is associated with increased lymphoma risk."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-007",
+    "specialty": "Rheumatology",
+    "scenario": "A 44-year-old schoolteacher presents with widespread musculoskeletal pain, persistent fatigue and disturbed sleep for eight months. She feels exhausted despite sleeping and has difficulty concentrating at work. She reports intermittent headaches and urinary frequency. Examination reveals diffuse tenderness over the neck, shoulders, back and thighs without synovitis or objective muscle weakness.",
+    "questions": [
+      {
+        "question": "What is your most likely diagnosis?",
+        "marks": 2,
+        "answer": "Fibromyalgia syndrome."
+      },
+      {
+        "question": "How will you investigate this patient?",
+        "marks": 3,
+        "answer": "Clinical diagnosis. Consider CBC, ESR/CRP, renal and liver function, TSH, and CK or autoimmune testing only when clinically indicated to evaluate alternative or coexisting conditions."
+      },
+      {
+        "question": "How will you manage this patient?",
+        "marks": 5,
+        "answer": "Education, individualized aerobic and strengthening exercise, CBT, sleep hygiene and activity pacing. Consider amitriptyline, duloxetine, pregabalin or milnacipran according to symptoms, contraindications and local guidance. Avoid routine opioids, systemic corticosteroids and NSAIDs for fibromyalgia itself."
+      }
+    ],
+    "findings": [],
+    "learningPoints": [
+      "2016 criteria: WPI >=7 and SSS >=5, or WPI 4–6 and SSS >=9; generalized pain in at least four of five regions; symptoms for at least three months.",
+      "Tender point count is not mandatory.",
+      "ME/CFS is characterized by post-exertional malaise."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-008",
+    "specialty": "Rheumatology",
+    "scenario": "A 29-year-old woman presents with painful right lower limb swelling for three days. She had an unprovoked DVT three years ago and received six months of anticoagulation. Her right calf is warm, swollen and tender.",
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "marks": 2,
+        "answer": "Suspected antiphospholipid syndrome (APS) with recurrent DVT; confirm objectively and establish persistent antibodies."
+      },
+      {
+        "question": "Investigations?",
+        "marks": 3,
+        "answer": "Compression venous ultrasound; CBC, renal and liver function, coagulation profile.\nLupus anticoagulant, anticardiolipin IgG/IgM and anti-beta-2 glycoprotein I IgG/IgM; repeat positive tests at least 12 weeks apart. Anticoagulants may interfere with lupus anticoagulant testing.\nANA and anti-dsDNA if evaluating associated SLE; mixing study may help evaluate prolonged APTT. Inherited thrombophilia testing is selective, not routine."
+      },
+      {
+        "question": "Management?",
+        "marks": 5,
+        "answer": "Therapeutic LMWH or UFH followed by warfarin with appropriate overlap; INR 2–3 for venous APS. Generally lifelong anticoagulation for confirmed APS with recurrent unprovoked VTE.\nAvoid DOACs especially in triple-positive or arterial APS. Address smoking, estrogen exposure and cardiovascular risks.\nIf recurrence despite therapeutic warfarin, confirm adherence and INR control; specialist options include INR 3–4, low-dose aspirin or LMWH.\nPregnancy: low-dose aspirin plus therapeutic LMWH for prior thrombotic APS; prophylactic LMWH plus aspirin for obstetric APS without prior thrombosis. Plan delivery and postpartum anticoagulation with specialists."
+      }
+    ],
+    "findings": [
+      "Hemoglobin: 12.4 g/dL",
+      "WBC: 8200/µL",
+      "Platelets: 112000/µL",
+      "ALT: 32 U/L",
+      "ALP: 98 U/L",
+      "PT: 13 seconds",
+      "APTT: 56 seconds"
+    ],
+    "learningPoints": [
+      "Lupus anticoagulant prolongs phospholipid-dependent clotting assays but is associated with thrombosis.",
+      "Triple positivity means lupus anticoagulant, anticardiolipin and anti-beta-2 glycoprotein I antibodies.",
+      "Catastrophic APS: urgent therapeutic heparin, glucocorticoids and plasma exchange and/or IVIG; refractory cases may warrant rituximab or eculizumab under specialist care.",
+      "Obstetric APS generally requires postpartum prophylaxis for at least six weeks; thrombotic APS requires ongoing therapeutic anticoagulation."
+    ],
+    "totalMarks": 10,
+    "status": "draft; independent guideline review and deployment pending"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-002",
+    "specialty": "Rheumatology",
+    "scenario": "A 49-year-old man presents with progressive breathlessness, blood-stained sputum and intermittent fever for three weeks, recurrent nasal crusting, sinus discomfort and dark urine. He has previously treated pulmonary tuberculosis.",
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "marks": 2,
+        "answer": "Granulomatosis with polyangiitis presenting with pulmonary–renal syndrome."
+      },
+      {
+        "question": "Investigations?",
+        "marks": 4,
+        "answer": "CBC, ESR, CRP, renal and liver function\nUrine microscopy and protein quantification\nPR3-ANCA, MPO-ANCA, anti-GBM antibodies\nHRCT chest\nSputum TB testing including GeneXpert\nRenal biopsy for pauci-immune necrotizing crescentic glomerulonephritis"
+      },
+      {
+        "question": "Management?",
+        "marks": 4,
+        "answer": "Urgent hospital admission and specialist consultation\nGlucocorticoids plus rituximab or cyclophosphamide for induction\nConsider IV methylprednisolone in life-threatening disease; avacopan where appropriate\nSelected use of plasma exchange for severe renal disease, hypoxemic alveolar hemorrhage or anti-GBM overlap\nMaintenance rituximab or azathioprine; methotrexate only if renal function permits\nPneumocystis prophylaxis, infection screening including TB and HBV, bone protection, laboratory monitoring and dialysis if indicated"
+      }
+    ],
+    "findings": [
+      "Hb: 9.8 g/dL",
+      "WBC: 14200/µL",
+      "platelets: 155000/µL",
+      "ESR: 105 mm/hr",
+      "urea: 72 mg/dL",
+      "creatinine: 2.6 mg/dL",
+      "urine protein: 2+",
+      "urine blood: 3+",
+      "chest X-ray: Bilateral nodular opacities"
+    ],
+    "learningPoints": [
+      "GPA commonly involves upper airways, lungs and kidneys; PR3-ANCA is characteristic."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-004",
+    "specialty": "Rheumatology",
+    "scenario": "A 45-year-old schoolteacher has progressive bilateral hand and wrist pain and swelling for four months, morning stiffness lasting 90 minutes, and difficulty writing. Her sister has psoriasis, but she has no skin or nail lesions. Examination shows symmetrical MCP and PIP synovitis and painless left eye redness.",
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "marks": 2,
+        "answer": "Rheumatoid arthritis with possible episcleritis; consider psoriatic arthritis."
+      },
+      {
+        "question": "Investigations?",
+        "marks": 3,
+        "answer": "CBC, ESR, CRP, RF, anti-CCP, renal and liver function\nHand and foot radiographs; ultrasound for synovitis\nChest or cervical imaging when indicated; ophthalmological assessment"
+      },
+      {
+        "question": "Management?",
+        "marks": 5,
+        "answer": "Education, exercise, physiotherapy, occupational therapy, splints\nNSAIDs if appropriate; brief glucocorticoid bridge when necessary\nMethotrexate 15 mg once weekly titrated to 20–25 mg as tolerated, with folic acid and CBC/LFT/renal monitoring; assess pregnancy and contraindications\nAlternatives: sulfasalazine, leflunomide, hydroxychloroquine; consider combination therapy\nTreat to target; escalate to biologic or targeted synthetic DMARDs after appropriate screening and risk assessment\nSurgery for selected advanced disease"
+      }
+    ],
+    "findings": [
+      "Hb: 10.8 g/dL",
+      "WBC: 8500/µL",
+      "platelets: 420000/µL",
+      "ESR: 76 mm/hr",
+      "CRP: 32 mg/L"
+    ],
+    "learningPoints": [
+      "ACR/EULAR 2010 classification: joint involvement 5, serology 3, inflammatory markers 1, duration 1; threshold 6/10 in eligible patients",
+      "Felty syndrome: RA, neutropenia, splenomegaly",
+      "Caplan syndrome: RA with pneumoconiosis and pulmonary nodules",
+      "Methotrexate is weekly, never daily for RA",
+      "Painful red eye, photophobia or visual change requires urgent ophthalmic assessment"
+    ],
+    "totalMarks": 10,
+    "status": "draft; independent guideline review and deployment pending"
+  },
+  {
+    "id": "SV-TOACS-RHEUM-005",
+    "specialty": "Rheumatology",
+    "scenario": "A 35-year-old woman with rheumatoid arthritis taking hydroxychloroquine, sulfasalazine and low-dose prednisolone develops fatigue, dizziness, dark urine and jaundice four days after starting primaquine-containing treatment for vivax malaria. She has pallor and tachycardia.",
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "marks": 2,
+        "answer": "Acute oxidative hemolytic anemia due to suspected G6PD deficiency, precipitated by primaquine."
+      },
+      {
+        "question": "How will you investigate?",
+        "marks": 3,
+        "answer": "CBC, reticulocytes, blood film for bite and blister cells, supravital stain for Heinz bodies, LDH, haptoglobin, fractionated bilirubin, DAT, quantitative G6PD assay, urinalysis, renal function, repeat malaria microscopy."
+      },
+      {
+        "question": "How will you manage?",
+        "marks": 5,
+        "answer": "Stop primaquine and other suspected triggers; assess stability, hydrate appropriately, monitor renal function, urine output and hemoglobin; crossmatch and transfuse when clinically indicated; arrange specialist-directed malaria therapy and review RA medications; educate about triggers."
+      }
+    ],
+    "findings": [
+      "previousHb: 11.2 g/dL",
+      "currentHb: 7.1 g/dL",
+      "reticulocytes: 9%",
+      "totalBilirubin: 4.6 mg/dL",
+      "indirectBilirubin: 3.8 mg/dL",
+      "LDH: Elevated"
+    ],
+    "learningPoints": [
+      "G6PD assay can be falsely normal during acute hemolysis; repeat about three months after recovery if suspicion persists.",
+      "Females can be affected.",
+      "Steroids are not routine treatment for oxidative hemolysis.",
+      "Assess G6PD activity before radical cure with primaquine or tafenoquine."
+    ],
+    "totalMarks": 10,
+    "status": "draft_pending_clinical_review"
+  }
+]

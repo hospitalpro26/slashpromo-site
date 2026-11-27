@@ -1,120 +1,44 @@
 [
   {
-    "id": "SV-TOACS-GI-001",
+    "id": "SV-TOACS-GI-011",
     "status": "draft_pending_clinical_review",
-    "scenario": "A 30-year-old man was diagnosed with tuberculous pericarditis following evaluation for prolonged fever, night sweats, breathlessness and pericardial effusion. Three weeks after commencing standard antituberculous therapy, his constitutional symptoms improved. However, he subsequently developed nausea, loss of appetite, dark urine and yellow discoloration of his eyes. He has a history of regular alcohol consumption.",
+    "scenario": "A 39-year-old obese man presents with progressively worsening upper abdominal pain over 48 hours, rated 8/10. He takes amlodipine and lisinopril for hypertension and consumes approximately 10 units of alcohol weekly. He is febrile with epigastric tenderness but otherwise stable.",
     "findings": [],
     "questions": [
       {
         "question": "What is the most likely diagnosis?",
-        "answer": "Suspected antituberculous drug-induced liver injury in a patient with tuberculous pericarditis.",
-        "marks": 2
-      },
-      {
-        "question": "Which antituberculous drugs are potentially responsible?",
-        "answer": "Isoniazid, rifampicin and pyrazinamide.",
+        "answer": "Acute pancreatitis.",
         "marks": 1
       },
       {
-        "question": "What investigations would you perform?",
-        "answer": "ALT, AST, ALP, bilirubin, PT/INR, renal function, viral hepatitis testing and abdominal ultrasound as indicated. Assess alternative causes and severity.",
+        "question": "What are the diagnostic criteria?",
+        "answer": "Two of three: characteristic pain, lipase or amylase at least three times upper limit of normal, characteristic imaging.",
         "marks": 2
       },
       {
-        "question": "How would you manage this patient initially?",
-        "answer": "Withhold hepatotoxic TB drugs when ALT is at least three times ULN with symptoms or five times ULN without symptoms; jaundice warrants urgent evaluation and interruption of suspected hepatotoxic agents. Assess for acute liver failure. Consult TB specialists for an adequate nonhepatotoxic bridging regimen if needed.",
-        "marks": 3
-      },
-      {
-        "question": "How would you reintroduce antituberculous therapy?",
-        "answer": "After symptoms resolve and ALT falls below twice ULN (or near baseline), sequentially reintroduce rifampicin then isoniazid with monitoring. Pyrazinamide may need to be omitted, especially after severe injury; treatment duration may need extension under specialist guidance.",
-        "marks": 2
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": []
-  },
-  {
-    "id": "SV-TOACS-GI-002",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 38-year-old woman presents with progressive abdominal distension and right upper quadrant pain for five days. She had an unprovoked deep venous thrombosis two years ago. Pulse 108/min, BP 120/80 mmHg, mild scleral icterus, tender hepatomegaly, moderate ascites with shifting dullness and normal JVP.",
-    "findings": [],
-    "questions": [
-      {
-        "question": "What is the most likely diagnosis?",
-        "answer": "Budd–Chiari syndrome due to hepatic venous outflow obstruction.",
+        "question": "How would you investigate and identify the cause?",
+        "answer": "Lipase, CBC, LFTs, renal function, calcium, triglycerides, CRP and abdominal ultrasound. CT if diagnosis uncertain or failure to improve after 48–72 hours.",
         "marks": 2
       },
       {
-        "question": "What are the common underlying causes?",
-        "answer": "Myeloproliferative neoplasms, antiphospholipid syndrome, PNH, inherited thrombophilia and hormonal risk factors.",
+        "question": "How would you assess severity?",
+        "answer": "Revised Atlanta classification, BISAP and organ failure assessment.",
         "marks": 2
       },
       {
-        "question": "How would you investigate this patient?",
-        "answer": "Hepatic Doppler ultrasound first, CT/MR venography, CBC, LFTs, INR, renal function and directed thrombophilia workup including JAK2, APS and PNH testing.",
-        "marks": 2
-      },
-      {
-        "question": "What ascitic fluid findings would you expect?",
-        "answer": "Typically SAAG ≥1.1 g/dL and protein ≥2.5 g/dL, especially in early disease.",
-        "marks": 1
-      },
-      {
-        "question": "Describe the stepwise management.",
-        "answer": "Therapeutic anticoagulation unless contraindicated, treatment of underlying cause, ascites management, angioplasty/stenting for suitable lesions, TIPS for inadequate response and transplantation when indicated.",
+        "question": "How would you manage the patient?",
+        "answer": "Goal-directed Ringer lactate, analgesia, early oral or enteral feeding, monitoring and cause-specific treatment. No prophylactic antibiotics; urgent ERCP for cholangitis; same-admission cholecystectomy for mild biliary pancreatitis.",
         "marks": 3
       }
     ],
     "totalMarks": 10,
     "learningPoints": [
-      "Long-term anticoagulation is generally required.",
-      "Warfarin is preferred over DOACs in high-risk APS.",
-      "Defibrotide is not routine therapy for Budd–Chiari syndrome.",
-      "Aspirin and hydroxyurea do not replace therapeutic anticoagulation."
-    ]
-  },
-  {
-    "id": "SV-TOACS-GI-003",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 29-year-old woman presents four months after childbirth with progressive fatigue, generalized body aches, morning stiffness and pain involving the small joints of both hands. Over the preceding two weeks she has developed jaundice and reduced appetite. She has no history of alcohol consumption or recent hepatotoxic medication use. Examination reveals scleral icterus and tender hepatomegaly without clinically detectable ascites.",
-    "findings": [],
-    "questions": [
-      {
-        "question": "What is the most likely diagnosis?",
-        "answer": "Autoimmune hepatitis presenting postpartum.",
-        "marks": 2
-      },
-      {
-        "question": "Which investigations would you request?",
-        "answer": "CBC, LFTs, INR, IgG, ANA, ASMA, anti-LKM1, anti-SLA, viral hepatitis screening and liver biopsy.",
-        "marks": 2
-      },
-      {
-        "question": "What histopathological findings would you expect?",
-        "answer": "Interface hepatitis, lymphoplasmacytic infiltration and possible bridging necrosis.",
-        "marks": 2
-      },
-      {
-        "question": "How would you initiate treatment?",
-        "answer": "Prednisolone with azathioprine where appropriate; assess TPMT where available and monitor CBC, liver tests and IgG.",
-        "marks": 2
-      },
-      {
-        "question": "How would you manage treatment failure or relapse?",
-        "answer": "Assess adherence and diagnosis; consider specialist-directed mycophenolate or tacrolimus and transplant referral where indicated. Avoid mycophenolate in pregnancy and breastfeeding.",
-        "marks": 2
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": [
-      "Type 1: ANA and ASMA; type 2: anti-LKM1 and anti-LC1.",
-      "Anti-SLA is highly specific.",
-      "Prednisolone induction commonly 0.5–1 mg/kg/day; azathioprine maintenance commonly 1–2 mg/kg/day, individualized.",
-      "Aim for normal aminotransferases and IgG.",
-      "Consider withdrawal only in selected patients after at least two years of sustained complete biochemical remission.",
-      "Prednisolone and azathioprine are generally compatible with pregnancy and breastfeeding.",
-      "Acute severe disease requires early transplant-centre referral and close assessment of steroid response."
+      "BISAP: BUN >25 mg/dL, impaired mental status, SIRS, age >60, pleural effusion; one point each.",
+      "Severe pancreatitis: persistent organ failure >48 hours.",
+      "Moderately severe: transient organ failure and/or local or systemic complications without persistent organ failure.",
+      "ALT ≥150 IU/L suggests biliary cause; triglycerides ≥1000 mg/dL suggest hypertriglyceridemic cause.",
+      "CRP ≥150 mg/L at 48 hours suggests severe disease.",
+      "In stable necrosis requiring intervention, delay approximately four weeks when feasible."
     ]
   },
   {
@@ -201,6 +125,224 @@
     "learningPoints": []
   },
   {
+    "id": "SV-TOACS-GI-009",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 26-year-old man has six weeks of bloody diarrhea, lower abdominal cramps and urgency, worsening over five days to eight bloody stools daily, fever and tenesmus. He has lost 6 kg in two months. Examination shows pallor, aphthous ulcers and mild lower abdominal tenderness.",
+    "findings": [
+      "temperature C: 38.2",
+      "pulse: 112",
+      "BP: 105/70",
+      "Hb g dL: 9.5",
+      "ESR mm h: 65",
+      "CRP mg L: 58",
+      "albumin g dL: 2.8"
+    ],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Acute severe ulcerative colitis, pending exclusion of infection and confirmation.",
+        "marks": 2
+      },
+      {
+        "question": "How would you assess disease severity?",
+        "answer": "Truelove and Witts: at least six bloody stools daily plus one of temperature >37.8 C, pulse >90/min, Hb <10.5 g/dL, ESR >30 mm/h.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations would you request?",
+        "answer": "CBC, CRP, electrolytes, albumin, stool cultures and C. difficile testing, abdominal imaging, limited flexible sigmoidoscopy with biopsy.",
+        "marks": 2
+      },
+      {
+        "question": "How would you manage initially?",
+        "answer": "Admission, IV methylprednisolone 40–60 mg/day or hydrocortisone 100 mg every six hours, fluids and electrolytes, pharmacological VTE prophylaxis unless contraindicated, early surgical consultation.",
+        "marks": 2
+      },
+      {
+        "question": "What are the indications for rescue therapy and surgery?",
+        "answer": "Assess response by day 3; infliximab or ciclosporin for steroid-refractory disease. Urgent surgery for perforation, uncontrolled hemorrhage, deteriorating toxic megacolon or failed medical therapy.",
+        "marks": 2
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Oxford day-3 criteria: >8 stools/day or 3–8 with CRP >45 mg/L predicts high risk of treatment failure.",
+      "Prefer enteral nutrition when tolerated.",
+      "Avoid antimotility drugs, opioids and full colonoscopy during ASUC.",
+      "Emergency operation typically subtotal colectomy with end ileostomy.",
+      "Steroids are not maintenance therapy."
+    ]
+  },
+  {
+    "id": "SV-TOACS-GI-002",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 38-year-old woman presents with progressive abdominal distension and right upper quadrant pain for five days. She had an unprovoked deep venous thrombosis two years ago. Pulse 108/min, BP 120/80 mmHg, mild scleral icterus, tender hepatomegaly, moderate ascites with shifting dullness and normal JVP.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Budd–Chiari syndrome due to hepatic venous outflow obstruction.",
+        "marks": 2
+      },
+      {
+        "question": "What are the common underlying causes?",
+        "answer": "Myeloproliferative neoplasms, antiphospholipid syndrome, PNH, inherited thrombophilia and hormonal risk factors.",
+        "marks": 2
+      },
+      {
+        "question": "How would you investigate this patient?",
+        "answer": "Hepatic Doppler ultrasound first, CT/MR venography, CBC, LFTs, INR, renal function and directed thrombophilia workup including JAK2, APS and PNH testing.",
+        "marks": 2
+      },
+      {
+        "question": "What ascitic fluid findings would you expect?",
+        "answer": "Typically SAAG ≥1.1 g/dL and protein ≥2.5 g/dL, especially in early disease.",
+        "marks": 1
+      },
+      {
+        "question": "Describe the stepwise management.",
+        "answer": "Therapeutic anticoagulation unless contraindicated, treatment of underlying cause, ascites management, angioplasty/stenting for suitable lesions, TIPS for inadequate response and transplantation when indicated.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Long-term anticoagulation is generally required.",
+      "Warfarin is preferred over DOACs in high-risk APS.",
+      "Defibrotide is not routine therapy for Budd–Chiari syndrome.",
+      "Aspirin and hydroxyurea do not replace therapeutic anticoagulation."
+    ]
+  },
+  {
+    "id": "SV-TOACS-GI-012",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 26-year-old man presents with six months of loose stools, cramping lower abdominal pain and weight loss. Blood and mucus occur occasionally in stools. His abdomen is soft with lower abdominal tenderness. CRP is 60 mg/L and stool culture is negative. Symptoms improve after intravenous hydrocortisone.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Crohn's disease; exclude mimics including intestinal tuberculosis.",
+        "marks": 1
+      },
+      {
+        "question": "How would you investigate?",
+        "answer": "CBC, iron profile, B12, folate, ESR, CRP, albumin, fecal calprotectin, stool culture and C. difficile testing, ileocolonoscopy with biopsies, MR or CT enterography; pelvic MRI if perianal disease suspected.",
+        "marks": 3
+      },
+      {
+        "question": "What are characteristic endoscopic and histological findings?",
+        "answer": "Skip lesions, cobblestoning, deep ulcers, and noncaseating granulomas when present.",
+        "marks": 2
+      },
+      {
+        "question": "How would you treat?",
+        "answer": "Smoking cessation, nutritional support, budesonide 9 mg/day for about 8 weeks for mild ileocecal disease; short-term systemic steroids when indicated and early advanced therapy for moderate-to-severe disease. Options include anti-TNF agents, vedolizumab, ustekinumab, risankizumab and upadacitinib in selected patients. Steroid-free maintenance with appropriate advanced therapy or immunomodulators. Screen for TB and hepatitis B before biologics.",
+        "marks": 3
+      },
+      {
+        "question": "What are indications for surgery?",
+        "answer": "Obstruction, perforation, uncontrolled bleeding, refractory disease, or abscess/fistula requiring intervention; abscess may be managed with image-guided drainage when appropriate.",
+        "marks": 1
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Crohn disease can affect any gastrointestinal segment and is typically discontinuous and transmural.",
+      "Steroid response alone is not diagnostic.",
+      "Exclude intestinal tuberculosis before immunosuppression, especially in endemic settings.",
+      "Mesalamine and antibiotics are not routinely recommended for uncomplicated luminal Crohn disease.",
+      "Corticosteroids are not maintenance therapy.",
+      "Avoid loperamide in severe active colitis or suspected obstruction.",
+      "Surgery is not curative; aim for steroid-free clinical and endoscopic remission.",
+      "Correct nutritional deficiencies; consider bile acid sequestrants for selected patients with bile acid diarrhea."
+    ]
+  },
+  {
+    "id": "SV-TOACS-GI-003",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 29-year-old woman presents four months after childbirth with progressive fatigue, generalized body aches, morning stiffness and pain involving the small joints of both hands. Over the preceding two weeks she has developed jaundice and reduced appetite. She has no history of alcohol consumption or recent hepatotoxic medication use. Examination reveals scleral icterus and tender hepatomegaly without clinically detectable ascites.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Autoimmune hepatitis presenting postpartum.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations would you request?",
+        "answer": "CBC, LFTs, INR, IgG, ANA, ASMA, anti-LKM1, anti-SLA, viral hepatitis screening and liver biopsy.",
+        "marks": 2
+      },
+      {
+        "question": "What histopathological findings would you expect?",
+        "answer": "Interface hepatitis, lymphoplasmacytic infiltration and possible bridging necrosis.",
+        "marks": 2
+      },
+      {
+        "question": "How would you initiate treatment?",
+        "answer": "Prednisolone with azathioprine where appropriate; assess TPMT where available and monitor CBC, liver tests and IgG.",
+        "marks": 2
+      },
+      {
+        "question": "How would you manage treatment failure or relapse?",
+        "answer": "Assess adherence and diagnosis; consider specialist-directed mycophenolate or tacrolimus and transplant referral where indicated. Avoid mycophenolate in pregnancy and breastfeeding.",
+        "marks": 2
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Type 1: ANA and ASMA; type 2: anti-LKM1 and anti-LC1.",
+      "Anti-SLA is highly specific.",
+      "Prednisolone induction commonly 0.5–1 mg/kg/day; azathioprine maintenance commonly 1–2 mg/kg/day, individualized.",
+      "Aim for normal aminotransferases and IgG.",
+      "Consider withdrawal only in selected patients after at least two years of sustained complete biochemical remission.",
+      "Prednisolone and azathioprine are generally compatible with pregnancy and breastfeeding.",
+      "Acute severe disease requires early transplant-centre referral and close assessment of steroid response."
+    ]
+  },
+  {
+    "id": "SV-TOACS-GI-013",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 56-year-old woman presents with six months of weakness, poor appetite and bilateral knee pain. She has skin hyperpigmentation, wasting and firm non-tender hepatomegaly 4 cm below the costal margin, without jaundice or splenomegaly. BP 100/60 mmHg, Hb 17.5 g/dL, WBC 6800/µL, random glucose 13.1 mmol/L, TSH 5.71; chest X-ray shows cardiomegaly.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "answer": "Hereditary hemochromatosis.",
+        "marks": 1
+      },
+      {
+        "question": "Underlying genetic abnormality?",
+        "answer": "HFE mutation, commonly C282Y homozygosity in HFE-related disease.",
+        "marks": 1
+      },
+      {
+        "question": "How would you investigate?",
+        "answer": "Iron studies including transferrin saturation and ferritin, HFE testing, liver MRI for iron quantification and fibrosis assessment; evaluate cardiac and endocrine complications.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage?",
+        "answer": "Therapeutic phlebotomy approximately 400–500 mL weekly or fortnightly as tolerated, monitor Hb and ferritin; target ferritin around 50 µg/L during induction and 50–100 during maintenance. Specialist chelation if phlebotomy unsuitable. Manage complications.",
+        "marks": 3
+      },
+      {
+        "question": "How would you screen family members?",
+        "answer": "Iron studies and appropriate genetic testing of adult first-degree relatives.",
+        "marks": 2
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Classical triad: pigmentation, diabetes and cirrhosis.",
+      "CPPD arthropathy may occur; knee pain alone is not diagnostic.",
+      "HFE-related disease is autosomal recessive; hepcidin is inappropriately low.",
+      "Avoid iron and high-dose vitamin C supplements, raw shellfish and excessive alcohol.",
+      "HCC surveillance in cirrhosis.",
+      "Liver biopsy is not routinely necessary."
+    ]
+  },
+  {
     "id": "SV-TOACS-GI-006",
     "status": "draft_pending_clinical_review",
     "scenario": "A 36-year-old woman presents with progressive facial puffiness, bilateral ankle swelling and frothy urine for three weeks. She reports intermittent joint pain, bluish discoloration of her fingers during cold exposure and recurrent purpuric lesions over her lower limbs. Examination shows pitting pedal edema, periorbital swelling and palpable purpura.",
@@ -252,6 +394,125 @@
     ]
   },
   {
+    "id": "SV-TOACS-GI-008",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 22-year-old university student develops behavioral changes, declining academic performance and difficulty writing over two months, followed by dysarthria, coarse postural tremor and jaundice. Examination shows pallor and scleral icterus. Hb 8.1 g/dL, reticulocytes 6.5%, bilirubin 4.8 mg/dL, elevated LDH, reduced haptoglobin and negative direct Coombs test.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "Most likely diagnosis?",
+        "answer": "Wilson disease with neurological, hepatic and hematological manifestations.",
+        "marks": 2
+      },
+      {
+        "question": "Genetic defect and pathophysiology?",
+        "answer": "Autosomal recessive ATP7B variants impair biliary copper excretion.",
+        "marks": 2
+      },
+      {
+        "question": "Confirmatory investigations?",
+        "answer": "Ceruloplasmin, 24-hour urinary copper, slit-lamp examination, ATP7B testing; MRI brain for neurological involvement; hepatic copper when indicated.",
+        "marks": 2
+      },
+      {
+        "question": "Management?",
+        "answer": "Specialist-directed trientine or D-penicillamine; zinc in selected patients; urgent transplant evaluation for acute liver failure.",
+        "marks": 2
+      },
+      {
+        "question": "Monitoring and family screening?",
+        "answer": "Urinary copper, liver tests, CBC, urinalysis, neurological assessment and first-degree relative screening.",
+        "marks": 2
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Coombs-negative hemolysis",
+      "Kayser–Fleischer rings in Descemet membrane",
+      "Ceruloplasmin often reduced; not diagnostic alone",
+      "Urinary copper usually >100 micrograms/day in symptomatic untreated disease",
+      "Hepatic copper >250 micrograms/g dry weight supports diagnosis",
+      "Leipzig score >=4 supports diagnosis",
+      "Lifelong therapy; continue during pregnancy under specialist supervision",
+      "Do not monitor treatment using ceruloplasmin alone"
+    ]
+  },
+  {
+    "id": "SV-TOACS-GI-010",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 62-year-old woman has four months of progressive dysphagia, initially to solids and now liquids, retrosternal discomfort, reduced appetite and 9 kg weight loss. She has thickened skin on palms and soles since adolescence; her brother died of esophageal malignancy. Examination shows pallor, muscle wasting and bilateral palmoplantar hyperkeratosis.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Esophageal carcinoma, likely squamous cell carcinoma associated with hereditary tylosis; confirm by biopsy.",
+        "marks": 2
+      },
+      {
+        "question": "What is the significance of the dermatological findings?",
+        "answer": "Hereditary tylosis with esophageal cancer, autosomal dominant, associated with RHBDF2 mutations.",
+        "marks": 2
+      },
+      {
+        "question": "How would you confirm and stage the disease?",
+        "answer": "Urgent upper GI endoscopy with biopsy, contrast CT, EUS and PET-CT as indicated.",
+        "marks": 2
+      },
+      {
+        "question": "What treatments are available for localized disease?",
+        "answer": "Endoscopic resection for selected superficial lesions; esophagectomy or multimodal therapy including chemotherapy and radiotherapy according to stage, histology and fitness.",
+        "marks": 2
+      },
+      {
+        "question": "How would you manage advanced metastatic disease?",
+        "answer": "Systemic therapy including selected immunotherapy based on biomarkers and histology, palliative radiotherapy or stenting, nutrition and symptom support.",
+        "marks": 2
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Progressive solid then liquid dysphagia suggests mechanical obstruction.",
+      "Hereditary tylosis warrants genetic counseling and specialist-directed family surveillance.",
+      "Tis high-grade dysplasia; T1a lamina propria or muscularis mucosae; T1b submucosa; T2 muscularis propria; T3 adventitia; T4a potentially resectable adjacent structures; T4b generally unresectable adjacent structures.",
+      "N0 no regional nodes; N1 1–2; N2 3–6; N3 7 or more. M0 no distant metastasis; M1 distant metastasis."
+    ]
+  },
+  {
+    "id": "SV-TOACS-GI-001",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 30-year-old man was diagnosed with tuberculous pericarditis following evaluation for prolonged fever, night sweats, breathlessness and pericardial effusion. Three weeks after commencing standard antituberculous therapy, his constitutional symptoms improved. However, he subsequently developed nausea, loss of appetite, dark urine and yellow discoloration of his eyes. He has a history of regular alcohol consumption.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected antituberculous drug-induced liver injury in a patient with tuberculous pericarditis.",
+        "marks": 2
+      },
+      {
+        "question": "Which antituberculous drugs are potentially responsible?",
+        "answer": "Isoniazid, rifampicin and pyrazinamide.",
+        "marks": 1
+      },
+      {
+        "question": "What investigations would you perform?",
+        "answer": "ALT, AST, ALP, bilirubin, PT/INR, renal function, viral hepatitis testing and abdominal ultrasound as indicated. Assess alternative causes and severity.",
+        "marks": 2
+      },
+      {
+        "question": "How would you manage this patient initially?",
+        "answer": "Withhold hepatotoxic TB drugs when ALT is at least three times ULN with symptoms or five times ULN without symptoms; jaundice warrants urgent evaluation and interruption of suspected hepatotoxic agents. Assess for acute liver failure. Consult TB specialists for an adequate nonhepatotoxic bridging regimen if needed.",
+        "marks": 3
+      },
+      {
+        "question": "How would you reintroduce antituberculous therapy?",
+        "answer": "After symptoms resolve and ALT falls below twice ULN (or near baseline), sequentially reintroduce rifampicin then isoniazid with monitoring. Pyrazinamide may need to be omitted, especially after severe injury; treatment duration may need extension under specialist guidance.",
+        "marks": 2
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": []
+  },
+  {
     "id": "SV-TOACS-GI-007",
     "status": "draft_pending_clinical_review",
     "scenario": "A 30-year-old woman has six months of abdominal bloating, loose stools and fatigue despite treatment for presumed IBS. She has lost 5 kg and has intensely itchy grouped excoriated vesicles on elbows and knees, with conjunctival pallor.",
@@ -297,267 +558,6 @@
       "Monitor serology, nutritional status and bone health.",
       "Marsh 0 normal; 1 increased intraepithelial lymphocytes; 2 crypt hyperplasia with lymphocytosis; 3a partial, 3b subtotal, 3c total villous atrophy.",
       "Restrict lactose only if symptomatic."
-    ]
-  },
-  {
-    "id": "SV-TOACS-GI-008",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 22-year-old university student develops behavioral changes, declining academic performance and difficulty writing over two months, followed by dysarthria, coarse postural tremor and jaundice. Examination shows pallor and scleral icterus. Hb 8.1 g/dL, reticulocytes 6.5%, bilirubin 4.8 mg/dL, elevated LDH, reduced haptoglobin and negative direct Coombs test.",
-    "findings": [],
-    "questions": [
-      {
-        "question": "Most likely diagnosis?",
-        "answer": "Wilson disease with neurological, hepatic and hematological manifestations.",
-        "marks": 2
-      },
-      {
-        "question": "Genetic defect and pathophysiology?",
-        "answer": "Autosomal recessive ATP7B variants impair biliary copper excretion.",
-        "marks": 2
-      },
-      {
-        "question": "Confirmatory investigations?",
-        "answer": "Ceruloplasmin, 24-hour urinary copper, slit-lamp examination, ATP7B testing; MRI brain for neurological involvement; hepatic copper when indicated.",
-        "marks": 2
-      },
-      {
-        "question": "Management?",
-        "answer": "Specialist-directed trientine or D-penicillamine; zinc in selected patients; urgent transplant evaluation for acute liver failure.",
-        "marks": 2
-      },
-      {
-        "question": "Monitoring and family screening?",
-        "answer": "Urinary copper, liver tests, CBC, urinalysis, neurological assessment and first-degree relative screening.",
-        "marks": 2
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": [
-      "Coombs-negative hemolysis",
-      "Kayser–Fleischer rings in Descemet membrane",
-      "Ceruloplasmin often reduced; not diagnostic alone",
-      "Urinary copper usually >100 micrograms/day in symptomatic untreated disease",
-      "Hepatic copper >250 micrograms/g dry weight supports diagnosis",
-      "Leipzig score >=4 supports diagnosis",
-      "Lifelong therapy; continue during pregnancy under specialist supervision",
-      "Do not monitor treatment using ceruloplasmin alone"
-    ]
-  },
-  {
-    "id": "SV-TOACS-GI-009",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 26-year-old man has six weeks of bloody diarrhea, lower abdominal cramps and urgency, worsening over five days to eight bloody stools daily, fever and tenesmus. He has lost 6 kg in two months. Examination shows pallor, aphthous ulcers and mild lower abdominal tenderness.",
-    "findings": [
-      "temperature C: 38.2",
-      "pulse: 112",
-      "BP: 105/70",
-      "Hb g dL: 9.5",
-      "ESR mm h: 65",
-      "CRP mg L: 58",
-      "albumin g dL: 2.8"
-    ],
-    "questions": [
-      {
-        "question": "What is the most likely diagnosis?",
-        "answer": "Acute severe ulcerative colitis, pending exclusion of infection and confirmation.",
-        "marks": 2
-      },
-      {
-        "question": "How would you assess disease severity?",
-        "answer": "Truelove and Witts: at least six bloody stools daily plus one of temperature >37.8 C, pulse >90/min, Hb <10.5 g/dL, ESR >30 mm/h.",
-        "marks": 2
-      },
-      {
-        "question": "Which investigations would you request?",
-        "answer": "CBC, CRP, electrolytes, albumin, stool cultures and C. difficile testing, abdominal imaging, limited flexible sigmoidoscopy with biopsy.",
-        "marks": 2
-      },
-      {
-        "question": "How would you manage initially?",
-        "answer": "Admission, IV methylprednisolone 40–60 mg/day or hydrocortisone 100 mg every six hours, fluids and electrolytes, pharmacological VTE prophylaxis unless contraindicated, early surgical consultation.",
-        "marks": 2
-      },
-      {
-        "question": "What are the indications for rescue therapy and surgery?",
-        "answer": "Assess response by day 3; infliximab or ciclosporin for steroid-refractory disease. Urgent surgery for perforation, uncontrolled hemorrhage, deteriorating toxic megacolon or failed medical therapy.",
-        "marks": 2
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": [
-      "Oxford day-3 criteria: >8 stools/day or 3–8 with CRP >45 mg/L predicts high risk of treatment failure.",
-      "Prefer enteral nutrition when tolerated.",
-      "Avoid antimotility drugs, opioids and full colonoscopy during ASUC.",
-      "Emergency operation typically subtotal colectomy with end ileostomy.",
-      "Steroids are not maintenance therapy."
-    ]
-  },
-  {
-    "id": "SV-TOACS-GI-010",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 62-year-old woman has four months of progressive dysphagia, initially to solids and now liquids, retrosternal discomfort, reduced appetite and 9 kg weight loss. She has thickened skin on palms and soles since adolescence; her brother died of esophageal malignancy. Examination shows pallor, muscle wasting and bilateral palmoplantar hyperkeratosis.",
-    "findings": [],
-    "questions": [
-      {
-        "question": "What is the most likely diagnosis?",
-        "answer": "Esophageal carcinoma, likely squamous cell carcinoma associated with hereditary tylosis; confirm by biopsy.",
-        "marks": 2
-      },
-      {
-        "question": "What is the significance of the dermatological findings?",
-        "answer": "Hereditary tylosis with esophageal cancer, autosomal dominant, associated with RHBDF2 mutations.",
-        "marks": 2
-      },
-      {
-        "question": "How would you confirm and stage the disease?",
-        "answer": "Urgent upper GI endoscopy with biopsy, contrast CT, EUS and PET-CT as indicated.",
-        "marks": 2
-      },
-      {
-        "question": "What treatments are available for localized disease?",
-        "answer": "Endoscopic resection for selected superficial lesions; esophagectomy or multimodal therapy including chemotherapy and radiotherapy according to stage, histology and fitness.",
-        "marks": 2
-      },
-      {
-        "question": "How would you manage advanced metastatic disease?",
-        "answer": "Systemic therapy including selected immunotherapy based on biomarkers and histology, palliative radiotherapy or stenting, nutrition and symptom support.",
-        "marks": 2
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": [
-      "Progressive solid then liquid dysphagia suggests mechanical obstruction.",
-      "Hereditary tylosis warrants genetic counseling and specialist-directed family surveillance.",
-      "Tis high-grade dysplasia; T1a lamina propria or muscularis mucosae; T1b submucosa; T2 muscularis propria; T3 adventitia; T4a potentially resectable adjacent structures; T4b generally unresectable adjacent structures.",
-      "N0 no regional nodes; N1 1–2; N2 3–6; N3 7 or more. M0 no distant metastasis; M1 distant metastasis."
-    ]
-  },
-  {
-    "id": "SV-TOACS-GI-011",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 39-year-old obese man presents with progressively worsening upper abdominal pain over 48 hours, rated 8/10. He takes amlodipine and lisinopril for hypertension and consumes approximately 10 units of alcohol weekly. He is febrile with epigastric tenderness but otherwise stable.",
-    "findings": [],
-    "questions": [
-      {
-        "question": "What is the most likely diagnosis?",
-        "answer": "Acute pancreatitis.",
-        "marks": 1
-      },
-      {
-        "question": "What are the diagnostic criteria?",
-        "answer": "Two of three: characteristic pain, lipase or amylase at least three times upper limit of normal, characteristic imaging.",
-        "marks": 2
-      },
-      {
-        "question": "How would you investigate and identify the cause?",
-        "answer": "Lipase, CBC, LFTs, renal function, calcium, triglycerides, CRP and abdominal ultrasound. CT if diagnosis uncertain or failure to improve after 48–72 hours.",
-        "marks": 2
-      },
-      {
-        "question": "How would you assess severity?",
-        "answer": "Revised Atlanta classification, BISAP and organ failure assessment.",
-        "marks": 2
-      },
-      {
-        "question": "How would you manage the patient?",
-        "answer": "Goal-directed Ringer lactate, analgesia, early oral or enteral feeding, monitoring and cause-specific treatment. No prophylactic antibiotics; urgent ERCP for cholangitis; same-admission cholecystectomy for mild biliary pancreatitis.",
-        "marks": 3
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": [
-      "BISAP: BUN >25 mg/dL, impaired mental status, SIRS, age >60, pleural effusion; one point each.",
-      "Severe pancreatitis: persistent organ failure >48 hours.",
-      "Moderately severe: transient organ failure and/or local or systemic complications without persistent organ failure.",
-      "ALT ≥150 IU/L suggests biliary cause; triglycerides ≥1000 mg/dL suggest hypertriglyceridemic cause.",
-      "CRP ≥150 mg/L at 48 hours suggests severe disease.",
-      "In stable necrosis requiring intervention, delay approximately four weeks when feasible."
-    ]
-  },
-  {
-    "id": "SV-TOACS-GI-012",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 26-year-old man presents with six months of loose stools, cramping lower abdominal pain and weight loss. Blood and mucus occur occasionally in stools. His abdomen is soft with lower abdominal tenderness. CRP is 60 mg/L and stool culture is negative. Symptoms improve after intravenous hydrocortisone.",
-    "findings": [],
-    "questions": [
-      {
-        "question": "What is the most likely diagnosis?",
-        "answer": "Crohn's disease; exclude mimics including intestinal tuberculosis.",
-        "marks": 1
-      },
-      {
-        "question": "How would you investigate?",
-        "answer": "CBC, iron profile, B12, folate, ESR, CRP, albumin, fecal calprotectin, stool culture and C. difficile testing, ileocolonoscopy with biopsies, MR or CT enterography; pelvic MRI if perianal disease suspected.",
-        "marks": 3
-      },
-      {
-        "question": "What are characteristic endoscopic and histological findings?",
-        "answer": "Skip lesions, cobblestoning, deep ulcers, and noncaseating granulomas when present.",
-        "marks": 2
-      },
-      {
-        "question": "How would you treat?",
-        "answer": "Smoking cessation, nutritional support, budesonide 9 mg/day for about 8 weeks for mild ileocecal disease; short-term systemic steroids when indicated and early advanced therapy for moderate-to-severe disease. Options include anti-TNF agents, vedolizumab, ustekinumab, risankizumab and upadacitinib in selected patients. Steroid-free maintenance with appropriate advanced therapy or immunomodulators. Screen for TB and hepatitis B before biologics.",
-        "marks": 3
-      },
-      {
-        "question": "What are indications for surgery?",
-        "answer": "Obstruction, perforation, uncontrolled bleeding, refractory disease, or abscess/fistula requiring intervention; abscess may be managed with image-guided drainage when appropriate.",
-        "marks": 1
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": [
-      "Crohn disease can affect any gastrointestinal segment and is typically discontinuous and transmural.",
-      "Steroid response alone is not diagnostic.",
-      "Exclude intestinal tuberculosis before immunosuppression, especially in endemic settings.",
-      "Mesalamine and antibiotics are not routinely recommended for uncomplicated luminal Crohn disease.",
-      "Corticosteroids are not maintenance therapy.",
-      "Avoid loperamide in severe active colitis or suspected obstruction.",
-      "Surgery is not curative; aim for steroid-free clinical and endoscopic remission.",
-      "Correct nutritional deficiencies; consider bile acid sequestrants for selected patients with bile acid diarrhea."
-    ]
-  },
-  {
-    "id": "SV-TOACS-GI-013",
-    "status": "draft_pending_clinical_review",
-    "scenario": "A 56-year-old woman presents with six months of weakness, poor appetite and bilateral knee pain. She has skin hyperpigmentation, wasting and firm non-tender hepatomegaly 4 cm below the costal margin, without jaundice or splenomegaly. BP 100/60 mmHg, Hb 17.5 g/dL, WBC 6800/µL, random glucose 13.1 mmol/L, TSH 5.71; chest X-ray shows cardiomegaly.",
-    "findings": [],
-    "questions": [
-      {
-        "question": "Most likely diagnosis?",
-        "answer": "Hereditary hemochromatosis.",
-        "marks": 1
-      },
-      {
-        "question": "Underlying genetic abnormality?",
-        "answer": "HFE mutation, commonly C282Y homozygosity in HFE-related disease.",
-        "marks": 1
-      },
-      {
-        "question": "How would you investigate?",
-        "answer": "Iron studies including transferrin saturation and ferritin, HFE testing, liver MRI for iron quantification and fibrosis assessment; evaluate cardiac and endocrine complications.",
-        "marks": 3
-      },
-      {
-        "question": "How would you manage?",
-        "answer": "Therapeutic phlebotomy approximately 400–500 mL weekly or fortnightly as tolerated, monitor Hb and ferritin; target ferritin around 50 µg/L during induction and 50–100 during maintenance. Specialist chelation if phlebotomy unsuitable. Manage complications.",
-        "marks": 3
-      },
-      {
-        "question": "How would you screen family members?",
-        "answer": "Iron studies and appropriate genetic testing of adult first-degree relatives.",
-        "marks": 2
-      }
-    ],
-    "totalMarks": 10,
-    "learningPoints": [
-      "Classical triad: pigmentation, diabetes and cirrhosis.",
-      "CPPD arthropathy may occur; knee pain alone is not diagnostic.",
-      "HFE-related disease is autosomal recessive; hepcidin is inappropriately low.",
-      "Avoid iron and high-dose vitamin C supplements, raw shellfish and excessive alcohol.",
-      "HCC surveillance in cirrhosis.",
-      "Liver biopsy is not routinely necessary."
     ]
   }
 ]

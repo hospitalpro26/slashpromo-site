@@ -1,38 +1,7 @@
 [
   {
-    "id": "tamponade", "specialty": "Cardiology",
-    "scenario": "A 32-year-old with several weeks of fever and weight loss develops worsening dyspnoea. BP is 80/55 mmHg, pulse 126/min, jugular venous pressure is raised, and heart sounds are quiet. Systolic pressure falls by 18 mmHg on inspiration.",
-    "diagnosis": "Cardiac tamponade causing obstructive shock. Hypotension, raised JVP and quiet heart sounds form Beck’s triad. The inspiratory fall in systolic pressure is pulsus paradoxus.",
-    "investigations": "Obtain urgent bedside echocardiography. Look for pericardial fluid, right-sided chamber collapse and a plethoric inferior vena cava. Once drained, tailor fluid microbiology, cytology and TB studies to the suspected cause.",
-    "management": "Call for urgent cardiology and critical-care support. Drain the pericardium without delay in this unstable patient, usually with image-guided pericardiocentesis. Consider surgical drainage when the cause or anatomy warrants it. Treat the underlying cause after stabilization.",
-    "reference": "https://doi.org/10.1093/eurheartj/ehaf192"
-  },
-  {
-    "id": "budd-chiari", "specialty": "Hepatology",
-    "scenario": "A 29-year-old develops painful hepatomegaly and rapidly progressive ascites over two weeks. There is a history of an unprovoked deep-vein thrombosis. The spleen is palpable.",
-    "diagnosis": "Budd–Chiari syndrome from hepatic venous outflow obstruction. Painful hepatomegaly, ascites and a thrombotic history are the key clues.",
-    "investigations": "Start with hepatic and portal venous Doppler. If findings are uncertain, obtain contrast CT or MRI. Assess liver and renal function, INR and ascitic fluid. Investigate underlying thrombophilia and myeloproliferative disease with specialist input.",
-    "management": "Refer to hepatology and start therapeutic anticoagulation unless contraindicated. Treat the underlying prothrombotic disorder and manage ascites. Assess suitability for angioplasty or stenting, then TIPS or transplant if disease progresses despite treatment.",
-    "reference": "https://www.journal-of-hepatology.eu/article/S0168-8278(25)02406-7/abstract"
-  },
-  {
-    "id": "autoimmune-hepatitis", "specialty": "Hepatology",
-    "scenario": "A 26-year-old woman presents with fatigue, jaundice and arthralgia. ALT is 890 U/L, ALP is only mildly elevated, and IgG is markedly raised. She has autoimmune thyroid disease.",
-    "diagnosis": "Autoimmune hepatitis is the leading diagnosis. The hepatocellular pattern, elevated IgG and autoimmune history support it.",
-    "investigations": "Check INR and bilirubin for severity, test ANA, smooth-muscle antibodies and other relevant autoantibodies, and exclude viral hepatitis, medication-related injury and Wilson disease as appropriate. Obtain liver biopsy when safe to support the diagnosis.",
-    "management": "Involve hepatology for corticosteroid induction and selection of a steroid-sparing agent. Assess blood counts and thiopurine suitability before azathioprine where used. Follow transaminases and IgG. Coagulopathy with encephalopathy warrants urgent transplant-centre evaluation.",
-    "reference": "https://pubmed.ncbi.nlm.nih.gov/40348684/"
-  },
-  {
-    "id": "mesenteric-ischaemia", "specialty": "Acute medicine",
-    "scenario": "A 74-year-old with atrial fibrillation and no anticoagulation develops sudden, severe abdominal pain. The abdomen is soft with mild tenderness. Lactate is initially within the laboratory reference range.",
-    "diagnosis": "Acute mesenteric ischaemia, likely embolic superior mesenteric artery occlusion. Severe pain with limited initial tenderness is a key clue.",
-    "investigations": "Arrange immediate CT angiography of the abdomen and pelvis. Obtain blood gas, lactate, blood count, renal function and coagulation studies in parallel. A normal early lactate cannot rule it out.",
-    "management": "Resuscitate, start broad-spectrum antibiotics and involve emergency general and vascular surgery immediately. Consider IV unfractionated heparin if appropriate. Revascularize urgently where feasible and assess for bowel necrosis requiring surgery.",
-    "reference": "https://doi.org/10.1186/s13017-022-00443-x"
-  },
-  {
-    "id": "ketoacidosis", "specialty": "Endocrinology",
+    "id": "ketoacidosis",
+    "specialty": "Endocrinology",
     "scenario": "A 22-year-old with type 1 diabetes has vomiting, abdominal pain and deep rapid breathing after missing insulin. Glucose is 24 mmol/L, blood ketones 6.0 mmol/L, venous pH 7.12 and potassium 4.6 mmol/L.",
     "diagnosis": "Diabetic ketoacidosis. The combination of diabetes or hyperglycaemia, ketonaemia and metabolic acidosis establishes the diagnosis.",
     "investigations": "Check electrolytes and renal function, venous blood gas, bedside glucose and blood ketones. Monitor glucose, ketones and potassium throughout treatment. Look for the precipitant, including missed insulin and infection.",
@@ -40,7 +9,8 @@
     "reference": "https://doi.org/10.2337/dci24-0032"
   },
   {
-    "id": "hyperkalaemia", "specialty": "Nephrology",
+    "id": "hyperkalaemia",
+    "specialty": "Nephrology",
     "scenario": "A 68-year-old with chronic kidney disease takes ramipril and recently started trimethoprim. After several days of poor intake he develops weakness. Potassium is 7.2 mmol/L and ECG shows peaked T waves with a widening QRS.",
     "diagnosis": "Severe hyperkalaemia with ECG toxicity, likely related to acute kidney injury and interacting medicines.",
     "investigations": "Start cardiac monitoring and repeat a rapidly processed potassium sample if needed while treatment begins. Check blood glucose, blood gas and renal function. Review medicines and assess urine output.",
@@ -48,15 +18,8 @@
     "reference": "https://guidelines.ukkidney.org/hyperkalaemia/"
   },
   {
-    "id": "pulmonary-embolism", "specialty": "Respiratory medicine",
-    "scenario": "A 51-year-old develops sudden pleuritic chest pain and dyspnoea ten days after knee surgery. Pulse is 117/min, oxygen saturation 89% and BP 118/72 mmHg. One calf is swollen and tender.",
-    "diagnosis": "Acute pulmonary embolism with likely lower-limb deep-vein thrombosis. Recent surgery, tachycardia and unilateral calf swelling increase the pre-test probability.",
-    "investigations": "Use a validated pathway such as the two-level PE Wells score. With likely PE, arrange urgent CT pulmonary angiography, or suitable V/Q imaging if CTPA is unsuitable. Check renal function and baseline blood count and coagulation before anticoagulation where feasible.",
-    "management": "Give oxygen and assess haemodynamic status. If imaging is delayed, consider interim therapeutic anticoagulation after assessing bleeding risk and recent surgery. Treat confirmed PE with anticoagulation. Seek urgent specialist input if shock develops and reperfusion is being considered.",
-    "reference": "https://www.nice.org.uk/guidance/ng158/chapter/recommendations"
-  },
-  {
-    "id": "giant-cell-arteritis", "specialty": "Rheumatology",
+    "id": "giant-cell-arteritis",
+    "specialty": "Rheumatology",
     "scenario": "A 73-year-old reports a new unilateral headache, scalp tenderness and jaw fatigue while chewing. This morning she had a brief curtain-like loss of vision in one eye.",
     "diagnosis": "Giant cell arteritis with threatened vision. Jaw claudication and transient monocular visual loss are major warning signs.",
     "investigations": "Check ESR, CRP, full blood count and platelets. Arrange same-day ophthalmology assessment and expedited temporal artery ultrasound or biopsy according to local expertise. Do not delay steroids for confirmation.",
@@ -64,7 +27,35 @@
     "reference": "https://doi.org/10.1093/rheumatology/kez672"
   },
   {
-    "id": "variceal-bleeding", "specialty": "Gastroenterology",
+    "id": "pulmonary-embolism",
+    "specialty": "Respiratory medicine",
+    "scenario": "A 51-year-old develops sudden pleuritic chest pain and dyspnoea ten days after knee surgery. Pulse is 117/min, oxygen saturation 89% and BP 118/72 mmHg. One calf is swollen and tender.",
+    "diagnosis": "Acute pulmonary embolism with likely lower-limb deep-vein thrombosis. Recent surgery, tachycardia and unilateral calf swelling increase the pre-test probability.",
+    "investigations": "Use a validated pathway such as the two-level PE Wells score. With likely PE, arrange urgent CT pulmonary angiography, or suitable V/Q imaging if CTPA is unsuitable. Check renal function and baseline blood count and coagulation before anticoagulation where feasible.",
+    "management": "Give oxygen and assess haemodynamic status. If imaging is delayed, consider interim therapeutic anticoagulation after assessing bleeding risk and recent surgery. Treat confirmed PE with anticoagulation. Seek urgent specialist input if shock develops and reperfusion is being considered.",
+    "reference": "https://www.nice.org.uk/guidance/ng158/chapter/recommendations"
+  },
+  {
+    "id": "autoimmune-hepatitis",
+    "specialty": "Hepatology",
+    "scenario": "A 26-year-old woman presents with fatigue, jaundice and arthralgia. ALT is 890 U/L, ALP is only mildly elevated, and IgG is markedly raised. She has autoimmune thyroid disease.",
+    "diagnosis": "Autoimmune hepatitis is the leading diagnosis. The hepatocellular pattern, elevated IgG and autoimmune history support it.",
+    "investigations": "Check INR and bilirubin for severity, test ANA, smooth-muscle antibodies and other relevant autoantibodies, and exclude viral hepatitis, medication-related injury and Wilson disease as appropriate. Obtain liver biopsy when safe to support the diagnosis.",
+    "management": "Involve hepatology for corticosteroid induction and selection of a steroid-sparing agent. Assess blood counts and thiopurine suitability before azathioprine where used. Follow transaminases and IgG. Coagulopathy with encephalopathy warrants urgent transplant-centre evaluation.",
+    "reference": "https://pubmed.ncbi.nlm.nih.gov/40348684/"
+  },
+  {
+    "id": "tamponade",
+    "specialty": "Cardiology",
+    "scenario": "A 32-year-old with several weeks of fever and weight loss develops worsening dyspnoea. BP is 80/55 mmHg, pulse 126/min, jugular venous pressure is raised, and heart sounds are quiet. Systolic pressure falls by 18 mmHg on inspiration.",
+    "diagnosis": "Cardiac tamponade causing obstructive shock. Hypotension, raised JVP and quiet heart sounds form Beck’s triad. The inspiratory fall in systolic pressure is pulsus paradoxus.",
+    "investigations": "Obtain urgent bedside echocardiography. Look for pericardial fluid, right-sided chamber collapse and a plethoric inferior vena cava. Once drained, tailor fluid microbiology, cytology and TB studies to the suspected cause.",
+    "management": "Call for urgent cardiology and critical-care support. Drain the pericardium without delay in this unstable patient, usually with image-guided pericardiocentesis. Consider surgical drainage when the cause or anatomy warrants it. Treat the underlying cause after stabilization.",
+    "reference": "https://doi.org/10.1093/eurheartj/ehaf192"
+  },
+  {
+    "id": "variceal-bleeding",
+    "specialty": "Gastroenterology",
     "scenario": "A 56-year-old with known cirrhosis presents with large-volume haematemesis and melaena. BP is 86/54 mmHg, pulse 124/min, and he is actively vomiting blood.",
     "diagnosis": "Suspected acute variceal upper gastrointestinal bleeding with haemorrhagic shock. Endoscopy determines the bleeding source.",
     "investigations": "Send blood count, group and crossmatch, renal and liver profile, INR and lactate during resuscitation. Arrange urgent upper GI endoscopy after initial stabilization, aiming for within 12 hours.",
@@ -72,11 +63,30 @@
     "reference": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11090185/"
   },
   {
-    "id": "septic-shock", "specialty": "Acute medicine",
+    "id": "budd-chiari",
+    "specialty": "Hepatology",
+    "scenario": "A 29-year-old develops painful hepatomegaly and rapidly progressive ascites over two weeks. There is a history of an unprovoked deep-vein thrombosis. The spleen is palpable.",
+    "diagnosis": "Budd–Chiari syndrome from hepatic venous outflow obstruction. Painful hepatomegaly, ascites and a thrombotic history are the key clues.",
+    "investigations": "Start with hepatic and portal venous Doppler. If findings are uncertain, obtain contrast CT or MRI. Assess liver and renal function, INR and ascitic fluid. Investigate underlying thrombophilia and myeloproliferative disease with specialist input.",
+    "management": "Refer to hepatology and start therapeutic anticoagulation unless contraindicated. Treat the underlying prothrombotic disorder and manage ascites. Assess suitability for angioplasty or stenting, then TIPS or transplant if disease progresses despite treatment.",
+    "reference": "https://www.journal-of-hepatology.eu/article/S0168-8278(25)02406-7/abstract"
+  },
+  {
+    "id": "septic-shock",
+    "specialty": "Acute medicine",
     "scenario": "A 64-year-old with fever and flank pain is confused and oliguric. Lactate is 4.1 mmol/L. Despite initial fluid resuscitation, mean arterial pressure remains 56 mmHg and norepinephrine is required.",
     "diagnosis": "Septic shock, likely from an upper urinary tract infection. Vasopressor-dependent hypotension and elevated lactate persist after resuscitation.",
     "investigations": "Obtain blood and urine cultures promptly without delaying antibiotics, measure and trend lactate, and assess organ dysfunction. Arrange urgent urinary tract imaging if obstruction is possible.",
     "management": "Give prompt IV empiric antibiotics guided by the likely source and local resistance patterns. Reassess response to IV crystalloids and use norepinephrine as first-line vasopressor, generally targeting an initial MAP of 65 mmHg. Involve critical care and obtain urgent drainage if the urinary tract is obstructed.",
     "reference": "https://www.survivingsepsis.org/clinical-resources/guidelines/guidelines/surviving-sepsis-campaign-international-guidelines-for-management-of-sepsis-and-septic-shock-2026"
+  },
+  {
+    "id": "mesenteric-ischaemia",
+    "specialty": "Acute medicine",
+    "scenario": "A 74-year-old with atrial fibrillation and no anticoagulation develops sudden, severe abdominal pain. The abdomen is soft with mild tenderness. Lactate is initially within the laboratory reference range.",
+    "diagnosis": "Acute mesenteric ischaemia, likely embolic superior mesenteric artery occlusion. Severe pain with limited initial tenderness is a key clue.",
+    "investigations": "Arrange immediate CT angiography of the abdomen and pelvis. Obtain blood gas, lactate, blood count, renal function and coagulation studies in parallel. A normal early lactate cannot rule it out.",
+    "management": "Resuscitate, start broad-spectrum antibiotics and involve emergency general and vascular surgery immediately. Consider IV unfractionated heparin if appropriate. Revascularize urgently where feasible and assess for bowel necrosis requiring surgery.",
+    "reference": "https://doi.org/10.1186/s13017-022-00443-x"
   }
 ]
