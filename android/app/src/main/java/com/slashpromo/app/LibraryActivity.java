@@ -911,13 +911,31 @@ public final class LibraryActivity extends Activity {
         private void apply(){float w=bitmap.getWidth()*base*zoom,h=bitmap.getHeight()*base*zoom;x=w<=getWidth()?(getWidth()-w)/2f:Math.max(getWidth()-w,Math.min(0,x));y=h<=getHeight()?(getHeight()-h)/2f:Math.max(getHeight()-h,Math.min(0,y));transform.setScale(base*zoom,base*zoom);transform.postTranslate(x,y);setImageMatrix(transform);}
         @Override public boolean onTouchEvent(android.view.MotionEvent e){if(inking)return inkTouch(e);if(marking)return markTouch(e);if(e.getActionMasked()==MotionEvent.ACTION_DOWN){multiTouch=false;downX=e.getX();downY=e.getY();}if(e.getPointerCount()>1)multiTouch=true;pinch.onTouchEvent(e);gestures.onTouchEvent(e);if(e.getActionMasked()==MotionEvent.ACTION_UP&&!multiTouch&&zoom<=1.05f){float dx=e.getX()-downX,dy=e.getY()-downY;boolean vertical=prefs().getBoolean("reader.vertical",false);float primary=vertical?dy:dx,secondary=vertical?dx:dy;if(Math.abs(primary)>dp(70)&&Math.abs(primary)>Math.abs(secondary)*1.5f){int next=currentPage+(primary<0?1:-1);if(next>=0&&next<pageCount)page(next);}}return true;}
     }
+    private void pageThumbnails(int current,int total){
+        final File source=book;final int token=generation;
+        LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(12),dp(8),dp(12),dp(8));
+        TextView range=label("",15);panel.addView(range);
+        LinearLayout row=new LinearLayout(this);panel.addView(row);
+        Button previous=new Button(this),next=new Button(this);previous.setText("Previous 6");next.setText("Next 6");row.addView(previous,new LinearLayout.LayoutParams(0,-2,1));row.addView(next,new LinearLayout.LayoutParams(0,-2,1));
+        ScrollView scroll=new ScrollView(this);LinearLayout tiles=new LinearLayout(this);tiles.setOrientation(1);scroll.addView(tiles);panel.addView(scroll,new LinearLayout.LayoutParams(-1,dp(360)));
+        AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Page thumbnails").setView(panel).setNegativeButton("Close",null).create();
+        final int[] start={current/6*6},request={0};
+        Runnable refresh=()->{int serial=++request[0],first=start[0],end=Math.min(total,first+6);tiles.removeAllViews();range.setText("PDF pages "+(first+1)+"–"+end+" / "+total);previous.setEnabled(first>0);next.setEnabled(end<total);
+            worker.execute(()->{try(ParcelFileDescriptor fd=ParcelFileDescriptor.open(source,ParcelFileDescriptor.MODE_READ_ONLY);PdfRenderer renderer=new PdfRenderer(ParcelFileDescriptor.dup(fd.getFileDescriptor()))){
+                for(int p=first;p<end;p++){final int target=p;Bitmap thumb;try(PdfRenderer.Page pdf=renderer.openPage(p)){int w=220,h=Math.max(1,(int)((long)w*pdf.getHeight()/pdf.getWidth()));if(h>320){w=Math.max(1,w*320/h);h=320;}thumb=Bitmap.createBitmap(w,h,Bitmap.Config.ARGB_8888);thumb.eraseColor(Color.WHITE);pdf.render(thumb,null,null,PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);}
+                    runOnUiThread(()->{if(isDestroyed()||generation!=token||!dialog.isShowing()||request[0]!=serial){thumb.recycle();return;}LinearLayout tile=new LinearLayout(this);tile.setGravity(Gravity.CENTER_VERTICAL);ImageView image=new ImageView(this);image.setImageBitmap(thumb);image.setScaleType(ImageView.ScaleType.FIT_CENTER);tile.addView(image,new LinearLayout.LayoutParams(dp(94),dp(128)));TextView title=label("PDF page "+(target+1)+(target==current?" • Current":""),16);tile.addView(title,new LinearLayout.LayoutParams(0,-2,1));tile.setContentDescription("Open PDF page "+(target+1));tile.setFocusable(true);tile.setOnClickListener(v->{dialog.dismiss();page(target);});tiles.addView(tile);});
+                }
+            }catch(Exception e){runOnUiThread(()->{if(dialog.isShowing()&&request[0]==serial&&generation==token)range.setText("Preview unavailable. Use numeric page navigation.");});}});
+        };
+        previous.setOnClickListener(v->{start[0]=Math.max(0,start[0]-6);refresh.run();});next.setOnClickListener(v->{if(start[0]+6<total){start[0]+=6;refresh.run();}});dialog.setOnDismissListener(d->{request[0]++;tiles.removeAllViews();});dialog.show();refresh.run();
+    }
     private void pageNavigator(int current,int total){
         if(total<=0)return;
         LinearLayout panel=new LinearLayout(this);panel.setOrientation(1);panel.setPadding(dp(16),dp(8),dp(16),dp(8));
         TextView position=label("PDF page "+(current+1)+" / "+total,18);panel.addView(position);
-        SeekBar slider=new SeekBar(this);slider.setMax(total-1);slider.setProgress(current);slider.setContentDescription("Choose PDF page");panel.addView(slider);
+        SeekBar slider=new SeekBar(this);slider.setMax(total-1);slider.setProgress(current);slider.setContentDescription("Choose PDF page");panel.addView(slider);Button thumbnails=new Button(this);thumbnails.setText("Browse page thumbnails");panel.addView(thumbnails);
         slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(SeekBar b,int p,boolean fromUser){position.setText("PDF page "+(p+1)+" / "+total);}public void onStartTrackingTouch(SeekBar b){}public void onStopTrackingTouch(SeekBar b){}});
-        new AlertDialog.Builder(this).setTitle("Quick page navigation").setView(panel).setPositiveButton("Open page",(d,w)->page(slider.getProgress())).setNeutralButton("Enter page number",(d,w)->goToPage(total)).setNegativeButton("Cancel",null).show();
+        AlertDialog navigator=new AlertDialog.Builder(this).setTitle("Quick page navigation").setView(panel).setPositiveButton("Open page",(d,w)->page(slider.getProgress())).setNeutralButton("Enter page number",(d,w)->goToPage(total)).setNegativeButton("Cancel",null).create();thumbnails.setOnClickListener(v->{navigator.dismiss();pageThumbnails(current,total);});navigator.show();
     }
     private void page(int number){if(number<0||(pageCount>0&&number>=pageCount))return;endReading();int token=++generation;final File source=book;currentPage=number;releaseBitmap();applyReaderBrightness(true);
         body=new LinearLayout(this);body.setOrientation(1);body.setPadding(dp(6),dp(6),dp(6),dp(6));setContentView(body);applySafeArea(body);
