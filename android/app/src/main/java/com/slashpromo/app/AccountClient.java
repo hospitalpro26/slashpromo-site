@@ -60,8 +60,10 @@ final class AccountClient {
  }
  Result request(String path,JSONObject payload,String token) throws Exception {
   if(!ENABLED)throw new IllegalStateException("Account service is not enabled");
-  if(!path.matches("/v1/(register|login|me|logout|verification/request|verification/confirm|recovery/request|recovery/confirm|google/nonce|google/login|owner/summary|messages(?:/[0-9a-f-]{36}|/members)?)(?:\\?(?:before=[0-9]{1,16}|q=[A-Za-z0-9%+_.~*\\-]{1,1200}))?"))throw new IllegalArgumentException("Invalid endpoint");
-  int responseLimit=path.startsWith("/v1/messages")?262144:65536;
+  boolean accountPath=path.matches("/v1/(register|login|me|logout|verification/request|verification/confirm|recovery/request|recovery/confirm|google/nonce|google/login|owner/summary)");
+  boolean messagePath=path.matches("/v1/messages(?:/[0-9a-f-]{36}(?:\\?before=[0-9]{1,16})?|/members\\?q=[A-Za-z0-9%+_.~*\\-]{1,1200}|/broadcast|\\?(?:before=[0-9]{1,16}(?:&sent=1)?|sent=1))?");
+  if(!accountPath&&!messagePath)throw new IllegalArgumentException("Invalid endpoint");
+  int responseLimit=messagePath?262144:65536;
   HttpsURLConnection c=(HttpsURLConnection)new URL(BASE+path).openConnection();
   try{
    c.setInstanceFollowRedirects(false);c.setConnectTimeout(10000);c.setReadTimeout(15000);c.setUseCaches(false);

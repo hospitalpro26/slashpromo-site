@@ -1,6 +1,7 @@
 package com.slashpromo.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.widget.ArrayAdapter;
@@ -28,6 +29,7 @@ final class MessageCentre {
     private final AccountClient client;
     private final ExecutorService worker;
     private boolean owner;
+    private boolean sent;
     private boolean loading;
 
     MessageCentre(Activity activity, LinearLayout parent, TextView status,
@@ -47,14 +49,22 @@ final class MessageCentre {
     }
 
     private void inbox(long before) {
-        request(API + cursor(before), null, data -> {
+        String suffix = cursor(before);
+        if (sent) suffix += before == 0 ? "?sent=1" : "&sent=1";
+        request(API + suffix, null, data -> {
             owner = data.optBoolean("owner");
             panel.removeAllViews();
-            button("Refresh inbox", this::open);
+            text(sent ? "Sent" : "Inbox");
+            button("Refresh", this::open);
+            button(sent ? "View inbox" : "View sent", () -> {
+                sent = !sent;
+                open();
+            });
             button(owner ? "Message a member" : "New message", () -> {
                 if (owner) findMember("");
-                else compose("", "", "", "");
+                else compose("", "", "", "", false);
             });
+            if (owner) button("Broadcast to members", () -> compose("", "", "Broadcast to all approved members", "", true));
             JSONArray threads = data.optJSONArray("threads");
             if (threads.length() == 0) text("No conversations on this page.");
             for (int i = 0; i < threads.length(); i++) {
@@ -100,7 +110,7 @@ final class MessageCentre {
                     choice.setAllCaps(false);
                     choice.setText(name);
                     choice.setOnClickListener(view -> {
-                        if (!loading) compose("", member.optString("id"), name, input);
+                        if (!loading) compose("", member.optString("id"), name, input, false);
                     });
                     results.addView(choice);
                 }
@@ -128,7 +138,7 @@ final class MessageCentre {
                 text(author + " · " + date + "\n" + message.optString("body"));
                 readThrough = message.optLong("sequence");
             }
-            button("Reply", () -> compose(id, "", subject, ""));
+            button("Reply", () -> compose(id, "", subject, "", false));
             if (before == 0 && readThrough > 0) {
                 final JSONObject receipt = payload("readThrough", readThrough);
                 final String token = client.session();
@@ -143,12 +153,12 @@ final class MessageCentre {
         });
     }
 
-    private void compose(String thread, String recipient, String title, String query) {
+    private void compose(String thread, String recipient, String title, String query, boolean broadcast) {
         panel.removeAllViews();
         boolean reply = !thread.isEmpty();
         button("Cancel", () -> {
             if (reply) conversation(thread, 0);
-            else if (owner) findMember(query);
+            else if (owner && !broadcast) findMember(query);
             else open();
         });
         if (!title.isEmpty()) text(title);
@@ -178,8 +188,22 @@ final class MessageCentre {
                 lastPayload[1] = UUID.randomUUID().toString();
             }
             put(message, "id", lastPayload[1]);
-            request(reply ? API + "/" + thread : API, message,
-                    response -> conversation(response.optString("id"), 0));
+            if (broadcast) {
+                put(message, "confirmed", true);
+                new AlertDialog.Builder(activity).setTitle("Send broadcast?")
+                        .setMessage("Each approved member will receive a private copy.")
+                        .setNegativeButton("Cancel", null)
+                        .setPositiveButton("Send broadcast", (dialog, which) ->
+                                request(API + "/broadcast", message, response -> {
+                                    panel.removeAllViews();
+                                    text("Sent to " + response.optInt("recipient_count") + " members.");
+                                    button("Back to inbox", this::open);
+                                }))
+                        .show();
+            } else {
+                request(reply ? API + "/" + thread : API, message,
+                        response -> conversation(response.optString("id"), 0));
+            }
         });
     }
 
