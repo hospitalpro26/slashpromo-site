@@ -553,37 +553,56 @@ public final class LibraryActivity extends Activity {
 
     private void pickBook(){Intent i=new Intent(Intent.ACTION_OPEN_DOCUMENT);i.setType("application/pdf");i.addCategory(Intent.CATEGORY_OPENABLE);startActivityForResult(i,PICK);}
     private org.json.JSONArray toacsStations;
+    private org.json.JSONArray gastroStations;
+
+    private void examMenu() {
+        menuScreen("Exam");
+        button("TOACS Part-II", this::toacsMenu);
+    }
+
+    private void toacsMenu() {
+        menuScreen("TOACS Part-II");
+        button("Back to Exam", this::examMenu);
+        menuCard("Gastroenterology", "13 practice stations", () -> examPractice(true), true);
+        menuCard("Mixed Medicine", "10 practice stations", () -> examPractice(false), true);
+    }
     private static final String TOACS_SAVED = "offlineStudy.toacsSaved";
 
-    private void examPractice() {
-        menuScreen("TOACS practice");
-        if (toacsStations == null) {
-            try (InputStream in = getAssets().open("toacs.json");
+    private void examPractice(boolean gastro) {
+        menuScreen(gastro ? "Gastroenterology" : "Mixed Medicine");
+        button("Back to TOACS Part-II", this::toacsMenu);
+        org.json.JSONArray stations = gastro ? gastroStations : toacsStations;
+        if (stations == null) {
+            try (InputStream in = getAssets().open(gastro ? "toacs-gastroenterology.json" : "toacs.json");
                  ByteArrayOutputStream out = new ByteArrayOutputStream()) {
                 byte[] buffer = new byte[4096];
                 int count;
                 while ((count = in.read(buffer)) != -1) out.write(buffer, 0, count);
-                toacsStations = new org.json.JSONArray(out.toString("UTF-8"));
+                stations = new org.json.JSONArray(out.toString("UTF-8"));
+                if (gastro) gastroStations = stations;
+                else toacsStations = stations;
             } catch (IOException | org.json.JSONException error) {
                 body.addView(label("The station pack could not be opened.", 16));
                 return;
             }
         }
-        body.addView(label("10 offline FCPS Medicine practice stations. Answer each prompt before tapping Reveal.", 16));
+        body.addView(label(stations.length() + " offline practice stations. Answer each prompt before tapping Reveal.", 16));
+        if (gastro) body.addView(label("Draft stations for clinical review.", 15));
         java.util.Set<String> saved = prefs().getStringSet(TOACS_SAVED, java.util.Collections.emptySet());
-        for (int i = 0; i < toacsStations.length(); i++) {
+        for (int i = 0; i < stations.length(); i++) {
             final int number = i;
-            org.json.JSONObject station = toacsStations.optJSONObject(i);
-            String title = "Station " + (i + 1) + " · " + station.optString("specialty");
+            org.json.JSONObject station = stations.optJSONObject(i);
+            String title = "Station " + (i + 1) + (gastro ? "" : " · " + station.optString("specialty"));
             button(title + (saved.contains(station.optString("id")) ? " · Saved" : ""),
-                    () -> openStation(number));
+                    () -> openStation(gastro, number));
         }
     }
 
-    private void openStation(int number) {
-        org.json.JSONObject station = toacsStations.optJSONObject(number);
-        menuScreen("Station " + (number + 1) + " of " + toacsStations.length());
-        button("All stations", this::examPractice);
+    private void openStation(boolean gastro, int number) {
+        org.json.JSONArray stations = gastro ? gastroStations : toacsStations;
+        org.json.JSONObject station = stations.optJSONObject(number);
+        menuScreen("Station " + (number + 1) + " of " + stations.length());
+        button("All stations", () -> examPractice(gastro));
         String id = station.optString("id");
         Button bookmark = new Button(this);
         bookmark.setAllCaps(false);
@@ -599,31 +618,46 @@ public final class LibraryActivity extends Activity {
         });
         body.addView(bookmark);
         body.addView(label(station.optString("scenario"), 18));
-        stationPrompt(number, station, 0);
+        if (gastro) {
+            org.json.JSONArray findings = station.optJSONArray("findings");
+            for (int i = 0; i < findings.length(); i++) body.addView(label(findings.optString(i), 16));
+            body.addView(label(station.optInt("totalMarks") + " marks", 15));
+        }
+        stationPrompt(gastro, number, station, 0);
     }
 
-    private void stationPrompt(int number, org.json.JSONObject station, int stage) {
+    private void stationPrompt(boolean gastro, int number, org.json.JSONObject station, int stage) {
         String[] prompts = {"What is the most likely diagnosis and why?",
                 "Which investigations would you request?",
                 "How would you manage this patient?"};
         String[] keys = {"diagnosis", "investigations", "management"};
-        body.addView(label(prompts[stage], 18));
+        org.json.JSONArray questions = station.optJSONArray("questions");
+        org.json.JSONObject question = gastro ? questions.optJSONObject(stage) : null;
+        int stageCount = gastro ? questions.length() : keys.length;
+        body.addView(label(gastro ? question.optString("question") + " (" + question.optInt("marks") + " marks)"
+                : prompts[stage], 18));
         Button reveal = new Button(this);
         reveal.setAllCaps(false);
-        reveal.setText("Reveal " + keys[stage]);
+        reveal.setText(gastro ? "Reveal answer" : "Reveal " + keys[stage]);
         body.addView(reveal);
         reveal.setOnClickListener(view -> {
             body.removeView(reveal);
-            body.addView(label(station.optString(keys[stage]), 16));
-            if (stage < keys.length - 1) {
-                stationPrompt(number, station, stage + 1);
+            body.addView(label(gastro ? question.optString("answer") : station.optString(keys[stage]), 16));
+            if (stage + 1 < stageCount) {
+                stationPrompt(gastro, number, station, stage + 1);
             } else {
-                TextView reference = label("Guideline reference", 15);
-                reference.setText(station.optString("reference"));
-                android.text.util.Linkify.addLinks(reference, android.text.util.Linkify.WEB_URLS);
-                body.addView(reference);
-                if (number + 1 < toacsStations.length()) button("Next station", () -> openStation(number + 1));
-                button("Back to all stations", this::examPractice);
+                if (gastro) {
+                    org.json.JSONArray points = station.optJSONArray("learningPoints");
+                    if (points.length() > 0) body.addView(label("Learning points", 18));
+                    for (int i = 0; i < points.length(); i++) body.addView(label("• " + points.optString(i), 16));
+                } else {
+                    TextView reference = label(station.optString("reference"), 15);
+                    android.text.util.Linkify.addLinks(reference, android.text.util.Linkify.WEB_URLS);
+                    body.addView(reference);
+                }
+                int count = gastro ? gastroStations.length() : toacsStations.length();
+                if (number + 1 < count) button("Next station", () -> openStation(gastro, number + 1));
+                button("Back to all stations", () -> examPractice(gastro));
             }
         });
     }
@@ -820,7 +854,7 @@ public final class LibraryActivity extends Activity {
         menuCard("Backup & restore","Password-protected local study archive",this::backupMenu,true);
         menuCard("My account",prefs().getBoolean("localAccount.saved",false)?"Local profile • not synced":"Register your local profile",this::localAccount,true);
         menuCard("Daily study progress",todayPages().size()+" / "+prefs().getInt("offlineStudy.goal",10)+" distinct pages opened today • stored on this device",this::studyProgress,true);
-        menuCard("TOACS practice","10 offline clinical stations",this::examPractice,true);
+        menuCard("Exam","TOACS Part-II practice",this::examMenu,true);
         menuCard("Offline flashcards","Create questions and reveal answers without internet",this::offlineFlashcards,true);
         menuCard("Study timer","Set a focused offline session",this::studyTimer,true);
         menuCard("Recent activity","Search history, explored pages and recently read books",this::recentActivity,true);
