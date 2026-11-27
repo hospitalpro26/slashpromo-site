@@ -56,6 +56,94 @@ async function issueCode(env,account,purpose){
  await env.DB.prepare("INSERT INTO account_tokens(account_id,purpose,token_hash,expires_at) VALUES (?,?,?,?) ON CONFLICT(account_id,purpose) DO UPDATE SET token_hash=excluded.token_hash,expires_at=excluded.expires_at").bind(account.id,purpose,hash,expires).run();
  try{await sendCode(env,account.email,code,purpose)}catch(e){await env.DB.prepare("DELETE FROM account_tokens WHERE token_hash=?").bind(hash).run();throw e}
 }
+const messageSubjects = new Set(["Complaint", "Suggestion", "Feedback", "Renewal", "Other"]);
+const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+async function messageCentre(req, env, account, owner, route) {
+ const db = env.DB;
+ const author = owner ? "admin" : "member";
+ const incoming = owner ? "member" : "admin";
+ if (route === "/broadcast" && req.method === "POST") {
+  if (!owner) return json({error:"Forbidden"},403);
+  const input = await readJson(req,14000);
+  const body = typeof input?.body === "string" ? input.body.trim() : "";
+  if (input?.confirmed !== true || !uuid.test(input.id || "") || !messageSubjects.has(input.subject) || !body || body.length > 2000) {
+   return json({error:"Choose a subject, enter a message and confirm the broadcast"},400);
+  }
+  if (await limited(db,"broadcast:"+account.id,5,3600)) return json({error:"Broadcast limit reached. Try again later."},429);
+  const now = new Date().toISOString();
+  const open = "SELECT id FROM message_broadcasts WHERE id=? AND owner_id=? AND recipient_count IS NULL";
+  const recipients = "SELECT thread_id,account_id FROM message_broadcast_targets WHERE broadcast_id IN ("+open+")";
+  await db.batch([
+   db.prepare("INSERT INTO message_broadcasts(id,owner_id,subject,body) VALUES (?,?,?,?) ON CONFLICT(id) DO NOTHING").bind(input.id,account.id,input.subject,body),
+   db.prepare(`INSERT INTO message_broadcast_targets(broadcast_id,account_id,thread_id)
+    SELECT b.id,a.id,lower(hex(randomblob(4))||'-'||hex(randomblob(2))||'-'||hex(randomblob(2))||'-'||hex(randomblob(2))||'-'||hex(randomblob(6)))
+    FROM accounts a CROSS JOIN (${open}) b WHERE a.id<>? AND a.status='approved' AND a.email_verified_at IS NOT NULL`).bind(input.id,account.id,account.id),
+   db.prepare(`INSERT INTO message_threads(id,account_id,subject,created_at) SELECT thread_id,account_id,?,? FROM (${recipients})`).bind(input.subject,now,input.id,account.id),
+   db.prepare(`INSERT INTO messages(id,thread_id,author,body,created_at) SELECT thread_id,thread_id,'admin',?,? FROM (${recipients})`).bind(body,now,input.id,account.id),
+   db.prepare("UPDATE message_broadcasts SET recipient_count=(SELECT count(*) FROM message_broadcast_targets WHERE broadcast_id=?) WHERE id=? AND owner_id=? AND recipient_count IS NULL").bind(input.id,input.id,account.id)
+  ]);
+  const saved = await db.prepare("SELECT recipient_count FROM message_broadcasts WHERE id=? AND owner_id=? AND subject=? AND body=?").bind(input.id,account.id,input.subject,body).first();
+  return saved ? json({recipient_count:saved.recipient_count},201) : json({error:"Could not send the broadcast"},409);
+ }
+ if (route === "/members" && req.method === "GET") {
+  if (!owner) return json({error:"Forbidden"},403);
+  const q = (new URL(req.url).searchParams.get("q") || "").trim();
+  if (q.length < 2 || q.length > 100) return json({error:"Enter 2–100 characters to find a member"},400);
+  const {results} = await db.prepare("SELECT id,name,email FROM accounts WHERE status='approved' AND email_verified_at IS NOT NULL AND id<>? AND (instr(lower(name),lower(?))>0 OR instr(lower(email),lower(?))>0) ORDER BY name,id LIMIT 20").bind(account.id,q,q).all();
+  return json({members:results});
+ }
+ if (route === "" && req.method === "GET") {
+  const params = new URL(req.url).searchParams;
+  const before = Number(params.get("before") || Number.MAX_SAFE_INTEGER);
+  const sent = params.get("sent") === "1";
+  if (!Number.isSafeInteger(before) || before < 1) return json({error:"Invalid cursor"},400);
+  const {results} = await db.prepare(`SELECT t.id,t.subject,${owner ? "a.name AS member_name," : ""}
+    max(m.sequence) AS latest,max(m.created_at) AS updated_at,
+    sum(CASE WHEN m.author=? AND m.read_at IS NULL THEN 1 ELSE 0 END) AS unread
+    FROM message_threads t JOIN accounts a ON a.id=t.account_id JOIN messages m ON m.thread_id=t.id
+    WHERE (?=1 OR t.account_id=?) GROUP BY t.id HAVING max(m.sequence)<? AND (?=0 OR sum(m.author=?)>0) ORDER BY latest DESC LIMIT 31`)
+    .bind(incoming,owner?1:0,account.id,before,sent?1:0,author).all();
+  return json({threads:results.slice(0,30),next:results.length>30?results[29].latest:null,owner});
+ }
+ const thread = route.slice(1);
+ if (uuid.test(thread)) {
+  const record = await db.prepare("SELECT id,subject FROM message_threads WHERE id=? AND (?=1 OR account_id=?)").bind(thread,owner?1:0,account.id).first();
+  if (!record) return json({error:"Conversation not found"},404);
+  if (req.method === "GET") {
+   const before = Number(new URL(req.url).searchParams.get("before") || Number.MAX_SAFE_INTEGER);
+   if (!Number.isSafeInteger(before) || before < 1) return json({error:"Invalid cursor"},400);
+   const {results} = await db.prepare("SELECT sequence,author,body,created_at FROM messages WHERE thread_id=? AND sequence<? ORDER BY sequence DESC LIMIT 16").bind(thread,before).all();
+   const messages = results.slice(0,15);
+   return json({thread:record,messages:messages.reverse(),next:results.length>15?messages[0].sequence:null});
+  }
+ }
+ if (req.method !== "POST" || (route !== "" && !uuid.test(thread))) return json({error:"Not found"},404);
+ const input = await readJson(req,14000);
+ if (uuid.test(thread) && Number.isSafeInteger(input?.readThrough) && input.readThrough > 0) {
+  await db.prepare("UPDATE messages SET read_at=? WHERE thread_id=? AND author=? AND sequence<=? AND read_at IS NULL").bind(new Date().toISOString(),thread,incoming,input.readThrough).run();
+  return json({message:"Marked as read"});
+ }
+ const body = typeof input?.body === "string" ? input.body.trim() : "";
+ if (!body || body.length > 2000 || typeof input?.id !== "string" || !uuid.test(input.id)) return json({error:"Enter a message of 1–2,000 characters"},400);
+ if (await limited(db,"messages:"+account.id,owner?60:15,600)) return json({error:"Too many messages. Try again in a few minutes."},429);
+ const now = new Date().toISOString();
+ if (route === "") {
+  if (!messageSubjects.has(input.subject)) return json({error:"Choose a subject"},400);
+  const recipient = owner ? input.recipient : account.id;
+  if (typeof recipient !== "string" || !/^[0-9a-f]{32}$/.test(recipient) || (owner && recipient === account.id)) return json({error:"Choose a member"},400);
+  await db.batch([
+   db.prepare("INSERT INTO message_threads (id,account_id,subject,created_at) SELECT ?,id,?,? FROM accounts WHERE id=? AND status='approved' AND email_verified_at IS NOT NULL ON CONFLICT(id) DO NOTHING").bind(input.id,input.subject,now,recipient),
+   db.prepare("INSERT INTO messages (id,thread_id,author,body,created_at) SELECT ?,id,?,?,? FROM message_threads WHERE id=? AND account_id=? AND subject=? AND NOT EXISTS(SELECT 1 FROM messages WHERE thread_id=?) ON CONFLICT(id) DO NOTHING").bind(input.id,author,body,now,input.id,recipient,input.subject,input.id)
+  ]);
+  const saved = await db.prepare("SELECT m.id FROM messages m JOIN message_threads t ON t.id=m.thread_id WHERE m.id=? AND m.thread_id=? AND m.author=? AND m.body=? AND t.account_id=? AND t.subject=?").bind(input.id,input.id,author,body,recipient,input.subject).first();
+  return saved ? json({id:saved.id},201) : json({error:"Could not start the conversation"},409);
+ }
+ await db.prepare("INSERT INTO messages (id,thread_id,author,body,created_at) VALUES (?,?,?,?,?) ON CONFLICT(id) DO NOTHING").bind(input.id,thread,author,body,now).run();
+ const saved = await db.prepare("SELECT id FROM messages WHERE id=? AND thread_id=? AND author=? AND body=?").bind(input.id,thread,author,body).first();
+ return saved ? json({id:thread},201) : json({error:"Could not send the reply"},409);
+}
+
 export default {
  async scheduled(event,env,ctx){
   const now=Math.floor(Date.now()/1000);
@@ -218,15 +306,17 @@ export default {
    if(entitlement(await ownerMembership(env,account))==="expired")return json({error:"Membership expired",membership:"expired"},403);
    return createSession(env,account,input.deviceId);
   }
-  if(["/v1/me","/v1/logout","/v1/owner/summary"].includes(path)){
+  const messageRoute = path === "/v1/messages" || path.startsWith("/v1/messages/");
+  if(messageRoute || ["/v1/me","/v1/logout","/v1/owner/summary"].includes(path)){
    const auth=req.headers.get("Authorization")||"";
    if(!/^Bearer [a-f0-9]{64}$/.test(auth))return json({error:"Unauthorized"},401);
    const hash=await digest(auth.slice(7));
    if(path==="/v1/logout"&&req.method==="POST"){await env.DB.prepare("DELETE FROM sessions WHERE token_hash=?").bind(hash).run();return json({message:"Signed out"});}
-   if(!["/v1/me","/v1/owner/summary"].includes(path)||req.method!=="GET")return json({error:"Not found"},404);
+   if(!messageRoute && (!["/v1/me","/v1/owner/summary"].includes(path)||req.method!=="GET"))return json({error:"Not found"},404);
    const account=await env.DB.prepare("SELECT a.id,a.name,a.email,a.status,a.email_verified_at,a.trial_until,a.paid_until FROM accounts a JOIN sessions s ON s.account_id=a.id WHERE s.token_hash=? AND s.expires_at>? AND EXISTS(SELECT 1 FROM devices d WHERE d.account_id=a.id AND d.device_hash=s.device_hash)").bind(hash,Math.floor(Date.now()/1000)).first();
    if(!account||account.status!=="approved"||!account.email_verified_at)return json({error:"Unauthorized"},401);
    const membership=entitlement(await ownerMembership(env,account));
+   if(messageRoute) return await messageCentre(req,env,account,membership==="owner"&&env.REVIEW_ADMIN_ENABLED==="true",path.slice("/v1/messages".length));
    if(membership==="expired")return json({error:"Membership expired",membership},403);
    if(path==="/v1/owner/summary"){
     if(membership!=="owner"||env.REVIEW_ADMIN_ENABLED!=="true")return json({error:"Forbidden"},403);

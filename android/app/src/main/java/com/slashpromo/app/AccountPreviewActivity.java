@@ -46,7 +46,9 @@ public class AccountPreviewActivity extends Activity {
   int emailType=InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS;
   int passType=InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD;
   TextView status=new TextView(this);status.setTextSize(16);status.setPadding(0,dp(12),0,dp(12));body.addView(status);
-  if(mode.equals("Owner Centre")){
+  if(mode.equals("Message Centre")){
+   new MessageCentre(this,body,status,client,worker).open();
+  }else if(mode.equals("Owner Centre")){
    label("Private account statistics",18);Button refresh=button("Refresh statistics",()->{});refresh.setOnClickListener(v->call(refresh,status,"/v1/owner/summary",null,true));refresh.setEnabled(AccountClient.ENABLED);call(refresh,status,"/v1/owner/summary",null,true);
   }else if(mode.equals("Membership")){
    Button check=button("Check membership",()->{});check.setOnClickListener(v->call(check,status,"/v1/me",null,true));check.setEnabled(AccountClient.ENABLED);
@@ -72,7 +74,7 @@ public class AccountPreviewActivity extends Activity {
    Button google=button("Continue with Google",()->{});google.setEnabled(AccountClient.ENABLED&&!GOOGLE_CLIENT_ID.isEmpty());google.setOnClickListener(v->googleSignIn(google,status));
    label("Register with Google for automatic approval and three months free. Email/password registration is not yet available.",14);
   }
-  button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Verify email",()->screen("Verify email"));button("Forgot password",()->screen("Reset password"));button("Membership",()->screen("Membership"));button("Help & Support",()->startActivity(new android.content.Intent(this,SupportActivity.class)));button("Return to library",this::finish);
+  button("Register",()->screen("Register"));button("Sign in",()->screen("Sign in"));button("Verify email",()->screen("Verify email"));button("Forgot password",()->screen("Reset password"));button("Membership",()->screen("Membership"));button("Message Centre",()->screen("Message Centre")).setEnabled(AccountClient.ENABLED);button("Help & Support",()->startActivity(new android.content.Intent(this,SupportActivity.class)));button("Return to library",this::finish);
  }
  private void googleSignIn(Button button,TextView status){
   if(!AccountClient.ENABLED||GOOGLE_CLIENT_ID.isEmpty())return;
