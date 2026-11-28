@@ -555,6 +555,7 @@ public final class LibraryActivity extends Activity {
     private final java.util.Map<String, org.json.JSONArray> stationPacks = new java.util.HashMap<>();
 
     private String stationSectionTitle(String section) {
+        if (section.equals("ecg")) return "ECG";
         if (section.equals("gastroenterology")) return "Gastroenterology";
         if (section.equals("endocrinology")) return "Endocrinology";
         if (section.equals("rheumatology")) return "Rheumatology";
@@ -575,6 +576,7 @@ public final class LibraryActivity extends Activity {
     private void toacsMenu() {
         menuScreen("TOACS Part-II");
         button("Back to Exam", this::examMenu);
+        menuCard("ECG", "30 clinical ECG stations · offline tracings", () -> examPractice("ecg"), true);
         menuCard("Gastroenterology", "13 practice stations", () -> examPractice("gastroenterology"), true);
         menuCard("Endocrinology", "9 practice stations", () -> examPractice("endocrinology"), true);
         menuCard("Rheumatology", "10 practice stations", () -> examPractice("rheumatology"), true);
@@ -637,12 +639,38 @@ public final class LibraryActivity extends Activity {
         });
         body.addView(bookmark);
         body.addView(label(station.optString("scenario"), 18));
+        if (station.has("ecgImage")) button("Open ECG · pinch to zoom", () -> openEcg(station));
         if (!section.equals("mixed")) {
             org.json.JSONArray findings = station.optJSONArray("findings");
             for (int i = 0; i < findings.length(); i++) body.addView(label(findings.optString(i), 16));
             body.addView(label(station.optInt("totalMarks") + " marks", 15));
         }
         stationPrompt(section, number, station, 0);
+    }
+
+    private void openEcg(org.json.JSONObject station) {
+        String path=station.optString("ecgImage");
+        if(!path.matches("ecg/[a-zA-Z0-9_-]+\\.(png|jpg|webp)"))return;
+        android.graphics.BitmapFactory.Options options=new android.graphics.BitmapFactory.Options();
+        options.inJustDecodeBounds=true;
+        try(InputStream bounds=getAssets().open(path)){android.graphics.BitmapFactory.decodeStream(bounds,null,options);}
+        catch(IOException error){return;}
+        options.inSampleSize=1;
+        while((long)(options.outWidth/options.inSampleSize)*(options.outHeight/options.inSampleSize)>8000000L)options.inSampleSize*=2;
+        options.inJustDecodeBounds=false;
+        try(InputStream in=getAssets().open(path)) {
+            Bitmap bitmap=android.graphics.BitmapFactory.decodeStream(in,null,options);
+            if(bitmap==null)throw new IOException("Invalid ECG image");
+            LinearLayout content=new LinearLayout(this);content.setOrientation(LinearLayout.VERTICAL);
+            TextView hint=label("Pinch to zoom • drag to inspect • scale as printed on tracing",14);
+            content.addView(hint);content.addView(new EcgView(this,bitmap),new LinearLayout.LayoutParams(-1,0,1));
+            AlertDialog dialog=new AlertDialog.Builder(this).setTitle("Clinical ECG").setView(content)
+                    .setPositiveButton("Close",null).create();
+            dialog.setOnDismissListener(d -> bitmap.recycle());
+            dialog.show();
+            dialog.getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE);
+            dialog.getWindow().setLayout(-1,-1);
+        } catch(IOException error) {new AlertDialog.Builder(this).setMessage("The offline ECG could not be opened.").setPositiveButton("Close",null).show();}
     }
 
     private void stationPrompt(String section, int number, org.json.JSONObject station, int stage) {
@@ -667,6 +695,11 @@ public final class LibraryActivity extends Activity {
             } else {
                 if (!section.equals("mixed")) {
                     org.json.JSONArray points = station.optJSONArray("learningPoints");
+                    if (station.has("ecgCredit")) {
+                        TextView credit=label(station.optString("ecgCredit"),14);
+                        android.text.util.Linkify.addLinks(credit,android.text.util.Linkify.WEB_URLS);
+                        body.addView(credit);
+                    }
                     if (points.length() > 0) body.addView(label("Learning points", 18));
                     for (int i = 0; i < points.length(); i++) body.addView(label("• " + points.optString(i), 16));
                 } else {

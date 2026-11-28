@@ -46,6 +46,10 @@ jobs:
           TOOL="$SDK/cmdline-tools/latest/bin/sdkmanager"
           if [ ! -x "$TOOL" ]; then TOOL="$SDK/cmdline-tools/16.0/bin/sdkmanager"; fi
           "$TOOL" "platforms;android-36" "build-tools;35.0.0"
+      - name: Fetch and verify offline clinical ECG assets
+        run: |
+          node scripts/fetch-ecg-assets.mjs
+          node scripts/test-ecg-pack.mjs
       - name: Build unsigned release
         working-directory: android
         run: gradle --no-daemon :app:assembleRelease
