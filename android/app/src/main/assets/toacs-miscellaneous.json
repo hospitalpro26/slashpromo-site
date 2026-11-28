@@ -1,0 +1,152 @@
+[
+  {
+    "id": "SV-TOACS-MISC-005",
+    "topic": "Snakebite envenoming",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 35-year-old farm worker presents after a snakebite with progressive leg swelling, bleeding from the gums and prolonged clotting tests. The snake species is unknown.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Systemic snake envenoming with venom-induced coagulopathy and local tissue injury.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess airway, breathing, circulation and neurological weakness. Mark swelling progression and monitor urine output. Obtain blood count, coagulation studies, fibrinogen, renal function, electrolytes and urinalysis. Where laboratory testing is unavailable, use a correctly performed and validated 20-minute whole-blood clotting test.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Immobilize and transfer urgently to a facility able to provide antivenom and resuscitation. Give locally appropriate antivenom for systemic envenoming under protocol, with anaphylaxis treatment immediately available. Support ventilation/circulation and manage bleeding or kidney injury as required. Provide wound care, analgesia and tetanus review. Avoid tourniquets, wound cutting, suction or ice.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Antivenom choice depends on regional species coverage; normal initial tests do not remove the need for observation and repeat assessment.",
+      "Reference: https://www.who.int/teams/control-of-neglected-tropical-diseases/snakebite-envenoming/treatment"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Snakebite envenoming topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-MISC-003",
+    "topic": "Diabetic autonomic neuropathy",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 54-year-old man with longstanding diabetes experiences dizziness on standing, early satiety and urinary hesitancy. Blood pressure falls from 146/84 supine to 112/66 mmHg after standing, with little rise in heart rate.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Diabetic autonomic neuropathy causing neurogenic orthostatic hypotension, with possible gastrointestinal and bladder involvement.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Measure lying and standing blood pressure and pulse, review medicines and hydration, and check ECG, glucose/HbA1c, electrolytes and renal function. Exclude anaemia, cardiac disease and other causes. Use targeted gastric-emptying or bladder tests when symptoms warrant.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Optimize diabetes care while avoiding hypoglycaemia. Review hypotensive medicines, advise slow position changes and consider compression and head-up sleeping. Individualize fluid/salt measures for cardiac and kidney status. Persistent symptomatic hypotension may need specialist medication with supine-BP monitoring. Manage gastrointestinal and bladder problems according to confirmed cause.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Do not attribute all postural dizziness or gastrointestinal symptoms to diabetes without assessing reversible causes.",
+      "Reference: https://www.niddk.nih.gov/health-information/diabetes/overview/preventing-problems/nerve-damage-diabetic-neuropathies/autonomic-neuropathy"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Diabetic autonomic neuropathy topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-MISC-004",
+    "topic": "Progressive supranuclear palsy",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 70-year-old man has early recurrent backward falls, axial stiffness, slowed speech and choking during meals. Examination shows impaired voluntary downward gaze that improves with the vestibulo-ocular manoeuvre and symmetric bradykinesia.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Progressive supranuclear palsy, particularly the Richardson syndrome phenotype.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Arrange movement-disorder assessment, including eye movements, cognition, gait and swallowing. MRI can support the diagnosis and exclude mimics, but diagnosis remains clinical. Assess aspiration, nutrition, falls and carer needs.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Provide multidisciplinary care with physiotherapy, occupational therapy, mobility aids and speech/swallow support. A supervised levodopa trial may help selected motor symptoms, but response is often limited and falls may persist. Discuss nutrition options, communication aids, caregiver support and advance care planning.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "PSP should not simply receive an escalating Parkinson disease drug list; early falls and vertical gaze dysfunction are key clues.",
+      "Reference: https://www.frontiersin.org/journals/neurology/articles/10.3389/fneur.2021.694872/full"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Progressive supranuclear palsy topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-MISC-001",
+    "topic": "Sheehan syndrome with adrenal crisis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 37-year-old woman becomes hypotensive after surgery. She reports failure to lactate and absent menstruation since a major postpartum haemorrhage six years ago. Glucose is low, sodium is 122 mmol/L and free T4 is low with an inappropriately normal TSH.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Postpartum hypopituitarism (Sheehan syndrome), presenting with secondary adrenal crisis and central hypothyroidism.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess airway, circulation, glucose and electrolytes immediately. Draw cortisol/ACTH before steroids only if this does not delay treatment. Once stable, assess other pituitary axes and arrange pituitary MRI and endocrine review. Free T4 must be interpreted with TSH.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Give immediate parenteral hydrocortisone, isotonic fluid and glucose as indicated under the adrenal-crisis protocol. Treat the precipitant and monitor sodium and haemodynamics. Establish glucocorticoid cover before levothyroxine; arrange individualized long-term hormone replacement, sick-day rules and emergency steroid identification.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Aldosterone is usually preserved in secondary adrenal insufficiency, so hyperkalaemia is not a required feature.",
+      "Reference: https://www.endocrine.org/clinical-practice-guidelines/hormone-replacement-in-hypopituitarism"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Sheehan syndrome with adrenal crisis topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-MISC-002",
+    "topic": "Dermatomyositis with dysphagia",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 61-year-old woman reports difficulty rising from a chair, lifting her arms and swallowing. She has symmetric proximal weakness, a violaceous eyelid rash and scaly papules over the knuckles.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Dermatomyositis with bulbar involvement; assess aspiration risk and possible associated malignancy.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Check CK and other muscle enzymes, myositis antibodies and baseline organ function. Use muscle MRI, EMG and biopsy where needed to clarify diagnosis. Arrange swallowing assessment, lung evaluation and age-/risk-appropriate cancer screening. Investigate structural oesophageal disease if symptoms suggest it.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Refer urgently to rheumatology/neurology and protect swallowing and nutrition. Use glucocorticoid induction with a suitable steroid-sparing agent and monitoring. Severe dysphagia or refractory disease may warrant IVIG or other specialist therapy. Provide rehabilitation, sun protection and screening for treatment complications.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Dysphagia may reflect myositis or another lesion; it does not establish oesophageal cancer by itself.",
+      "Reference: https://doi.org/10.1093/rheumatology/keac115"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Dermatomyositis with dysphagia topic. Clinical details modified for clarity; clinician review pending."
+  }
+]
