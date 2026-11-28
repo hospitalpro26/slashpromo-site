@@ -1,0 +1,272 @@
+[
+  {
+    "id": "SV-TOACS-NEU-005",
+    "topic": "Lateral medullary stroke",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 43-year-old woman develops acute vertigo, hoarseness and imbalance after neck pain following minor trauma. She has right Horner syndrome, right limb ataxia, reduced right facial pain sensation and reduced left body pain sensation.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Right lateral medullary infarction (Wallenberg syndrome), with vertebral artery dissection suspected.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Activate the stroke pathway; establish onset time, glucose and swallowing safety. Urgent brain imaging and CTA/MRA of head and neck; MRI diffusion imaging can identify posterior fossa infarction. Monitor airway and cardiorespiratory status.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Urgent stroke-team assessment for reperfusion eligibility. Protect airway, keep oral intake withheld until swallowing assessment and provide stroke-unit care. Once hemorrhage is excluded, select antithrombotic therapy according to findings; dissection treatment is individualized, commonly for three to six months. Begin rehabilitation and risk-factor management.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Anticoagulation is not automatically superior to antiplatelet treatment for cervical artery dissection.",
+      "Reference: https://pubmed.ncbi.nlm.nih.gov/38299330/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-008",
+    "topic": "Vitamin B12 myeloneuropathy",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 58-year-old woman with a restricted diet and long-term proton-pump inhibitor use reports numb feet and difficulty walking in darkness. She has impaired vibration and joint position sense, a positive Romberg test and bilateral extensor plantar responses.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Vitamin B12 deficiency causing subacute combined degeneration with peripheral neuropathy; consider other myelopathy causes.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "CBC/film, serum total or active B12 and folate; methylmalonic acid when results are indeterminate. Investigate the cause, including autoimmune gastritis, dietary deficiency or malabsorption. Consider copper testing and spinal imaging when clinically indicated.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Take diagnostic blood samples promptly but do not delay B12 replacement when neurological disease is suspected. Parenteral replacement is generally favored for significant neurological involvement, using the local regimen. Treat the cause, review ongoing PPI need and arrange neurological follow-up and rehabilitation; irreversible malabsorption may require lifelong replacement.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Neurological B12 deficiency may occur without anemia or macrocytosis. Avoid folate-only treatment.",
+      "Reference: https://www.nice.org.uk/guidance/ng239/chapter/Recommendations"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-002",
+    "topic": "Miller Fisher syndrome",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 35-year-old man develops double vision and an unsteady gait following a respiratory infection. He has ophthalmoplegia, marked ataxia and absent tendon reflexes, with preserved limb strength.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Miller Fisher syndrome, within the Guillain–Barré spectrum; assess for overlap with generalized GBS.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Anti-GQ1b antibodies, nerve conduction studies and CSF examination where appropriate. Assess swallowing, autonomic function and serial respiratory strength. Consider brain imaging if central signs or diagnostic uncertainty are present.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Neurology assessment and close observation for progression, with falls prevention and rehabilitation. Pure Miller Fisher syndrome often recovers without immunotherapy; significant limb, bulbar or respiratory involvement warrants specialist consideration of IVIG or plasma exchange and critical-care support.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Normal early CSF protein does not exclude a GBS-spectrum disorder.",
+      "Reference: https://doi.org/10.1111/jns.12594"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-009",
+    "topic": "Acute bacterial meningitis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 29-year-old woman develops fever, severe headache, neck stiffness and confusion. CSF obtained safely shows marked neutrophilic pleocytosis, high protein and low glucose relative to blood glucose.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Acute bacterial meningitis requiring immediate treatment. The CSF pattern does not itself diagnose a cerebral abscess.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Blood cultures, CBC, glucose, renal/liver tests and electrolytes; CSF microscopy, culture and PCR when safe. Do not delay antibiotics for imaging or lumbar puncture. Brain imaging before LP is reserved for relevant contraindications or concern for a space-occupying lesion.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stabilize ABCs and give prompt IV antibiotics, usually meningitis-dose ceftriaxone with additions guided by local resistance, allergies and Listeria risk. Give dexamethasone with or before the first antibiotic when possible without delaying antibiotics. Obtain infection-specialist advice, manage complications and arrange appropriate isolation, contact measures and hearing follow-up.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "If focal signs or a mass lesion are suspected, reassess LP safety; an abscess needs imaging and a different management pathway.",
+      "Reference: https://www.nice.org.uk/guidance/ng240/chapter/recommendations"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-006",
+    "topic": "Myasthenia gravis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 34-year-old woman has intermittent diplopia and ptosis that worsen toward evening and improve after rest. Sustained upward gaze increases the ptosis. Pupils, sensation and tendon reflexes are normal.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Ocular myasthenia gravis; assess for generalized, bulbar and respiratory involvement.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "AChR antibodies, with further antibody testing when indicated; repetitive nerve stimulation or single-fiber EMG. Consider an ice-pack test for ptosis. Image the thymus and assess thyroid disease; assess respiratory function urgently if weakness extends beyond ocular symptoms.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Specialist-directed pyridostigmine for symptoms; troublesome persistent ocular disease may require carefully introduced immunotherapy. Review potentially aggravating medicines. Dysphagia or respiratory weakness requires urgent admission, airway monitoring and consideration of IVIG or plasma exchange. Thymectomy decisions depend on thymoma and disease characteristics.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Steroids can initially worsen weakness, so initiation should reflect severity and monitoring needs.",
+      "Reference: https://pmc.ncbi.nlm.nih.gov/articles/PMC4977114/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-001",
+    "topic": "Idiopathic intracranial hypertension",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 32-year-old woman with obesity has progressive headache, pulsatile tinnitus and brief visual dimming when bending. Examination shows bilateral papilledema without a focal neurological deficit.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Raised intracranial pressure, with idiopathic intracranial hypertension suspected only after excluding secondary causes, particularly cerebral venous sinus thrombosis.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Urgent visual acuity, fields and optic disc assessment; brain MRI with MR venography (or appropriate CT/CTV). After safe imaging, lumbar puncture in the lateral decubitus position for opening pressure and CSF composition. Review medicines and secondary causes.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Coordinate neurology and ophthalmology care. Weight management and acetazolamide may be appropriate with monitoring. Deteriorating vision requires urgent specialist intervention, potentially CSF diversion or optic nerve sheath fenestration. Manage headache and follow visual function closely.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "A normal brain MRI alone does not exclude venous thrombosis or establish IIH.",
+      "Reference: https://jnnp.bmj.com/content/89/10/1088"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-004",
+    "topic": "Hypokalemic periodic paralysis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 21-year-old man awakens with painless symmetrical weakness after strenuous exercise and a large evening meal. A similar episode resolved within hours previously. Reflexes are reduced, sensation is intact and serum potassium is 2.3 mmol/L.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Hypokalemic paralysis, with periodic paralysis likely. Assess for thyrotoxicosis and potassium loss before classifying the cause.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Immediate ECG, repeat potassium, magnesium, phosphate, renal function and acid–base assessment. Obtain thyroid tests and targeted urine potassium studies; review drugs, gastrointestinal losses and family history. Assess respiratory strength.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Monitor ECG and replace potassium cautiously with serial measurements; route depends on severity, swallowing and cardiac/respiratory involvement. Avoid excessive replacement because rebound hyperkalemia can occur in redistribution disorders. Treat the underlying cause and arrange endocrine/neuromuscular follow-up and trigger advice.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Rapid recurrent episodes with preserved sensation favor periodic paralysis; persistent progressive weakness requires reassessment for GBS or other causes.",
+      "Reference: https://www.ncbi.nlm.nih.gov/sites/books/NBK1338/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-003",
+    "topic": "Multiple sclerosis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 28-year-old woman develops right-sided weakness and brisk reflexes over several days. Eighteen months earlier she had painful monocular visual loss that recovered. She now has an extensor right plantar response and residual optic disc pallor.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "A central demyelinating disorder, most likely multiple sclerosis; establish diagnostic criteria and exclude mimics.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Neurology review, MRI brain and spinal cord, and selected CSF studies including oligoclonal bands. Check for infection and metabolic mimics. Consider AQP4/MOG testing when the presentation suggests an alternative inflammatory disorder.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "For a disabling confirmed relapse, discuss high-dose methylprednisolone with the MS team after excluding infection: oral 500 mg daily for five days, or IV 1 g daily for three to five days when indicated. Arrange rehabilitation, symptom management and individualized disease-modifying therapy assessment.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "A relapse is a clinical diagnosis; not every new symptom requires steroids. Pregnancy requires specific treatment planning.",
+      "Reference: https://www.nice.org.uk/guidance/ng220/chapter/Recommendations"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEU-007",
+    "topic": "Acute thoracic myelopathy",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 40-year-old man develops severe bilateral leg weakness, urinary retention and a band-like truncal sensation over two days. Examination shows a sensory level near the umbilicus, flaccid legs and a distended bladder.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Acute thoracic spinal cord syndrome. Exclude compression urgently before diagnosing inflammatory transverse myelitis.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Urgent spinal MRI, extending imaging as clinically required. CBC, inflammatory markers, metabolic tests and infection assessment. After compression is excluded and lumbar puncture is safe, consider CSF studies, brain MRI and serum AQP4/MOG antibodies under neurology guidance.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Admit urgently, decompress the bladder and prevent pressure injury and venous thrombosis. Compression requires immediate spinal/neurosurgical assessment and cause-specific treatment. For inflammatory myelitis, specialist-directed high-dose IV steroids and early plasma exchange in severe or refractory disease may be appropriate; investigate and treat infection when indicated.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Early spinal shock can produce flaccidity and absent reflexes despite a cord lesion.",
+      "Reference: https://wearesrna.org/living-with-myelitis/disease-information/transverse-myelitis/acute-treatments/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded neurology topic. Clinical details modified for clarity; clinician review pending."
+  }
+]
