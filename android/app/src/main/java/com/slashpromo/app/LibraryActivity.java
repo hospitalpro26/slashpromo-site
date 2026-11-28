@@ -560,6 +560,8 @@ public final class LibraryActivity extends Activity {
         if (section.equals("rheumatology")) return "Rheumatology";
         if (section.equals("hematology")) return "Hematology";
         if (section.equals("neurology")) return "Neurology";
+        if (section.equals("nephrology")) return "Nephrology";
+        if (section.equals("toxicology")) return "Toxicology";
         return "Mixed Medicine";
     }
 
@@ -576,6 +578,8 @@ public final class LibraryActivity extends Activity {
         menuCard("Rheumatology", "10 practice stations", () -> examPractice("rheumatology"), true);
         menuCard("Hematology", "7 practice stations", () -> examPractice("hematology"), true);
         menuCard("Neurology", "9 practice stations", () -> examPractice("neurology"), true);
+        menuCard("Nephrology", "6 practice stations", () -> examPractice("nephrology"), true);
+        menuCard("Toxicology", "13 practice stations", () -> examPractice("toxicology"), true);
         menuCard("Mixed Medicine", "10 practice stations", () -> examPractice("mixed"), true);
     }
     private static final String TOACS_SAVED = "offlineStudy.toacsSaved";

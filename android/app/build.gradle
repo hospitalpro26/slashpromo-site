@@ -10,8 +10,8 @@ android {
         applicationId 'com.slashpromo.app'
         minSdk 24
         targetSdk 35
-        versionCode 37
-        versionName '0.12.6'
+        versionCode 38
+        versionName '0.12.7'
     }
 
     // Stable signing is opt-in and must use a securely provisioned keystore.
