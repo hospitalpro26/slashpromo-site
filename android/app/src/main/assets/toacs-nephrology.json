@@ -1,0 +1,182 @@
+[
+  {
+    "id": "SV-TOACS-NEPH-004",
+    "topic": "SIADH associated with pneumonia",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 58-year-old man admitted with pneumonia develops a seizure. Sodium is 114 mmol/L, serum osmolality 245 mOsm/kg, urine osmolality 510 mOsm/kg and urine sodium 62 mmol/L. He appears euvolaemic; renal function, thyroid tests and cortisol assessment are reassuring, and he takes no diuretic.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Severe symptomatic hypotonic hyponatraemia, consistent with SIADH triggered by pneumonia after excluding alternative causes.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess airway, glucose and neurological status immediately. Review drugs and volume status; obtain paired serum and urine studies and serial sodium measurements. Exclude adrenal insufficiency, hypothyroidism and renal failure; investigate the pulmonary trigger.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Manage in a monitored setting. Give 3% hypertonic saline using the local emergency bolus protocol, reassessing symptoms and sodium after each bolus. Aim for an initial rise of about 4–6 mmol/L, not normalization. Use a conservative correction ceiling of 8 mmol/L in any 24 hours, especially with unknown duration or high osmotic demyelination risk. Monitor sodium and urine output closely; seek specialist rescue treatment if overcorrection occurs. Treat pneumonia; once stabilized, consider fluid restriction for persistent SIADH.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Seizures require hypertonic saline; fluid restriction alone is insufficient. Rapid correction can cause osmotic demyelination.",
+      "Reference: https://pmc.ncbi.nlm.nih.gov/articles/PMC5314809/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded SIADH associated with pneumonia topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEPH-006",
+    "topic": "Advanced chronic kidney disease",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 63-year-old man has had eGFR below 15 mL/min/1.73 m² for five months. He now has anorexia, pruritus, oedema and breathlessness despite diuretics. Haemoglobin is 8.7 g/dL and ultrasound shows small echogenic kidneys.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Advanced chronic kidney disease with symptomatic kidney failure and fluid overload; assess for an additional reversible acute deterioration.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Review prior kidney results, urine albumin and sediment, obstruction risk, medicines and volume status. Check potassium, bicarbonate, calcium, phosphate, albumin, full blood count and iron indices. Obtain ECG and chest imaging when indicated. Assess uraemic complications and patient preferences.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Treat pulmonary oedema and dangerous electrolyte abnormalities urgently. Arrange nephrology assessment for dialysis when symptoms or refractory fluid/electrolyte problems warrant it; eGFR alone is not the trigger. Discuss transplant, dialysis modalities and conservative kidney care. Manage anaemia, mineral-bone disease, nutrition and cardiovascular risk with individualized monitoring and renal drug dosing.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Planning access can precede dialysis; the decision to start depends on the whole clinical picture.",
+      "Reference: https://kdigo.org/wp-content/uploads/2017/02/KDIGO-2024-CKD-Guideline-Executive-Summary.pdf"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Advanced chronic kidney disease topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEPH-001",
+    "topic": "Renovascular hypertension",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 69-year-old man has a second episode of abrupt pulmonary oedema in three months. His blood pressure is 214/112 mmHg despite three medicines. He has peripheral arterial disease, an abdominal bruit and a substantial creatinine rise after starting an ACE inhibitor.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Atherosclerotic renal artery stenosis, possibly bilateral, causing renovascular hypertension and recurrent flash pulmonary oedema.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess oxygenation, ECG, troponin, chest imaging, echocardiography, renal function and potassium. Renal artery duplex is an initial investigation; CTA or MRA is selected according to kidney function and local expertise. Exclude other cardiac causes.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Treat pulmonary oedema urgently with oxygen for hypoxaemia, ventilatory support when needed, IV loop diuretic and monitored vasodilator therapy if appropriate. Review the ACE inhibitor during acute kidney injury. Optimize vascular risk and blood pressure treatment. Refer for specialist assessment of revascularization because of recurrent flash pulmonary oedema; routine stenting of stable stenosis is not indicated.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "An anatomical stenosis alone does not establish benefit from intervention. Monitor creatinine and potassium when using renin-angiotensin system blockers.",
+      "Reference: https://pmc.ncbi.nlm.nih.gov/articles/PMC11731842/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Renovascular hypertension topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEPH-005",
+    "topic": "Nephrotic syndrome in HIV",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 39-year-old man with untreated confirmed HIV develops ankle swelling and frothy urine. Albumin is 2.1 g/dL, urine protein excretion is 5.6 g/day and creatinine is rising. Ultrasound shows enlarged echogenic kidneys.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Nephrotic syndrome with suspected HIV-associated nephropathy, commonly a collapsing FSGS pattern; biopsy is needed to establish the renal lesion.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Quantify proteinuria, assess urine sediment, eGFR, albumin and lipids. Check HIV viral load/CD4 count, hepatitis coinfection and other secondary causes. Arrange nephrology assessment and kidney biopsy where appropriate; consider alternative HIV-associated renal diseases and drug toxicity.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Start or optimize antiretroviral treatment with the HIV team and renal dose review. Manage oedema with sodium restriction and carefully monitored diuretics; use ACE inhibitor/ARB for proteinuria if tolerated. Assess infection and thrombosis risk individually. Do not automatically apply primary-FSGS steroid regimens to secondary disease; any immunosuppression requires biopsy-informed specialist assessment.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "HIV infection with proteinuria does not by itself prove HIV-associated nephropathy.",
+      "Reference: https://kdigo.org/wp-content/uploads/2021/10/KDIGO-2021-Guideline-for-the-Management-of-Glomerular-Diseases.pdf"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Nephrotic syndrome in HIV topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEPH-002",
+    "topic": "Autosomal dominant polycystic kidney disease",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 46-year-old woman with hypertension reports intermittent flank discomfort. Her father required dialysis at 54. Ultrasound shows bilaterally enlarged kidneys containing numerous cysts and several liver cysts. Her eGFR is 42 mL/min/1.73 m².",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Autosomal dominant polycystic kidney disease (ADPKD).",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess family history, blood pressure, urine albumin, haematuria, creatinine trajectory and electrolytes. Review imaging against age-appropriate diagnostic criteria; consider genetic testing if uncertain. Assess progression risk using kidney volume and eGFR trend. Discuss intracranial aneurysm screening according to personal/family history and individual risk.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Arrange nephrology follow-up and genetic counselling. Control blood pressure, generally with an ACE inhibitor or ARB with monitoring; manage infection, stones or bleeding when present. Discuss tolvaptan for eligible adults at risk of rapid progression with eGFR at least 25, after contraindication review and counselling about aquaresis and liver monitoring. Plan kidney replacement therapy as disease advances.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Tolvaptan is not appropriate for every patient with renal cysts; treatment depends on confirmed ADPKD and progression risk.",
+      "Reference: https://kdigo.org/wp-content/uploads/2025/01/KDIGO-2025-ADPKD-Guideline.pdf"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Autosomal dominant polycystic kidney disease topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-NEPH-003",
+    "topic": "Acute kidney injury during sepsis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 34-year-old woman with stable lupus takes ibuprofen for fever and cough. She arrives with pneumonia, blood pressure 82/48 mmHg and reduced urine output. Creatinine has risen from 0.9 to 2.7 mg/dL in two days. Urine microscopy shows granular casts without red-cell casts.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Sepsis-associated acute kidney injury with hypoperfusion and possible acute tubular injury, aggravated by NSAID exposure. Lupus nephritis remains a differential if urinary or immunological findings suggest it.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Measure urine output, fluid balance, serial creatinine, potassium and acid-base status. Obtain cultures and lactate without delaying antibiotics. Perform urine microscopy and protein quantification; use ultrasound to exclude obstruction. Check complements and anti-dsDNA if a lupus flare is suspected.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Treat sepsis promptly with appropriate antibiotics and source control. Give carefully reassessed crystalloid resuscitation for hypoperfusion; use vasopressor support for persistent shock. Stop NSAIDs, adjust drug doses and avoid fluid overload. Treat dangerous hyperkalaemia immediately. Seek urgent nephrology input for refractory electrolyte disturbance, acidosis, pulmonary oedema or uraemic complications requiring dialysis.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Do not diagnose lupus nephritis solely from a history of lupus; establish the cause of AKI.",
+      "Reference: https://kdigo.org/guidelines/acute-kidney-injury/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Acute kidney injury during sepsis topic. Clinical details modified for clarity; clinician review pending."
+  }
+]

@@ -1,0 +1,392 @@
+[
+  {
+    "id": "SV-TOACS-TOX-006",
+    "topic": "Organophosphate poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A farm worker develops profuse sweating, pinpoint pupils, vomiting, wheeze, copious respiratory secretions and muscle fasciculations after pesticide exposure. His pulse is 46/min and oxygen saturation is 83%.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Organophosphate poisoning with a cholinergic crisis.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess ventilation and ECG immediately. Check glucose, blood gas and electrolytes. Plasma and red-cell cholinesterase can support exposure but must not delay treatment. Identify the product safely.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Use staff protection, remove contaminated clothes and wash exposed skin. Suction and support ventilation. Give IV atropine, rapidly titrated to improved oxygenation and control of bronchial secretions, followed by maintenance as needed. Give pralidoxime with toxicology guidance and benzodiazepines for seizures. Monitor for delayed respiratory weakness.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Pupil size alone is not an atropinization target.",
+      "Reference: https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-and-pediatric-special-circumstances-of%20resuscitation"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Organophosphate poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-010",
+    "topic": "Carbon monoxide poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "Two family members become unwell overnight in a room heated by a faulty gas appliance. A 44-year-old man is confused with headache and chest pain, although a standard pulse oximeter reads 99%.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Carbon monoxide poisoning.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Request carboxyhaemoglobin by co-oximetry, blood gas, glucose, ECG and troponin. Record exposure and oxygen-treatment timing. Assess neurological function and pregnancy status where relevant; the COHb result alone does not grade severity.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Remove from exposure safely and give 100% oxygen immediately. Support airway/circulation and consult a hyperbaric service urgently for severe neurological findings, loss of consciousness, cardiac involvement, severe acidosis or pregnancy. Arrange follow-up for delayed neurological effects and inspection of the source before reuse.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Standard pulse oximetry can appear normal because it cannot reliably distinguish carboxyhaemoglobin.",
+      "Reference: https://www.cdc.gov/carbon-monoxide/hcp/clinical-guidance/index.html"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Carbon monoxide poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-012",
+    "topic": "Neuroleptic malignant syndrome",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 38-year-old man develops fever of 40°C, confusion, generalized lead-pipe rigidity and labile blood pressure three days after a substantial antipsychotic dose increase. CK is markedly elevated.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Neuroleptic malignant syndrome.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Review dopamine-blocking drugs and recent dose changes. Check CK, electrolytes, kidney/liver function, urine for myoglobin, blood count and ECG; assess acidosis and coagulation if severe. Exclude sepsis, CNS infection and competing hyperthermic syndromes.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stop the causative antipsychotic and obtain ICU/toxicology input. Provide active cooling, monitored fluids, respiratory support and treatment of rhabdomyolysis/electrolyte complications. Benzodiazepines may help agitation. Specialist-directed bromocriptine or dantrolene may be considered in severe cases; psychiatric review is needed before any later antipsychotic restart.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Prominent rigidity with a slower onset after dopamine blockade favours NMS over serotonin toxicity.",
+      "Reference: https://www.austin.org.au/Assets/Files/NMS_V3_8_2025.pdf"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Neuroleptic malignant syndrome topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-003",
+    "topic": "Lithium toxicity",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 51-year-old man taking lithium develops vomiting, coarse tremor, ataxia and confusion after gastroenteritis and several days of ibuprofen. Creatinine is 2.3 mg/dL and lithium is 3.1 mmol/L.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Chronic lithium toxicity precipitated by volume depletion and reduced renal clearance.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Check serial lithium concentrations, electrolytes, kidney function, glucose and ECG. Review dose timing, formulation and interacting medicines. Assess neurological state, hydration and urine output repeatedly.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stop lithium and interacting medicines. Restore intravascular volume with monitored isotonic fluid when depleted. Consult nephrology/toxicology urgently: decreased consciousness, seizures or dangerous dysrhythmia can warrant haemodialysis irrespective of concentration. Follow serial levels after dialysis for rebound. Activated charcoal does not bind lithium.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Clinical severity matters more than a single concentration, particularly in chronic toxicity.",
+      "Reference: https://www.extrip-workgroup.org/lithium"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Lithium toxicity topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-007",
+    "topic": "Paracetamol poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 24-year-old woman presents two days after an uncertain quantity of paracetamol. She has vomiting and right-upper-quadrant tenderness. ALT is 4200 U/L, INR 3.4 and glucose 3.1 mmol/L.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Delayed paracetamol toxicity with severe acute liver injury; assess for encephalopathy indicating acute liver failure.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Measure paracetamol concentration, serial ALT/AST, INR, bilirubin, glucose, renal function, blood gas and lactate. Establish timing and co-ingestants. The standard nomogram is not applicable to this delayed/uncertain presentation.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Start IV N-acetylcysteine immediately under the local protocol. Correct hypoglycaemia and support circulation. Discuss early with toxicology and a liver/transplant centre. Continue acetylcysteine until specialist stopping criteria are met; do not stop solely because a fixed infusion duration has elapsed. Arrange psychosocial assessment once medically stable.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "A low or undetectable paracetamol level late after ingestion does not exclude established hepatotoxicity.",
+      "Reference: https://www.acmt.net/news/acmt-practice-statement-duration-of-intravenous-acetylcysteine-therapy-following-acetaminophen-overdose-2026-update/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Paracetamol poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-002",
+    "topic": "Ethylene glycol poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 41-year-old man becomes confused after drinking from a bottle later identified as engine coolant. He has deep rapid breathing, pH 7.12, high anion-gap acidosis, rising creatinine and calcium oxalate crystals in urine.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Ethylene glycol poisoning with metabolic acidosis and acute kidney injury.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Obtain blood gas, electrolytes, calcium, glucose, renal function, measured osmolality and ethylene glycol concentration if available. Calculate anion and osmol gaps and assess ECG and urine microscopy. A normal osmol gap late in poisoning does not exclude it.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stabilize airway and circulation and contact toxicology/nephrology urgently. Begin fomepizole promptly when strongly suspected; a supervised ethanol protocol is an alternative where unavailable. Correct severe acidaemia as advised. This severe presentation warrants urgent haemodialysis assessment. Continue and adjust antidote dosing during dialysis.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Urinary crystals support the diagnosis but their absence does not exclude it; do not wait for a send-away concentration to treat.",
+      "Reference: https://link.springer.com/article/10.1186/s13054-022-04227-2"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Ethylene glycol poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-013",
+    "topic": "Salicylate poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 26-year-old woman develops vomiting, tinnitus, sweating and rapid breathing after taking many aspirin tablets. Blood gas shows respiratory alkalosis with concurrent high anion-gap metabolic acidosis.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Salicylate poisoning.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Measure serial salicylate concentrations, blood gas, electrolytes, glucose and renal function. Assess mental state, oxygenation and fluid status; delayed absorption means an early level may underestimate toxicity.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Contact toxicology. Give monitored fluid and potassium replacement and IV bicarbonate for serum/urine alkalinization when indicated. Consider activated charcoal only when appropriate and the airway is protected. Arrange urgent haemodialysis for severe features such as altered mental state, new oxygen requirement, failure of standard treatment or a very high level. Avoid loss of compensatory hyperventilation during any necessary intubation.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret salicylate concentrations alongside pH and clinical state; chronic toxicity can be severe at lower levels.",
+      "Reference: https://www.extrip-workgroup.org/salicylates"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Salicylate poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-005",
+    "topic": "Lead poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 47-year-old battery-recycling worker develops abdominal colic, constipation and wrist-extension weakness. Haemoglobin is 9.4 g/dL with microcytosis; the blood film shows basophilic stippling.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Occupational lead poisoning.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Confirm with a venous blood lead concentration. Check full blood count, iron studies, renal function and blood pressure; perform neurological assessment. Take an occupational and household exposure history and identify others potentially exposed.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Remove the exposure and arrange occupational/public-health assessment. Treat complications and nutritional deficiencies. Consult toxicology about chelation based on symptoms and venous concentration; encephalopathy requires urgent admission and specialist parenteral chelation. Use calcium disodium EDTA when that chelator is indicated, not disodium EDTA.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Basophilic stippling is supportive but neither sensitive nor specific; blood lead testing is essential.",
+      "Reference: https://www.ncbi.nlm.nih.gov/books/NBK575284/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Lead poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-001",
+    "topic": "Serotonin toxicity",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 29-year-old woman taking sertraline receives tramadol for an injury. Within hours she becomes agitated and sweaty, with diarrhoea, temperature 39.2°C, tremor, brisk reflexes and inducible ankle clonus.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Serotonin toxicity from a serotonergic drug interaction.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Review all prescription, non-prescription and recreational exposures. Diagnosis is clinical; check glucose, ECG, electrolytes, renal function, CK and acid-base status for complications. Consider infection, NMS and other toxidromes.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stop serotonergic drugs. Provide monitored supportive care, IV fluids as indicated, benzodiazepine sedation and active cooling. Severe rigidity, hyperthermia or respiratory compromise requires ICU care, airway control and non-depolarizing paralysis. Discuss enteral cyproheptadine with a toxicologist for persistent symptoms; it does not replace resuscitation.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Clonus and hyperreflexia favour serotonin toxicity; antipyretics do not correct heat generated by excessive muscle activity.",
+      "Reference: https://indianpsychiatricsociety.org/wp-content/uploads/2022/04/Grover_2022_Clinical_Practice_Guidelines_for_Management_of_Medical_Emergencies_Associated.pdf"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Serotonin toxicity topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-011",
+    "topic": "Benzodiazepine poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 32-year-old woman is found drowsy beside an open diazepam packet. Her respiratory rate is 8/min. Her usual medicines and possible co-ingestants are initially unknown.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected sedative poisoning, including benzodiazepines; mixed opioid or other drug exposure must be considered.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Check glucose, ECG, blood gas, electrolytes and targeted co-ingestant tests. Assess airway reflexes and ventilation repeatedly; obtain collateral medication history.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Support ventilation and airway first. Give naloxone if opioid co-exposure is suspected. Avoid routine flumazenil in an unknown or mixed overdose because of seizure/arrhythmia risk; reserve it for carefully selected pure exposures without contraindications. Observe until recovery and arrange psychosocial assessment when appropriate.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Reversal of sedation is not a substitute for safe airway management.",
+      "Reference: https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-and-pediatric-special-circumstances-of%20resuscitation"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Benzodiazepine poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-008",
+    "topic": "Arsenic toxicity",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 48-year-old man with prolonged exposure to contaminated well water develops abdominal symptoms, painful distal sensory loss, skin pigmentation changes and transverse white nail bands.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Chronic inorganic arsenic toxicity with peripheral neuropathy.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Take environmental, occupational and dietary histories. Request urinary arsenic with speciation, preferably a 24-hour collection; seafood can elevate total arsenic without indicating inorganic toxicity. Check full blood count, renal/liver function, electrolytes and ECG; assess neuropathy.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stop exposure and secure safe drinking water. Correct dehydration and electrolyte abnormalities and arrange toxicology/public-health evaluation. Chelation is an individualized specialist decision, especially for acute severe exposure; it may not reverse established chronic neuropathy. Provide neurological rehabilitation and follow-up for long-term complications.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret urinary arsenic in context; speciation helps distinguish inorganic exposure from seafood-related organic arsenic.",
+      "Reference: https://www.atsdr.cdc.gov/environmental-medicine/hcp/clinician-briefs/arsenic.html"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Arsenic toxicity topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-004",
+    "topic": "Methanol poisoning",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 36-year-old man develops vomiting, blurred vision and deep breathing after drinking an unregulated alcoholic beverage. He has high anion-gap metabolic acidosis and pH 7.09.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Methanol poisoning with visual toxicity and severe acidaemia.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Check blood gas, electrolytes, glucose, renal function, measured osmolality, ethanol and methanol concentrations where available. Assess vision and neurological state. Evaluate co-ingestants; a normal osmol gap does not exclude delayed presentation.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Begin resuscitation and urgent toxicology consultation. Start fomepizole without waiting for confirmation when suspicion is strong; supervised ethanol is an alternative. Give bicarbonate and folinic/folic acid according to specialist protocol. Visual toxicity and severe acidaemia require urgent haemodialysis. Continue alcohol dehydrogenase blockade during dialysis with adjusted dosing.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "The toxic metabolite formate drives visual injury and acidosis.",
+      "Reference: https://www.extrip-workgroup.org/methanol"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Methanol poisoning topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-TOX-009",
+    "topic": "Cyanide toxicity",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient receiving a prolonged sodium nitroprusside infusion develops abrupt confusion, cardiovascular instability and severe lactic acidosis despite adequate arterial oxygenation.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected cyanide toxicity from nitroprusside.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess blood gas, lactate, glucose, electrolytes and ECG while resuscitating. Cyanide testing is usually too slow to guide emergency care; evaluate other causes of shock.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Stop nitroprusside immediately. Provide oxygen, airway and circulatory support and urgently administer hydroxocobalamin with toxicology guidance. Do not delay antidote for a confirmatory assay.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Cyanide impairs cellular oxygen use; a satisfactory arterial oxygen result does not exclude it.",
+      "Reference: https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-and-pediatric-special-circumstances-of%20resuscitation"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Cyanide toxicity topic. Clinical details modified for clarity; clinician review pending."
+  }
+]
