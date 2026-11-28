@@ -42,6 +42,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
+      - name: Fetch and verify offline clinical ECG assets
+        run: |
+          node scripts/fetch-ecg-assets.mjs
+          node scripts/test-ecg-pack.mjs
       - name: Build isolated debug APK
         working-directory: android
         run: gradle --no-daemon :app:assembleDebug

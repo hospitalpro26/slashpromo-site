@@ -1,0 +1,1022 @@
+[
+  {
+    "id": "SV-TOACS-ECG-008",
+    "topic": "Type 1 Brugada pattern with PR prolongation",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A young adult has unexplained syncope during a febrile illness. Interpret the right-precordial leads and AV conduction.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-08.png",
+    "ecgCredit": "ECG: Brugada syndrome type1 example3 (CardioNetworks ECGpedia).png. Credit: CardioNetworks: [ ]. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:Brugada_syndrome_type1_example3_(CardioNetworks_ECGpedia).png\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Coved ST elevation with subsequent T-wave inversion in the right-precordial leads is a type 1 Brugada pattern. The source also documents first-degree AV block. A Brugada pattern requires clinical assessment before labeling the syndrome.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Confirm lead placement and repeat right-precordial leads at standard and higher intercostal positions when indicated. Review fever, drugs, electrolytes, syncope and family history. Obtain specialist electrophysiology assessment; distinguish a Brugada ECG pattern from the clinical syndrome.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Treat fever promptly and avoid recognized provoking drugs. Arrange monitored urgent care for arrhythmic syncope or ventricular arrhythmia. ICD decisions depend on clinical risk, not the tracing alone. Counsel regarding family assessment and specialist follow-up.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Brugada_syndrome_type1_example3_(CardioNetworks_ECGpedia).png"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-025",
+    "topic": "Hypokalemia with repolarization changes",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient using a loop diuretic has cramps and palpitations after several days of poor intake. Interpret the repolarization abnormalities.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-25.jpg",
+    "ecgCredit": "ECG: LowKECG.JPG. Credit: James Heilman, MD. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:LowKECG.JPG\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "T-wave flattening, ST depression and prominent U-wave activity support hypokalemia in this setting. Measure QT carefully and avoid including the U wave as the T-wave endpoint.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Measure potassium, magnesium, renal function and acid-base status. Review GI losses, diuretics and other drugs. Monitor rhythm; repeat ECG and electrolytes during replacement. Distinguish a prominent U wave from the end of the T wave.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Replace potassium with a route and rate appropriate to severity, symptoms, renal function and ECG findings. Severe or symptomatic cases require monitored IV replacement using local safety protocols; never give IV potassium as a bolus. Correct magnesium deficiency and ongoing losses. QT/QU prolongation increases arrhythmic risk.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:LowKECG.JPG"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-001",
+    "topic": "Ventricular pre-excitation",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A young adult reports brief episodes of rapid palpitations and is now comfortable. Interpret the resting tracing.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-01.jpg",
+    "ecgCredit": "ECG: De-Wpw full ecg2 (CardioNetworks ECGpedia).jpg. Credit: CardioNetworks: Googletrans. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:De-Wpw_full_ecg2_(CardioNetworks_ECGpedia).jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Short PR and slurred initial QRS upstroke support ventricular pre-excitation (WPW pattern). The rhythm shown is not pre-excited AF. Symptoms determine whether this represents WPW syndrome.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Repeat a full 12-lead ECG, obtain previous tracings, echocardiography and ambulatory rhythm monitoring. Refer for electrophysiology assessment and accessory-pathway risk stratification.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Arrange cardiology/electrophysiology review; catheter ablation can provide definitive treatment in symptomatic patients. If a rapid irregular broad-complex rhythm develops, suspect pre-excited AF: avoid AV-nodal blockers, including adenosine, verapamil/diltiazem, beta-blockers, digoxin and IV amiodarone. Unstable patients require urgent electrical cardioversion; stable cases require specialist-directed therapy.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:De-Wpw_full_ecg2_(CardioNetworks_ECGpedia).jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-016",
+    "topic": "Sustained ventricular tachycardia",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with known structural heart disease develops prolonged palpitations and dizziness. Interpret the wide-complex rhythm.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-16.png",
+    "ecgCredit": "ECG: Electrocardiogram of Ventricular Tachycardia.png. Credit: The original uploader was Ksheka at English Wikipedia.. License: CC BY-SA 2.5. https://creativecommons.org/licenses/by-sa/2.5\nSource: https://commons.wikimedia.org/wiki/File:Electrocardiogram_of_Ventricular_Tachycardia.png\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "A sustained broad-complex tachycardia is highly concerning for ventricular tachycardia. The clinical tracing is labeled VT by its source. Management depends immediately on pulse and hemodynamic stability.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Immediately assess pulse and stability. Obtain a 12-lead ECG if it does not delay treatment, continuous monitoring, electrolytes and assessment for ischemia or structural disease. Look for AV dissociation and capture/fusion beats where visible.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Treat an uncertain broad-complex tachycardia as VT. Pulseless VT requires CPR and defibrillation; unstable monomorphic VT with a pulse requires synchronized cardioversion. Stable sustained VT needs monitored expert management, with cardioversion or antiarrhythmic treatment selected for the clinical context. Avoid empiric verapamil in undifferentiated broad-complex tachycardia.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Electrocardiogram_of_Ventricular_Tachycardia.png"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-006",
+    "topic": "Pulmonary embolism: right-heart strain",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient develops abrupt dyspnea and pleuritic pain after recent immobilization. Interpret the ECG and explain its diagnostic limitations.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-06.jpg",
+    "ecgCredit": "ECG: Pulm embolism.jpg. Credit: R.W.Koster. License: CC BY 3.0. https://creativecommons.org/licenses/by/3.0\nSource: https://commons.wikimedia.org/wiki/File:Pulm_embolism.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "An S1Q3T3 pattern is a right-heart strain clue compatible with PE. This pattern is neither sensitive nor specific. The diagnosis requires integration with clinical probability and appropriate imaging.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Assess clinical probability and hemodynamic stability. Use CTPA when appropriate; D-dimer is useful in selected low/intermediate-probability presentations. Bedside echocardiography can guide urgent care when unstable and transport is unsafe. Assess troponin, renal function and bleeding risk.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Provide monitored supportive care and anticoagulation when indicated, considering bleeding risk and diagnostic certainty. Shock from high-risk PE requires urgent specialist assessment for reperfusion. An ECG cannot confirm PE or determine clot burden; absence of right-heart strain does not exclude it.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Pulm_embolism.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-010",
+    "topic": "Acquired QT prolongation",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient taking sotalol develops presyncope during deterioration in kidney function. Use this illustrative long-QT tracing to discuss the likely risk.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-10.jpg",
+    "ecgCredit": "ECG: ECG long-QT bionerd.jpg. Credit: Bionerd. License: CC BY 3.0. https://creativecommons.org/licenses/by/3.0\nSource: https://commons.wikimedia.org/wiki/File:ECG_long-QT_bionerd.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "QT prolongation suggests delayed ventricular repolarization and torsades risk. The source tracing illustrates prolonged QT but does not establish sotalol exposure in the source patient. Verify QT manually; the printed tracing uses 50 mm/s, so use its own calibration.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Manually assess QT and rate correction using the printed speed; review drugs, renal function and potassium, magnesium and calcium. Obtain serial ECGs and continuous monitoring when clinically significant. Consider congenital disease if prolongation persists.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Stop QT-prolonging drugs and correct electrolytes. With suspected sotalol accumulation, obtain urgent toxicology/cardiology advice and account for renal impairment. Torsades requires IV magnesium and immediate defibrillation for sustained unstable polymorphic VT or arrest; recurrent pause-dependent acquired torsades may need rate acceleration under specialist supervision.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:ECG_long-QT_bionerd.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-022",
+    "topic": "Pericarditis: a second clinical example",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A young adult has positional chest pain and a pericardial rub. Interpret the distribution of ST changes and discuss key alternatives.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-22.jpg",
+    "ecgCredit": "ECG: Pericarditis2016.jpg. Credit: James Heilman, MD. License: CC BY-SA 4.0. https://creativecommons.org/licenses/by-sa/4.0\nSource: https://commons.wikimedia.org/wiki/File:Pericarditis2016.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "A widespread ST-elevation pattern is compatible with pericarditis in this clinical setting. Compare with early repolarization and STEMI. Symptoms, examination, biomarkers and echocardiography help establish the diagnosis.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Assess hemodynamics, inflammatory markers, troponin, renal function and echocardiography for effusion and ventricular dysfunction. Evaluate infectious and systemic causes according to history. Exclude ACS where appropriate.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Treat confirmed uncomplicated inflammatory pericarditis with an appropriate anti-inflammatory regimen and colchicine when suitable, with gastroprotection and activity advice. Admit high-risk patients, including those with fever, a large effusion, tamponade or myocardial involvement. A compatible ECG alone is insufficient to diagnose pericarditis.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Pericarditis2016.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-004",
+    "topic": "Hypothermia with J waves",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A person is brought in after prolonged cold exposure with confusion and a low core temperature. Interpret the tracing.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-04.jpg",
+    "ecgCredit": "ECG: HypothermiaECG.jpg. Credit: WikiSysop. License: CC BY 3.0. https://creativecommons.org/licenses/by/3.0\nSource: https://commons.wikimedia.org/wiki/File:HypothermiaECG.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Prominent deflections at the QRS-ST junction are Osborn J waves, compatible with hypothermia in this setting. They are not specific and must be interpreted with core temperature and clinical findings.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Measure core temperature with a suitable low-reading thermometer; assess glucose, blood gas, electrolytes and coagulation. Monitor rhythm and investigate infection, endocrine disease, intoxication or trauma as appropriate.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Handle gently, prevent further heat loss and rewarm according to severity. Use warmed supportive treatment and involve critical care. Marked instability or arrest requires a hypothermia-specific resuscitation pathway and consideration of extracorporeal rewarming. Bradycardia may improve with rewarming; treat the patient rather than an isolated rate.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:HypothermiaECG.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-027",
+    "topic": "Right bundle branch block",
+    "status": "draft_pending_clinical_review",
+    "scenario": "An older adult has an incidental conduction abnormality during preoperative assessment and no current chest pain. Interpret the ECG.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-27.jpg",
+    "ecgCredit": "ECG: ECG NSR with RBBB 74 bpm.jpg. Credit: Ewingdo. License: CC BY-SA 4.0. https://creativecommons.org/licenses/by-sa/4.0\nSource: https://commons.wikimedia.org/wiki/File:ECG_NSR_with_RBBB_74_bpm.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "A widened QRS with a terminal right-precordial R-prime and broad terminal S waves in lateral leads supports right bundle branch block. Compare earlier tracings and assess symptoms before deciding clinical significance.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Compare prior ECGs; assess symptoms and obtain echocardiography when structural disease is suspected. In acute chest pain or breathlessness, investigate ACS or PE according to clinical probability rather than attributing symptoms to the conduction pattern.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "An isolated chronic RBBB does not automatically require a pacemaker. Treat the underlying condition. Syncope, additional fascicular disease or evidence of advanced AV block warrants urgent rhythm evaluation and possible pacing.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:ECG_NSR_with_RBBB_74_bpm.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-012",
+    "topic": "Torsades de pointes",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A monitored patient collapses while receiving a QT-prolonging medicine. Interpret the telemetry strip and state the first action.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-12.jpg",
+    "ecgCredit": "ECG: Tosadesdepointes.jpg. Credit: w:User:Panthro. License: Public domain. \nSource: https://commons.wikimedia.org/wiki/File:Tosadesdepointes.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "This strip demonstrates polymorphic ventricular tachycardia with a twisting QRS envelope, consistent with torsades when preceding QT prolongation is present. Assess the patient and pulse immediately; do not delay resuscitation to complete ECG measurements.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Check pulse and hemodynamics immediately. Review the preceding QT interval, drugs and potassium/magnesium/calcium. Identify bradycardia, pauses, ischemia and reversible triggers.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Sustained unstable polymorphic VT or pulseless VT requires immediate unsynchronized defibrillation, with CPR if pulseless. Give IV magnesium for torsades, stop QT-prolonging drugs and correct electrolytes. Recurrent acquired pause-dependent episodes may require pacing or specialist-directed rate acceleration. Avoid QT-prolonging antiarrhythmics.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Tosadesdepointes.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-020",
+    "topic": "Complete AV block: 12-lead assessment",
+    "status": "draft_pending_clinical_review",
+    "scenario": "An older patient develops fatigue and recurrent near-syncope. Interpret the full tracing and prioritize the immediate assessment.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-20.jpg",
+    "ecgCredit": "ECG: CompleteHeartBlock.jpg. Credit: James Heilman, MD. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:CompleteHeartBlock.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The ECG is consistent with third-degree AV block with an escape rhythm. Establish the atrial and ventricular rates independently, assess QRS width and determine whether there are signs of poor perfusion.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Continuous cardiac monitoring, serial 12-lead ECGs and rhythm strips; review AV-nodal blocking drugs, ischemia, electrolytes and reversible causes. Obtain echocardiography and urgent cardiology review for symptomatic or advanced block.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Assess for shock, syncope, ischemia and heart failure. Prepare pacing early in unstable high-grade AV block; transcutaneous pacing may bridge to transvenous pacing. Drug treatment depends on the rhythm and local bradycardia protocol; atropine is unreliable in infranodal block. Persistent advanced block without a reversible cause may require permanent pacing.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:CompleteHeartBlock.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-009",
+    "topic": "Posterior myocardial infarction",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient has persistent ischemic chest pain. The anterior leads show ST depression rather than the usual ST elevation. Interpret this finding.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-09.jpg",
+    "ecgCredit": "ECG: E310 (CardioNetworks ECGpedia).jpg. Credit: Michael Rosengarten BEng, MD.McGill. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:E310_(CardioNetworks_ECGpedia).jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The anterior ST-depression pattern with prominent anterior R waves raises concern for posterior myocardial infarction. Obtain V7-V9 posterior leads and activate the appropriate acute occlusion pathway when supported by the clinical assessment.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Obtain serial ECGs, troponin, electrolytes and urgent cardiology assessment. Assess hemodynamics and complications; use echocardiography when helpful without delaying reperfusion. Additional right-sided or posterior leads may clarify the territory.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Activate the acute coronary syndrome/reperfusion pathway for ongoing ischemia with diagnostic acute occlusion findings. Give antithrombotic treatment as appropriate after contraindication assessment and according to local protocol. Do not wait for troponin to arrange reperfusion. Monitor for arrhythmia and shock; oxygen is indicated for hypoxemia, not routinely.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:E310_(CardioNetworks_ECGpedia).jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-028",
+    "topic": "Pre-excitation: another resting example",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A young patient with a past episode of abrupt palpitations attends follow-up in sinus rhythm. Interpret this alternative resting ECG.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-28.png",
+    "ecgCredit": "ECG: De-Wpw full ecg3 (CardioNetworks ECGpedia).png. Credit: CardioNetworks: Googletrans. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:De-Wpw_full_ecg3_(CardioNetworks_ECGpedia).png\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The ECG shows ventricular pre-excitation with short atrioventricular conduction and delta-wave/slurred QRS onset. The resting tracing illustrates the substrate, not an ongoing episode of pre-excited AF.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Repeat a full 12-lead ECG, obtain previous tracings, echocardiography and ambulatory rhythm monitoring. Refer for electrophysiology assessment and accessory-pathway risk stratification.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Arrange cardiology/electrophysiology review; catheter ablation can provide definitive treatment in symptomatic patients. If a rapid irregular broad-complex rhythm develops, suspect pre-excited AF: avoid AV-nodal blockers, including adenosine, verapamil/diltiazem, beta-blockers, digoxin and IV amiodarone. Unstable patients require urgent electrical cardioversion; stable cases require specialist-directed therapy.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:De-Wpw_full_ecg3_(CardioNetworks_ECGpedia).png"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-015",
+    "topic": "Hyperkalemia with absent P waves",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with acute kidney injury develops a conduction abnormality. Examine the annotated rhythm strip.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-15.png",
+    "ecgCredit": "ECG: ECG demonstrating hyperkalemia with absent P waves.png. Credit: Ecgtocardiology. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:ECG_demonstrating_hyperkalemia_with_absent_P_waves.png\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Loss of visible P waves with tall T waves may occur with severe hyperkalemia and sinoventricular conduction. This is an annotated teaching strip, not a complete 12-lead ECG. Do not diagnose atrial fibrillation solely because P waves are absent.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Obtain urgent potassium, blood gas, glucose, renal function, calcium and magnesium; repeat a hemolyzed specimen without delaying treatment when ECG toxicity is present. Start continuous monitoring and review drugs and dialysis history.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Urgently stabilize the myocardium with IV calcium when hyperkalemic ECG changes are present. Shift potassium intracellularly with insulin and glucose with serial glucose monitoring; nebulized beta-agonist is an adjunct. Remove potassium and correct the cause; arrange urgent dialysis when indicated. Recheck potassium for rebound. Calcium does not lower potassium.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:ECG_demonstrating_hyperkalemia_with_absent_P_waves.png"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-002",
+    "topic": "Acute pericarditis pattern",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient presents with pleuritic chest discomfort that improves when sitting forward after a viral illness. Interpret the tracing.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-02.jpg",
+    "ecgCredit": "ECG: Acute pericarditis.jpg. Credit: James Heilman, MD. License: CC BY-SA 4.0. https://creativecommons.org/licenses/by-sa/4.0\nSource: https://commons.wikimedia.org/wiki/File:Acute_pericarditis.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Widespread ST elevation in the appropriate clinical setting supports acute pericarditis. Assess for PR changes, reciprocal changes and an ischemic territorial distribution; exclude acute coronary occlusion.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Assess hemodynamics, inflammatory markers, troponin, renal function and echocardiography for effusion and ventricular dysfunction. Evaluate infectious and systemic causes according to history. Exclude ACS where appropriate.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Treat confirmed uncomplicated inflammatory pericarditis with an appropriate anti-inflammatory regimen and colchicine when suitable, with gastroprotection and activity advice. Admit high-risk patients, including those with fever, a large effusion, tamponade or myocardial involvement. A compatible ECG alone is insufficient to diagnose pericarditis.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Acute_pericarditis.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-024",
+    "topic": "Inferior infarction with Wenckebach conduction",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with acute inferior ischemic symptoms develops intermittent dropped beats. Interpret both the ischemic and conduction findings.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-24.png",
+    "ecgCredit": "ECG: Type I A-V block 5-to-4 Wenckebach periods.png. Credit: Jer5150. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:Type_I_A-V_block_5-to-4_Wenckebach_periods.png\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Inferior infarction is accompanied by a Wenckebach conduction pattern with grouped beats. The source description contains conflicting block terminology; the progressive PR/dropped-beat pattern should be described as Mobitz I, not inferred from the erroneous type label.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Obtain serial ECGs, troponin, electrolytes and urgent cardiology assessment. Assess hemodynamics and complications; use echocardiography when helpful without delaying reperfusion. Additional right-sided or posterior leads may clarify the territory.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Activate the acute coronary syndrome/reperfusion pathway for ongoing ischemia with diagnostic acute occlusion findings. Give antithrombotic treatment as appropriate after contraindication assessment and according to local protocol. Do not wait for troponin to arrange reperfusion. Monitor for arrhythmia and shock; oxygen is indicated for hypoxemia, not routinely.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Type_I_A-V_block_5-to-4_Wenckebach_periods.png"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-013",
+    "topic": "Sinus-node dysfunction",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with a history of episodic atrial fibrillation reports dizzy spells between tachycardia episodes. Interpret the pauses on this tracing.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-13.jpg",
+    "ecgCredit": "ECG: E353 (CardioNetworks ECGpedia).jpg. Credit: Michael Rosengarten BEng, MD.McGill. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:E353_(CardioNetworks_ECGpedia).jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Grouped beats with missing P waves suggest sinus arrest or sinoatrial exit block. This supports possible sinus-node dysfunction when symptoms correlate. Distinguish missing atrial impulses from AV block, in which P waves continue.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Correlate symptoms with telemetry or ambulatory monitoring. Review drugs, ischemia, thyroid function and electrolytes. Inspect whether P waves disappear during pauses and whether pause duration suggests exit block; one short strip may not distinguish all mechanisms.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Treat unstable symptomatic bradycardia with urgent monitored support and pacing when required. Correct reversible causes. Persistent symptomatic sinus-node dysfunction can require a permanent pacemaker after symptom-rhythm correlation; a pause alone is not a complete clinical diagnosis.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:E353_(CardioNetworks_ECGpedia).jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-029",
+    "topic": "Hypercalcemia with a shortened QT",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient taking calcium-containing antacids develops vomiting, thirst and worsening renal function. Interpret the supplied precordial ECG extract.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-29.jpg",
+    "ecgCredit": "ECG: Hypercalcemia as a Cause of Kidney Failure, Figure 1. Credit: Olivera Stojceva-Taneva, Borjanka Taneva and Gjulsen Selim (2016). License: CC BY (as stated in article). https://pmc.ncbi.nlm.nih.gov/articles/PMC4908746/#copyright\nSource: https://pmc.ncbi.nlm.nih.gov/articles/PMC4908746/\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The extract illustrates shortened repolarization and abnormal ST morphology associated with hypercalcemia. It shows V1-V3 only; confirm intervals on a full calibrated ECG and measure calcium. ST changes may mimic acute ischemia.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Confirm ionized or albumin-adjusted calcium, renal function, phosphate, magnesium and PTH. Review calcium/vitamin D supplements and drugs; investigate malignancy or other causes according to PTH and history.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "For significant symptomatic hypercalcemia, restore volume with carefully monitored isotonic fluid when appropriate and stop contributory agents. Arrange cause-specific calcium-lowering treatment with specialist input, accounting for renal and cardiac function. Monitor ECG and electrolytes. A short QT is a clue, not a substitute for calcium measurement.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://pmc.ncbi.nlm.nih.gov/articles/PMC4908746/"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-007",
+    "topic": "Second-degree AV block",
+    "status": "draft_pending_clinical_review",
+    "scenario": "An older adult has intermittent presyncope. Examine the relationship of P waves to QRS complexes in this clinical ECG.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-07.jpg",
+    "ecgCredit": "ECG: 2ndDegreeType2.jpg. Credit: James Heilman, MD. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:2ndDegreeType2.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "There are nonconducted P waves consistent with second-degree AV block. The source labels this Mobitz II; inspect the conducted PR intervals carefully. A purely 2:1 segment cannot by itself establish Mobitz I versus II and should be described as 2:1 AV block.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Continuous cardiac monitoring, serial 12-lead ECGs and rhythm strips; review AV-nodal blocking drugs, ischemia, electrolytes and reversible causes. Obtain echocardiography and urgent cardiology review for symptomatic or advanced block.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Assess for shock, syncope, ischemia and heart failure. Prepare pacing early in unstable high-grade AV block; transcutaneous pacing may bridge to transvenous pacing. Drug treatment depends on the rhythm and local bradycardia protocol; atropine is unreliable in infranodal block. Persistent advanced block without a reversible cause may require permanent pacing.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:2ndDegreeType2.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-023",
+    "topic": "Type 1 Brugada pattern: a second example",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient is assessed after a family member died unexpectedly at a young age. Interpret the right-precordial leads.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-23.png",
+    "ecgCredit": "ECG: Brugada syndrome type1 example4 (CardioNetworks ECGpedia).png. Credit: CardioNetworks: [ ]. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:Brugada_syndrome_type1_example4_(CardioNetworks_ECGpedia).png\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The tracing shows a type 1 Brugada morphology. Distinguish the ECG pattern from a diagnosis of Brugada syndrome and exclude reversible phenocopies such as fever-associated electrolyte or drug effects.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Confirm lead placement and repeat right-precordial leads at standard and higher intercostal positions when indicated. Review fever, drugs, electrolytes, syncope and family history. Obtain specialist electrophysiology assessment; distinguish a Brugada ECG pattern from the clinical syndrome.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Treat fever promptly and avoid recognized provoking drugs. Arrange monitored urgent care for arrhythmic syncope or ventricular arrhythmia. ICD decisions depend on clinical risk, not the tracing alone. Counsel regarding family assessment and specialist follow-up.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Brugada_syndrome_type1_example4_(CardioNetworks_ECGpedia).png"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-011",
+    "topic": "Atrial flutter",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient has recurrent regular palpitations and exertional fatigue. Identify the atrial rhythm on this ECG.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-11.jpg",
+    "ecgCredit": "ECG: ECG-atrial flutter.jpg. Credit: Ciernik M. License: CC BY-SA 4.0. https://creativecommons.org/licenses/by-sa/4.0\nSource: https://commons.wikimedia.org/wiki/File:ECG-atrial_flutter.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Repetitive flutter waves support atrial flutter. Assess the ventricular response and AV conduction ratio from the actual tracing; atrial flutter can have fixed or variable conduction.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Assess rate, hemodynamic stability, duration of arrhythmia, thromboembolic risk, electrolytes and thyroid function. Obtain echocardiography and examine leads II, III, aVF and V1 for atrial activity.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Urgently cardiovert if the rhythm causes hemodynamic instability. In stable patients, choose rate or rhythm control with cardiology input. Anticoagulation and cardioversion timing depend on duration and stroke risk. Typical flutter may be treated with catheter ablation. Do not assume a regular pulse excludes an atrial arrhythmia.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:ECG-atrial_flutter.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-030",
+    "topic": "Combined electrolyte disturbance",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with chronic kidney disease has a markedly abnormal electrolyte panel and the attached clinical ECG. Describe how more than one abnormality may influence the tracing.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-30.png",
+    "ecgCredit": "ECG: Combined hyperkalemia and hypocalcemia.png. Credit: Jer5150. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:Combined_hyperkalemia_and_hypocalcemia.png\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The source documents combined hyperkalemia and hypocalcemia. Peaked T waves support hyperkalemia, while hypocalcemia can prolong the ST/QT interval. A mixed disturbance may not follow the textbook appearance of either abnormality alone.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Obtain urgent potassium, blood gas, glucose, renal function, calcium and magnesium; repeat a hemolyzed specimen without delaying treatment when ECG toxicity is present. Start continuous monitoring and review drugs and dialysis history.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Urgently stabilize the myocardium with IV calcium when hyperkalemic ECG changes are present. Shift potassium intracellularly with insulin and glucose with serial glucose monitoring; nebulized beta-agonist is an adjunct. Remove potassium and correct the cause; arrange urgent dialysis when indicated. Recheck potassium for rebound. Calcium does not lower potassium.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Combined_hyperkalemia_and_hypocalcemia.png"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-026",
+    "topic": "Severe hypokalemia: another clinical tracing",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with prolonged gastrointestinal losses develops generalized weakness. Potassium is markedly reduced. Interpret the ECG.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-26.jpg",
+    "ecgCredit": "ECG: HypoK2.4.jpg. Credit: James Heilman, MD. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:HypoK2.4.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The tracing is a clinical example of hypokalemia with flattened T waves and prominent U waves. The source reports potassium 2.4 mmol/L. Evaluate rhythm and distinguish QT prolongation from an apparent long QU interval.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Measure potassium, magnesium, renal function and acid-base status. Review GI losses, diuretics and other drugs. Monitor rhythm; repeat ECG and electrolytes during replacement. Distinguish a prominent U wave from the end of the T wave.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Replace potassium with a route and rate appropriate to severity, symptoms, renal function and ECG findings. Severe or symptomatic cases require monitored IV replacement using local safety protocols; never give IV potassium as a bolus. Correct magnesium deficiency and ongoing losses. QT/QU prolongation increases arrhythmic risk.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:HypoK2.4.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-005",
+    "topic": "Inferior acute myocardial infarction",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient has ongoing central chest pain, nausea and sweating. Interpret the 12-lead ECG and identify the threatened territory.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-05.jpg",
+    "ecgCredit": "ECG: ECG 001.jpg. Credit: http://en.wikipedia.org/wiki/User:Glenlarson. License: CC BY-SA 3.0. http://creativecommons.org/licenses/by-sa/3.0/\nSource: https://commons.wikimedia.org/wiki/File:ECG_001.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "ST elevation in II, III and aVF with reciprocal changes is consistent with an acute inferior STEMI in this setting. Assess right ventricular involvement and AV conduction; do not assume a specific culprit vessel from ECG alone.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Obtain serial ECGs, troponin, electrolytes and urgent cardiology assessment. Assess hemodynamics and complications; use echocardiography when helpful without delaying reperfusion. Additional right-sided or posterior leads may clarify the territory.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Activate the acute coronary syndrome/reperfusion pathway for ongoing ischemia with diagnostic acute occlusion findings. Give antithrombotic treatment as appropriate after contraindication assessment and according to local protocol. Do not wait for troponin to arrange reperfusion. Monitor for arrhythmia and shock; oxygen is indicated for hypoxemia, not routinely.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:ECG_001.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-017",
+    "topic": "Dextrocardia",
+    "status": "draft_pending_clinical_review",
+    "scenario": "An ECG is recorded during a routine review. Lead I is unexpectedly inverted and chest-lead progression is unusual. Explain the likely cause.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-17.jpg",
+    "ecgCredit": "ECG: De-Dextrocardia (CardioNetworks ECGpedia).jpg. Credit: CardioNetworks: Googletrans. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:De-Dextrocardia_(CardioNetworks_ECGpedia).jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "The combination of abnormal limb-lead orientation and reversed/poor precordial R-wave progression supports dextrocardia. Check placement and confirm cardiac anatomy; isolated limb-lead reversal is an important alternative.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Check electrode placement, cardiac apex position, chest imaging and echocardiography. Repeat the ECG with appropriately labeled right-sided chest leads and corrected limb leads when dextrocardia is confirmed.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Dextrocardia itself is not an arrhythmic emergency. Establish anatomy and associated structural disease, document lead placement and manage the presenting symptom normally. Limb-lead reversal can invert lead I but typically preserves normal precordial progression; true dextrocardia alters both.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:De-Dextrocardia_(CardioNetworks_ECGpedia).jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-018",
+    "topic": "Mobitz I AV block",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient reports mild intermittent dizziness. Interpret the grouped beating pattern in this rhythm recording.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-18.jpg",
+    "ecgCredit": "ECG: DVA2426 (CardioNetworks ECGpedia).jpg. Credit: W.G. de Voogt, MD, PhD, SLAZ, The Netherlands. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:DVA2426_(CardioNetworks_ECGpedia).jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Progressive PR prolongation followed by a nonconducted P wave is a Wenckebach (Mobitz I) pattern. Compare successive conducted beats and identify the dropped atrial impulse.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Continuous cardiac monitoring, serial 12-lead ECGs and rhythm strips; review AV-nodal blocking drugs, ischemia, electrolytes and reversible causes. Obtain echocardiography and urgent cardiology review for symptomatic or advanced block.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Assess for shock, syncope, ischemia and heart failure. Prepare pacing early in unstable high-grade AV block; transcutaneous pacing may bridge to transvenous pacing. Drug treatment depends on the rhythm and local bradycardia protocol; atropine is unreliable in infranodal block. Persistent advanced block without a reversible cause may require permanent pacing.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:DVA2426_(CardioNetworks_ECGpedia).jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-021",
+    "topic": "Pulmonary embolism with tachycardia and RBBB",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient presents with acute breathlessness and a rapid pulse following a period of reduced mobility. Interpret this alternative PE-associated tracing.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-21.jpg",
+    "ecgCredit": "ECG: Pulmonary embolism ECG.jpg. Credit: Walter Serra, Giuseppe De Iaco, Claudio Reverberi and Tiziano Gherli. License: CC BY 2.0. https://creativecommons.org/licenses/by/2.0\nSource: https://commons.wikimedia.org/wiki/File:Pulmonary_embolism_ECG.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Sinus tachycardia and a right bundle branch block pattern can accompany acute right ventricular strain. The source patient had PE; the ECG alone cannot confirm PE in a new patient.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Assess clinical probability and hemodynamic stability. Use CTPA when appropriate; D-dimer is useful in selected low/intermediate-probability presentations. Bedside echocardiography can guide urgent care when unstable and transport is unsafe. Assess troponin, renal function and bleeding risk.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Provide monitored supportive care and anticoagulation when indicated, considering bleeding risk and diagnostic certainty. Shock from high-risk PE requires urgent specialist assessment for reperfusion. An ECG cannot confirm PE or determine clot burden; absence of right-heart strain does not exclude it.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Pulmonary_embolism_ECG.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-014",
+    "topic": "Large pericardial effusion with electrical alternans",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with progressive breathlessness has tachycardia, elevated venous pressure and falling blood pressure. Interpret the ECG.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-14.jpg",
+    "ecgCredit": "ECG: Electrical Alternans.JPG. Credit: James Heilman, MD. License: CC BY-SA 3.0. https://creativecommons.org/licenses/by-sa/3.0\nSource: https://commons.wikimedia.org/wiki/File:Electrical_Alternans.JPG\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Low voltage and beat-to-beat QRS amplitude variation suggest electrical alternans associated with a large pericardial effusion. Urgent echocardiography is required to assess for tamponade.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Urgent bedside echocardiography, focused examination for tamponade, blood pressure and perfusion assessment. Investigate renal disease, malignancy, infection and inflammatory causes after stabilization.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "If tamponade causes hemodynamic compromise, arrange urgent echo-guided drainage with specialist support. Use cautious temporary circulatory support while arranging definitive treatment. Avoid unnecessary preload reduction. Electrical alternans and low voltage support the suspicion but are neither required nor diagnostic of tamponade.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Electrical_Alternans.JPG"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-003",
+    "topic": "Hyperkalemia with peaked T waves",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient with kidney impairment reports weakness after missing a dialysis session. Interpret the ECG before the laboratory result returns.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-03.jpg",
+    "ecgCredit": "ECG: Hyperkalemia ECG.jpg. Credit: Dr. Michael-Joseph F. Agbayani and Dr. Eddieson Gonzales (Manila, Philippines). License: CC BY 4.0. https://creativecommons.org/licenses/by/4.0\nSource: https://commons.wikimedia.org/wiki/File:Hyperkalemia_ECG.jpg\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "Tall, narrow-based T waves in multiple leads suggest hyperkalemia. The degree of ECG change does not reliably predict serum potassium; severe hyperkalemia can also occur with a near-normal ECG.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Obtain urgent potassium, blood gas, glucose, renal function, calcium and magnesium; repeat a hemolyzed specimen without delaying treatment when ECG toxicity is present. Start continuous monitoring and review drugs and dialysis history.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Urgently stabilize the myocardium with IV calcium when hyperkalemic ECG changes are present. Shift potassium intracellularly with insulin and glucose with serial glucose monitoring; nebulized beta-agonist is an adjunct. Remove potassium and correct the cause; arrange urgent dialysis when indicated. Recheck potassium for rebound. Calcium does not lower potassium.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:Hyperkalemia_ECG.jpg"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  },
+  {
+    "id": "SV-TOACS-ECG-019",
+    "topic": "Complete AV block: rhythm strips",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A patient presents with syncope and a slow regular pulse. The supplied paired rhythm strips show the same recording period.",
+    "findings": [
+      "Open the clinical ECG before revealing the answer. Some source tracings contain teaching annotations."
+    ],
+    "ecgImage": "ecg/tracing-19.png",
+    "ecgCredit": "ECG: 3rd degree heart block.PNG. Credit: Gregory Marcus, MD, MAS, FACC. License: CC BY 3.0. https://creativecommons.org/licenses/by/3.0\nSource: https://commons.wikimedia.org/wiki/File:3rd_degree_heart_block.PNG\nImage reproduced unchanged. Fictional scenario; it is not the history of the source patient.",
+    "questions": [
+      {
+        "question": "Describe the ECG and give the most likely interpretation.",
+        "answer": "P waves and QRS complexes proceed independently, demonstrating AV dissociation consistent with complete AV block. The source arrows identify atrial activity; the escape rhythm sustains ventricular activity.",
+        "marks": 4
+      },
+      {
+        "question": "Which assessments and investigations are required?",
+        "answer": "Continuous cardiac monitoring, serial 12-lead ECGs and rhythm strips; review AV-nodal blocking drugs, ischemia, electrolytes and reversible causes. Obtain echocardiography and urgent cardiology review for symptomatic or advanced block.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this clinical presentation?",
+        "answer": "Assess for shock, syncope, ischemia and heart failure. Prepare pacing early in unstable high-grade AV block; transcutaneous pacing may bridge to transvenous pacing. Drug treatment depends on the rhythm and local bradycardia protocol; atropine is unreliable in infranodal block. Persistent advanced block without a reversible cause may require permanent pacing.",
+        "marks": 3
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Interpret the tracing using its printed speed and gain; not all source images use 25 mm/s. A tracing illustrates a pattern and may not establish the clinical cause.",
+      "Source and image-specific discussion: https://commons.wikimedia.org/wiki/File:3rd_degree_heart_block.PNG"
+    ],
+    "sourceNote": "Original fictional replacement station aligned to this actual clinical tracing. Not a transcription or a one-to-one reproduction of the uploaded book cases."
+  }
+]

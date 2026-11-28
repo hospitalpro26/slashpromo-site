@@ -3,3 +3,6 @@
 *.private.sql
 *.d1.sql
 *.backup-plain.json
+
+# Reproducible clinical assets fetched with pinned checksums before APK builds
+android/app/src/main/assets/ecg/
