@@ -1,0 +1,182 @@
+[
+  {
+    "id": "SV-TOACS-INF-003",
+    "topic": "Rhino-orbital-cerebral mucormycosis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 56-year-old man with uncontrolled diabetes develops severe unilateral facial pain, eyelid swelling and rapidly worsening vision. Examination shows ophthalmoplegia and a dark necrotic patch on the palate. He has hyperglycaemia and ketonaemia.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected rhino-orbital-cerebral mucormycosis, an invasive fungal emergency.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Obtain urgent ENT, ophthalmology and infectious-disease assessment. Image sinuses, orbit and brain to define extent. Arrange endoscopic tissue biopsy for microscopy, histopathology and culture. Check glucose, ketones, blood gas, renal function and electrolytes.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Start prompt specialist-directed IV liposomal amphotericin B and urgent surgical debridement; do not wait for final culture when suspicion is high. Correct ketoacidosis and hyperglycaemia and reduce reversible immunosuppression where feasible. Monitor kidney function and electrolytes. Isavuconazole or posaconazole may be used for selected alternative, salvage or step-down treatment.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "A necrotic lesion with orbital signs in diabetes demands urgent action; routine antibacterial treatment alone is inadequate.",
+      "Reference: https://www.ecmm.info/guidelines/mucormycoses-2019/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Rhino-orbital-cerebral mucormycosis topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-INF-005",
+    "topic": "Infective endocarditis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 42-year-old woman with known mitral valve disease has three weeks of fever and malaise. She has a changing murmur, painless lesions on the palms, splenomegaly and microscopic haematuria.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected infective endocarditis with peripheral vascular and renal manifestations.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Obtain three sets of blood cultures before antibiotics when clinically feasible. Perform transthoracic echocardiography and transoesophageal imaging when indicated, including persistent suspicion or assessment for complications. Check ECG, blood count, inflammatory markers, renal function and urinalysis. Assess embolic and heart-failure complications using contemporary diagnostic criteria.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Involve an endocarditis team. Start appropriate IV antibiotics after cultures, urgently in sepsis; tailor to organism, susceptibility, valve type and renal function. Evaluate early surgery for heart failure, uncontrolled infection or substantial embolic risk. Monitor culture clearance and organ complications; plan follow-up and dental/source care.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Do not delay lifesaving antibiotics in an unstable patient merely to complete a culture schedule.",
+      "Reference: https://academic.oup.com/eurheartj/article/44/39/3948/7243107"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Infective endocarditis topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-INF-001",
+    "topic": "Enteric fever",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 23-year-old man in Sindh presents with eight days of persistent fever, headache, abdominal discomfort and poor appetite after drinking unsafe water. He is haemodynamically stable, with mild splenomegaly and no peritonism.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected enteric fever due to Salmonella Typhi or Paratyphi; confirm microbiologically and consider other endemic febrile illnesses.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Take blood cultures before antibiotics when feasible, with susceptibility testing. Check blood count, renal/liver function and hydration; test for malaria or dengue when indicated. Assess for bleeding, encephalopathy or intestinal perforation. Widal testing does not reliably confirm the diagnosis.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Use local resistance guidance and culture results. In the Pakistan/XDR context, azithromycin may be appropriate for uncomplicated disease; severe or complicated illness needs admission and an IV carbapenem-based approach with infectious-disease advice. Do not assume ceftriaxone or ciprofloxacin susceptibility. Provide fluids, nutrition and complication surveillance; reinforce safe water, hygiene and vaccination advice.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Persistent fever requires reassessment of susceptibility, adherence, complications and alternative diagnoses.",
+      "Reference: https://www.cdc.gov/typhoid-fever/hcp/clinical-guidance/index.html"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Enteric fever topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-INF-006",
+    "topic": "Acute rheumatic fever",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 17-year-old boy develops fever and migratory large-joint arthritis three weeks after a sore throat. Examination reveals a new apical pansystolic murmur and a non-itchy serpiginous rash over the trunk.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected acute rheumatic fever with carditis, migratory arthritis and erythema marginatum.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Apply risk-adjusted Jones criteria and seek evidence of preceding group A streptococcal infection using appropriate serology and throat testing. Obtain ECG, inflammatory markers and Doppler echocardiography even if clinical carditis is uncertain. Exclude septic arthritis and alternative causes.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Eradicate group A streptococcus with a recommended antibiotic regimen, considering allergy. Treat arthritis and fever with anti-inflammatory therapy under supervision; manage heart failure and severe carditis with cardiology input. Begin secondary antibiotic prophylaxis, commonly benzathine penicillin, with interval and duration determined by cardiac involvement and local guidance.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Preventing recurrent attacks is central to reducing further valve damage.",
+      "Reference: https://www.cdc.gov/group-a-strep/hcp/clinical-guidance/acute-rheumatic-fever.html"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Acute rheumatic fever topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-INF-002",
+    "topic": "Dengue with warning signs",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 31-year-old woman on day five of a febrile illness develops persistent vomiting, abdominal tenderness and gum bleeding as her temperature falls. Platelets are 48,000/µL and haematocrit is rising. She is alert with blood pressure 108/72 mmHg and preserved urine output.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Dengue with warning signs, at risk of progression during the critical phase. Thrombocytopenia alone does not define severe dengue.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Assess perfusion, pulse pressure, respiratory status, bleeding and urine output repeatedly. Trend blood count and haematocrit; check renal/liver function and electrolytes. Use NAAT/NS1 and/or serology according to illness timing and local availability. Assess pregnancy and comorbidities.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Admit for monitoring. Give carefully titrated isotonic crystalloid according to clinical state and local dengue protocol, reassessing perfusion, urine output and haematocrit frequently. Reduce fluids as leakage resolves to prevent overload. Use paracetamol rather than aspirin/NSAIDs. Do not give prophylactic platelets solely for a low count or routine corticosteroids. Escalate for shock, significant bleeding or organ dysfunction.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "Defervescence can mark deterioration rather than recovery.",
+      "Reference: https://www.cdc.gov/dengue/hcp/clinical-care/"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Dengue with warning signs topic. Clinical details modified for clarity; clinician review pending."
+  },
+  {
+    "id": "SV-TOACS-INF-004",
+    "topic": "Malaria with haemolysis",
+    "status": "draft_pending_clinical_review",
+    "scenario": "A 28-year-old man develops intermittent fever, chills and jaundice after travel to a malaria-endemic district. Haemoglobin is 8.6 g/dL, indirect bilirubin and reticulocytes are elevated, and he has mild splenomegaly.",
+    "findings": [],
+    "questions": [
+      {
+        "question": "What is the most likely diagnosis?",
+        "answer": "Suspected malaria with haemolysis; establish species, parasite density and severity rather than attributing jaundice automatically to hepatitis.",
+        "marks": 2
+      },
+      {
+        "question": "Which investigations and assessments are required?",
+        "answer": "Request urgent thick and thin blood films and a rapid diagnostic test if available. Repeat microscopy if initial tests are negative but suspicion remains high. Check glucose, blood count, renal/liver function, acid-base status and urine output. Assess consciousness, respiratory distress, shock and other severe-malaria features.",
+        "marks": 3
+      },
+      {
+        "question": "How would you manage this patient?",
+        "answer": "Treat promptly with a species- and resistance-appropriate regimen under local malaria guidance. Uncomplicated falciparum malaria requires an effective artemisinin-based combination, not artemisinin monotherapy. Severe disease requires parenteral artesunate and hospital support, followed by a complete oral regimen once suitable. For vivax/ovale relapse prevention, assess G6PD status and contraindications before radical cure. Monitor for post-artesunate haemolysis when applicable.",
+        "marks": 5
+      }
+    ],
+    "totalMarks": 10,
+    "learningPoints": [
+      "The presence of jaundice requires severity assessment; species and clinical condition determine treatment.",
+      "Reference: https://www.who.int/teams/global-malaria-programme/case-management/treatment"
+    ],
+    "sourceNote": "Original fictional educational scenario adapted from the uploaded Malaria with haemolysis topic. Clinical details modified for clarity; clinician review pending."
+  }
+]
